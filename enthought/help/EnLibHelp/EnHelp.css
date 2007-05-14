@@ -1,0 +1,388 @@
+/*=(===============================================================)*/
+
+/*=(===============================================================)*/
+/*=(Created with RoboEditor.)=======================================*/
+/*=(===============================================================)*/
+
+BODY {
+	font-family: Arial;
+	background-color: #ffffff;
+}
+
+H1 {
+	font-weight: bold;
+	color: #000080;
+	font-size: 14pt;
+	font-family: Verdana, sans-serif;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-H1 {
+	font-weight: bold;
+	color: #000080;
+	font-size: 14pt;
+	font-family: Verdana, sans-serif;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+H2 {
+	font-weight: bold;
+	color: #000080;
+	font-size: 12pt;
+	font-family: Verdana, sans-serif;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-H2 {
+	font-weight: bold;
+	color: #000080;
+	font-size: 12pt;
+	font-family: Verdana, sans-serif;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+H3 {
+	font-weight: bold;
+	font-size: 11pt;
+	font-family: Verdana, sans-serif;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-H3 {
+	font-weight: bold;
+	font-size: 11pt;
+	font-family: Verdana, sans-serif;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+H4 {
+	font-weight: bold;
+	font-size: 12.0pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-H4 {
+	font-weight: bold;
+	font-size: 12.0pt;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+H5 {
+	font-weight: bold;
+	font-size: 10.0pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-H5 {
+	font-weight: bold;
+	font-size: 10.0pt;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+H6 {
+	font-weight: bold;
+	font-size: 8.0pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-H6 {
+	font-weight: bold;
+	font-size: 8.0pt;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+P {
+	font-size: 10pt;
+	margin-top: 7pt;
+	margin-bottom: 7pt;
+	font-family: Verdana, sans-serif;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P {
+	font-size: 10pt;
+	font-family: Verdana, sans-serif;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+A.expandspot {
+	cursor: hand;
+	x-text-overline: off;
+	x-text-line-through: off;
+	font-size: 10pt;
+	font-weight: normal;
+	font-style: normal;
+	font-family: Tahoma, sans-serif;
+	color: #008080;
+	x-text-underline: Normal;
+	/*begin!kadov{{*/ text-decoration: none none underline; /*}}end!kadov*/ 
+}
+
+SPAN.expandtext {
+	font-size: 10pt;
+	font-weight: normal;
+	font-style: normal;
+	font-family: Tahoma, sans-serif;
+	color: #800000;
+}
+
+A.dropspot {
+	cursor: hand;
+	color: #008000;
+	font-style: italic;
+	x-text-underline: off;
+	x-text-overline: off;
+	x-text-line-through: off;
+	/*begin!kadov{{*/ text-decoration: none none none; /*}}end!kadov*/ 
+}
+
+A.glossterm {
+	cursor: hand;
+	x-text-overline: off;
+	x-text-line-through: off;
+	font-size: 10pt;
+	font-family: Tahoma, sans-serif;
+	color: #008080;
+	x-text-underline: Normal;
+	font-style: italic;
+	font-weight: normal;
+	/*begin!kadov{{*/ text-decoration: none none underline; /*}}end!kadov*/ 
+}
+
+SPAN.glosstext {
+	font-size: 10pt;
+	font-weight: normal;
+	font-style: normal;
+	font-family: Tahoma, sans-serif;
+	color: #800000;
+}
+
+OL,
+UL {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+P.Note {
+	font-style: italic;
+	font-weight: normal;
+	color: #0000ff;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-CNote {
+	font-style: italic;
+	font-weight: normal;
+	color: #0000ff;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+SPAN.UIElem {
+	font-weight: bold;
+	font-style: normal;
+}
+
+P.ListContinue1 {
+	margin-left: 14pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-CListContinue1 {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+P.ListContinue2 {
+	margin-left: 30pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-CListContinue2 {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+P.ListContinue3 {
+	margin-left: 44pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-CListContinue3 {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+P.ListContinue4 {
+	margin-left: 60pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-CListContinue4 {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+SPAN.KeyName {
+	font-variant: small-caps;
+	font-size: 10pt;
+	font-family: Tahoma, sans-serif;
+}
+
+P.TableHeader {
+	color: #ffffff;
+	margin-top: 0pt;
+	margin-bottom: 0pt;
+	font-weight: bold;
+	font-style: normal;
+	text-align: Center;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-CTableHeader {
+	color: #ffffff;
+	font-weight: bold;
+	font-style: normal;
+	text-align: Center;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+P.TableBody {
+	margin-bottom: 6pt;
+	margin-top: 0pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-CTableBody {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+SPAN.Literal {
+	font-size: 10pt;
+	font-family: "Courier New", monospace;
+}
+
+P.Access {
+	x-next-class: ;
+	x-next-type: P;
+	background-color: #e6e6e6;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-CAccess {
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+DIV.AccessSection {
+	background-color: #e6e6e6;
+}
+
+P.Caution {
+	x-next-class: ;
+	x-next-type: P;
+	font-style: italic;
+	font-weight: normal;
+	color: #ff0000;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-CCaution {
+	font-style: italic;
+	font-weight: normal;
+	color: #ff0000;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+P.TableBullet {
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+	list-style: disc;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-CTableBullet {
+	list-style: disc;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+P.Code {
+	font-family: "Courier New", monospace;
+	margin-top: 0pt;
+	margin-bottom: 0pt;
+}
+
+/*=(Generated Code)=================================================*/
+/*=(WARNING: DO NOT EDIT OR DELETE THIS SECTION!)===================*/
+/*begin!kadov{{=====================================================*/ 
+LI.kadov-P-CCode {
+	font-family: "Courier New", monospace;
+}
+/*}}end!kadov=======================================================*/ 
+
+
+
+
+/*=(===============================================================)*/

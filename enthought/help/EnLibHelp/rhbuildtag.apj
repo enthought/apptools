@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<rhpml majorversion="1" minorversion="0">
+	<buildtags>
+		<buildtag>
+			<name>Converge</name>
+			<colorref>16711680</colorref>
+			<comments/>
+		</buildtag>
+		<buildtag>
+			<name>Not_implemented</name>
+			<colorref>128</colorref>
+			<comments/>
+		</buildtag>
+		<buildtag>
+			<name>VMS</name>
+			<colorref>255</colorref>
+			<comments/>
+		</buildtag>
+		<buildtag>
+			<name>ProAVA2</name>
+			<colorref>32768</colorref>
+			<comments/>
+		</buildtag>
+		<buildtag>
+			<name>Online</name>
+			<colorref>65280</colorref>
+			<comments/>
+		</buildtag>
+		<buildtag>
+			<name>CoPEG</name>
+			<colorref>8388608</colorref>
+			<comments/>
+		</buildtag>
+	</buildtags>
+</rhpml>

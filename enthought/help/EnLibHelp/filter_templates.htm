@@ -1,0 +1,213 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Filter Templates</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name="build tags" content="Converge,VMS">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=1188>
+<meta name=layout-width content=734>
+
+
+<!--(Links)=========================================================-->
+
+<link rel=StyleSheet href=EnHelp.css>
+
+
+
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<h1><!--kadov_tag{{<variable name=title
+							x-format=default
+							x-value="Filter Templates">}}-->Filter Templates<!--kadov_tag{{</variable>}}--></h1>
+
+<p>When you create a filter for<span style="x-condition: Converge;"> the 
+ Inputs table or the Outputs table in a dataflow window</span><span style="x-condition: VMS;"> 
+ the Geometry Variables or Selected Geometry variables view</span>, you 
+ can base the filter on another filter, or on a filter template. A filter 
+ template is like a normal filter, but it cannot be changed or deleted. 
+ In addition, the appearance of the <span class=UIElem>Edit filter</span> 
+ dialog box varies depending on the type of template that a filter was 
+ created from.</p>
+
+<p>The following types of filter templates are available:</p>
+
+<ul style="list-style: disc;"
+	type=disc>
+	
+	<li class=kadov-p><p><a href="#Evaluation">Evaluation</a></p></li>
+	
+	<li class=kadov-p><p><a href="#Rule">Rule-based</a></p></li>
+	
+	<li class=kadov-p><p><a href="#Menu">Menu-based</a></p></li>
+	
+	<li style="x-condition: Converge; /*begin!kadov{{*/ x-condition: Converge; /*}}end!kadov*/ "
+		class=kadov-p><p style="x-condition: Converge;"><a href="#Converge"
+															style="x-condition: Converge;">Filter 
+ template</a></p></li>
+</ul>
+
+<h2><a name=Evaluation>Evaluation Filter Template</a></h2>
+
+<p>This template lets you define an arbitrary Python expression. Only items 
+ for which the expression is true will be displayed in the table.</p>
+
+<p style="x-condition: VMS;">For example, to define a filter that selects 
+ variables that belong to objects whose name is longer than 15 characters, 
+ enter the following expression:</p>
+
+<p><span class=Literal>len(object.name) &gt; 15</span></p>
+
+<h2><a name=Rule>Rule-based Filter Template</a></h2>
+
+<p>Rule-based: This template lets you define a set of rules that compare 
+ an attribute of the items in the table to a specified value. The available 
+ operations include numeric and string&nbsp;comparisons. You can combine 
+ multiple rules by conjoining (&quot;AND&quot;) or disjoining (&quot;OR&quot;) 
+ them. Only items for which the set of rules is true will be displayed 
+ in the table. See <a HREF="edit_rule-based_filter_box.htm">Edit Rule-Based 
+ Filter Dialog Box</a>.</p>
+
+<p style="x-condition: VMS;">For example, to define a filter that selects 
+ variables named <span class=Literal>position_x</span> whose value is greater 
+ than 0.0:</p>
+
+<ol>
+	
+	<li style="list-style: decimal; x-condition: VMS;"
+		type=1
+		class=kadov-p><p>Click <span class=UIElem>Insert new item</span> 
+ (<img src="table_insert_item.png"
+		x-maintain-ratio=TRUE
+		style="border: none;
+				width: 16px;
+				height: 16px;
+				float: none;
+				border-style: none;
+				border-style: none;"
+		width=16
+		height=16
+		border=0>) to add a row to the <span class=UIElem>Edit Filter</span> 
+ dialog box.</p></li>
+	
+	<li style="list-style: decimal; x-condition: VMS;"
+		type=1
+		class=kadov-p><p>In the Name column, select <span class=Literal>name</span>.</p></li>
+	
+	<li style="list-style: decimal; x-condition: VMS;"
+		type=1
+		class=kadov-p><p>If necessary, in the Operation column, select 
+ <span class=Literal>=</span>.</p></li>
+	
+	<li style="list-style: decimal; x-condition: VMS;"
+		type=1
+		class=kadov-p><p>In the Value column, type <span class=Literal>position_x</span>.</p></li>
+	
+	<li style="list-style: decimal; x-condition: VMS;"
+		type=1
+		class=kadov-p><p>Click <span class=UIElem>Insert new item</span> 
+ (<img src="table_insert_item.png"
+		x-maintain-ratio=TRUE
+		style="border: none;
+				width: 16px;
+				height: 16px;
+				float: none;
+				border-style: none;
+				border-style: none;"
+		width=16
+		height=16
+		border=0>) to add another row.</p></li>
+	
+	<li style="list-style: decimal; x-condition: VMS;"
+		type=1
+		class=kadov-p><p>In the Name column, select <span class=Literal>value</span>.</p></li>
+	
+	<li style="list-style: decimal; x-condition: VMS;"
+		type=1
+		class=kadov-p><p>In the Operation column, select <span class=Literal>&gt;=</span>.</p></li>
+	
+	<li style="list-style: decimal; x-condition: VMS;"
+		type=1
+		class=kadov-p><p>In the Value column, type <span class=Literal>0.0</span>.</p></li>
+</ol>
+
+<h2><a name=Menu>Menu-based Filter Template</a></h2>
+
+<p>Menu-based: Similar to the rule-based template, this template pre-defines 
+ one rule for every attribute of the items in the table. You can modify 
+ the rules and enable or disable them. Only items for which the enabled 
+ rules are true will be displayed in the table. See <a HREF="edit_menu-based_filter_dialog_box.htm">Edit 
+ Menu-Based Filter Dialog Box</a>.</p>
+
+<p style="x-condition: VMS;">For example, to define a filter that selects 
+ only Float variables:</p>
+
+<ol>
+	
+	<li style="list-style: decimal; x-condition: VMS;"
+		type=1
+		class=kadov-p><p>Click in the first column for the row whose Name 
+ value is <span class=Literal>type</span>. A check box appears in the first 
+ cell.</p></li>
+	
+	<li style="list-style: decimal; x-condition: VMS;"
+		type=1
+		class=kadov-p><p>Click the check box to select the row for the 
+ filter.</p></li>
+	
+	<li style="list-style: decimal; x-condition: VMS;"
+		type=1
+		class=kadov-p><p>If necessary, change the Operation cell to <span 
+ class=Literal>=</span>.</p></li>
+	
+	<li style="list-style: decimal; x-condition: VMS;"
+		type=1
+		class=kadov-p><p>If necessary, change the Value cell to <span class=Literal>Float</span>.</p></li>
+</ol>
+
+<h2 style="x-condition: Converge;"><a name=Converge>Filter Template</a></h2>
+
+<p style="x-condition: Converge;">This template lets you set values for 
+ criteria that are pre-defined based on the type of item being filtered. 
+ Only items that match the specified criteria will be displayed in the 
+ template. See:</p>
+
+<ul style="list-style: disc;"
+	type=disc>
+	
+	<li style="x-condition: Converge; /*begin!kadov{{*/ x-condition: Converge; /*}}end!kadov*/ "
+		class=kadov-p><p style="x-condition: Converge;"><a HREF="edit_filter_for_inputs_dialog_box.htm"
+															style="x-condition: Converge;">Edit 
+ Filter For Inputs Dialog Box</a></p></li>
+	
+	<li style="x-condition: Converge; /*begin!kadov{{*/ x-condition: Converge; /*}}end!kadov*/ "
+		class=kadov-p><p style="x-condition: Converge;"><a HREF="edit_filter_for_outputs_dialog_box.htm"
+															style="x-condition: Converge;">Edit 
+ Filter For Outputs Dialog Box</a></p></li>
+</ul>
+
+<p>&nbsp;</p>
+
+</body>
+
+</html>

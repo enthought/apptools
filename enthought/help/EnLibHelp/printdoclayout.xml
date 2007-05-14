@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--Printed Documentation Layout-->
+<printdoclayout version="2">
+  <temphistory/>
+ <stylemapping>
+   <templatefile type="msword" filename="Style Mapping.dot"/>
+  <maps>
+    <item org="a.dropspot" new="Drop-down hotspot"/>
+    <item org="a.expandspot" new="Expanding hotspot"/>
+    <item org="a.glossterm" new="Glossary term"/>
+    <item org="a.popupspot" new="Text-only popup hotspot"/>
+    <item org="a:link" new="\-86"/>
+    <item org="div" new="\0"/>
+    <item org="div.accesssection" new="\0"/>
+    <item org="div.droptext" new="Drop-down text"/>
+    <item org="p" new="\-67"/>
+    <item org="p.access" new="\0"/>
+    <item org="p.caution" new="\0"/>
+    <item org="p.code" new="\0"/>
+    <item org="p.listcontinue1" new="\0"/>
+    <item org="p.listcontinue2" new="\0"/>
+    <item org="p.listcontinue3" new="\0"/>
+    <item org="p.listcontinue4" new="\0"/>
+    <item org="p.note" new="Note"/>
+    <item org="p.tablebody" new="\0"/>
+    <item org="p.tablebullet" new="\0"/>
+    <item org="p.tableheader" new="\0"/>
+    <item org="span.expandtext" new="Expanding text"/>
+    <item org="span.glosstext" new="Glossary text"/>
+    <item org="span.keyname" new="\0"/>
+    <item org="span.literal" new="\0"/>
+    <item org="span.uielem" new="\0"/>
+  </maps>
+ </stylemapping>
+ <tocstructure>
+  <chapter name="New Chapter">
+    <page name="Customize Filters Dialog Box" topic="customize_filters_dialog_box.htm" flags="0" topicid="-1"/>
+    <page name="Edit Menu-Based Filter Dialog Box" topic="edit_menu-based_filter_dialog_box.htm" flags="0" topicid="-1"/>
+    <page name="Edit Rule-Based Filter Dialog Box" topic="edit_rule-based_filter_box.htm" flags="0" topicid="-1"/>
+    <page name="Filter Templates" topic="filter_templates.htm" flags="0" topicid="-1"/>
+    <page name="Import Item Dialog Box" topic="import_item_dialog_box.htm" flags="0" topicid="-1"/>
+    <page name="Python View" topic="python_pane.htm" flags="0" topicid="-1"/>
+    <page name="Repository Browser Pane" topic="repository_pane.htm" flags="0" topicid="-1"/>
+    <page name="Table Filters" topic="table_filters.htm" flags="0" topicid="-1"/>
+  </chapter>
+ </tocstructure>
+  <sectionhistory/>
+ <sectionlist>
+   <section type="topics" name="Chapter Layout" url="" flags="0" topicid="-1"/>
+ </sectionlist>
+  <robopdfgeneratorsettings data="resIndex=3&amp;jpegImageQuality=75&amp;imageDPI=96&amp;quiet=0&amp;Quality=3&amp;resolution=96&amp;customResolution=300&amp;customImageDPI=96&amp;customJpegImageQuality=75&amp;pdfTemplateEnable=0&amp;pdfTemplateOnTop=0&amp;pdfTemplate=&amp;watermark=&amp;watermarkText=&amp;watermarkFontName=Arial&amp;watermarkFontSize=48&amp;watermarkStyle=0&amp;watermarkColor=90&amp;sd_permissionFlags=-64&amp;sd_enabled=0&amp;sd_keyLen=16&amp;sd_up=&amp;sd_op=&amp;"/>
+</printdoclayout>
