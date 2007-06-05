@@ -4,6 +4,7 @@
 # Enthought library imports.
 from enthought.envisage import get_application
 from enthought.traits.api import Instance
+from enthought.envisage.api import Plugin
 
 # FIXME: Support for both UI and Workbench plug-ins. When UI plug-in goes away,
 # delete this crazy import stuff!
@@ -16,7 +17,7 @@ else:
 
 class HelpAction(WorkbenchAction):
     """ Abstract class for help actions. """
-    plugin = Instance
+    plugin = Instance(Plugin)
     
     def __init__( self, **kw ):
         """ Constructor. """
