@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'enthought.help',
-    version = '1.1.0',
+    version = '3.0a1',
     description  = 'Help framework for envisage applications',
     author       = 'Enthought, Inc',
     author_email = 'info@enthought.com',
