@@ -1,11 +1,16 @@
+
+# Standard library imports
+import logging
 import sys, os.path
 import re, string
 
-# Enthought imports
-from enthought.logger import logger
-
 # Local imports
 from robohelp_csh import rh_showhelp
+
+
+# Setup a logger for this module.
+logger = logging.getLogger(__name__)
+
 
 # Microsoft HtmlHelp API constants
 HH_DISPLAY_TOPIC = 0x0000
@@ -13,6 +18,7 @@ HH_DISPLAY_TOC = 0x0001
 HH_DISPLAY_INDEX = 0x0002
 HH_DISPLAY_SEARCH = 0x0003
 HH_HELP_CONTEXT = 0x000f
+
 
 class HelpViewer:
     """ Encapsulates access to the RoboHelp context-sensitive help API. """
@@ -27,7 +33,7 @@ class HelpViewer:
                 logger.error(msg)
                 self.map_IDs = {}
         else: self.map_IDs = {}
-        
+
     def view(self, hwnd=None, custom_wnd_name=None):
         """ Displays the default topic with table of contents pane visible."""
         self.view_toc(hwnd, custom_wnd_name)
@@ -45,7 +51,7 @@ class HelpViewer:
             hwnd = self.hwnd
         help_string = self._add_custom_wnd(custom_wnd_name)
         rh_showhelp(hwnd, help_string, HH_DISPLAY_INDEX, 0)
-        
+
     def view_search(self, hwnd=0, custom_wnd_name=None):
         """ Displays the default topic with the search pane visible."""
         if not hwnd:
@@ -66,7 +72,7 @@ class HelpViewer:
             hwnd = self.hwnd
         help_string = self._add_custom_wnd(custom_wnd_name)
         rh_showhelp(hwnd, help_string, HH_HELP_CONTEXT, id)
-        
+
     def view_page(self, page, hwnd=0):
         """ Supports calling a page in a help project by name, rather than ID.
             This function is can be used for WebHelp, if IDs are not used. For
@@ -81,19 +87,19 @@ class HelpViewer:
             else:
                 help_string = self.help_file
             return help_string
-        
+
 def _read_map_ids(map_file):
     mapIDs = {}
-    if map_file:	# Read map IDs into dictionary
-        try: 
+    if map_file:    # Read map IDs into dictionary
+        try:
             mf = open(map_file, 'r')
         except IOError:
             msg = 'Cannot open the help map file, %s' % os.path.abspath(map_file)
             raise ValueError, msg
         matchstr = re.compile(
-            r"""(\#define\s+)	#1 '#define' followed by whitespace
-                (\w+)\s+		#2 topic ID followed by whitespace
-                (\w+)			#3 map number
+            r"""(\#define\s+)    #1 '#define' followed by whitespace
+                (\w+)\s+        #2 topic ID followed by whitespace
+                (\w+)            #3 map number
             """,
             re.VERBOSE)
         for line in mf.readlines():
