@@ -1,2 +1,2 @@
-The help package, a part othe Enthought Tool Suite.
+The help package, a part of the Enthought Tool Suite.
 
