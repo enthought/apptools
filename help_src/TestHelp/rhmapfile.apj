@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<rhpml majorversion="1" minorversion="0">
+	<maps>
+		<map>
+			<filename>BSSCDefault.h</filename>
+			<locked>false</locked>
+		</map>
+	</maps>
+</rhpml>
