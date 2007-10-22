@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<rhpml majorversion="1" minorversion="0">
+	<windows>
+		<window>
+			<name>Context</name>
+			<caption>Enthought Library Help</caption>
+			<tocfile></tocfile>
+			<indexfile></indexfile>
+			<defaultfile></defaultfile>
+			<homefile></homefile>
+			<jump1filename></jump1filename>
+			<jump1text></jump1text>
+			<jump2filename></jump2filename>
+			<jump2text></jump2text>
+			<flags>918560</flags>
+			<navpanewidth>0</navpanewidth>
+			<buttons>12302</buttons>
+			<windowplacement>
+				<left>5</left>
+				<top>5</top>
+				<right>617</right>
+				<bottom>441</bottom>
+			</windowplacement>
+			<windowstyle>0</windowstyle>
+			<windowstyleex>0</windowstyleex>
+			<expandedstate>1</expandedstate>
+			<defaulttab>0</defaulttab>
+			<tabposition>0</tabposition>
+			<showwindow>0</showwindow>
+		</window>
+		<window>
+			<name>Main</name>
+			<caption>Enthought Library Help</caption>
+			<tocfile></tocfile>
+			<indexfile></indexfile>
+			<defaultfile></defaultfile>
+			<homefile></homefile>
+			<jump1filename></jump1filename>
+			<jump1text></jump1text>
+			<jump2filename></jump2filename>
+			<jump2text></jump2text>
+			<flags>1074660384</flags>
+			<navpanewidth>0</navpanewidth>
+			<buttons>12302</buttons>
+			<windowplacement>
+				<left>22</left>
+				<top>26</top>
+				<right>809</right>
+				<bottom>465</bottom>
+			</windowplacement>
+			<windowstyle>0</windowstyle>
+			<windowstyleex>0</windowstyleex>
+			<expandedstate>0</expandedstate>
+			<defaulttab>0</defaulttab>
+			<tabposition>0</tabposition>
+			<showwindow>0</showwindow>
+		</window>
+	</windows>
+</rhpml>

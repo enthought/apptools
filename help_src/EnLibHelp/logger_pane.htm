@@ -1,0 +1,170 @@
+<!doctype HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<html>
+
+<!--(==============================================================)-->
+<!--(Document created with RoboEditor. )============================-->
+<!--(==============================================================)-->
+
+<head>
+
+<title>Logger View</title>
+
+<!--(Meta)==========================================================-->
+
+<meta http-equiv=content-type content="text/html; charset=windows-1252">
+<meta name="build tags" content="Converge,ProAVA2,CoPEG">
+<meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
+<meta name=generator-major-version content=0.1>
+<meta name=generator-minor-version content=1>
+<meta name=filetype content=kadov>
+<meta name=filetype-version content=1>
+<meta name=page-count content=1>
+<meta name=layout-height content=795>
+<meta name=layout-width content=804>
+
+
+<!--(Links)=========================================================-->
+
+<link rel=StyleSheet href=EnHelp.css>
+
+
+
+</head>
+
+<!--(Body)==========================================================-->
+
+
+<body>
+
+<h1>Logger View</h1>
+
+<p>The Logger view displays messages from the application, including the 
+ type, date, and time of the message. If the application does not behave 
+ as expected, especially with respect to generating data, check this tab 
+ to see whether an internal error occurred.</p>
+
+<p>The following message types, in order of severity, may be used:</p>
+
+<ol style="list-style: decimal;"
+	type=1>
+	
+	<li class=kadov-p><p><img src="output_debug.png"
+								x-maintain-ratio=TRUE
+								style="border: none;
+										width: 18px;
+										height: 16px;
+										float: none;
+										border-style: none;
+										border-style: none;"
+								width=18
+								height=16
+								border=0>DEBUG: A message of interest to 
+ programmers.</p></li>
+	
+	<li class=kadov-p><p><img src="output_info.png"
+								x-maintain-ratio=TRUE
+								style="border: none;
+										width: 18px;
+										height: 16px;
+										float: none;
+										border-style: none;
+										border-style: none;"
+								width=18
+								height=16
+								border=0>INFO: High-level program status 
+ or progress information.</p></li>
+	
+	<li class=kadov-p><p><img src="output_warning.png"
+								x-maintain-ratio=TRUE
+								style="border: none;
+										width: 18px;
+										height: 16px;
+										float: none;
+										border-style: none;
+										border-style: none;"
+								width=18
+								height=16
+								border=0>WARNING: A message about problem 
+ involving data. This message type does not indicate a problem with the 
+ program's operation. </p></li>
+	
+	<li class=kadov-p><p><img src="output_error.png"
+								x-maintain-ratio=TRUE
+								style="border: none;
+										width: 16px;
+										height: 16px;
+										float: none;
+										border-style: none;
+										border-style: none;"
+								width=16
+								height=16
+								border=0>ERROR: Information about an internal 
+ error. <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->This 
+ message type usually indicates a bug in the program or a major configuration 
+ problem.</p></li>
+	
+	<li class=kadov-p><p><img src="output_critical.png"
+								x-maintain-ratio=TRUE
+								style="border: none;
+										width: 17px;
+										height: 17px;
+										float: none;
+										border-style: none;
+										border-style: none;"
+								width=17
+								height=17
+								border=0>CRITICAL: Information about an 
+ error so severe that it impairs the program's ability to continue, and 
+ may cause the program to exit (for example, running out of memory). </p></li>
+</ol>
+
+<p>If you double-click an entry in the Logger view, a window appears, displaying 
+ the full text of the message. <span style="x-condition: CoPEG;">If you 
+ have enabled it in <a HREF="logger_preferences.htm">Logger Preferences</a>, 
+ the window is a </span><a HREF="quality_agent_dialog_box.htm"
+							style="x-condition: CoPEG;"><span class=UIElem>Quality 
+ Agent</span></a><span style="x-condition: CoPEG;"> dialog box; otherwise, 
+ it is a </span><span class=UIElem
+						style="x-condition: CoPEG;">Log Message Detail</span><span 
+ style="x-condition: CoPEG;"> window.</span> This window is useful for 
+ viewing long messages, such as Python traceback error messages. You can 
+ also use the <span class=UIElem>Quality Agent</span> dialog box <!--kadov_tag{{<spaces>}}-->&nbsp;<!--kadov_tag{{</spaces>}}-->for 
+ reporting errors to Enthought. </p>
+
+<p>To clear all the entries in the Logger view,<span style="x-condition: Converge, ProAVA2;"> 
+ right-click anywhere in the list of messages.</span><span style="x-condition: CoPEG;"> 
+ click </span><span class=UIElem
+					style="x-condition: CoPEG;">Reset Logs</span><span 
+ style="x-condition: CoPEG;">.</span></p>
+
+<p style="x-condition: Converge;"><span style="x-condition: Converge, ProAVA2;">Messages 
+ are also written to a file, </span><span class=Literal
+											style="x-condition: ProAVA2, Converge;">envisage.log</span><span 
+ style="x-condition: Converge, ProAVA2;">, in your home directory. (On 
+ MS Windows, your home directory is typically </span><span class=Literal
+															style="x-condition: ProAVA2, Converge;">C:\Documents 
+ and Settings\</span><span class=Literal
+							style="font-style: italic; x-condition: ProAVA2, Converge;">username</span><span 
+ style="x-condition: Converge, ProAVA2;">.) When this file grows to about 
+ 1000 KB, it &quot;overflows&quot; to a back-up file, </span><span class=Literal
+	style="x-condition: ProAVA2, Converge;">envisage.log.1</span><span 
+ style="x-condition: Converge, ProAVA2;">; up to 3 back-up files are maintained, 
+ for a total of up to 4 MB of log entries for the current session</span></p>
+
+<p style="x-condition: CoPEG;">Messages are also written to a log file, 
+ <span class=Literal>ets.log</span>, located under your user application 
+ data folder. On MS Windows, this folder is typically <span class=Literal>C:\Documents 
+ and Settings\</span><span class=Literal
+							style="font-style: italic;">username</span><span 
+ class=Literal>\ApplicationData</span>. On Unix, it is your home directory. 
+ The exact location of the log depends on the vendor and identifier for 
+ the application.</p>
+
+<p style="x-condition: CoPEG;">When the log file grows to about 1000 KB, 
+ it &quot;overflows&quot; to a back-up file, ets.log.1; up to 3 back-up 
+ files are maintained, for a total of up to 4 MB of log entries. </p>
+
+</body>
+
+</html>

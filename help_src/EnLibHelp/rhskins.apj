@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<rhpml majorversion="1" minorversion="0">
+	<skins>
+		<skin>
+			<filename>!SkinSubFolder!\Default\Default.skn</filename>
+		</skin>
+		<skin>
+			<filename>!SkinSubFolder!\FlashHelp_Default\FlashHelp_Default.fhs</filename>
+		</skin>
+	</skins>
+</rhpml>
