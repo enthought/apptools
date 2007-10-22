@@ -12,8 +12,8 @@ from enthought.help.help_plugin_definition import HelpProject
 sample_help_project = HelpProject(
     proj_id = "enthought.help.tests.SampleHelpProject",
     name = "Sample",
-    help_file = "../TestHelp/TestHelp.chm",
-    map_file = "../TestHelp/BSSCDefault.h",
+    help_file = "../TestHelp.chm",
+    map_file = "../BSSCDefault.h",
     custom_wnd = "Context",
 )
 

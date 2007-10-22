@@ -8,7 +8,7 @@ enlib_help = HelpProject(
     proj_id = "enlib",
     name = "Enthought Library",
     help_file = "EnLibHelp.chm",
-    map_file = "EnLibHelp/EnLibHelp.h",
+    map_file = "EnLibHelp.h",
     custom_wnd = "Context",
 )
 
