@@ -1,6 +1,3 @@
-* Remove the enthought.undo use of enthought.debug which is causing this project
-  to have a dependency on DevTools.
-
 * Refactor out the usage of enthought.util.numerix to remove the dependency
   this module has on enthought.util.
 
