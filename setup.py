@@ -42,6 +42,7 @@ setup(
         'nonets': [
             ],
         },
+    ext_modules = [],
     include_package_data = True,
     install_requires = [
         ENTHOUGHTBASE,
