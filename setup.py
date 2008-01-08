@@ -19,6 +19,7 @@ def etsdep(p, min, max=None, literal=False):
 # Declare our ETS project dependencies.
 ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.0b1')
 ENVISAGECORE = etsdep('EnvisageCore', '3.0.0b1')
+#MAYAVI -- not required due to the way state_pickler.py uses the import
 TRAITS = etsdep('Traits', '3.0.0b1')
 TRAITS_UI = etsdep('Traits[ui]', '3.0.0b1')
 TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')

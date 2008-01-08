@@ -1,1 +1,7 @@
+* Refactor out the usage of enthought.util.numerix to remove the dependency
+  this module has on enthought.util.
+
+* Refactor the state_pickler.py module to break the need to import
+  enthought.tvtk at all.
+
 
