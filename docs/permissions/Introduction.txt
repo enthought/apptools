@@ -1,0 +1,126 @@
+Permissions Framework - Introduction
+====================================
+
+The Permissions Framework is a component of the Enthought Tool Suite that
+provides developers with the facility to limit access to parts of an
+application unless the user is appropriately authorised.  In other words it
+enables and disables different parts of the GUI according to the identity of
+the user.
+
+The framework includes an API to allow it to be integrated with an
+organisation's existing security infrastructure, for example to look users up
+in a corporate LDAP directory.
+
+The framework is completely configurable.  Alternate implementations of all
+major components can be provided if necessary.  The default implementations
+provide a simple local filesystem user database and allows roles to be defined
+and assigned to users.
+
+The framework **does not** provide any facility for protecting access to data.
+It is not possible to implement such protection in Python and using the file
+security provided by a typical operating system.
+
+
+Framework Concepts
+------------------
+
+The following are the concepts supported by the framework.
+
+- Permission
+
+  A permission is the basic tool that a developer uses to specify that access
+  to a part of the application should be restricted.  If the current user has
+  the permission then access is granted.  A permission may be attached to a
+  PyFace action, to an item of a TraitsUI view, or to a GUI toolkit specific
+  widget.  When the user is denied access, the corresponding GUI control is
+  disabled or completely hidden.
+
+- User
+
+  Each application has a current user who is either *authorised* or
+  *unauthorised*.  In order to become authorised a user must identify
+  themselves and authenticate that identity.
+
+- Permissions Policy
+
+  The permissions policy is responsible for checking whether the current user
+  has a particular permission.  To do this it must maintain a persistent record
+  of what permissions have been granted to each user.
+  
+  The default permissions policy supplied with the framework uses roles to make
+  it easier for an administrator to manage the relationships between
+  permissions and users.  A role is defined as a named set of permissions, and
+  a user may have one or more roles assigned to them.
+
+  An API is provided that allows the permissions policy to persist its data in
+  appropriately secure locations (eg. an RDBMS).  The default implementation
+  pickles the data in a local file.
+
+  **FIXME:** The current API wrongly mixes the policy data with the user
+  manager's data which means that a user manager can't be used with other
+  permissions policies.
+
+- User Manager
+
+  The user manager is responsible for authorising the current user.  It also
+  provides information about the user population to the permissions policy to
+  allow an adminstrator to assign permissions to users.  It may also,
+  optionally, provide the ability to manage the user population (eg. add or
+  delete users).
+
+  The default user manager supplied with the framework implements a simple
+  user database (independent of any operating system user database) stored as
+  a pickled local file.
+
+  An API is provided to allow an organisation's existing user database (eg. a
+  remote LDAP directory) to be wrapped as a user manager.
+
+- Permissions Manager
+
+  The permissions manager is a singleton object used to get and set the current
+  permissions policy and user manager.
+
+**FIXME:** We need to say something about how alternative user managers (and
+permissions policies) would be delivered - as Envisage3 plugins seems to be the
+obvious choice, unless plain eggs would do.
+
+
+Framework APIs
+--------------
+
+The APIs provided by the permissions framework can be split into the following
+groups.
+
+- `Application API`_
+
+  This part of the API is used by application developers.
+
+- `User Manager API`_
+
+  This part of the API is used by developers integrating the permissions
+  framework with the organisation's existing security infrastructure.  It
+  would also be used to implement a user manager that stored its user database
+  in a more secure location (eg. on a remote server) than that provided by the
+  default implementation.
+
+- `Permissions Policy Data API`_
+
+  This part of the API is used by developers to store the policy's persistent
+  data in a more secure location (eg. on a remote server) than that provided by
+  the default implementation.
+
+- `Permissions Policy API`_
+
+  This is the interface that an alternative permissions policy must implement.
+  The need to implement an alternative is expected to be very rare and so the
+  API isn't covered further.  See the definition of the IPermissionsPolicy
+  interface for the details.
+
+The complete API_ documentation is available as endo generated HTML.
+
+
+.. _API: api/index.html
+.. _`Application API`: ApplicationAPI.html
+.. _`User Manager API`: UserManagerAPI.html
+.. _`Permissions Policy Data API`: PermissionsPolicyDataAPI.html
+.. _`Permissions Policy API`: https://svn.enthought.com/enthought/browser/trunk/enthought.permissions_1.0/enthought/permissions/i_permissions_policy.py
