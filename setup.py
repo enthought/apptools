@@ -17,6 +17,7 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies.
+DEVTOOLS = etsdep('DevTools', '3.0.0b1')
 ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.0b1')
 ENVISAGECORE = etsdep('EnvisageCore', '3.0.0b1')
 #MAYAVI -- not required due to the way state_pickler.py uses the import
@@ -53,6 +54,7 @@ setup(
     ext_modules = [],
     include_package_data = True,
     install_requires = [
+        DEVTOOLS,
         ENTHOUGHTBASE,
         TRAITS,
         TRAITS_UI,
