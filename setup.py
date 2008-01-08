@@ -17,10 +17,11 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies.
-ENVISAGE = etsdep('enthought.envisage', '2.0b1')
-LOGGER = etsdep('enthought.envisage', '2.0b1')
-PYFACE = etsdep('enthought.pyface', '2.0b1')
-TRAITS_UI = etsdep('enthought.traits[ui]', '2.0b1')
+ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.0b1')
+ENVISAGECORE = etsdep('EnvisageCore', '3.0.0b1')
+TRAITS = etsdep('Traits', '3.0.0b1')
+TRAITS_UI = etsdep('Traits[ui]', '3.0.0b1')
+TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')
 
 
 setup(
@@ -28,12 +29,11 @@ setup(
     author_email = 'info@enthought.com',
     dependency_links = [
         'http://code.enthought.com/enstaller/eggs/source',
-        'http://code.enthought.com/enstaller/eggs/source/unstable',
         ],
-    description = 'Help framework for envisage applications',
+    description = 'Application tools',
     extras_require = {
         "plugin": [
-            ENVISAGE,
+            ENVISAGECORE,
             ],
 
         # All non-ets dependencies should be in this extra to ensure users can
@@ -43,12 +43,13 @@ setup(
         },
     include_package_data = True,
     install_requires = [
-        LOGGER,
-        PYFACE,
+        ENTHOUGHTBASE,
+        TRAITS,
         TRAITS_UI,
+        TRAITSGUI,
         ],
     license = 'BSD',
-    name = 'enthought.help',
+    name = 'AppTools',
     namespace_packages = [
         "enthought",
         ],
@@ -58,7 +59,7 @@ setup(
         ],
     test_suite = 'nose.collector',
     url = 'http://code.enthought.com/ets',
-    version = '3.0.0a1',
+    version = '3.0.0b1',
     zip_safe = False,
     )
 
