@@ -1,4 +1,4 @@
-[plugin]
+[envisage]
 enthought.help.api = *    # because it imports from help_action!
 enthought.help.enlib_help_project_plugin = *
 enthought.help.enlib_help_project_plugin_definition = *

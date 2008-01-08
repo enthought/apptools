@@ -35,7 +35,7 @@ setup(
         ],
     description = 'Application tools',
     extras_require = {
-        "plugin": [
+        "envisage": [
             ENVISAGECORE,
             ],
         'qt': [
