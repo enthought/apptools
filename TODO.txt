@@ -1,10 +1,11 @@
-* Refactor out the usage of enthought.util.numerix to remove the dependency
-  this module has on enthought.util.
+* Take a critical look at whether enthought.template should be in this project.
+  It appears to be adding a lot of dependencies the other packages do not need.
+  For now, its use is controlled through an extra.
 
 * Refactor the state_pickler.py module to break the need to import
   enthought.tvtk at all.
 
-* Check to see if this whole package is redundant with the
+* Check to see if the enthought.resource package is redundant with the
   enthought.envisage.resource code.  If so, let's minimize to one location.
 
 

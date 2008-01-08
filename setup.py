@@ -17,14 +17,18 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies.
+BLOCKCANVAS = etsdep('BlockCanvas', '3.0.0b1')
+CHACO = etsdep('Chaco', '3.0.0b1')
+DEVTOOLS = etsdep('DevTools', '3.0.0b1')
+ENABLE = etsdep('Enable', '3.0.0b1')
 ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.0b1')
-ENVISAGECORE = etsdep('EnvisageCore', '3.0.0b1')
+ENVISAGECORE = etsdep('EnvisageCore', '3.0.0b1')  # -- mostly in enthought.help
+ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.0.0b1')  # -- mostly in enthought.help
 #MAYAVI -- not required due to the way state_pickler.py uses the import
 TRAITS = etsdep('Traits', '3.0.0b1')
-TRAITSBACKENDQT = etsdep('TraitsBackendQt', '3.0.0b1')
 TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.0b1')
 TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')
-TRAITS_UI = etsdep('Traits[ui]', '3.0.0b1')
+TRAITSGUI_DOCK = etsdep('TraitsGUI[dock]', '3.0.0b1')
 
 
 setup(
@@ -37,17 +41,23 @@ setup(
     extras_require = {
         "envisage": [
             ENVISAGECORE,
+            ENVISAGEPLUGINS,
             ],
-        'qt': [
-            TRAITSBACKENDQT,
-            ],
-        'wx': [
+        'template': [
+            BLOCKCANVAS,
+            CHACO,
+            DEVTOOLS,
+            ENABLE,
             TRAITSBACKENDWX,
+            TRAITSGUI_DOCK,
             ],
 
         # All non-ets dependencies should be in this extra to ensure users can
         # decide whether to require them or not.
         'nonets': [
+            'configobj',
+            'numpy',
+            #'PyQt4' -- not everyone uses Qt.
             ],
         },
     ext_modules = [],
@@ -55,7 +65,6 @@ setup(
     install_requires = [
         ENTHOUGHTBASE,
         TRAITS,
-        TRAITS_UI,
         TRAITSGUI,
         ],
     license = 'BSD',
