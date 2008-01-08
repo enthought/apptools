@@ -4,4 +4,9 @@
 * Refactor the state_pickler.py module to break the need to import
   enthought.tvtk at all.
 
+* Check to see if this whole package is redundant with the
+  enthought.envisage.resource code.  If so, let's minimize to one location.
+
+
+
 
