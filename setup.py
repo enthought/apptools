@@ -19,16 +19,16 @@ def etsdep(p, min, max=None, literal=False):
 # Declare our ETS project dependencies.
 BLOCKCANVAS = etsdep('BlockCanvas', '3.0.0b1') # -- only used by enthought.template
 CHACO = etsdep('Chaco', '3.0.0b1')  # -- only used by enthought.template
-DEVTOOLS = etsdep('DevTools', '3.0.0b1')  # -- only used by enthought.template
+DEVTOOLS_DEVELOPER = etsdep('DevTools[developer]', '3.0.0b1')  # -- only used by enthought.template
 ENABLE = etsdep('Enable', '3.0.0b1')  # -- only used by enthought.template
 ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.0b1')
-ENVISAGECORE = etsdep('EnvisageCore', '3.0.0b1')  # -- mostly in enthought.help, but one in enthought.naming
+ENVISAGECORE = etsdep('EnvisageCore', '3.0.0b1')  # -- mostly in enthought.help, enthought.naming use is in a try..except
 ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.0.0b1')  # -- only used by enthought.help
 #MAYAVI -- not required due to the way state_pickler.py uses the import
-TRAITS = etsdep('Traits', '3.0.0b1')
 TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.0b1')  # -- directly used only by enthought.template
 TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')
 TRAITSGUI_DOCK = etsdep('TraitsGUI[dock]', '3.0.0b1')  # -- only used by enthought.template
+TRAITS_UI = etsdep('Traits[ui]', '3.0.0b1')
 
 
 setup(
@@ -39,14 +39,14 @@ setup(
         ],
     description = 'Application tools',
     extras_require = {
-        "envisage": [
+        "help": [
             ENVISAGECORE,
             ENVISAGEPLUGINS,
             ],
         'template': [
             BLOCKCANVAS,
             CHACO,
-            DEVTOOLS,
+            DEVTOOLS_DEVELOPER,
             ENABLE,
             TRAITSBACKENDWX,
             TRAITSGUI_DOCK,
@@ -57,15 +57,16 @@ setup(
         'nonets': [
             'configobj',
             'numpy',
-            #'PyQt4' -- not everyone uses Qt.
+            #'PyQt4', -- not everyone uses Qt.
+            #'wxPython', -- not everyone uses WX.
             ],
         },
     ext_modules = [],
     include_package_data = True,
     install_requires = [
         ENTHOUGHTBASE,
-        TRAITS,
         TRAITSGUI,
+        TRAITS_UI,
         ],
     license = 'BSD',
     name = 'AppTools',

@@ -1,14 +1,5 @@
-[envisage]
-enthought.help.api = *    # because it imports from help_action!
-enthought.help.enlib_help_project_plugin = *
-enthought.help.enlib_help_project_plugin_definition = *
-enthought.help.help_action = *
-enthought.help.help_plugin = *
-enthought.help.help_plugin_definition = *
-enthought.help.tests.sample_help_action = *
-enthought.help.tests.sample_help_project_plugin = *
-enthought.help.tests.sample_help_project_plugin_definition = *
-enthought.help.tests.sample_help_project_plugin_definition = *
+[help]
+enthought.help = *
 
 
 [template]

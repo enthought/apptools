@@ -7,7 +7,7 @@
 
 * Check to see if the enthought.resource package is redundant with the
   enthought.envisage.resource code.  If so, let's minimize to one location.
-
-
-
+  Note that, at least as of Jan 2008, we are considering moving
+  enthought.resource into the TraitsGUI project to resolve issues with
+  dependencies there.
 
