@@ -8,31 +8,6 @@
 </object>
 <ul>
   <li><object type="text/sitemap">
-    <param name="Name" value="Application Info">
-  </object>
-  <ul>
-    <li><object type="text/sitemap">
-      <param name="Name" value="Additions Preferences">
-      <param name="Local" value="additions_preferences.htm">
-    </object>
-    <li><object type="text/sitemap">
-      <param name="Name" value="Logger View">
-      <param name="Local" value="logger_pane.htm">
-    </object>
-    <li><object type="text/sitemap">
-      <param name="Name" value="Logger Preferences">
-      <param name="Local" value="logger_preferences.htm">
-    </object>
-    <li><object type="text/sitemap">
-      <param name="Name" value="Quality Agent Dialog Box">
-      <param name="Local" value="quality_agent_dialog_box.htm">
-    </object>
-    <li><object type="text/sitemap">
-      <param name="Name" value="Workbench Preferences">
-      <param name="Local" value="workbench_preferences.htm">
-    </object>
-    </ul>
-  <li><object type="text/sitemap">
     <param name="Name" value="Connections">
   </object>
   <ul>
@@ -52,40 +27,6 @@
     <li><object type="text/sitemap">
       <param name="Name" value="Create a New Log Dialog Box">
       <param name="Local" value="create_a_new_log_dialog_box.htm">
-    </object>
-    </ul>
-  <li><object type="text/sitemap">
-    <param name="Name" value="Repositories">
-  </object>
-  <ul>
-    <li><object type="text/sitemap">
-      <param name="Name" value="Import Item Dialog Box">
-      <param name="Local" value="import_item_dialog_box.htm">
-    </object>
-    <li><object type="text/sitemap">
-      <param name="Name" value="Repository Browser Pane">
-      <param name="Local" value="repository_pane.htm">
-    </object>
-    </ul>
-  <li><object type="text/sitemap">
-    <param name="Name" value="Scripting">
-  </object>
-  <ul>
-    <li><object type="text/sitemap">
-      <param name="Name" value="Python View">
-      <param name="Local" value="python_pane.htm">
-    </object>
-    <li><object type="text/sitemap">
-      <param name="Name" value="Script Window">
-      <param name="Local" value="script_window.htm">
-    </object>
-    <li><object type="text/sitemap">
-      <param name="Name" value="Component Library Browser Dialog Box">
-      <param name="Local" value="function_browser_dialog_box.htm">
-    </object>
-    <li><object type="text/sitemap">
-      <param name="Name" value="Script Editing Window">
-      <param name="Local" value="Script_Editing_Window.htm">
     </object>
     </ul>
   <li><object type="text/sitemap">
@@ -132,6 +73,27 @@
     <li><object type="text/sitemap">
       <param name="Name" value="Workflow Properties Dialog Box">
       <param name="Local" value="workflow_properties_dialog_box.htm">
+    </object>
+    </ul>
+  <li><object type="text/sitemap">
+    <param name="Name" value="Templates">
+  </object>
+  <ul>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Templates">
+      <param name="Local" value="Templates.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Repositories">
+      <param name="Local" value="repositories.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Import Item Dialog Box">
+      <param name="Local" value="import_item_dialog_box.htm">
+    </object>
+    <li><object type="text/sitemap">
+      <param name="Name" value="Repository Browser Pane">
+      <param name="Local" value="repository_pane.htm">
     </object>
     </ul>
 </ul>

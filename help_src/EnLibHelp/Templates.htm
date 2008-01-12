@@ -13,15 +13,15 @@
 <!--(Meta)==========================================================-->
 
 <meta http-equiv=content-type content="text/html; charset=windows-1252">
-<meta name="build tags" content="ProAVA2,VMS">
+<meta name="build tags" content="ProAVA2,VMS,CoPEG">
 <meta name=generator content="RoboHELP by eHelp Corporation - www.ehelp.com">
 <meta name=generator-major-version content=0.1>
 <meta name=generator-minor-version content=1>
 <meta name=filetype content=kadov>
 <meta name=filetype-version content=1>
 <meta name=page-count content=1>
-<meta name=layout-height content=2499>
-<meta name=layout-width content=804>
+<meta name=layout-height content=2621>
+<meta name=layout-width content=807>
 
 
 <!--(Links)=========================================================-->
@@ -47,9 +47,9 @@
  the initial data for the new object, but once the new object is created, 
  changes to the object and changes to the template do not affect one another.</p>
 
-<p><span>Templates in ProAVA2 are predefined formats for plots. You can 
- save a plot template and apply it to other sets of data than the one it 
- was created with.</span></p>
+<p style="x-condition: ProAVA2, CoPEG;">Templates are predefined formats 
+ for plots. You can save a plot template and apply it to other sets of 
+ data than the one it was created with.</p>
 
 <p style="x-condition: VMS;">You can use templates in VMS for:</p>
 
@@ -75,33 +75,42 @@
 
 <h2><a name=ImportPlot>Importing Templates</a></h2>
 
-<p style="x-condition: ProAVA2;">Applying a template to a plot is called 
- &quot;importing the template.</p>
+<p style="x-condition: ProAVA2, CoPEG;">Applying a template to a plot is 
+ called &quot;importing&quot; the template.</p>
 
 <ol style="list-style: decimal;"
 	type=1>
 	
-	<li style="/*begin!kadov{{*/ x-condition: ProAVA2; /*}}end!kadov*/ "
-		class=kadov-p><p style="x-condition: ProAVA2;">In a log plot, Column 
- Log View, Synthetic Trace View, or Simulation View window, on the <span 
- class=UIElem>Plot</span> menu, click <span class=UIElem>Restore Template</span>. 
- The <span class=UIElem>Import Item</span> dialog box appears.</p></li>
+	<li style="x-condition: CoPEG; /*begin!kadov{{*/ x-condition: ProAVA2, CoPEG; /*}}end!kadov*/ "
+		class=kadov-p><p style="x-condition: ProAVA2, CoPEG;">In a log 
+ plot<span style="x-condition: ProAVA2;">, Column Log View, Synthetic Trace 
+ View, or Simulation View window,</span><span style="x-condition: CoPEG;"> 
+ or 1-D Pressure View window, </span>on the <span class=UIElem
+													style="x-condition: CoPEG, ProAVA2;">Plot</span> 
+ menu, click <span class=UIElem
+					style="x-condition: CoPEG, ProAVA2;">Restore Template</span>. 
+ The <span class=UIElem
+			style="x-condition: CoPEG, ProAVA2;">Import Item</span> dialog 
+ box appears.</p></li>
 	
-	<li style="/*begin!kadov{{*/ x-condition: ProAVA2; /*}}end!kadov*/ "
-		class=kadov-p><p style="x-condition: ProAVA2;">If necessary, expand 
- the folders for the repository location for the template you want to use.</p></li>
+	<li style="x-condition: CoPEG; /*begin!kadov{{*/ x-condition: ProAVA2, CoPEG; /*}}end!kadov*/ "
+		class=kadov-p><p style="x-condition: ProAVA2, CoPEG;">If necessary, 
+ expand the folders for the repository location for the template you want 
+ to use.</p></li>
 	
-	<li style="/*begin!kadov{{*/ x-condition: ProAVA2; /*}}end!kadov*/ "
-		class=kadov-p><p style="x-condition: ProAVA2;">Select a template 
- in the repository pane. </p></li>
+	<li style="x-condition: CoPEG; /*begin!kadov{{*/ x-condition: ProAVA2, CoPEG; /*}}end!kadov*/ "
+		class=kadov-p><p style="x-condition: ProAVA2, CoPEG;">Select a 
+ template in the repository pane. </p></li>
 	
-	<li style="/*begin!kadov{{*/ x-condition: ProAVA2; /*}}end!kadov*/ "
-		class=kadov-p><p style="x-condition: ProAVA2;">Click <span class=UIElem>Import</span> 
- to apply the plot template to the current plot.</p></li>
+	<li style="x-condition: CoPEG; /*begin!kadov{{*/ x-condition: ProAVA2, CoPEG; /*}}end!kadov*/ "
+		class=kadov-p><p style="x-condition: ProAVA2, CoPEG;">Click <span 
+ class=UIElem
+	style="x-condition: CoPEG, ProAVA2;">Import</span> to apply the plot 
+ template to the current plot.</p></li>
 </ol>
 
-<p style="x-condition: VMS;"><span style="x-condition: VMS;">Creating an 
- object from a template is called &quot;importing&quot; the template.</span></p>
+<p style="x-condition: VMS;">Creating an object from a template is called 
+ &quot;importing&quot; the template.</p>
 
 <h3 style="x-condition: VMS;"><a name=ImportGeo
 								style="x-condition: VMS;">Importing a Geometry 
@@ -246,21 +255,25 @@
 <ol style="list-style: decimal;"
 	type=1>
 	
-	<li style="x-condition: ProAVA2;"
-		class=kadov-p><p>In a log plot, Column Log View, Synthetic Trace 
- View, or Simulation View window, on the <span class=UIElem>Plot</span> 
+	<li style="x-condition: ProAVA2, CoPEG; /*begin!kadov{{*/ x-condition: CoPEG, ProAVA2; /*}}end!kadov*/ "
+		class=kadov-p><p style="x-condition: CoPEG, ProAVA2;">In a log 
+ plot<span style="x-condition: ProAVA2;">, Column Log View, Synthetic Trace 
+ View, or Simulation View window,</span><span style="x-condition: CoPEG;"> 
+ or 1-D Pressure View window, </span>on the <span class=UIElem>Plot</span> 
  menu, click <span class=UIElem>Save Template</span>. An <span class=UIElem>Export 
  Item</span> dialog box appears.</p></li>
 	
-	<li style="x-condition: ProAVA2;"
-		class=kadov-p><p>Select a folder in which to save the template.</p></li>
+	<li style="x-condition: ProAVA2, CoPEG; /*begin!kadov{{*/ x-condition: CoPEG, ProAVA2; /*}}end!kadov*/ "
+		class=kadov-p><p style="x-condition: CoPEG, ProAVA2;">Select a 
+ folder in which to save the template.</p></li>
 	
-	<li style="x-condition: ProAVA2;"
-		class=kadov-p><p>Type a <span class=UIElem>File name</span> for 
- the template.</p></li>
+	<li style="x-condition: ProAVA2, CoPEG; /*begin!kadov{{*/ x-condition: CoPEG, ProAVA2; /*}}end!kadov*/ "
+		class=kadov-p><p style="x-condition: CoPEG, ProAVA2;">Type a <span 
+ class=UIElem>File name</span> for the template.</p></li>
 	
-	<li style="x-condition: ProAVA2;"
-		class=kadov-p><p>Click <span class=UIElem>Export</span>.</p></li>
+	<li style="x-condition: ProAVA2, CoPEG; /*begin!kadov{{*/ x-condition: CoPEG, ProAVA2; /*}}end!kadov*/ "
+		class=kadov-p><p style="x-condition: CoPEG, ProAVA2;">Click <span 
+ class=UIElem>Export</span>.</p></li>
 </ol>
 
 <h3 style="x-condition: VMS;"><a name=ExportGeo
@@ -410,6 +423,23 @@
 	<li style="x-condition: VMS;"
 		class=kadov-p><p>Click <span class=UIElem>Export</span>.</p></li>
 </ol>
+
+<h2 style="x-condition: CoPEG;">Resetting a Template</h2>
+
+<p style="x-condition: CoPEG;">You can reset a plot window to the original 
+ software settings by resetting its template.</p>
+
+<ul style="list-style: disc;"
+	type=disc>
+	
+	<li style="x-condition: CoPEG;"
+		class=kadov-p><p>In a log plot or 1-D Pressure View window, on 
+ the <span class=UIElem>Plot</span> menu, click <span class=UIElem>Reset 
+ Template</span>.</p></li>
+	
+	<p style="x-condition: CoPEG;">The window is reset to the default display 
+ settings for that type of window.</p>
+</ul>
 
 </body>
 

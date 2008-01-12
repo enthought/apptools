@@ -9,7 +9,7 @@
 /// Section Begin - General and relative topics(JavaScript 1.0)
 
 //{{HH_SYMBOL_SECTION
-var HH_ChmFilename = "C:\\svn\\enthought\\src\\lib\\enthought\\help\\EnLibHelp\\EnLibHelp.chm";
+var HH_ChmFilename = "C:\\webhelp\\cp_help_src\\projects\\enlib_help\\EnLibHelp.chm";
 var HH_WindowName = "Context||Main";
 var HH_GlossaryFont = "";
 var HH_Glossary = "1,1";
