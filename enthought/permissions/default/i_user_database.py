@@ -30,6 +30,14 @@ class IUserDatabase(Interface):
     # Set if the implementation supports deleting users.
     can_delete_user = Bool(False)
 
+    def authenticate_user(self, user):
+        """Authenticate the given user and return True if successful.  user
+        implements IUser."""
+
+    def unauthenticate_user(self, user):
+        """Unauthenticate the given user and return True if successful.  user
+        implements IUser."""
+
     def add_user(self):
         """Add a user account to the database.  This only needs to be
         reimplemented if 'can_add_user' is True."""

@@ -55,16 +55,17 @@ class UserManager(HasTraits):
         if user is None:
             user = self.user
 
-        # FIXME: For the moment do it unconditionally.
-        user.authenticated = True
+        if self.user_db.authenticate_user(user):
+            user.authenticated = True
 
-        self.user = user
-        self.user_authenticated = user
+            self.user = user
+            self.user_authenticated = user
 
     def unauthenticate_user(self):
 
-        self.user.authenticated = False
-        self.user_authenticated = None
+        if self.user.authenticated and self.user_db.unauthenticate_user(self.user):
+            self.user.authenticated = False
+            self.user_authenticated = None
 
     ###########################################################################
     # Trait handlers.

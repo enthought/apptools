@@ -67,6 +67,17 @@ class UserDatabase(HasTraits):
     # 'IUserDatabase' interface.
     ###########################################################################
 
+    def authenticate_user(self, user):
+        """TODO"""
+
+        # Always authenticate for the moment.
+        return True
+
+    def unauthenticate_user(self, user):
+
+        # There is nothing to do to authenticate so it is always successful.
+        return True
+
     def add_user(self):
         """TODO"""
 
