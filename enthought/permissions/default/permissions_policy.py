@@ -26,7 +26,7 @@ from enthought.permissions.secure_proxy import SecureProxy
 from i_management_view import IManagementView
 
 
-class DefaultPermissionsPolicy(HasTraits):
+class PermissionsPolicy(HasTraits):
     """The default permissions policy implementation.  This policy enforces the
     use of roles.  Permissions are associated with roles rather than directly
     with users.  Users are then associated with one or more roles."""
@@ -41,7 +41,7 @@ class DefaultPermissionsPolicy(HasTraits):
 
     user_manager = Instance(IUserManager)
 
-    #### 'DefaultPermissionsPolicy' interface #################################
+    #### 'PermissionsPolicy' interface ########################################
 
     management_view = Instance(IManagementView)
 
@@ -83,14 +83,14 @@ class DefaultPermissionsPolicy(HasTraits):
         return [act]
 
     def _user_manager_default(self):
-        from user_manager import DefaultUserManager
+        from user_manager import UserManager
 
-        return DefaultUserManager()
+        return UserManager()
 
     def _management_view_default(self):
-        from management_view import DefaultManagementView
+        from management_view import ManagementView
 
-        return DefaultManagementView()
+        return ManagementView()
 
     ###########################################################################
     # Private interface.

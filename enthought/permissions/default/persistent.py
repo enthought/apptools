@@ -27,18 +27,18 @@ class Persistent(HasTraits):
     insecure) shared data storage.
     """
 
-    def __init__(self, filename, envname, **traits):
-        """Initialise the object.  filename is the name of the file in the
-        ETSConfig.application_home to persist the data to.  envname is the name
-        of an environment variable that, if set, is used as the full path to
-        the persisted data."""
+    def __init__(self, file_name, env_var_name, **traits):
+        """Initialise the object.  file_name is the name of the file in the
+        ETSConfig.application_home directory to persist the data to.
+        env_var_name is the name of an environment variable that, if set, is
+        used as the full path to the persisted data, overriding file_name."""
 
         super(Persistent, self).__init__(**traits)
 
         # Get the name of the file to use.
-        fname = os.environ.get(envname, None)
+        fname = os.environ.get(env_var_name, None)
 
         if fname is None:
-            fname = os.path.join(ETSConfig.application_home, filename)
+            fname = os.path.join(ETSConfig.application_home, file_name)
 
         self._fname = fname

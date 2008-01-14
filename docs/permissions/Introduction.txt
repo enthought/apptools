@@ -56,10 +56,6 @@ The following are the concepts supported by the framework.
   appropriately secure locations (eg. an RDBMS).  The default implementation
   pickles the data in a local file.
 
-  **FIXME:** The current API wrongly mixes the policy data with the user
-  manager's data which means that a user manager can't be used with other
-  permissions policies.
-
 - User Manager
 
   The user manager is responsible for authorising the current user.  It also

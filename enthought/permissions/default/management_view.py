@@ -20,7 +20,7 @@ from enthought.traits.api import HasTraits, implements
 from i_management_view import IManagementView
 
 
-class DefaultManagementView(HasTraits):
+class ManagementView(HasTraits):
     """The default management view implementation."""
 
     implements(IManagementView)

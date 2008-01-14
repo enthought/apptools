@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -14,25 +14,18 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import HasTraits, Instance
-
-# Local imports.
-from i_permissions_policy import IPermissionsPolicy
+from enthought.traits.api import Interface, Unicode
 
 
-class PermissionsManager(HasTraits):
-    """A singleton class that provides access to the current permissions
-    policy."""
+class IUserAccount(Interface):
+    """The interface to be implemented by a single user account for the default
+    user manager."""
 
-    # The current permissions policy.
-    policy = Instance(IPermissionsPolicy)
+    # The name the user uses to identify themselves.
+    name = Unicode
 
-    def _policy_default(self):
-        """Provide a default permissions policy."""
+    # A description of the user (typically their full name).
+    description = Unicode
 
-        from default.permissions_policy import PermissionsPolicy
-
-        return PermissionsPolicy()
-
-
-PermissionsManager = PermissionsManager()
+    # The user's password.
+    password = Unicode
