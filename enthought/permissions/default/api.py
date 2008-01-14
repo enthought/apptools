@@ -13,9 +13,7 @@
 #------------------------------------------------------------------------------
 
 from i_management_view import IManagementView
-from i_user_account import IUserAccount
 from i_user_database import IUserDatabase
 from management_view import ManagementView
 from permissions_policy import PermissionsPolicy
-from user import DefaultUser
 from user_manager import UserManager

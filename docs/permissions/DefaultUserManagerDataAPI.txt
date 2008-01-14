@@ -1,0 +1,9 @@
+Default User Manager Data API
+=============================
+
+This section provides an overview of the part of the ETS Permissions Framework
+API used by developers who want to store a user database in a more secure
+location (eg. a remote server) than that provided by the default
+implementation.
+
+**FIXME:** TODO

@@ -20,3 +20,4 @@ from i_user_manager import IUserManager
 from permission import Permission
 from permissions_manager import PermissionsManager
 from secure_proxy import SecureHandler, SecureProxy
+from user import User

@@ -260,7 +260,7 @@ The `PyFace action adapter`_ is an example of a wrapping adapter.
 The `PyQt widget adapter`_ is an example of a patching adapter.
 
 
-.. _`Permissions Framework example`: https://svn.enthought.com/enthought/browser/trunk/enthought.permissions_1.0/examples/
-.. _`adapter_base.py`: https://svn.enthought.com/enthought/browser/trunk/enthought.permissions_1.0/enthought/permissions/adapter_base.py
-.. _`PyFace action adapter`: https://svn.enthought.com/enthought/browser/trunk/enthought.permissions_1.0/enthought/permissions/adapters/pyface_action.py
-.. _`PyQt widget adapter`: https://svn.enthought.com/enthought/browser/trunk/enthought.permissions_1.0/enthought/permissions/adapters/qt4_widget.py
+.. _`Permissions Framework example`: https://svn.enthought.com/enthought/browser/AppTools/trunk/examples/permissions/
+.. _`adapter_base.py`: https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/adapter_base.py
+.. _`PyFace action adapter`: https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/adapters/pyface_action.py
+.. _`PyQt widget adapter`: https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/adapters/qt4_widget.py

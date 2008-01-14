@@ -14,18 +14,21 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Interface, Unicode
+from enthought.traits.api import Bool, HasTraits, implements, Unicode
+
+# Local imports.
+from i_user import IUser
 
 
-class IUserAccount(Interface):
-    """The interface to be implemented by a single user account for the default
-    user manager."""
+class User(HasTraits):
+    """The default user implementation."""
 
-    # The name the user uses to identify themselves.
+    implements(IUser)
+
+    #### 'IUser' interface ####################################################
+
     name = Unicode
 
-    # A description of the user (typically their full name).
-    description = Unicode
+    authenticated = Bool(False)
 
-    # The user's password.
-    password = Unicode
+    description = Unicode

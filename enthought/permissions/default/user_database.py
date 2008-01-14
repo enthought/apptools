@@ -14,15 +14,27 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Dict, HasTraits, implements, Instance
+from enthought.traits.api import Dict, HasTraits, implements, Instance, Unicode
 
 # Local imports.
 from i_user_database import IUserDatabase
 from persistent import Persistent
-from user_account import UserAccount
 
 
-class _Db(Persistent):
+class _UserAccount(HasTraits):
+    """This represents a single account in the user database."""
+
+    # The name the user uses to identify themselves.
+    name = Unicode
+
+    # A description of the user (typically their full name).
+    description = Unicode
+
+    # The user's password.
+    password = Unicode
+
+
+class _UserDb(Persistent):
     """This is the persisted user database."""
 
     # The dictionary of user accounts.
@@ -49,7 +61,7 @@ class UserDatabase(HasTraits):
     #### Private interface ###################################################
 
     # The persisted database.
-    _db = Instance(_Db)
+    _db = Instance(_UserDb)
 
     ###########################################################################
     # 'IUserDatabase' interface.
@@ -83,4 +95,4 @@ class UserDatabase(HasTraits):
     def __db_default(self):
         """Return the default persisted data."""
 
-        return _Db('ets_perms_userdb', 'ETS_PERMS_USERDB')
+        return _UserDb('ets_perms_userdb', 'ETS_PERMS_USERDB')

@@ -29,6 +29,8 @@ class Permission(HasTraits):
 
     implements(IPermission)
 
+    #### 'IPermission' interface ##############################################
+
     name = Str
 
     description = Unicode
@@ -37,6 +39,10 @@ class Permission(HasTraits):
 
     bootstrap = Bool(False)
 
+    ###########################################################################
+    # 'object' interface.
+    ###########################################################################
+
     def __init__(self, **traits):
         """Initialise the object."""
 
@@ -44,6 +50,10 @@ class Permission(HasTraits):
 
         # Tell the current permissions policy.
         PermissionsManager.policy.perms.append(self)
+
+    ###########################################################################
+    # Trait handlers.
+    ###########################################################################
 
     def _get_granted(self):
         """Check the user has this permission."""

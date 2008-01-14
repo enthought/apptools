@@ -1,5 +1,5 @@
-Permissions Policy Data API
-===========================
+Default Permissions Policy Data API
+===================================
 
 This section provides an overview of the part of the ETS Permissions Framework
 API used by developers who want to store a permissions policy's persistent data

@@ -13,9 +13,6 @@
 #------------------------------------------------------------------------------
 
 
-# Standard library imports.
-import os
-
 # Enthought library imports.
 from enthought.pyface.action.api import Action
 from enthought.traits.api import Bool, Event, HasTraits, implements, \
@@ -27,7 +24,6 @@ from enthought.permissions.i_user_manager import IUserManager
 from enthought.permissions.permission import Permission
 from enthought.permissions.secure_proxy import SecureProxy
 from i_user_database import IUserDatabase
-from user import DefaultUser
 
 
 class UserManager(HasTraits):
@@ -77,9 +73,9 @@ class UserManager(HasTraits):
     def _user_default(self):
         """Return the default current user."""
 
-        # Create a default user with a suggested name corresponding to their
-        # current name.
-        return DefaultUser(name=os.environ.get('USER', ''))
+        from enthought.permissions.user import User
+
+        return User()
 
     def _management_actions_default(self):
         """Return the list of management actions."""
