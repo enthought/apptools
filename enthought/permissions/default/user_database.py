@@ -14,15 +14,19 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Dict, HasTraits, implements, Instance, Unicode
+from enthought.pyface.api import error
+from enthought.traits.api import Dict, HasTraits, implements, Instance, \
+        Password, Unicode
+from enthought.traits.ui.api import Handler, Item, View
+from enthought.traits.ui.menu import OKCancelButtons
 
 # Local imports.
 from i_user_database import IUserDatabase
 from persistent import Persistent
 
 
-class _UserAccount(HasTraits):
-    """This represents a single account in the user database."""
+class UserAccount(HasTraits):
+    """This represents a single account in the persisted user database."""
 
     # The name the user uses to identify themselves.
     name = Unicode
@@ -34,11 +38,73 @@ class _UserAccount(HasTraits):
     password = Unicode
 
 
-class _UserDb(Persistent):
+class UserDb(Persistent):
     """This is the persisted user database."""
 
     # The dictionary of user accounts.
     users = Dict
+
+
+class _UserAccount(UserAccount):
+    """This represents a single account when edited."""
+
+    # The password
+    password = Password
+
+    # The password confirmation.
+    confirm_password = Password
+
+
+class _UserAccountHandler(Handler):
+    """The traits handler for the user account view that validates the data."""
+
+    MIN_PASSWORD_LEN = 6
+
+    def close(self, info, is_ok):
+        """Reimplemented to validate the data."""
+
+        # If the user cancelled then close the dialog.
+        if not is_ok:
+            return True
+
+        # Validate the form.
+        return self.validate(info.ui.context['object'])
+
+    def validate(self, uac):
+        """Actually do the validation of the given object and return True if
+        there were no problems."""
+
+        if not uac.name.strip():
+            self.error("A user name must be given.")
+            return False
+
+        if uac.password != uac.confirm_password:
+            self.error("The passwords do not match.")
+            return False
+
+        if not uac.password:
+            self.error("A password must be given.")
+            return False
+
+        if len(uac.password) < self.MIN_PASSWORD_LEN:
+            self.error("The password must be at least %d characters long." % self.MIN_PASSWORD_LEN)
+            return False
+
+        return True
+
+    def error(self, msg):
+        """Display an error message to the user."""
+
+        error(None, msg)
+
+
+def _UserAccountView(title):
+    """Create a view to handle a user account."""
+
+    return View(Item(name='name'), Item(name='description'),
+            Item(name='password'), Item(name='confirm_password'), title=title,
+            kind='modal', buttons=OKCancelButtons,
+            handler=_UserAccountHandler())
 
 
 class UserDatabase(HasTraits):
@@ -61,7 +127,7 @@ class UserDatabase(HasTraits):
     #### Private interface ###################################################
 
     # The persisted database.
-    _db = Instance(_UserDb)
+    _db = Instance(UserDb)
 
     ###########################################################################
     # 'IUserDatabase' interface.
@@ -75,15 +141,19 @@ class UserDatabase(HasTraits):
 
     def unauthenticate_user(self, user):
 
-        # There is nothing to do to authenticate so it is always successful.
+        # There is nothing to do to unauthenticate so it is always successful.
         return True
 
     def add_user(self):
-        """TODO"""
 
-        from enthought.pyface.api import information
+        uac = _UserAccount()
+        view = _UserAccountView("Add a user")
 
-        information(None, "This will eventually implement a TraitsUI based GUI for adding users.")
+        if uac.edit_traits(view=view).result:
+            puac = UserAccount(name=uac.name.strip(),
+                    description=uac.description, password=uac.password)
+
+            self._db.users[puac.name] = puac
 
     def modify_user(self):
         """TODO"""
@@ -106,4 +176,4 @@ class UserDatabase(HasTraits):
     def __db_default(self):
         """Return the default persisted data."""
 
-        return _UserDb('ets_perms_userdb', 'ETS_PERMS_USERDB')
+        return UserDb('ets_perms_userdb', 'ETS_PERMS_USERDB')
