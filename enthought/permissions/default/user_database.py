@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.pyface.api import error, information
+from enthought.pyface.api import confirm, error, information, YES
 from enthought.traits.api import Dict, HasTraits, implements, Instance, \
         Password, Unicode
 from enthought.traits.ui.api import Handler, Item, View
@@ -27,6 +27,8 @@ from persistent import Persistent, PersistentError
 
 class UserAccount(HasTraits):
     """This represents a single account in the persisted user database."""
+
+    #### 'UserAccount' interface ##############################################
 
     # The name the user uses to identify themselves.
     name = Unicode
@@ -41,6 +43,8 @@ class UserAccount(HasTraits):
 class UserDb(HasTraits):
     """This is the persisted user database."""
 
+    #### 'UserDb' interface ###################################################
+
     # The dictionary of user accounts.
     users = Dict
 
@@ -48,8 +52,12 @@ class UserDb(HasTraits):
 class _ViewUserAccount(UserAccount):
     """This represents a single account when in a view."""
 
+    #### 'UserAccount' interface ##############################################
+
     # The password
     password = Password
+
+    #### '_ViewUserAccount' interface #########################################
 
     # The password confirmation.
     confirm_password = Password
@@ -79,7 +87,7 @@ class _UserAccountHandler(Handler):
     # '_UserAccountHandler' interface.
     ###########################################################################
 
-    def validate(self, uac):
+    def validate(self, vuac):
         """This must be reimplemented to validate the given object and return
         True if there were no problems."""
 
@@ -140,25 +148,25 @@ class _AddUserAccountHandler(_UserAccountHandler):
     # '_UserAccountHandler' interface.
     ###########################################################################
 
-    def validate(self, uac):
+    def validate(self, vuac):
         """Validate the given object and return True if there were no problems.
         """
 
         MIN_PASSWORD_LEN = 6
 
-        if not uac.name.strip():
+        if not vuac.name.strip():
             self.error("A user name must be given.")
             return False
 
-        if uac.password != uac.confirm_password:
+        if vuac.password != vuac.confirm_password:
             self.error("The passwords do not match.")
             return False
 
-        if not uac.password:
+        if not vuac.password:
             self.error("A password must be given.")
             return False
 
-        if len(uac.password) < MIN_PASSWORD_LEN:
+        if len(vuac.password) < MIN_PASSWORD_LEN:
             self.error("The password must be at least %d characters long." % MIN_PASSWORD_LEN)
             return False
 
@@ -208,6 +216,24 @@ class _ModifyUserAccountHandler(_AddUserAccountHandler):
         vuac.password = vuac.confirm_password = uac.password
 
 
+class _DeleteUserAccountHandler(_ModifyUserAccountHandler):
+    """The traits handler for the delete user account view."""
+
+    ###########################################################################
+    # '_UserAccountHandler' interface.
+    ###########################################################################
+
+    def validate(self, vuac):
+        """Validate the given object and return True if there were no problems.
+        """
+
+        if not vuac.name.strip():
+            self.error("A user name must be given.")
+            return False
+
+        return True
+
+
 class _UserAccountView(View):
     """The base view for handling user accounts."""
 
@@ -234,8 +260,6 @@ class _AddUserAccountView(_UserAccountView):
 
     #### 'View' interface #####################################################
 
-    kind = 'modal'
-
     title = "Add a user"
 
     ###########################################################################
@@ -249,15 +273,6 @@ class _AddUserAccountView(_UserAccountView):
                 Item(name='description'), Item(name='password'),
                 Item(name='confirm_password'), **traits)
 
-    ###########################################################################
-    # Trait handlers.
-    ###########################################################################
-
-    def _handler_default(self):
-        """Return the view's handler."""
-
-        return _AddUserAccountHandler()
-
 
 class _ModifyUserAccountView(_AddUserAccountView):
     """A view to handle modifying a user account."""
@@ -266,14 +281,23 @@ class _ModifyUserAccountView(_AddUserAccountView):
 
     title = "Modify a user"
 
+
+class _DeleteUserAccountView(_UserAccountView):
+    """A view to handle deleting a user account."""
+
+    #### 'View' interface #####################################################
+
+    title = "Delete a user"
+
     ###########################################################################
-    # Trait handlers.
+    # 'object' interface.
     ###########################################################################
 
-    def _handler_default(self):
-        """Return the view's handler."""
+    def __init__(self, **traits):
+        """Initialise the object."""
 
-        return _ModifyUserAccountHandler()
+        super(_DeleteUserAccountView, self).__init__(Item(name='name'),
+                Item(name='description', style='readonly'), **traits)
 
 
 class UserDatabase(HasTraits):
@@ -303,23 +327,27 @@ class UserDatabase(HasTraits):
     ###########################################################################
 
     def authenticate_user(self, user):
-        """TODO"""
+        """Authenticate a user."""
 
+        # TODO
         # Always authenticate for the moment.
         return True
 
     def unauthenticate_user(self, user):
+        """Unauthenticate a user."""
 
         # There is nothing to do to unauthenticate so it is always successful.
         return True
 
     def add_user(self):
+        """Add a user."""
 
         # Get the data from the user.
         vuac = _ViewUserAccount(user_db=self)
         view = _AddUserAccountView()
+        handler = _AddUserAccountHandler()
 
-        if vuac.edit_traits(view=view).result:
+        if vuac.edit_traits(view=view, handler=handler).result:
             uac = UserAccount(name=vuac.name.strip(),
                     description=vuac.description, password=vuac.password)
 
@@ -341,12 +369,14 @@ class UserDatabase(HasTraits):
                 error(None, str(e))
 
     def modify_user(self):
+        """Modify a user."""
 
         # Get the data from the user.
         vuac = _ViewUserAccount(user_db=self)
         view = _ModifyUserAccountView()
+        handler = _ModifyUserAccountHandler()
 
-        if vuac.edit_traits(view=view).result:
+        if vuac.edit_traits(view=view, handler=handler).result:
             uac = UserAccount(name=vuac.name.strip(),
                     description=vuac.description, password=vuac.password)
 
@@ -368,9 +398,33 @@ class UserDatabase(HasTraits):
                 error(None, str(e))
 
     def delete_user(self):
-        """TODO"""
+        """Delete a user."""
 
-        information(None, "This will eventually implement a TraitsUI based GUI for deleting users.")
+        # Get the data from the user.
+        vuac = _ViewUserAccount(user_db=self)
+        view = _DeleteUserAccountView()
+        handler = _DeleteUserAccountHandler()
+
+        if vuac.edit_traits(view=view, handler=handler).result:
+            name = vuac.name.strip()
+
+            # Delete the data from the database.
+            try:
+                self._db.lock()
+
+                try:
+                    data = self._db.read()
+
+                    if not data.users.has_key(name):
+                        raise PersistentError("The user \"%s\" doesn't exist." % name)
+
+                    if confirm(None, "Are you sure you want to delete the user \"%s\"?" % name) == YES:
+                        del data.users[name]
+                        self._db.write(data)
+                finally:
+                    self._db.unlock()
+            except PersistentError, e:
+                error(None, str(e))
 
     ###########################################################################
     # 'UserDatabase' interface.
