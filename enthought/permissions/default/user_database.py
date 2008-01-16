@@ -13,6 +13,9 @@
 #------------------------------------------------------------------------------
 
 
+# Standard library imports.
+import os
+
 # Enthought library imports.
 from enthought.pyface.api import confirm, error, information, YES
 from enthought.traits.api import Dict, HasTraits, implements, Instance, \
@@ -300,6 +303,20 @@ class _DeleteUserAccountView(_UserAccountView):
                 Item(name='description', style='readonly'), **traits)
 
 
+class _LoginUser(HasTraits):
+    """This represents the login data and view."""
+
+    # The user name.
+    name = Unicode
+
+    # The user password.
+    password = Password
+
+    # The default view.
+    traits_view = View(Item(name='name'), Item(name='password'),
+            title="Login", kind='modal', buttons=OKCancelButtons)
+
+
 class UserDatabase(HasTraits):
     """This is the default implementation of a user database.  It is good
     enough to be used in a cooperative environment (ie. where real access
@@ -329,8 +346,41 @@ class UserDatabase(HasTraits):
     def authenticate_user(self, user):
         """Authenticate a user."""
 
-        # TODO
-        # Always authenticate for the moment.
+        # Get the login details.
+        name = user.name
+
+        if not name:
+            name = os.environ.get('USER', '')
+
+        lu = _LoginUser(name=name)
+
+        if not lu.edit_traits().result:
+            return False
+
+        # Get the users.
+        db = self.readonly_copy()
+
+        if db is None:
+            return False
+
+        # Get the user account and compare passwords.
+        try:
+            uac = db.users[lu.name]
+
+            if uac.password != lu.password:
+                uac = None
+        except KeyError:
+            uac = None
+
+        if uac is None:
+            # It's bad security to give too much information...
+            error(None, "The user name or password is invalid.")
+            return False
+
+        # Copy the relevant parts of the user account.
+        user.name = uac.name
+        user.description = uac.description
+
         return True
 
     def unauthenticate_user(self, user):
