@@ -138,17 +138,16 @@ class HelpPlugin(Plugin):
             ext_location = extension._definition_.location
             # print "\t Location: %s" % ext_location
             if extension.help_file != "":
-                help_file = basename(extension.help_file)
-                help_file = self._add_help_file_extension(help_file)
+                help_file = self._add_help_file_extension(extension.help_file)
                 #if using_chm == True:
                 #    # Copy to state location
                 #    dst_help_file = join(self.state_location, help_file)
                 #    copy(join(ext_location, extension.help_file), self.state_location)
                 #else: # Assume it's WebHelp; run from installed location.
-                dst_help_file = abspath(join(ext_location, extension.help_file))
+                dst_help_file = abspath(join(ext_location, help_file))
             else:
                 dst_help_file = None
-
+                
             dst_map_file = None
             if extension.map_file != "":
                 map_file = basename(extension.map_file)
