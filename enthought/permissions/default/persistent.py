@@ -14,31 +14,92 @@
 
 
 # Standard library imports.
+import cPickle as pickle
+import errno
 import os
 
 # Enthought library imports.
 from enthought.etsconfig.api import ETSConfig
-from enthought.traits.api import HasTraits
 
 
-class Persistent(HasTraits):
-    """This is a base class that persists a Traits class to a file.  It is used
-    by the default permissions policy and user manager to implement basic (ie.
-    insecure) shared data storage.
-    """
+class Persistent(object):
+    """This persists a Traits class to a file.  It is used by the default
+    permissions policy and user manager to implement basic (ie.  insecure)
+    shared data storage."""
 
-    def __init__(self, file_name, env_var_name, **traits):
-        """Initialise the object.  file_name is the name of the file in the
-        ETSConfig.application_home directory to persist the data to.
-        env_var_name is the name of an environment variable that, if set, is
-        used as the full path to the persisted data, overriding file_name."""
+    def __init__(self, factory, file_name, desc):
+        """Initialise the object.  factory is a callable that will create a
+        new instance if there is no existing data.  file_name is the name of
+        the file in the ETSConfig.application_home directory (or the directory
+        specified by the ETS_PERMS_DATA_DIR environment variable if set) to
+        persist the data to.  desc is a description of the data used in
+        exceptions."""
 
-        super(Persistent, self).__init__(**traits)
+        self._factory = factory
+        self._desc = desc
 
         # Get the name of the file to use.
-        fname = os.environ.get(env_var_name, None)
+        data_dir = os.environ.get('ETS_PERMS_DATA_DIR',
+                ETSConfig.application_home)
+        self._fname = os.path.join(data_dir, file_name)
+        self._lock = self._fname + '.lock'
 
-        if fname is None:
-            fname = os.path.join(ETSConfig.application_home, file_name)
+    def lock(self):
+        """Obtain a lock on the persisted data."""
 
-        self._fname = fname
+        try:
+            os.mkdir(self._lock)
+        except OSError, e:
+            if e.errno == errno.EEXIST:
+                msg = "The lock on %s is held by another application or user." % self._desc
+            else:
+                msg = "Unable to acquire lock on %s: %s." % (self._desc, e)
+
+            raise PersistentError(msg)
+
+    def unlock(self):
+        """Release the lock on the persisted data."""
+
+        try:
+            os.rmdir(self._lock)
+        except OSError, e:
+            raise PersistentError("Unable to release lock on %s: %s." % (self._desc, e))
+
+    def read(self):
+        """Read and return the persisted data."""
+
+        try:
+            f = open(self._fname, 'r')
+
+            try:
+                data = pickle.load(f)
+            except:
+                raise PersistentError("Unable to read %s." % self._desc)
+            finally:
+                f.close()
+        except IOError, e:
+            if e.errno == errno.ENOENT:
+                data = self._factory()
+            else:
+                raise PersistentError("Unable to open %s: %s." % (self._desc, e))
+
+        return data
+
+    def write(self, data):
+        """Write the persisted data."""
+
+        try:
+            f = open(self._fname, 'w')
+
+            try:
+                pickle.dump(data, f)
+            except:
+                raise PersistentError("Unable to write %s." % self._desc)
+            finally:
+                f.close()
+        except IOError, e:
+            raise PersistentError("Unable to create %s: %s." % (self._desc, e))
+
+
+class PersistentError(Exception):
+    """The class used for all persistence related exceptions."""

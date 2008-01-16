@@ -22,7 +22,7 @@ from enthought.traits.ui.menu import OKCancelButtons
 
 # Local imports.
 from i_user_database import IUserDatabase
-from persistent import Persistent
+from persistent import Persistent, PersistentError
 
 
 class UserAccount(HasTraits):
@@ -38,7 +38,7 @@ class UserAccount(HasTraits):
     password = Unicode
 
 
-class UserDb(Persistent):
+class UserDb(HasTraits):
     """This is the persisted user database."""
 
     # The dictionary of user accounts.
@@ -127,7 +127,7 @@ class UserDatabase(HasTraits):
     #### Private interface ###################################################
 
     # The persisted database.
-    _db = Instance(UserDb)
+    _db = Instance(Persistent)
 
     ###########################################################################
     # 'IUserDatabase' interface.
@@ -146,14 +146,30 @@ class UserDatabase(HasTraits):
 
     def add_user(self):
 
-        uac = _UserAccount()
+        # Get the data from the user.
+        vuac = _UserAccount()
         view = _UserAccountView("Add a user")
 
-        if uac.edit_traits(view=view).result:
-            puac = UserAccount(name=uac.name.strip(),
-                    description=uac.description, password=uac.password)
+        if vuac.edit_traits(view=view).result:
+            uac = UserAccount(name=vuac.name.strip(),
+                    description=vuac.description, password=vuac.password)
 
-            self._db.users[puac.name] = puac
+            # Add the data to the database.
+            try:
+                self._db.lock()
+
+                try:
+                    data = self._db.read()
+
+                    if data.users.has_key(uac.name):
+                        raise PersistentError("The user \"%s\" already exists." % uac.name)
+
+                    data.users[uac.name] = uac
+                    self._db.write(data)
+                finally:
+                    self._db.unlock()
+            except PersistentError, e:
+                error(None, str(e))
 
     def modify_user(self):
         """TODO"""
@@ -174,6 +190,6 @@ class UserDatabase(HasTraits):
     ###########################################################################
 
     def __db_default(self):
-        """Return the default persisted data."""
+        """Return the default persisted database."""
 
-        return UserDb('ets_perms_userdb', 'ETS_PERMS_USERDB')
+        return Persistent(UserDb, 'ets_perms_userdb', "the user database")
