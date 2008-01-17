@@ -28,10 +28,10 @@ from i_user_database import IUserDatabase
 from persistent import Persistent, PersistentError
 
 
-class UserAccount(HasTraits):
-    """This represents a single account in the persisted user database."""
+class _ViewUserAccount(HasTraits):
+    """This represents a single account when in a view."""
 
-    #### 'UserAccount' interface ##############################################
+    #### '_ViewUserAccount' interface #########################################
 
     # The name the user uses to identify themselves.
     name = Unicode
@@ -39,28 +39,8 @@ class UserAccount(HasTraits):
     # A description of the user (typically their full name).
     description = Unicode
 
-    # The user's password.
-    password = Unicode
-
-
-class UserDb(HasTraits):
-    """This is the persisted user database."""
-
-    #### 'UserDb' interface ###################################################
-
-    # The dictionary of user accounts.
-    users = Dict
-
-
-class _ViewUserAccount(UserAccount):
-    """This represents a single account when in a view."""
-
-    #### 'UserAccount' interface ##############################################
-
     # The password
     password = Password
-
-    #### '_ViewUserAccount' interface #########################################
 
     # The password confirmation.
     confirm_password = Password
@@ -123,13 +103,13 @@ class _UserAccountHandler(Handler):
 
         # Get the user name and a read-only copy of the dictionary of users.
         vuac = self._user_account(info)
-        db = vuac.user_db.readonly_copy()
+        users = vuac.user_db.readonly_copy()
 
-        if db is not None:
+        if users is not None:
             name = vuac.name.strip()
 
             if name:
-                self.search(vuac, vuac.name.strip(), db.users)
+                self.search(vuac, name, users)
             else:
                 self.error("Please give a user name to search for.")
 
@@ -199,11 +179,12 @@ class _ModifyUserAccountHandler(_AddUserAccountHandler):
 
         # See if there is a user with the name.
         try:
-            uac = users[name]
+            password, description = users[name]
         except KeyError:
             # Find the first user that starts with the name.
-            for n, uac in users.items():
+            for n, (password, description) in users.items():
                 if n.startswith(name):
+                    name = n
                     break
             else:
                 if name:
@@ -214,9 +195,9 @@ class _ModifyUserAccountHandler(_AddUserAccountHandler):
                 return
 
         # Update the viewed object.
-        vuac.name = uac.name
-        vuac.description = uac.description
-        vuac.password = vuac.confirm_password = uac.password
+        vuac.name = name
+        vuac.description = description
+        vuac.password = vuac.confirm_password = password
 
 
 class _DeleteUserAccountHandler(_ModifyUserAccountHandler):
@@ -336,7 +317,9 @@ class UserDatabase(HasTraits):
 
     #### Private interface ###################################################
 
-    # The persisted database.
+    # The persisted database.  The database itself is a dictionary, keyed by
+    # the user name, and with a value that is a tuple of the clear text
+    # password and the description.
     _db = Instance(Persistent)
 
     ###########################################################################
@@ -357,29 +340,31 @@ class UserDatabase(HasTraits):
         if not lu.edit_traits().result:
             return False
 
-        # Get the users.
-        db = self.readonly_copy()
+        name = lu.name.strip()
 
-        if db is None:
+        # Get the users.
+        users = self.readonly_copy()
+
+        if users is None:
             return False
 
         # Get the user account and compare passwords.
         try:
-            uac = db.users[lu.name]
+            password, description = users[name]
 
-            if uac.password != lu.password:
-                uac = None
+            if password != lu.password:
+                name = None
         except KeyError:
-            uac = None
+            name = None
 
-        if uac is None:
+        if name is None:
             # It's bad security to give too much information...
             error(None, "The user name or password is invalid.")
             return False
 
-        # Copy the relevant parts of the user account.
-        user.name = uac.name
-        user.description = uac.description
+        # Update the user details.
+        user.name = name
+        user.description = description
 
         return True
 
@@ -398,21 +383,19 @@ class UserDatabase(HasTraits):
         handler = _AddUserAccountHandler()
 
         if vuac.edit_traits(view=view, handler=handler).result:
-            uac = UserAccount(name=vuac.name.strip(),
-                    description=vuac.description, password=vuac.password)
-
             # Add the data to the database.
             try:
                 self._db.lock()
 
                 try:
-                    data = self._db.read()
+                    users = self._db.read()
+                    name = vuac.name.strip()
 
-                    if data.users.has_key(uac.name):
-                        raise PersistentError("The user \"%s\" already exists." % uac.name)
+                    if users.has_key(name):
+                        raise PersistentError("The user \"%s\" already exists." % name)
 
-                    data.users[uac.name] = uac
-                    self._db.write(data)
+                    users[name] = (vuac.password, vuac.description)
+                    self._db.write(users)
                 finally:
                     self._db.unlock()
             except PersistentError, e:
@@ -427,21 +410,19 @@ class UserDatabase(HasTraits):
         handler = _ModifyUserAccountHandler()
 
         if vuac.edit_traits(view=view, handler=handler).result:
-            uac = UserAccount(name=vuac.name.strip(),
-                    description=vuac.description, password=vuac.password)
-
             # Update the data in the database.
             try:
                 self._db.lock()
 
                 try:
-                    data = self._db.read()
+                    users = self._db.read()
+                    name = vuac.name.strip()
 
-                    if not data.users.has_key(uac.name):
-                        raise PersistentError("The user \"%s\" doesn't exist." % uac.name)
+                    if not users.has_key(name):
+                        raise PersistentError("The user \"%s\" doesn't exist." % name)
 
-                    data.users[uac.name] = uac
-                    self._db.write(data)
+                    users[name] = (vuac.password, vuac.description)
+                    self._db.write(users)
                 finally:
                     self._db.unlock()
             except PersistentError, e:
@@ -456,21 +437,20 @@ class UserDatabase(HasTraits):
         handler = _DeleteUserAccountHandler()
 
         if vuac.edit_traits(view=view, handler=handler).result:
-            name = vuac.name.strip()
-
             # Delete the data from the database.
             try:
                 self._db.lock()
 
                 try:
-                    data = self._db.read()
+                    users = self._db.read()
+                    name = vuac.name.strip()
 
-                    if not data.users.has_key(name):
+                    if not users.has_key(name):
                         raise PersistentError("The user \"%s\" doesn't exist." % name)
 
                     if confirm(None, "Are you sure you want to delete the user \"%s\"?" % name) == YES:
-                        del data.users[name]
-                        self._db.write(data)
+                        del users[name]
+                        self._db.write(users)
                 finally:
                     self._db.unlock()
             except PersistentError, e:
@@ -487,14 +467,14 @@ class UserDatabase(HasTraits):
             self._db.lock()
 
             try:
-                data = self._db.read()
+                users = self._db.read()
             finally:
                 self._db.unlock()
         except PersistentError, e:
             error(None, str(e))
-            data = None
+            users = None
 
-        return data
+        return users
 
     ###########################################################################
     # Trait handlers.
@@ -503,4 +483,4 @@ class UserDatabase(HasTraits):
     def __db_default(self):
         """Return the default persisted database."""
 
-        return Persistent(UserDb, 'ets_perms_userdb', "the user database")
+        return Persistent(dict, 'ets_perms_userdb', "the user database")
