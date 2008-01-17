@@ -105,10 +105,13 @@ class ExampleWorkbenchWindow(WorkbenchWindow):
         # API doesn't do what you expect with append()).
         group = Group(LoginAction(), LogoutAction())
 
-        for act in policy.management_actions:
+        for act in policy.user_manager.user_actions:
             group.append(act)
         
         for act in policy.user_manager.management_actions:
+            group.append(act)
+        
+        for act in policy.management_actions:
             group.append(act)
         
         user_menu = MenuManager(group, name='&User', id='UserMenu', window=self)

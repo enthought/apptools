@@ -33,37 +33,45 @@ class UserManager(HasTraits):
 
     #### 'IUserManager' interface #############################################
 
-    bootstrap_perms = Bool(True)
-
     management_actions = List(Instance(Action))
 
     user = Instance(IUser)
 
+    user_actions = List(Instance(Action))
+
     user_authenticated = Event(IUser)
 
-    #### 'UserManager' interface ##############################################
+    #### Private interface ####################################################
 
     # The user database.
-    user_db = Instance(IUserDatabase)
+    _user_db = Instance(IUserDatabase)
 
     ###########################################################################
     # 'IUserManager' interface.
     ###########################################################################
 
+    def bootstrapping(self):
+        """Return True if we are bootstrapping, ie. no users have been defined.
+        """
+
+        return self._user_db.bootstrapping()
+
     def authenticate_user(self, user=None):
+        """Authenticate a user."""
 
         if user is None:
             user = self.user
 
-        if self.user_db.authenticate_user(user):
+        if self._user_db.authenticate_user(user):
             user.authenticated = True
 
             self.user = user
             self.user_authenticated = user
 
     def unauthenticate_user(self):
+        """Unauthenticate a user."""
 
-        if self.user.authenticated and self.user_db.unauthenticate_user(self.user):
+        if self.user.authenticated and self._user_db.unauthenticate_user(self.user):
             self.user.authenticated = False
             self.user_authenticated = None
 
@@ -71,17 +79,10 @@ class UserManager(HasTraits):
     # Trait handlers.
     ###########################################################################
 
-    def _user_default(self):
-        """Return the default current user."""
-
-        from enthought.permissions.user import User
-
-        return User()
-
     def _management_actions_default(self):
         """Return the list of management actions."""
 
-        user_db = self.user_db
+        user_db = self._user_db
         actions = []
 
         if user_db.can_add_user:
@@ -109,7 +110,28 @@ class UserManager(HasTraits):
 
         return actions
 
-    def _user_db_default(self):
+    def _user_actions_default(self):
+        """Return the list of user actions."""
+
+        user_db = self._user_db
+        actions = []
+
+        if user_db.can_change_password:
+            perm = Permission(name='ets.permissions.management.change_password',
+                    description=u"Change user's password")
+            act = Action(name='&Change password...',
+                    on_perform=lambda: user_db.change_password(self.user))
+
+            actions.append(SecureProxy(act, perms=[perm]))
+
+        return actions
+
+    def _user_default(self):
+        """Return the default current user."""
+
+        return self._user_db.user_factory()
+
+    def __user_db_default(self):
         """Return the default user database."""
 
         from user_database import UserDatabase

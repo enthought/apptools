@@ -18,14 +18,51 @@ import os
 
 # Enthought library imports.
 from enthought.pyface.api import confirm, error, information, YES
-from enthought.traits.api import Dict, HasTraits, implements, Instance, \
-        Password, Unicode
+from enthought.traits.api import Bool, Dict, HasTraits, implements, \
+        Instance, Int, Password, Unicode
 from enthought.traits.ui.api import Handler, Item, View
 from enthought.traits.ui.menu import Action, OKCancelButtons
 
 # Local imports.
+from enthought.permissions.i_user import IUser
 from i_user_database import IUserDatabase
 from persistent import Persistent, PersistentError
+
+
+class _LoginUser(HasTraits):
+    """This represents the login data and view."""
+
+    #### '_LoginUser' interface ###############################################
+
+    # The user name.
+    name = Unicode
+
+    # The user password.
+    password = Password
+
+    # The default view.
+    traits_view = View(Item(name='name'), Item(name='password'),
+            title="Login", kind='modal', buttons=OKCancelButtons)
+
+
+class _ChangePassword(HasTraits):
+    """This represents the change password data and view."""
+
+    #### '_ChangePassword' interface ##########################################
+
+    # The user name.
+    name = Unicode
+
+    # The new user password.
+    new_password = Password
+
+    # The confirmed new user password.
+    confirm_new_password = Password
+
+    # The default view.
+    traits_view = View(Item(name='name', style='readonly'),
+            Item(name='new_password'), Item(name='confirm_new_password'),
+            title="Change password", kind='modal', buttons=OKCancelButtons)
 
 
 class _ViewUserAccount(HasTraits):
@@ -135,22 +172,11 @@ class _AddUserAccountHandler(_UserAccountHandler):
         """Validate the given object and return True if there were no problems.
         """
 
-        MIN_PASSWORD_LEN = 6
-
         if not vuac.name.strip():
             self.error("A user name must be given.")
             return False
 
-        if vuac.password != vuac.confirm_password:
-            self.error("The passwords do not match.")
-            return False
-
-        if not vuac.password:
-            self.error("A password must be given.")
-            return False
-
-        if len(vuac.password) < MIN_PASSWORD_LEN:
-            self.error("The password must be at least %d characters long." % MIN_PASSWORD_LEN)
+        if not _validate_password(vuac.password, vuac.confirm_password):
             return False
 
         return True
@@ -284,18 +310,19 @@ class _DeleteUserAccountView(_UserAccountView):
                 Item(name='description', style='readonly'), **traits)
 
 
-class _LoginUser(HasTraits):
-    """This represents the login data and view."""
+class User(HasTraits):
+    """The user implementation.  We don't store any extra information other
+    than that defined by IUser."""
 
-    # The user name.
+    implements(IUser)
+
+    #### 'IUser' interface ####################################################
+
     name = Unicode
 
-    # The user password.
-    password = Password
+    authenticated = Bool(False)
 
-    # The default view.
-    traits_view = View(Item(name='name'), Item(name='password'),
-            title="Login", kind='modal', buttons=OKCancelButtons)
+    description = Unicode
 
 
 class UserDatabase(HasTraits):
@@ -308,6 +335,8 @@ class UserDatabase(HasTraits):
     implements(IUserDatabase)
 
     #### 'IUserDatabase' interface ############################################
+
+    can_change_password = True
 
     can_add_user = True
 
@@ -322,25 +351,37 @@ class UserDatabase(HasTraits):
     # password and the description.
     _db = Instance(Persistent)
 
+    # The approximate number of users in the database.  It is approximate
+    # because we wouldn't get notified if another application updated the
+    # database.
+    _nr_users = Int(-1)
+
     ###########################################################################
     # 'IUserDatabase' interface.
     ###########################################################################
+
+    def bootstrapping(self):
+        """See if we are bootstrapping."""
+
+        # This might be called often so we only explicitly read the database if
+        # we have never done it before.
+        if self._nr_users < 0:
+            users = self.readonly_copy()
+
+            if users is None:
+                return False
+
+        return (self._nr_users == 0)
 
     def authenticate_user(self, user):
         """Authenticate a user."""
 
         # Get the login details.
         name = user.name
-
-        if not name:
-            name = os.environ.get('USER', '')
-
         lu = _LoginUser(name=name)
 
         if not lu.edit_traits().result:
             return False
-
-        name = lu.name.strip()
 
         # Get the users.
         users = self.readonly_copy()
@@ -349,6 +390,8 @@ class UserDatabase(HasTraits):
             return False
 
         # Get the user account and compare passwords.
+        name = lu.name.strip()
+
         try:
             password, description = users[name]
 
@@ -374,6 +417,39 @@ class UserDatabase(HasTraits):
         # There is nothing to do to unauthenticate so it is always successful.
         return True
 
+    def change_password(self, user):
+        """Change a user's password."""
+
+        # Get the new password.
+        name = user.name
+        np = _ChangePassword(name=name)
+
+        if not np.edit_traits().result:
+            return
+
+        # Validate the password.
+        if not _validate_password(np.new_password, np.confirm_new_password):
+            return
+
+        # Update the password in the database.
+        try:
+            self._db.lock()
+
+            try:
+                users = self._db.read()
+
+                try:
+                    _, description = users[name]
+
+                    users[user] = (np.new_password, description)
+                    self._db.write(users)
+                except KeyError:
+                    error(None, "The user has been removed from the user database.")
+            finally:
+                self._db.unlock()
+        except PersistentError, e:
+            error(None, str(e))
+
     def add_user(self):
         """Add a user."""
 
@@ -396,6 +472,9 @@ class UserDatabase(HasTraits):
 
                     users[name] = (vuac.password, vuac.description)
                     self._db.write(users)
+
+                    # Take the opportunity to update the number of users.
+                    self._nr_users = len(users)
                 finally:
                     self._db.unlock()
             except PersistentError, e:
@@ -423,6 +502,9 @@ class UserDatabase(HasTraits):
 
                     users[name] = (vuac.password, vuac.description)
                     self._db.write(users)
+
+                    # Take the opportunity to update the number of users.
+                    self._nr_users = len(users)
                 finally:
                     self._db.unlock()
             except PersistentError, e:
@@ -451,10 +533,18 @@ class UserDatabase(HasTraits):
                     if confirm(None, "Are you sure you want to delete the user \"%s\"?" % name) == YES:
                         del users[name]
                         self._db.write(users)
+
+                    # Take the opportunity to update the number of users.
+                    self._nr_users = len(users)
                 finally:
                     self._db.unlock()
             except PersistentError, e:
                 error(None, str(e))
+
+    def user_factory(self):
+        """Create a new user object."""
+
+        return User(name=os.environ.get('USER', ''))
 
     ###########################################################################
     # 'UserDatabase' interface.
@@ -468,6 +558,9 @@ class UserDatabase(HasTraits):
 
             try:
                 users = self._db.read()
+
+                # Take the opportunity to update the number of users.
+                self._nr_users = len(users)
             finally:
                 self._db.unlock()
         except PersistentError, e:
@@ -484,3 +577,23 @@ class UserDatabase(HasTraits):
         """Return the default persisted database."""
 
         return Persistent(dict, 'ets_perms_userdb', "the user database")
+
+
+def _validate_password(password, confirmation):
+    """Validate a password and return True if it is valid."""
+
+    MIN_PASSWORD_LEN = 6
+
+    if password != confirmation:
+        error(None, "The passwords do not match.")
+        return False
+
+    if not password:
+        error(None, "A password must be given.")
+        return False
+
+    if len(password) < MIN_PASSWORD_LEN:
+        error(None, "The password must be at least %d characters long." % MIN_PASSWORD_LEN)
+        return False
+
+    return True

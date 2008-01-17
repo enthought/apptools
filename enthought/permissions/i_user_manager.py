@@ -24,21 +24,24 @@ from i_user import IUser
 class IUserManager(Interface):
     """The interface implemented by a user manager to manage users."""
 
-    # Set if bootstrap permissions should be enabled.  It would normally only
-    # be False if the user and permissions management is being handled by a
-    # separate application.
-    bootstrap_perms = Bool(True)
-
-    # The list of PyFace user management actions implemented by this user
-    # manager.
+    # The list of PyFace management actions (ie. actions related to all users)
+    # implemented by this user manager.
     management_actions = List(Instance(Action))
 
     # The current user.
     user = Instance(IUser)
 
+    # The list of PyFace user actions (ie. actions related to the current user)
+    # implemented by this user manager.
+    user_actions = List(Instance(Action))
+
     # This is fired whenever the currently authenticated user changes.  It will
     # be None if the current user isn't authenticated.
     user_authenticated = Event(IUser)
+
+    def bootstrapping(self):
+        """Return True if the user manager is bootstrapping.  Typically this is
+        when no users have been defined."""
 
     def authenticate_user(self, user=None):
         """The user is authenticated.  The user defaults to the current user.

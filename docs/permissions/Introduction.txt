@@ -122,6 +122,28 @@ groups.
 The complete API_ documentation is available as endo generated HTML.
 
 
+Using the Default Implementations
+---------------------------------
+
+The default permissions policy and its default user manager both (again by
+default) persist their data as pickles in local files called
+``ets_perms_permsdb`` and ``ets_perms_userdb`` respectively.  By default these
+are stored in the application's home directory (ie. that returned by
+``ETSConfig.application_home``).
+
+Note that this directory is normally in the user's own directory structure
+whereas it needs to be available to all users of the application.
+
+If the ``ETS_PERMS_DATA_DIR`` environment variable is set then its value is
+used instead.
+
+The directory must be writeable by all users of the application.
+
+It should be restated that the default implementations do *not* provide secure
+access to the permissions and user data.  They are useful in a cooperative
+environment and as working examples.
+
+
 .. _API: api/index.html
 .. _`Application API`: ApplicationAPI.html
 .. _`Permissions Policy API`: https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/i_permissions_policy.py

@@ -15,7 +15,7 @@
 
 # Enthought library imports.
 from enthought.pyface.action.api import Action
-from enthought.traits.api import HasTraits, implements, Instance, List
+from enthought.traits.api import Bool, HasTraits, implements, Instance, List
 
 # Local imports.
 from enthought.permissions.i_permissions_policy import IPermissionsPolicy
@@ -35,6 +35,8 @@ class PermissionsPolicy(HasTraits):
 
     #### 'IPermissionsPolicy' interface #######################################
 
+    allow_bootstrap_perms = Bool(True)
+
     management_actions = List(Instance(Action))
 
     perms = List(Instance(IPermission))
@@ -49,12 +51,23 @@ class PermissionsPolicy(HasTraits):
     # 'IPermissionsPolicy' interface.
     ###########################################################################
 
+    def bootstrapping(self):
+        """Return True if we are bootstrapping, ie. no policy or user data
+        exists."""
+
+        if self.user_manager.bootstrapping():
+            return True
+
+        # FIXME: Check for policy data.
+        return True
+
     def check_perms(self, *perms):
         """TODO"""
 
         for perm in perms:
-            # FIXME: Determine if we are in a bootstrap situation.
-            if perm.bootstrap:
+            # If this is a bootstrap permission then see if we are in a
+            # bootstrap situation.
+            if perm.bootstrap and self.allow_bootstrap_perms and self.bootstrapping():
                 return True
 
             if self.user_manager.user.authenticated:
@@ -77,7 +90,7 @@ class PermissionsPolicy(HasTraits):
                 description=u"View roles and permissions", bootstrap=True)
 
         act = Action(name='&Roles and Permissions...',
-                on_perform=self._manage_permissions)
+                on_perform=lambda: self.management_view(self.user_manager))
         act = SecureProxy(act, perms=[update_perm, view_perm], show=False)
 
         return [act]
@@ -91,13 +104,3 @@ class PermissionsPolicy(HasTraits):
         from management_view import ManagementView
 
         return ManagementView()
-
-    ###########################################################################
-    # Private interface.
-    ###########################################################################
-
-    def _manage_permissions(self):
-        """Invoke the GUI to manage the roles and permissions held by the user
-        manager."""
-
-        self.management_view(self.user_manager)

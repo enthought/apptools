@@ -21,6 +21,9 @@ class IUserDatabase(Interface):
     """The interface to be implemented by a user database for the default user
     manager."""
 
+    # Set if the implementation supports changing a user's password.
+    can_change_password = Bool(False)
+
     # Set if the implementation supports adding users.
     can_add_user = Bool(False)
 
@@ -30,6 +33,10 @@ class IUserDatabase(Interface):
     # Set if the implementation supports deleting users.
     can_delete_user = Bool(False)
 
+    def bootstrapping(self):
+        """Return True if the user database is bootstrapping.  Typically this
+        is when no users have been defined."""
+
     def authenticate_user(self, user):
         """Authenticate the given user and return True if successful.  user
         implements IUser."""
@@ -37,6 +44,10 @@ class IUserDatabase(Interface):
     def unauthenticate_user(self, user):
         """Unauthenticate the given user and return True if successful.  user
         implements IUser."""
+
+    def change_password(self, user):
+        """Change a user's password in the database.  This only needs to be
+        reimplemented if 'can_change_password' is True."""
 
     def add_user(self):
         """Add a user account to the database.  This only needs to be
@@ -49,3 +60,6 @@ class IUserDatabase(Interface):
     def delete_user(self):
         """Delete a user account from the database.  This only needs to be
         reimplemented if 'can_delete_user' is True."""
+
+    def user_factory(self):
+        """Return a new object that implements the IUser interface."""
