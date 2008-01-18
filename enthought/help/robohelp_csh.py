@@ -14,7 +14,7 @@
 import logging
 import os
 import atexit
-from webbrowser import get, Error
+import webbrowser
 
 
 # Setup a logger for this module.
@@ -27,15 +27,6 @@ HH_DISPLAY_TOC = 0x0001
 HH_DISPLAY_INDEX = 0x0002
 HH_DISPLAY_SEARCH = 0x0003
 HH_HELP_CONTEXT = 0x000f
-
-
-# Get the browser controller on load
-browser = None
-try:
-    browser = get()
-    logger.debug("Found browser controller: %s" % browser)
-except (Error), msg:
-    logger.error(msg)
 
 
 def rh_showhelp( hparent, help_file, command, data):
@@ -69,12 +60,14 @@ def rh_showhelp( hparent, help_file, command, data):
             HH_HELP_CONTEXT).
 
     """
+    #logger.debug("HELP: rh_showhelp(hparent=%s, help_file=%s, command=%s, data=%s)" % (hparent, help_file, command, data))
     if is_html_help(help_file):
         show_html_help_csh(hparent, help_file, command, data)
     else:
         show_web_help_csh(hparent, help_file, command, data)
 
 def show_html_help_csh(hparent, help_file, command, data):
+    #logger.debug("\tHELP: show_html_help(hparent=%s, help_file=%s, command=%s, data=%s)" % (hparent, help_file, command, data))
     import sys
     if sys.platform=='win32':
         from ctypes import windll
@@ -88,6 +81,7 @@ def show_html_help_csh(hparent, help_file, command, data):
 def show_web_help_csh(hparent, help_file, command, data):
     """ Displays WebHelp.
     """
+    #logger.debug("\tHELP: show_web_help(hparent=%s, help_file=%s, command=%s, data=%s)" % (hparent, help_file, command, data))
     help_path = help_file
 
     pos = help_file.find('>')
@@ -117,22 +111,26 @@ def show_web_help_csh(hparent, help_file, command, data):
             # window lying around, for any command other than 'toc'.
             # The generated Javascript for WebHelp attempts to close this
             # window, which IE allows but Mozilla does not.
-            if browser is not None:
-                try:
-                    browser.open(path2js(help_path))
-                except (OSError, Error), msg:
-                    logger.error(msg)
+            try:
+                #logger.debug("HELP: Calling webbrowser.open")
+                webbrowser.open(path2js(help_path))
+            except (OSError, webbrowser.Error), msg:
+                logger.error(msg)
     return
 
 def path2js(path):
+    logger.debug("\tHELP: path2js(%s)" % path)
     # Escape Windows path separators
     import re
     path = re.sub(r'\\', r'\\\\', path)
 
     import tempfile
-    js = tempfile.mktemp(suffix='.htm')
-    f = open(js,'w')
-    f.write('''
+    
+    fd, fn = tempfile.mkstemp(suffix='.htm', text=True)
+    #logger.debug("\tHELP: tempfile: %s" % fn)
+    try:
+        f = os.fdopen(fd, 'w')
+        f.write('''
 <html>
 <script language="Javascript">
 <!--
@@ -141,15 +139,17 @@ document.location.href="file:///%s";
 </script>
 </html>
 ''' % (path))
-    f.close()
-    def rm_file(name=js):
+        f.close()
+    except (IOError, Error), msg:
+        logger.error(msg)
+    def rm_file(name=fn):
         try: os.remove(name)
         except OSError: pass
     atexit.register(rm_file)
-    return js
+    return fn
 
 def is_html_help(help_source):
-    # logger.debug("Help file is " + help_source)
+    #logger.debug("\tHELP: is_html_help(%s)", help_source)
     if help_source.find('.chm') != -1:
         return True
     else:
