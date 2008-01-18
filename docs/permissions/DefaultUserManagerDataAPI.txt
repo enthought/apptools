@@ -6,4 +6,35 @@ API used by developers who want to store a user database in a more secure
 location (eg. a remote server) than that provided by the default
 implementation.
 
-**FIXME:** TODO
+The API is defined by the default user manager which uses password based
+authorisation.  If this API isn't sufficiently flexible, or if another method
+of authorisation is used (biometrics for example) then an alternative user
+manager should be implemented.
+
+The API is fully defined by the `IUserDatabase interface`_.  This allows user
+databases to be implemented that extend the ``IUser`` interface and store
+additional user related data.  If the user database is being persisted in
+secure storage (eg. a remote RDBMS) then this could be used to store sensitive
+data (eg. passwords for external systems) that shouldn't be stored as ordinary
+preferences.
+
+If there is no requirement to store additional user related data than that
+defined by ``IUser`` then the API provides the ``AbstractUserDatabase`` class
+which provides all the GUI code required to implement the `IUserDatabase`_
+interface but leaves it to a subclass to implement the methods that actually
+access the user database itself.
+
+
+Overview of IUserDatabase
+-------------------------
+
+**TODO**
+
+
+Overview of AbstractUserDatabase
+--------------------------------
+
+**TODO**
+
+
+.. _`IUserDatabase interface`: https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/i_user_database.py

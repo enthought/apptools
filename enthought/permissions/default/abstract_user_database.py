@@ -18,15 +18,14 @@ import os
 
 # Enthought library imports.
 from enthought.pyface.api import confirm, error, information, YES
-from enthought.traits.api import Bool, Dict, HasTraits, implements, \
-        Instance, Int, Password, Unicode
+from enthought.traits.api import Bool, HasTraits, implements, Instance, Int, \
+        Password, Unicode
 from enthought.traits.ui.api import Handler, Item, View
 from enthought.traits.ui.menu import Action, OKCancelButtons
 
 # Local imports.
 from enthought.permissions.i_user import IUser
 from i_user_database import IUserDatabase
-from persistent import Persistent, PersistentError
 
 
 class _LoginUser(HasTraits):
@@ -83,7 +82,7 @@ class _ViewUserAccount(HasTraits):
     confirm_password = Password
 
     # The user database.
-    user_db = Instance('UserDatabase')
+    user_db = Instance('AbstractUserDatabase')
 
 
 class _UserAccountHandler(Handler):
@@ -138,17 +137,17 @@ class _UserAccountHandler(Handler):
     def _search_clicked(self, info):
         """Invoked by the "Search" button."""
 
-        # Get the user name and a read-only copy of the dictionary of users.
+        # Get the user name.
         vuac = self._user_account(info)
-        users = vuac.user_db.readonly_copy()
+        name = vuac.name.strip()
 
-        if users is not None:
-            name = vuac.name.strip()
-
-            if name:
-                self.search(vuac, name, users)
-            else:
-                self.error("Please give a user name to search for.")
+        if name:
+            try:
+                self.search(vuac, name)
+            except UserDatabaseError, e:
+                self.error(str(e))
+        else:
+            self.error("Please give a user name to search for.")
 
     ###########################################################################
     # Private interface.
@@ -181,11 +180,11 @@ class _AddUserAccountHandler(_UserAccountHandler):
 
         return True
 
-    def search(self, vuac, name, users):
+    def search(self, vuac, name):
         """Search the user database to see if a user already exists."""
 
         # See if there is a user with the name.
-        if users.has_key(name):
+        if vuac.user_db.db_user_exists(name):
             self.error("A user called \"%s\" already exists." % name)
         else:
             self.inform("A user called \"%s\" doesn't currently exist." % name)
@@ -199,31 +198,22 @@ class _ModifyUserAccountHandler(_AddUserAccountHandler):
     # '_UserAccountHandler' interface.
     ###########################################################################
 
-    def search(self, vuac, name, users):
+    def search(self, vuac, name):
         """Search the user database and update the viewed object appropriately.
         """
 
-        # See if there is a user with the name.
-        try:
-            password, description = users[name]
-        except KeyError:
-            # Find the first user that starts with the name.
-            for n, (password, description) in users.items():
-                if n.startswith(name):
-                    name = n
-                    break
+        full_name, description, password = vuac.user_db.db_matching_user(name)
+
+        if full_name is None:
+            if name:
+                self.error("There is no user whose name starts with \"%s\"." % name)
             else:
-                if name:
-                    self.error("There is no user whose name starts with \"%s\"." % name)
-                else:
-                    self.error("No users have been defined.")
-
-                return
-
-        # Update the viewed object.
-        vuac.name = name
-        vuac.description = description
-        vuac.password = vuac.confirm_password = password
+                self.error("No users have been defined.")
+        else:
+            # Update the viewed object.
+            vuac.name = full_name
+            vuac.description = description
+            vuac.password = vuac.confirm_password = password
 
 
 class _DeleteUserAccountHandler(_ModifyUserAccountHandler):
@@ -325,12 +315,16 @@ class User(HasTraits):
     description = Unicode
 
 
-class UserDatabase(HasTraits):
-    """This is the default implementation of a user database.  It is good
-    enough to be used in a cooperative environment (ie. where real access
-    control is not required).  In an enterprise environment the user database
-    should be replaced with one that interacts with some secure directory
-    service."""
+class UserDatabaseError(Exception):
+    """This is the exception raised by an AbstractUserDatabase subclass when an
+    error occurs accessing the database.  Its string representation is
+    displayed as an error message to the user."""
+
+
+class AbstractUserDatabase(HasTraits):
+    """This implements a user database that supports IUser for the default user
+    manager (ie. using password authorisation) except that it leaves the actual
+    access of the data to a subclass."""
 
     implements(IUserDatabase)
 
@@ -344,17 +338,10 @@ class UserDatabase(HasTraits):
 
     can_delete_user = True
 
-    #### Private interface ###################################################
+    #### Private interface ####################################################
 
-    # The persisted database.  The database itself is a dictionary, keyed by
-    # the user name, and with a value that is a tuple of the clear text
-    # password and the description.
-    _db = Instance(Persistent)
-
-    # The approximate number of users in the database.  It is approximate
-    # because we wouldn't get notified if another application updated the
-    # database.
-    _nr_users = Int(-1)
+    # The saved result of whether or not the database is empty.
+    _bootstrap = Int(-1)
 
     ###########################################################################
     # 'IUserDatabase' interface.
@@ -363,15 +350,15 @@ class UserDatabase(HasTraits):
     def bootstrapping(self):
         """See if we are bootstrapping."""
 
-        # This might be called often so we only explicitly read the database if
-        # we have never done it before.
-        if self._nr_users < 0:
-            users = self.readonly_copy()
+        # This might be called often so we only check once and save the result.
+        if self._bootstrap < 0:
+            try:
+                self._bootstrap = int(self.db_is_empty())
+            except UserDatabaseError:
+                # Suppress the error and assume it isn't empty.
+                self._bootstrap = 0
 
-            if users is None:
-                return False
-
-        return (self._nr_users == 0)
+        return (self._bootstrap > 0)
 
     def authenticate_user(self, user):
         """Authenticate a user."""
@@ -383,24 +370,14 @@ class UserDatabase(HasTraits):
         if not lu.edit_traits().result:
             return False
 
-        # Get the users.
-        users = self.readonly_copy()
-
-        if users is None:
+        # Get the user account and compare passwords.
+        try:
+            name, description, password = self.db_exact_user(lu.name.strip())
+        except UserDatabaseError, e:
+            error(None, str(e));
             return False
 
-        # Get the user account and compare passwords.
-        name = lu.name.strip()
-
-        try:
-            password, description = users[name]
-
-            if password != lu.password:
-                name = None
-        except KeyError:
-            name = None
-
-        if name is None:
+        if name is None or password != lu.password:
             # It's bad security to give too much information...
             error(None, "The user name or password is invalid.")
             return False
@@ -433,21 +410,8 @@ class UserDatabase(HasTraits):
 
         # Update the password in the database.
         try:
-            self._db.lock()
-
-            try:
-                users = self._db.read()
-
-                try:
-                    _, description = users[name]
-
-                    users[user] = (np.new_password, description)
-                    self._db.write(users)
-                except KeyError:
-                    error(None, "The user has been removed from the user database.")
-            finally:
-                self._db.unlock()
-        except PersistentError, e:
+            self.db_update_password(name, np.new_password)
+        except UserDatabaseError, e:
             error(None, str(e))
 
     def add_user(self):
@@ -461,23 +425,9 @@ class UserDatabase(HasTraits):
         if vuac.edit_traits(view=view, handler=handler).result:
             # Add the data to the database.
             try:
-                self._db.lock()
-
-                try:
-                    users = self._db.read()
-                    name = vuac.name.strip()
-
-                    if users.has_key(name):
-                        raise PersistentError("The user \"%s\" already exists." % name)
-
-                    users[name] = (vuac.password, vuac.description)
-                    self._db.write(users)
-
-                    # Take the opportunity to update the number of users.
-                    self._nr_users = len(users)
-                finally:
-                    self._db.unlock()
-            except PersistentError, e:
+                self.db_add_user(vuac.name.strip(), vuac.description,
+                        vuac.password)
+            except UserDatabaseError, e:
                 error(None, str(e))
 
     def modify_user(self):
@@ -491,23 +441,9 @@ class UserDatabase(HasTraits):
         if vuac.edit_traits(view=view, handler=handler).result:
             # Update the data in the database.
             try:
-                self._db.lock()
-
-                try:
-                    users = self._db.read()
-                    name = vuac.name.strip()
-
-                    if not users.has_key(name):
-                        raise PersistentError("The user \"%s\" doesn't exist." % name)
-
-                    users[name] = (vuac.password, vuac.description)
-                    self._db.write(users)
-
-                    # Take the opportunity to update the number of users.
-                    self._nr_users = len(users)
-                finally:
-                    self._db.unlock()
-            except PersistentError, e:
+                self.db_update_user(vuac.name.strip(), vuac.description,
+                        vuac.password)
+            except UserDatabaseError, e:
                 error(None, str(e))
 
     def delete_user(self):
@@ -519,27 +455,15 @@ class UserDatabase(HasTraits):
         handler = _DeleteUserAccountHandler()
 
         if vuac.edit_traits(view=view, handler=handler).result:
-            # Delete the data from the database.
-            try:
-                self._db.lock()
+            # Make absolutely sure.
+            name = vuac.name.strip()
 
+            if confirm(None, "Are you sure you want to delete the user \"%s\"?" % name) == YES:
+                # Delete the data from the database.
                 try:
-                    users = self._db.read()
-                    name = vuac.name.strip()
-
-                    if not users.has_key(name):
-                        raise PersistentError("The user \"%s\" doesn't exist." % name)
-
-                    if confirm(None, "Are you sure you want to delete the user \"%s\"?" % name) == YES:
-                        del users[name]
-                        self._db.write(users)
-
-                    # Take the opportunity to update the number of users.
-                    self._nr_users = len(users)
-                finally:
-                    self._db.unlock()
-            except PersistentError, e:
-                error(None, str(e))
+                    self.db_delete_user(name)
+                except UserDatabaseError, e:
+                    error(None, str(e))
 
     def user_factory(self):
         """Create a new user object."""
@@ -547,36 +471,57 @@ class UserDatabase(HasTraits):
         return User(name=os.environ.get('USER', ''))
 
     ###########################################################################
-    # 'UserDatabase' interface.
+    # 'AbstractUserDatabase' interface.
     ###########################################################################
 
-    def readonly_copy(self):
-        """Return the current user database (which should not be modified)."""
+    def db_add_user(self, name, description, password):
+        """This must be reimplemented to add a new user with the given name,
+        description and password."""
 
-        try:
-            self._db.lock()
+        raise NotImplementedError
 
-            try:
-                users = self._db.read()
+    def db_delete_user(self, name):
+        """This must be reimplemented to delete the user with the given name
+        (which will not be empty)."""
 
-                # Take the opportunity to update the number of users.
-                self._nr_users = len(users)
-            finally:
-                self._db.unlock()
-        except PersistentError, e:
-            error(None, str(e))
-            users = None
+        raise NotImplementedError
 
-        return users
+    def db_exact_user(self, name):
+        """This must be reimplemented to return a tuple of the name,
+        description and password of the user with the given name."""
 
-    ###########################################################################
-    # Trait handlers.
-    ###########################################################################
+        raise NotImplementedError
 
-    def __db_default(self):
-        """Return the default persisted database."""
+    def db_is_empty(self):
+        """This must be reimplemented to return True if the user database is
+        empty.  It will only ever be called once."""
 
-        return Persistent(dict, 'ets_perms_userdb', "the user database")
+        raise NotImplementedError
+
+    def db_matching_user(self, name):
+        """This must be reimplemented to return a tuple of the full name,
+        description and password of the user with either the given name, or
+        the first user whose name starts with the given name."""
+
+        raise NotImplementedError
+
+    def db_update_password(self, name, password):
+        """This must be reimplemented to update the password for the user with
+        the given name (which will not be empty)."""
+
+        raise NotImplementedError
+
+    def db_update_user(self, name, description, password):
+        """This must be reimplemented to update the description and password
+        for the user with the given name (which will not be empty)."""
+
+        raise NotImplementedError
+
+    def db_user_exists(self, name):
+        """This must be reimplemented to return True if a user with the given
+        name (which will not be empty) exists in the user database."""
+
+        raise NotImplementedError
 
 
 def _validate_password(password, confirmation):

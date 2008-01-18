@@ -54,24 +54,29 @@ The following are the concepts supported by the framework.
   permissions and users.  A role is defined as a named set of permissions, and
   a user may have one or more roles assigned to them.
 
-  The default permissions policy persists its data in a permissions database.
-  An API is provided so that different implementations of the permissions
-  database can be provided (for example to store the data in an RDBMS).  A
-  default permissions database is provided that pickles the data in a local
-  file.
+  The permissions policy persists its data in a permissions database.  The
+  default permissions policy provides an API so that different implementations
+  of the permissions database can be used (for example to store the data in an
+  RDBMS).  A default permissions database is provided that pickles the data in
+  a local file.
 
 - User Manager
 
-  The user manager is responsible for authorising the current user.  It also
-  provides information about the user population to the permissions policy.  It
-  may also, optionally, provide the ability to manage the user population (eg.
-  add or delete users).  The user manager must either maintain a persistent
-  record of the user population, or interface with an external user database
-  or directory service.
+  The user manager is responsible for authorising the current user and,
+  therefore, determines how that is done.  It also provides information about
+  the user population to the permissions policy.  It may also, optionally,
+  provide the ability to manage the user population (eg. add or delete users).
+  The user manager must either maintain a persistent record of the user
+  population, or interface with an external user database or directory service.
 
-  The default user manager supplied by the default permissions policy provides
-  an API that allows the user database to be implemented appropriately.
-  A default user database is provided that pickles the data in a local file.
+  The default user manager supplied by the default permissions policy uses
+  password based authorisation.
+  
+  The user manager persists its data in a user database.  The default user
+  manager provides an API so that different implementations of the user
+  database can be used (for example to store the data in an RDBMS, or to
+  integrate with an existing directory service).  A default user database is
+  provided that pickles the data in a local file.
 
 - Permissions Manager
 

@@ -12,6 +12,7 @@
 # Description: <Enthought permissions package component>
 #------------------------------------------------------------------------------
 
+from abstract_user_database import AbstractUserDatabase
 from i_management_view import IManagementView
 from i_user_database import IUserDatabase
 from management_view import ManagementView

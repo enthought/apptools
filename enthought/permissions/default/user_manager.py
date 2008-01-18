@@ -134,6 +134,6 @@ class UserManager(HasTraits):
     def __user_db_default(self):
         """Return the default user database."""
 
-        from user_database import UserDatabase
+        from pickled_user_database import PickledUserDatabase
 
-        return UserDatabase()
+        return PickledUserDatabase()
