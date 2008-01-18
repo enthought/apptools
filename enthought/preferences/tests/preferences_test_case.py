@@ -32,6 +32,17 @@ class PreferencesTestCase(unittest.TestCase):
     # Tests.
     ###########################################################################
 
+    def test_package_global_default_preferences(self):
+        """ package global default preferences """
+
+        from enthought.preferences.api import get_default_preferences
+        from enthought.preferences.api import set_default_preferences
+
+        set_default_preferences(self.preferences)
+        self.assertEqual(self.preferences, get_default_preferences())
+
+        return
+    
     def test_get_and_set_str(self):
         """ get and set str """
 

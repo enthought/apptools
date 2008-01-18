@@ -7,6 +7,7 @@ import unittest
 # Enthought library imports.
 from enthought.preferences.api import Preferences, PreferencesHelper
 from enthought.preferences.api import ScopedPreferences
+from enthought.preferences.api import set_default_preferences
 from enthought.traits.api import Bool, HasTraits, Int, Float, Str
 
 
@@ -31,7 +32,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
     def setUp(self):
         """ Prepares the test fixture before each test method is called. """
 
-        self.preferences = PreferencesHelper.preferences = Preferences()
+        self.preferences = set_default_preferences(Preferences())
         
         return
 
@@ -257,8 +258,8 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
     def test_scoped_preferences(self):
         """ scoped preferences """
-        
-        p = PreferencesHelper.preferences = ScopedPreferences()
+
+        p = set_default_preferences(ScopedPreferences())
 
         # Set a preference value in the default scope.
         p.set('default/acme.ui.bgcolor', 'blue')

@@ -2,18 +2,22 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import HasTraits, Str, Unicode
+from enthought.traits.api import HasTraits, Instance, Str, Unicode
+
+# Local imports.
+from i_preferences import IPreferences
+from package_globals import get_default_preferences
 
 
 class PreferencesHelper(HasTraits):
     """ An object that can be initialized from a preferences node. """
 
-    #### 'PreferencesHelper' *CLASS* interface ################################
-
-    # The preferences node used by *ALL* preferences helpers.
-    preferences = None # Instance(IPreferences)
-    
     #### 'PreferencesHelper' interface ########################################
+
+    # The preferences node used by the helper. If this trait is not set then
+    # the package-global default preferences node is used (and if that is not
+    # set then the helper won't work ;^)
+    preferences = Instance(IPreferences)
 
     # The path to the preference node that contains the preferences that we
     # use to initialize instances of this class.
@@ -42,6 +46,13 @@ class PreferencesHelper(HasTraits):
     # Private interface.
     ###########################################################################
 
+    #### Trait initializers ###################################################
+
+    def _preferences_default(self):
+        """ Trait initializer. """
+
+        return get_default_preferences()
+    
     #### Trait change handlers ################################################
 
     def _anytrait_changed(self, trait_name, old, new):

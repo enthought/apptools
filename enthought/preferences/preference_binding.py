@@ -2,21 +2,26 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, HasTraits, Str, Undefined, Unicode
+from enthought.traits.api import Any, HasTraits, Instance, Str, Undefined
+from enthought.traits.api import Unicode
+
+# Local imports.
+from i_preferences import IPreferences
+from package_globals import get_default_preferences
 
 
 class PreferenceBinding(HasTraits):
     """ A binding between a trait on an object and a preference value. """
 
-    #### 'PreferenceBinding' *CLASS* interface ################################
-
-    # The preferences node that contains the preferences.
-    preferences = None # Instance(IPreferences)
-    
     #### 'PreferenceBinding' interface ########################################
 
     # The object that we are binding the preference to.
     obj = Any
+
+    # The preferences node used by the binding. If this trait is not set then
+    # the package-global default preferences node is used (and if that is not
+    # set then the binding won't work ;^)
+    preferences = Instance(IPreferences)
     
     # The path to the preference value.
     preference_path = Str
@@ -49,6 +54,13 @@ class PreferenceBinding(HasTraits):
     ###########################################################################
     # Private interface.
     ###########################################################################
+
+    #### Trait initializers ###################################################
+
+    def _preferences_default(self):
+        """ Trait initializer. """
+
+        return get_default_preferences()
 
     #### Trait change handlers ################################################
 

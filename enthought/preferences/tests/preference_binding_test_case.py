@@ -7,6 +7,7 @@ import unittest
 # Enthought library imports.
 from enthought.preferences.api import Preferences, PreferenceBinding
 from enthought.preferences.api import ScopedPreferences, bind_preference
+from enthought.preferences.api import set_default_preferences
 from enthought.traits.api import Bool, HasTraits, Int, Float, Str
 
 
@@ -31,7 +32,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
     def setUp(self):
         """ Prepares the test fixture before each test method is called. """
 
-        self.preferences = PreferenceBinding.preferences = Preferences()
+        self.preferences = set_default_preferences(Preferences())
         
         return
 
