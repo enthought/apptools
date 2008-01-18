@@ -12,6 +12,8 @@ following:
 
 - user authentication
 
+- getting and setting user data
+
 - integrate management actions.
 
 
@@ -171,6 +173,17 @@ method.
 As a convenience two PyFace actions, called ``LoginAction`` and
 ``LogoutAction``, are provided that wrap these two methods.  They can be
 imported from ``enthought.permissions.action.api``.
+
+
+Getting and Setting User Data
+-----------------------------
+
+The user manager has a ``user`` trait that is an object that implements the
+``IUser`` interface.  It is only valid once the user has been authenticated.
+
+The ``IUser`` interface has a ``blob`` trait that holds any binary data (as a
+Python string).  The data will be read when the user is authenticated.  The
+data will be written whenever it is changed.
 
 
 Integrating Management Actions

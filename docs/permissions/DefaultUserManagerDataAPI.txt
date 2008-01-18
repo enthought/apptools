@@ -12,7 +12,7 @@ of authorisation is used (biometrics for example) then an alternative user
 manager should be implemented.
 
 The API is fully defined by the `IUserDatabase interface`_.  This allows user
-databases to be implemented that extend the ``IUser`` interface and store
+databases to be implemented that extend the `IUser interface`_ and store
 additional user related data.  If the user database is being persisted in
 secure storage (eg. a remote RDBMS) then this could be used to store sensitive
 data (eg. passwords for external systems) that shouldn't be stored as ordinary
@@ -28,7 +28,28 @@ access the user database itself.
 Overview of IUserDatabase
 -------------------------
 
-**TODO**
+The `IUserDatabase interface`_ defines a set of ``Bool`` traits, all beginning
+with ``can_``, that describe the capabilities of a particular implementation.
+For example, the ``can_add_user`` trait is set by an implementation if it
+supports the ability to add a new user to the database.
+
+Each of these capability traits has a corresponding method which has the same
+name except for the ``can_`` prefix.  The method only needs to be implemented
+if the corresponding traits is ``True``.  The method, for example
+``add_user()`` is called by the user manager to implement the capability.
+
+The interface has two other methods.
+
+The ``bootstrapping()`` method is called by the user manager to determine if
+the database is bootstrapping.  Typically this is when the database is empty
+and no users have yet been defined.  The permissions framework treats this
+situation as a special case and is able to relax the enforcement of permissions
+to allow users and permissions to be initially defined.
+
+The ``user_factory()`` method is called by the user manager to create a new
+user object, ie. an object that implements the `IUser interface`_.  This allows
+an implementation to extend the `IUser interface`_ and store additional user
+related data in the object if the ``blob`` trait proves insufficient.
 
 
 Overview of AbstractUserDatabase
@@ -37,4 +58,5 @@ Overview of AbstractUserDatabase
 **TODO**
 
 
+.. _`IUser interface`: https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/i_user.py
 .. _`IUserDatabase interface`: https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/i_user_database.py

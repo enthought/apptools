@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Bool, Interface, Unicode
+from enthought.traits.api import Bool, Interface, Str, Unicode
 
 
 class IUser(Interface):
@@ -31,3 +31,9 @@ class IUser(Interface):
     # An optional description of the user (eg. their full name).  The exact
     # meaning is defined by the user manager.
     description = Unicode
+
+    # An optional piece of application defined binary data (eg. a pickled
+    # object).  If supported by the user manager this data will be saved in the
+    # user database whenever it is changed, and will be read from the user
+    # database whenever the user is authenticated.
+    blob = Str

@@ -19,7 +19,7 @@ import os
 # Enthought library imports.
 from enthought.pyface.api import confirm, error, information, YES
 from enthought.traits.api import Bool, HasTraits, implements, Instance, Int, \
-        Password, Unicode
+        Password, Str, Unicode
 from enthought.traits.ui.api import Handler, Item, View
 from enthought.traits.ui.menu import Action, OKCancelButtons
 
@@ -202,7 +202,7 @@ class _ModifyUserAccountHandler(_AddUserAccountHandler):
         """Search the user database and update the viewed object appropriately.
         """
 
-        full_name, description, password = vuac.user_db.db_matching_user(name)
+        full_name, description, password = vuac.user_db.db_search_user(name)
 
         if full_name is None:
             if name:
@@ -314,6 +314,8 @@ class User(HasTraits):
 
     description = Unicode
 
+    blob = Str
+
 
 class UserDatabaseError(Exception):
     """This is the exception raised by an AbstractUserDatabase subclass when an
@@ -342,6 +344,9 @@ class AbstractUserDatabase(HasTraits):
 
     # The saved result of whether or not the database is empty.
     _bootstrap = Int(-1)
+
+    # Set if updating the user blob internally.
+    _updating_blob_internally = Bool(False)
 
     ###########################################################################
     # 'IUserDatabase' interface.
@@ -372,9 +377,9 @@ class AbstractUserDatabase(HasTraits):
 
         # Get the user account and compare passwords.
         try:
-            name, description, password = self.db_exact_user(lu.name.strip())
+            name, description, blob, password = self.db_get_user(lu.name.strip())
         except UserDatabaseError, e:
-            error(None, str(e));
+            self._db_error(e)
             return False
 
         if name is None or password != lu.password:
@@ -385,6 +390,11 @@ class AbstractUserDatabase(HasTraits):
         # Update the user details.
         user.name = name
         user.description = description
+
+        # Suppress the trait notification.
+        self._updating_blob_internally = True
+        user.blob = blob
+        self._updating_blob_internally = False
 
         return True
 
@@ -412,7 +422,7 @@ class AbstractUserDatabase(HasTraits):
         try:
             self.db_update_password(name, np.new_password)
         except UserDatabaseError, e:
-            error(None, str(e))
+            self._db_error(e)
 
     def add_user(self):
         """Add a user."""
@@ -428,7 +438,7 @@ class AbstractUserDatabase(HasTraits):
                 self.db_add_user(vuac.name.strip(), vuac.description,
                         vuac.password)
             except UserDatabaseError, e:
-                error(None, str(e))
+                self._db_error(e)
 
     def modify_user(self):
         """Modify a user."""
@@ -444,7 +454,7 @@ class AbstractUserDatabase(HasTraits):
                 self.db_update_user(vuac.name.strip(), vuac.description,
                         vuac.password)
             except UserDatabaseError, e:
-                error(None, str(e))
+                self._db_error(e)
 
     def delete_user(self):
         """Delete a user."""
@@ -463,12 +473,17 @@ class AbstractUserDatabase(HasTraits):
                 try:
                     self.db_delete_user(name)
                 except UserDatabaseError, e:
-                    error(None, str(e))
+                    self._db_error(e)
 
     def user_factory(self):
         """Create a new user object."""
 
-        return User(name=os.environ.get('USER', ''))
+        user = User(name=os.environ.get('USER', ''), _user_db=self)
+
+        # Monitor when the blob changes.
+        user.on_trait_change(self._blob_changed, name='blob')
+
+        return user
 
     ###########################################################################
     # 'AbstractUserDatabase' interface.
@@ -486,22 +501,28 @@ class AbstractUserDatabase(HasTraits):
 
         raise NotImplementedError
 
-    def db_exact_user(self, name):
-        """This must be reimplemented to return a tuple of the name,
-        description and password of the user with the given name."""
-
-        raise NotImplementedError
-
     def db_is_empty(self):
         """This must be reimplemented to return True if the user database is
         empty.  It will only ever be called once."""
 
         raise NotImplementedError
 
-    def db_matching_user(self, name):
+    def db_get_user(self, name):
+        """This must be reimplemented to return a tuple of the name,
+        description, blob and password of the user with the given name."""
+
+        raise NotImplementedError
+
+    def db_search_user(self, name):
         """This must be reimplemented to return a tuple of the full name,
         description and password of the user with either the given name, or
         the first user whose name starts with the given name."""
+
+        raise NotImplementedError
+
+    def db_update_blob(self, name, blob):
+        """This must be reimplemented to update the blob for the user with the
+        given name (which will not be empty)."""
 
         raise NotImplementedError
 
@@ -522,6 +543,30 @@ class AbstractUserDatabase(HasTraits):
         name (which will not be empty) exists in the user database."""
 
         raise NotImplementedError
+
+    ###########################################################################
+    # Trait handlers.
+    ###########################################################################
+
+    def _blob_changed(self, user, tname, old, new):
+        """Invoked when the user's blob data changes."""
+
+        if not self._updating_blob_internally:
+            try:
+                self.db_update_blob(user.name, user.blob)
+            except UserDatabaseError, e:
+                self._db_error(e)
+
+    ###########################################################################
+    # Private interface.
+    ###########################################################################
+
+    @staticmethod
+    def _db_error(e):
+        """Display a message to the user after a UserDatabaseError exception
+        has been raised."""
+
+        error(None, str(e))
 
 
 def _validate_password(password, confirmation):

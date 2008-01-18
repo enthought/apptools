@@ -28,8 +28,8 @@ class PickledUserDatabase(AbstractUserDatabase):
     #### Private interface ###################################################
 
     # The persisted database.  The database itself is a dictionary, keyed by
-    # the user name, and with a value that is a tuple of the clear text
-    # password and the description.
+    # the user name, and with a value that is a tuple of the description, blob
+    # and clear text password.
     _db = Instance(Persistent)
 
     ###########################################################################
@@ -47,7 +47,7 @@ class PickledUserDatabase(AbstractUserDatabase):
             if users.has_key(name):
                 raise UserDatabaseError("The user \"%s\" already exists." % name)
 
-            users[name] = (password, description)
+            users[name] = (description, '', password)
             self._db.write(users)
         finally:
             self._db.unlock()
@@ -68,35 +68,35 @@ class PickledUserDatabase(AbstractUserDatabase):
         finally:
             self._db.unlock()
 
-    def db_exact_user(self, name):
-        """Return the details of the user with the given name."""
-
-        users = self._readonly_copy()
-
-        try:
-            password, description = users[name]
-        except KeyError:
-            return None, None, None
-
-        return name, description, password
-
     def db_is_empty(self):
         """See if the database is empty."""
 
         return (len(self._readonly_copy()) == 0)
 
-    def db_matching_user(self, name):
-        """Return the details of the user with the given name, or one that
-        starts with the given name."""
+    def db_get_user(self, name):
+        """Return the details of the user with the given name."""
+
+        users = self._readonly_copy()
+
+        try:
+            description, blob, password = users[name]
+        except KeyError:
+            return None, None, None, None
+
+        return name, description, blob, password
+
+    def db_search_user(self, name):
+        """Return the full name, description and password of the user with the
+        given name, or one that starts with the given name."""
 
         users = self._readonly_copy()
 
         # Try the exact name first.
         try:
-            password, description = users[name]
+            description, _, password = users[name]
         except KeyError:
             # Find the first user that starts with the name.
-            for n, (password, description) in users.items():
+            for n, (description, _, password) in users.items():
                 if n.startswith(name):
                     name = n
                     break
@@ -104,6 +104,24 @@ class PickledUserDatabase(AbstractUserDatabase):
                 return None, None, None
 
         return name, description, password
+
+    def db_update_blob(self, name, blob):
+        """Update the blob for the given user."""
+
+        self._db.lock()
+
+        try:
+            users = self._db.read()
+
+            try:
+                description, _, password = users[name]
+            except KeyError:
+                raise UserDatabaseError("The user has been removed from the user database.")
+
+            users[name] = (description, blob, password)
+            self._db.write(users)
+        finally:
+            self._db.unlock()
 
     def db_update_password(self, name, password):
         """Update the password for the given user."""
@@ -114,11 +132,11 @@ class PickledUserDatabase(AbstractUserDatabase):
             users = self._db.read()
 
             try:
-                _, description = users[name]
+                description, blob, _ = users[name]
             except KeyError:
                 raise UserDatabaseError("The user has been removed from the user database.")
 
-            users[name] = (password, description)
+            users[name] = (description, blob, password)
             self._db.write(users)
         finally:
             self._db.unlock()
@@ -131,10 +149,12 @@ class PickledUserDatabase(AbstractUserDatabase):
         try:
             users = self._db.read()
 
-            if not users.has_key(name):
-                raise UserDatabaseError("The user \"%s\" doesn't exist." % name)
+            try:
+                _, blob, _ = users[name]
+            except KeyError:
+                raise UserDatabaseError("The user has been removed from the user database.")
 
-            users[name] = (password, description)
+            users[name] = (description, blob, password)
             self._db.write(users)
         finally:
             self._db.unlock()

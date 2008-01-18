@@ -40,6 +40,11 @@ The following are the concepts supported by the framework.
   Each application has a current user who is either *authorised* or
   *unauthorised*.  In order to become authorised a user must identify
   themselves and authenticate that identity.
+  
+  An arbitrary piece of data (called a blob) can be associated with an
+  authorised user which (with user manager support) can be stored securely.
+  This might be used, for example, to store sensitive user preferences, or to
+  implement a roaming profile.
 
 - Permissions Policy
 

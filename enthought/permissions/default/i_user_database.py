@@ -22,16 +22,16 @@ class IUserDatabase(Interface):
     manager."""
 
     # Set if the implementation supports changing a user's password.
-    can_change_password = Bool(False)
+    can_change_password = Bool
 
     # Set if the implementation supports adding users.
-    can_add_user = Bool(False)
+    can_add_user = Bool
 
     # Set if the implementation supports modifying users.
-    can_modify_user = Bool(False)
+    can_modify_user = Bool
 
     # Set if the implementation supports deleting users.
-    can_delete_user = Bool(False)
+    can_delete_user = Bool
 
     def bootstrapping(self):
         """Return True if the user database is bootstrapping.  Typically this
