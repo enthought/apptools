@@ -23,6 +23,7 @@ HH_HELP_CONTEXT = 0x000f
 class HelpViewer:
     """ Encapsulates access to the RoboHelp context-sensitive help API. """
     def __init__(self, help_file, map_file=None, hwnd=None, custom_wnd=None):
+        #logger.debug("HELP: Initializing HelpViewer(helpfile=%s, map_file=%s" % (help_file, map_file))
         self.hwnd = hwnd
         self.help_file = help_file
         self.map_file = map_file
@@ -40,6 +41,7 @@ class HelpViewer:
 
     def view_toc(self, hwnd=0, custom_wnd_name=None):
         """ Displays the default topic with table of contents pane visible."""
+        #logger.debug("HELP: HelpViewer view_toc(hwnd=%s, custom_wnd_name=%s)" % (hwnd, custom_wnd_name))
         if not hwnd:
             hwnd = self.hwnd
         help_string = self._add_custom_wnd(custom_wnd_name)
@@ -61,11 +63,11 @@ class HelpViewer:
 
     def view_id(self, id, hwnd=0, custom_wnd_name=None):
         """ Displays the topic specified by `id`."""
-        #print "In Helpviewer.view_id(id=%s, hwnd=%s, custom_wnd_name=%s)" % \
-        #    (id, hwnd, custom_wnd_name)
+        #logger.debug("HELP: Helpviewer.view_id(id=%s, hwnd=%s, custom_wnd_name=%s)" % \
+        #    (id, hwnd, custom_wnd_name))
         try:
             id = self.map_IDs[id]
-            # print "ID after mapping: %s" % id
+            #logger.debug("ID after mapping: %s" % id)
         except KeyError:
             pass    # Treat as an integer ID
         if not hwnd:

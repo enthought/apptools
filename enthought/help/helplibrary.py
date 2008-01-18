@@ -41,7 +41,7 @@ class HelpLibrary(SingletonHasPrivateTraits):
             viewer associated with the project ID to display the topic associated
             with the topic ID.
         """
-        # print "In show_topic(), topic_string='%s'" % topic_string
+        #logger.debug("HELP: HelpLibrary show_topic('%s')" % topic_string)
         if topic_string is None:
             return
         elif '|' not in topic_string:
@@ -50,7 +50,7 @@ class HelpLibrary(SingletonHasPrivateTraits):
         else:
             proj, topic = topic_string.split('|')
             viewer = self.get_helpproject(proj)
-            logger.debug("Using HelpViewer for: %s" % viewer.help_file)
+            #logger.debug("HELP: Using HelpViewer for: %s" % viewer.help_file)
             if viewer is not None:
                 custom_wnd = self._custom_windows[proj]
                 viewer.view_id(topic, custom_wnd_name=custom_wnd)
@@ -58,6 +58,7 @@ class HelpLibrary(SingletonHasPrivateTraits):
     def show_toc(self, proj_id):
         """ Displays the TOC of the specified help project.
         """
+        #logger.debug("HELP: HelpLibrary show_toc(%s)", proj_id)
         viewer = self.get_helpproject(proj_id)
         if viewer is not None:
             viewer.view_toc()

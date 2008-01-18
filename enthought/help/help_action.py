@@ -1,5 +1,7 @@
 """ Executes a help command. """
 
+# Standard imports.
+import logging
 
 # Enthought library imports.
 from enthought.envisage import get_application
@@ -14,6 +16,9 @@ if not using_workbench:
 else:
     from enthought.envisage.workbench.action import WorkbenchAction
 
+# Create a logger for this module.
+logger = logging.getLogger(__name__)
+
 
 class HelpAction(WorkbenchAction):
     """ Abstract class for help actions. """
@@ -25,7 +30,7 @@ class HelpAction(WorkbenchAction):
         # Base-class constructor.
         WorkbenchAction.__init__(self, **kw)
         self.plugin = get_application().get_service('enthought.help.IHelp')
-        # print "Initializing HelpAction"
+        #logger.debug('HELP: Initializing HelpAction [%s]', self)
         if kw.has_key('image'):
             self.image = kw['image']
         else: 
@@ -40,7 +45,8 @@ class HelpContentsAction(HelpAction):
 
     def perform(self, event = None):
         """ Performs the action. """
-        # print "Performing HelpContentsAction"
+        #logger.debug('HELP: Performing HelpContentsAction [%s]', self)
+        #logger.debug('\tAction id: %s', self.id)
         self.plugin.library.show_toc(self.id)
 
         return

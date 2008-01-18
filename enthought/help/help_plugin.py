@@ -45,7 +45,6 @@ class HelpPlugin(Plugin):
     #### 'HelpPlugin' interface ###############################################
     def traits_show_help(self, info, control):
         """ Function to show help for Traits-based views."""
-        # print "in traits_show_help()"
         help_id_to_show = ""
 
         # If there's a help_id on the view, use it.
@@ -61,9 +60,8 @@ class HelpPlugin(Plugin):
                     break
 
         # If there's a help_id, show its topic
-        # print "help_id_to_show: %s" % help_id_to_show
         if help_id_to_show != "":
-            logger.debug("Showing help topic: %s" % help_id_to_show)
+            #logger.debug("HELP: HelpPlugin showing help topic: %s" % help_id_to_show)
             self.library.show_topic(help_id_to_show)
 
         else:
@@ -96,7 +94,7 @@ class HelpPlugin(Plugin):
         Called exactly once when the plug-in is first required.
 
         """
-        # print "In HelpPlugin.start()"
+        #logger.debug('HELP: Starting HelpPlugin[%s]', self)
 
         self._replace_traits_help_handler()
         self._add_extensions_to_library()
@@ -120,11 +118,11 @@ class HelpPlugin(Plugin):
     def _replace_traits_help_handler(self):
         # Save the original Traits help handler
         self.traits_help_handler = on_help_call()
-        # print "Saved help handler is: %s" % self.traits_help_handler
+        # logger.debug("Saved help handler is: %s" % self.traits_help_handler)
 
         # Replace with this plug-in's handler for Traits help
         on_help_call(self.traits_show_help)
-        # print "New help handler is %s" % on_help_call()
+        # logger.debug( "New help handler is %s" % on_help_call())
 
     def _add_extensions_to_library(self):
         # Get the global help library
@@ -132,11 +130,12 @@ class HelpPlugin(Plugin):
 
         # Get all contributions to the HelpProject extension point.
         extensions = self.get_extensions(HelpProject)
-        # print "Extensions to HelpProject: %s" % extensions
+        #logger.debug("HELP: Extensions to HelpProject:")
         for extension in extensions:
-            # print "** Processing HelpProject: %s" % extension.name
+            #logger.debug("\tName: %s", extension.name)
+            #logger.debug("\tProject ID: %s", extension.proj_id)
             ext_location = extension._definition_.location
-            # print "\t Location: %s" % ext_location
+            #logger.debug("\t Location: %s" % ext_location)
             if extension.help_file != "":
                 help_file = self._add_help_file_extension(extension.help_file)
                 #if using_chm == True:
@@ -178,6 +177,7 @@ class HelpPlugin(Plugin):
                 filename = help_filename + '.chm'
             else:
                 filename = help_filename + '.htm'
+        #logger.debug('\tHelp file name with extension: %s', filename)
         return filename
 
 #### EOF ######################################################################
