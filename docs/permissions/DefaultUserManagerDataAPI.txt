@@ -19,10 +19,23 @@ data (eg. passwords for external systems) that shouldn't be stored as ordinary
 preferences.
 
 If there is no requirement to store additional user related data than that
-defined by ``IUser`` then the API provides the ``AbstractUserDatabase`` class
-which provides all the GUI code required to implement the `IUserDatabase`_
-interface but leaves it to a subclass to implement the methods that actually
+defined by ``IUser`` then the API provides the `AbstractUserDatabase class`_
+which provides all the GUI code required to implement the `IUserDatabase
+interface`_ but leaves it to a subclass to implement the methods that actually
 access the user database itself.
+
+
+Overview of AbstractUserDatabase
+--------------------------------
+
+The `AbstractUserDatabase class`_ defines a number of methods, all beginning
+with ``db_``, that must be reimplemented to read and write to the user
+database.  The methods are designed to be implemented using simple SQL
+statements.
+
+In the event of an error a method must raise the ``UserDatabaseError``
+exception.  The string representation of the exception is used as an error
+message that is displayed to the user.
 
 
 Overview of IUserDatabase
@@ -52,11 +65,6 @@ an implementation to extend the `IUser interface`_ and store additional user
 related data in the object if the ``blob`` trait proves insufficient.
 
 
-Overview of AbstractUserDatabase
---------------------------------
-
-**TODO**
-
-
+.. _`AbstractUserDatabase class`: https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/abstract_user_database.py
 .. _`IUser interface`: https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/i_user.py
 .. _`IUserDatabase interface`: https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/i_user_database.py
