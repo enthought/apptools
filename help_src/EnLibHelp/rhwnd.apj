@@ -55,5 +55,32 @@
 			<tabposition>0</tabposition>
 			<showwindow>0</showwindow>
 		</window>
+		<window>
+			<name>$global_Context</name>
+			<caption>Enthought Library Help</caption>
+			<tocfile/>
+			<indexfile/>
+			<defaultfile/>
+			<homefile/>
+			<jump1filename/>
+			<jump1text/>
+			<jump2filename/>
+			<jump2text/>
+			<flags>1074267168</flags>
+			<navpanewidth>0</navpanewidth>
+			<buttons>12302</buttons>
+			<windowplacement>
+				<left>5</left>
+				<top>5</top>
+				<right>512</right>
+				<bottom>384</bottom>
+			</windowplacement>
+			<windowstyle>0</windowstyle>
+			<windowstyleex>0</windowstyleex>
+			<expandedstate>1</expandedstate>
+			<defaulttab>0</defaulttab>
+			<tabposition>0</tabposition>
+			<showwindow>0</showwindow>
+		</window>
 	</windows>
 </rhpml>

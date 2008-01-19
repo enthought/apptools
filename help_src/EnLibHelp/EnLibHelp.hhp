@@ -18,6 +18,7 @@ Flat=No
 [WINDOWS]
 Context="Enthought Library Help","EnLibHelp.hhc","EnLibHelp.hhk","","",,,,,0xe0420,0,0x300e,[5,5,617,441],0x0,0x0,,1,0,0
 Main="Enthought Library Help","EnLibHelp.hhc","EnLibHelp.hhk","","",,,,,0x400e0420,0,0x300e,[22,26,809,465],0x0,0x0,,0,0,0
+$global_Context="Enthought Library Help","EnLibHelp.hhc","EnLibHelp.hhk","","",,,,,0x40080420,0,0x300e,[5,5,512,384],0x0,0x0,,1,0,0
 
 [FILES]
 edit_filter_for_inputs_dialog_box.htm
@@ -72,4 +73,8 @@ EnLibHelp.brs
 BSSCDefault.h
 EnLibHelp.h
 
-
+[MERGE FILES]
+CoPEG.chm
+copeg_master.chm
+GeoLibHelp.chm
+CP_Library.chm

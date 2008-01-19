@@ -40,7 +40,7 @@ Skin List=C:\webhelp\cp_help_src\projects\enlib_help\EnLibHelp.trk
 OriginalHhk=C:\webhelp\cp_help_src\projects\enlib_help\EnLibHelp.hhk
 Active Layout Names=C:\webhelp\cp_help_src\projects\enlib_help\EnLibHelp.trl
 Default Topic=C:\webhelp\cp_help_src\projects\enlib_help\welcome.htm
-Build Tags0=5626;Converge | Not_implemented | VMS | ProAVA2 | Online | CoPEG
+Build Tags0=10910;Converge | Not_implemented | VMS | ProAVA2 | Online | CoPEG
 Build Tags=
 Build Expression=
 Language ID=1033
@@ -169,15 +169,15 @@ Time Stamp=1156452466
 [Target:CoPEG HTML Help]
 ResultFileName=C:\svn\cp\src\apps\unified\help\EnLibHelp.chm
 SSLayoutType=1
-CreateProjectTime=18:02, January 16, 2008
+CreateProjectTime=18:11, January 18, 2008
 CreateProjectUser=Janet Swisher
 SupportMas_MPJ=1
 ActionID For Generation=1001
 Remove Folder with prompt=1
 ViewFileName=C:\svn\cp\src\apps\unified\help\EnLibHelp.chm
 ResultStatus=0
-BuildTimeHi=29907100
-BuildTimeLow=971868029
+BuildTimeHi=29907503
+BuildTimeLow=-620457934
 Enable Result Dialog=1
 [Global Build Tag Expressions]
 Expr_2006:03:11:17:09:44=NOT Not_implemented

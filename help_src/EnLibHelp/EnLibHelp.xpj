@@ -3,7 +3,7 @@
 	<projectproperties>
 		<projecttitle>Enthought Library Help</projecttitle>
 		<homepage>welcome.htm</homepage>
-		<primarylayout>CoPEG WebHelp</primarylayout>
+		<primarylayout>CoPEG HTML Help</primarylayout>
 		<Flags>28</Flags>
 		<language>1033</language>
 	</projectproperties>

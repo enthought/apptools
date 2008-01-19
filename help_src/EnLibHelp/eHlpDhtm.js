@@ -10,10 +10,10 @@
 
 //{{HH_SYMBOL_SECTION
 var HH_ChmFilename = "C:\\webhelp\\cp_help_src\\projects\\enlib_help\\EnLibHelp.chm";
-var HH_WindowName = "Context||Main";
+var HH_WindowName = "Context||Main||$global_Context";
 var HH_GlossaryFont = "";
-var HH_Glossary = "1,1";
-var HH_Avenue = "0,1";
+var HH_Glossary = "1,1,1";
+var HH_Avenue = "0,1,1";
 var HH_ActiveX = true;
 //}}HH_SYMBOL_SECTION
 
