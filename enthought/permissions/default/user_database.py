@@ -26,6 +26,7 @@ from enthought.traits.ui.menu import Action, OKCancelButtons
 # Local imports.
 from enthought.permissions.i_user import IUser
 from i_user_database import IUserDatabase
+from i_user_storage import IUserStorage, UserStorageError
 
 
 class _LoginUser(HasTraits):
@@ -82,7 +83,7 @@ class _ViewUserAccount(HasTraits):
     confirm_password = Password
 
     # The user database.
-    user_db = Instance('AbstractUserDatabase')
+    us = Instance(IUserStorage)
 
 
 class _UserAccountHandler(Handler):
@@ -144,7 +145,7 @@ class _UserAccountHandler(Handler):
         if name:
             try:
                 self.search(vuac, name)
-            except UserDatabaseError, e:
+            except UserStorageError, e:
                 self.error(str(e))
         else:
             self.error("Please give a user name to search for.")
@@ -184,7 +185,7 @@ class _AddUserAccountHandler(_UserAccountHandler):
         """Search the user database to see if a user already exists."""
 
         # See if there is a user with the name.
-        if vuac.user_db.db_user_exists(name):
+        if vuac.us.user_exists(name):
             self.error("A user called \"%s\" already exists." % name)
         else:
             self.inform("A user called \"%s\" doesn't currently exist." % name)
@@ -202,7 +203,7 @@ class _ModifyUserAccountHandler(_AddUserAccountHandler):
         """Search the user database and update the viewed object appropriately.
         """
 
-        full_name, description, password = vuac.user_db.db_search_user(name)
+        full_name, description, password = vuac.us.search_user(name)
 
         if full_name is None:
             if name:
@@ -317,16 +318,10 @@ class User(HasTraits):
     blob = Str
 
 
-class UserDatabaseError(Exception):
-    """This is the exception raised by an AbstractUserDatabase subclass when an
-    error occurs accessing the database.  Its string representation is
-    displayed as an error message to the user."""
-
-
-class AbstractUserDatabase(HasTraits):
+class UserDatabase(HasTraits):
     """This implements a user database that supports IUser for the default user
     manager (ie. using password authorisation) except that it leaves the actual
-    access of the data to a subclass."""
+    access of the data to an implementation of IUserStorage."""
 
     implements(IUserDatabase)
 
@@ -339,6 +334,8 @@ class AbstractUserDatabase(HasTraits):
     can_modify_user = True
 
     can_delete_user = True
+
+    user_storage = Instance(IUserStorage)
 
     #### Private interface ####################################################
 
@@ -358,8 +355,8 @@ class AbstractUserDatabase(HasTraits):
         # This might be called often so we only check once and save the result.
         if self._bootstrap < 0:
             try:
-                self._bootstrap = int(self.db_is_empty())
-            except UserDatabaseError:
+                self._bootstrap = int(self.user_storage.is_empty())
+            except UserStorageError:
                 # Suppress the error and assume it isn't empty.
                 self._bootstrap = 0
 
@@ -377,9 +374,10 @@ class AbstractUserDatabase(HasTraits):
 
         # Get the user account and compare passwords.
         try:
-            name, description, blob, password = self.db_get_user(lu.name.strip())
-        except UserDatabaseError, e:
-            self._db_error(e)
+            name, description, blob, password = self.user_storage.get_user(
+                    lu.name.strip())
+        except UserStorageError, e:
+            self._us_error(e)
             return False
 
         if name is None or password != lu.password:
@@ -420,47 +418,47 @@ class AbstractUserDatabase(HasTraits):
 
         # Update the password in the database.
         try:
-            self.db_update_password(name, np.new_password)
-        except UserDatabaseError, e:
-            self._db_error(e)
+            self.user_storage.update_password(name, np.new_password)
+        except UserStorageError, e:
+            self._us_error(e)
 
     def add_user(self):
         """Add a user."""
 
         # Get the data from the user.
-        vuac = _ViewUserAccount(user_db=self)
+        vuac = _ViewUserAccount(us=self.user_storage)
         view = _AddUserAccountView()
         handler = _AddUserAccountHandler()
 
         if vuac.edit_traits(view=view, handler=handler).result:
             # Add the data to the database.
             try:
-                self.db_add_user(vuac.name.strip(), vuac.description,
+                self.user_storage.add_user(vuac.name.strip(), vuac.description,
                         vuac.password)
-            except UserDatabaseError, e:
-                self._db_error(e)
+            except UserStorageError, e:
+                self._us_error(e)
 
     def modify_user(self):
         """Modify a user."""
 
         # Get the data from the user.
-        vuac = _ViewUserAccount(user_db=self)
+        vuac = _ViewUserAccount(us=self.user_storage)
         view = _ModifyUserAccountView()
         handler = _ModifyUserAccountHandler()
 
         if vuac.edit_traits(view=view, handler=handler).result:
             # Update the data in the database.
             try:
-                self.db_update_user(vuac.name.strip(), vuac.description,
-                        vuac.password)
-            except UserDatabaseError, e:
-                self._db_error(e)
+                self.user_storage.update_user(vuac.name.strip(),
+                        vuac.description, vuac.password)
+            except UserStorageError, e:
+                self._us_error(e)
 
     def delete_user(self):
         """Delete a user."""
 
         # Get the data from the user.
-        vuac = _ViewUserAccount(user_db=self)
+        vuac = _ViewUserAccount(us=self.user_storage)
         view = _DeleteUserAccountView()
         handler = _DeleteUserAccountHandler()
 
@@ -471,14 +469,14 @@ class AbstractUserDatabase(HasTraits):
             if confirm(None, "Are you sure you want to delete the user \"%s\"?" % name) == YES:
                 # Delete the data from the database.
                 try:
-                    self.db_delete_user(name)
-                except UserDatabaseError, e:
-                    self._db_error(e)
+                    self.user_storage.delete_user(name)
+                except UserStorageError, e:
+                    self._us_error(e)
 
     def user_factory(self):
         """Create a new user object."""
 
-        user = User(name=os.environ.get('USER', ''), _user_db=self)
+        user = User(name=os.environ.get('USER', ''))
 
         # Monitor when the blob changes.
         user.on_trait_change(self._blob_changed, name='blob')
@@ -486,85 +484,33 @@ class AbstractUserDatabase(HasTraits):
         return user
 
     ###########################################################################
-    # 'AbstractUserDatabase' interface.
-    ###########################################################################
-
-    def db_add_user(self, name, description, password):
-        """This must be reimplemented to add a new user with the given name,
-        description and password."""
-
-        raise NotImplementedError
-
-    def db_delete_user(self, name):
-        """This must be reimplemented to delete the user with the given name
-        (which will not be empty)."""
-
-        raise NotImplementedError
-
-    def db_is_empty(self):
-        """This must be reimplemented to return True if the user database is
-        empty.  It will only ever be called once."""
-
-        raise NotImplementedError
-
-    def db_get_user(self, name):
-        """This must be reimplemented to return a tuple of the name,
-        description, blob and password of the user with the given name."""
-
-        raise NotImplementedError
-
-    def db_search_user(self, name):
-        """This must be reimplemented to return a tuple of the full name,
-        description and password of the user with either the given name, or
-        the first user whose name starts with the given name."""
-
-        raise NotImplementedError
-
-    def db_update_blob(self, name, blob):
-        """This must be reimplemented to update the blob for the user with the
-        given name (which will not be empty)."""
-
-        raise NotImplementedError
-
-    def db_update_password(self, name, password):
-        """This must be reimplemented to update the password for the user with
-        the given name (which will not be empty)."""
-
-        raise NotImplementedError
-
-    def db_update_user(self, name, description, password):
-        """This must be reimplemented to update the description and password
-        for the user with the given name (which will not be empty)."""
-
-        raise NotImplementedError
-
-    def db_user_exists(self, name):
-        """This must be reimplemented to return True if a user with the given
-        name (which will not be empty) exists in the user database."""
-
-        raise NotImplementedError
-
-    ###########################################################################
     # Trait handlers.
     ###########################################################################
+
+    def _user_storage_default(self):
+        """Return the default storage for the user data."""
+
+        from pickled_user_storage import PickledUserStorage
+
+        return PickledUserStorage()
 
     def _blob_changed(self, user, tname, old, new):
         """Invoked when the user's blob data changes."""
 
         if not self._updating_blob_internally:
             try:
-                self.db_update_blob(user.name, user.blob)
-            except UserDatabaseError, e:
-                self._db_error(e)
+                self.user_storage.update_blob(user.name, user.blob)
+            except UserStorageError, e:
+                self._us_error(e)
 
     ###########################################################################
     # Private interface.
     ###########################################################################
 
     @staticmethod
-    def _db_error(e):
-        """Display a message to the user after a UserDatabaseError exception
-        has been raised."""
+    def _us_error(e):
+        """Display a message to the user after a UserStorageError exception has
+        been raised."""
 
         error(None, str(e))
 

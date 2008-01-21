@@ -132,12 +132,48 @@ groups.
 The complete API_ documentation is available as endo generated HTML.
 
 
+What Do I Need to Reimplement?
+------------------------------
+
+The architecture of the permissions framework comprises several layers, each
+of which can reimplemented to meet the requirements of a particular
+environment.  Hopefully the following questions and answers will clarify what
+needs to be reimplemented depending on your environment.
+
+Q: Do you want to use roles to group permissions and assign them to users?
+
+A: If yes then use the supplied PermissionsPolicy, otherwise provide your own
+   IPermissionsPolicy implementation.
+
+Q: Do you want users to be authenticated using a password?
+
+A: If yes then use the supplied UserManager, otherwise provide your own
+   IUserManager implementation.
+
+Q: Does the IUser interface allow you to store all the user specific
+   information you need?
+
+A: If yes then use the supplied UserDatabase, otherwise provide your own
+   IUserDatabase implementation.
+
+Q: Do you want to store your user accounts as pickled data in a local file?
+
+A: If yes then use the supplied default, otherwise provide UserDatabase with
+   your own IUserStorage implementation.
+
+Q: Do you want to store your policy data (ie. roles and role assignments) as
+   pickled data in a local file?
+
+A: If yes then use the supplied default, otherwise provide PermissionsPolicy
+   with your own IPolicyStorage implementation.
+
+
 Using the Default Implementations
 ---------------------------------
 
 The default permissions policy and its default user manager both (again by
 default) persist their data as pickles in local files called
-``ets_perms_permsdb`` and ``ets_perms_userdb`` respectively.  By default these
+``ets_perms_policydb`` and ``ets_perms_userdb`` respectively.  By default these
 are stored in the application's home directory (ie. that returned by
 ``ETSConfig.application_home``).
 

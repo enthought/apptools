@@ -14,7 +14,10 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Bool, Interface
+from enthought.traits.api import Bool, Instance, Interface
+
+# Local imports.
+from i_user_storage import IUserStorage
 
 
 class IUserDatabase(Interface):
@@ -32,6 +35,9 @@ class IUserDatabase(Interface):
 
     # Set if the implementation supports deleting users.
     can_delete_user = Bool
+
+    # The user data storage.
+    user_storage = Instance(IUserStorage)
 
     def bootstrapping(self):
         """Return True if the user database is bootstrapping.  Typically this

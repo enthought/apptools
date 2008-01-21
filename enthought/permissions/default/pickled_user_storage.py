@@ -14,16 +14,18 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Instance
+from enthought.traits.api import HasTraits, Instance, implements
 
 # Local imports.
-from abstract_user_database import AbstractUserDatabase, UserDatabaseError
+from i_user_storage import IUserStorage, UserStorageError
 from persistent import Persistent, PersistentError
 
 
-class PickledUserDatabase(AbstractUserDatabase):
+class PickledUserStorage(HasTraits):
     """This implements a user database that pickles its data in a local file.
     """
+
+    implements(IUserStorage)
 
     #### Private interface ###################################################
 
@@ -33,10 +35,10 @@ class PickledUserDatabase(AbstractUserDatabase):
     _db = Instance(Persistent)
 
     ###########################################################################
-    # 'AbstractUserDatabase' interface.
+    # 'IUserStorage' interface.
     ###########################################################################
 
-    def db_add_user(self, name, description, password):
+    def add_user(self, name, description, password):
         """Add a new user."""
 
         self._db.lock()
@@ -45,14 +47,14 @@ class PickledUserDatabase(AbstractUserDatabase):
             users = self._db.read()
 
             if users.has_key(name):
-                raise UserDatabaseError("The user \"%s\" already exists." % name)
+                raise UserStorageError("The user \"%s\" already exists." % name)
 
             users[name] = (description, '', password)
             self._db.write(users)
         finally:
             self._db.unlock()
 
-    def db_delete_user(self, name):
+    def delete_user(self, name):
         """Delete a user."""
 
         self._db.lock()
@@ -61,19 +63,19 @@ class PickledUserDatabase(AbstractUserDatabase):
             users = self._db.read()
 
             if not users.has_key(name):
-                raise UserDatabaseError("The user \"%s\" doesn't exist." % name)
+                raise UserStorageError("The user \"%s\" doesn't exist." % name)
 
             del users[name]
             self._db.write(users)
         finally:
             self._db.unlock()
 
-    def db_is_empty(self):
+    def is_empty(self):
         """See if the database is empty."""
 
         return (len(self._readonly_copy()) == 0)
 
-    def db_get_user(self, name):
+    def get_user(self, name):
         """Return the details of the user with the given name."""
 
         users = self._readonly_copy()
@@ -85,7 +87,7 @@ class PickledUserDatabase(AbstractUserDatabase):
 
         return name, description, blob, password
 
-    def db_search_user(self, name):
+    def search_user(self, name):
         """Return the full name, description and password of the user with the
         given name, or one that starts with the given name."""
 
@@ -105,7 +107,7 @@ class PickledUserDatabase(AbstractUserDatabase):
 
         return name, description, password
 
-    def db_update_blob(self, name, blob):
+    def update_blob(self, name, blob):
         """Update the blob for the given user."""
 
         self._db.lock()
@@ -116,14 +118,14 @@ class PickledUserDatabase(AbstractUserDatabase):
             try:
                 description, _, password = users[name]
             except KeyError:
-                raise UserDatabaseError("The user has been removed from the user database.")
+                raise UserStorageError("The user has been removed from the user database.")
 
             users[name] = (description, blob, password)
             self._db.write(users)
         finally:
             self._db.unlock()
 
-    def db_update_password(self, name, password):
+    def update_password(self, name, password):
         """Update the password for the given user."""
 
         self._db.lock()
@@ -134,14 +136,14 @@ class PickledUserDatabase(AbstractUserDatabase):
             try:
                 description, blob, _ = users[name]
             except KeyError:
-                raise UserDatabaseError("The user has been removed from the user database.")
+                raise UserStorageError("The user has been removed from the user database.")
 
             users[name] = (description, blob, password)
             self._db.write(users)
         finally:
             self._db.unlock()
 
-    def db_update_user(self, name, description, password):
+    def update_user(self, name, description, password):
         """Update the description and password for the given user."""
 
         self._db.lock()
@@ -152,14 +154,14 @@ class PickledUserDatabase(AbstractUserDatabase):
             try:
                 _, blob, _ = users[name]
             except KeyError:
-                raise UserDatabaseError("The user has been removed from the user database.")
+                raise UserStorageError("The user has been removed from the user database.")
 
             users[name] = (description, blob, password)
             self._db.write(users)
         finally:
             self._db.unlock()
 
-    def db_user_exists(self, name):
+    def user_exists(self, name):
         """See if the given user exists."""
 
         return self._readonly_copy().has_key(name)
@@ -188,6 +190,6 @@ class PickledUserDatabase(AbstractUserDatabase):
             finally:
                 self._db.unlock()
         except PersistentError, e:
-            raise UserDatabaseError(str(e))
+            raise UserStorageError(str(e))
 
         return users

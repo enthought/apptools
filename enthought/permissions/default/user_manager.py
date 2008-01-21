@@ -41,10 +41,10 @@ class UserManager(HasTraits):
 
     user_authenticated = Event(IUser)
 
-    #### Private interface ####################################################
+    #### 'UserManger' interface ###############################################
 
     # The user database.
-    _user_db = Instance(IUserDatabase)
+    user_db = Instance(IUserDatabase)
 
     ###########################################################################
     # 'IUserManager' interface.
@@ -54,7 +54,7 @@ class UserManager(HasTraits):
         """Return True if we are bootstrapping, ie. no users have been defined.
         """
 
-        return self._user_db.bootstrapping()
+        return self.user_db.bootstrapping()
 
     def authenticate_user(self, user=None):
         """Authenticate a user."""
@@ -62,7 +62,7 @@ class UserManager(HasTraits):
         if user is None:
             user = self.user
 
-        if self._user_db.authenticate_user(user):
+        if self.user_db.authenticate_user(user):
             user.authenticated = True
 
             self.user = user
@@ -71,7 +71,7 @@ class UserManager(HasTraits):
     def unauthenticate_user(self):
         """Unauthenticate a user."""
 
-        if self.user.authenticated and self._user_db.unauthenticate_user(self.user):
+        if self.user.authenticated and self.user_db.unauthenticate_user(self.user):
             self.user.authenticated = False
             self.user_authenticated = None
 
@@ -82,7 +82,7 @@ class UserManager(HasTraits):
     def _management_actions_default(self):
         """Return the list of management actions."""
 
-        user_db = self._user_db
+        user_db = self.user_db
         actions = []
 
         if user_db.can_add_user:
@@ -113,7 +113,7 @@ class UserManager(HasTraits):
     def _user_actions_default(self):
         """Return the list of user actions."""
 
-        user_db = self._user_db
+        user_db = self.user_db
         actions = []
 
         if user_db.can_change_password:
@@ -129,11 +129,11 @@ class UserManager(HasTraits):
     def _user_default(self):
         """Return the default current user."""
 
-        return self._user_db.user_factory()
+        return self.user_db.user_factory()
 
-    def __user_db_default(self):
+    def _user_db_default(self):
         """Return the default user database."""
 
-        from pickled_user_database import PickledUserDatabase
+        from user_database import UserDatabase
 
-        return PickledUserDatabase()
+        return UserDatabase()

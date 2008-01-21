@@ -12,9 +12,10 @@
 # Description: <Enthought permissions package component>
 #------------------------------------------------------------------------------
 
-from abstract_user_database import AbstractUserDatabase, UserDatabaseError
 from i_management_view import IManagementView
 from i_user_database import IUserDatabase
+from i_user_storage import IUserStorage, UserStorageError
 from management_view import ManagementView
 from permissions_policy import PermissionsPolicy
+from user_database import UserDatabase
 from user_manager import UserManager
