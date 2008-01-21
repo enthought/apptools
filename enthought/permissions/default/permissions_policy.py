@@ -23,7 +23,6 @@ from enthought.permissions.i_permission import IPermission
 from enthought.permissions.i_user_manager import IUserManager
 from enthought.permissions.permission import Permission
 from enthought.permissions.secure_proxy import SecureProxy
-from i_management_view import IManagementView
 
 
 class PermissionsPolicy(HasTraits):
@@ -42,10 +41,6 @@ class PermissionsPolicy(HasTraits):
     perms = List(Instance(IPermission))
 
     user_manager = Instance(IUserManager)
-
-    #### 'PermissionsPolicy' interface ########################################
-
-    management_view = Instance(IManagementView)
 
     ###########################################################################
     # 'IPermissionsPolicy' interface.
@@ -84,23 +79,41 @@ class PermissionsPolicy(HasTraits):
     def _management_actions_default(self):
         """Return the management actions to manage the policy."""
 
-        update_perm = Permission(name='ets.permissions.management.update',
-                description=u"Update roles and permissions", bootstrap=True)
-        view_perm = Permission(name='ets.permissions.management.view',
-                description=u"View roles and permissions", bootstrap=True)
+        actions = []
 
-        act = Action(name='&Roles and Permissions...',
-                on_perform=lambda: self.management_view(self.user_manager))
-        act = SecureProxy(act, perms=[update_perm, view_perm], show=False)
+        perm = Permission(name='ets.permissions.management.define_roles',
+                description=u"Define roles", bootstrap=True)
+        act = Action(name='&Role Definitions...', on_perform=self._define_role)
 
-        return [act]
+        actions.append(SecureProxy(act, perms=[perm], show=False))
+
+        perm = Permission(name='ets.permissions.management.assign_roles',
+                description=u"Roles Assignments...", bootstrap=True)
+        act = Action(name='&Role Assignments...', on_perform=self._assign_role)
+
+        actions.append(SecureProxy(act, perms=[perm], show=False))
+
+        return actions
 
     def _user_manager_default(self):
         from user_manager import UserManager
 
         return UserManager()
 
-    def _management_view_default(self):
-        from management_view import ManagementView
+    ###########################################################################
+    # Private interface.
+    ###########################################################################
 
-        return ManagementView()
+    def _define_role(self):
+        """Define the roles."""
+
+        from enthought.pyface.api import information
+
+        information(None, "This will eventually implement a TraitsUI based GUI for defining roles.")
+
+    def _assign_role(self):
+        """Assign the roles."""
+
+        from enthought.pyface.api import information
+
+        information(None, "This will eventually implement a TraitsUI based GUI for assigning roles.")

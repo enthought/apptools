@@ -88,14 +88,14 @@ class UserManager(HasTraits):
         if user_db.can_add_user:
             perm = Permission(name='ets.permissions.management.add_user',
                     description=u"Add users", bootstrap=True)
-            act = Action(name='&Add a user...', on_perform=user_db.add_user)
+            act = Action(name='&Add a User...', on_perform=user_db.add_user)
 
             actions.append(SecureProxy(act, perms=[perm], show=False))
 
         if user_db.can_modify_user:
             perm = Permission(name='ets.permissions.management.modify_user',
                     description=u"Modify users", bootstrap=True)
-            act = Action(name='&Modify a user...',
+            act = Action(name='&Modify a User...',
                     on_perform=user_db.modify_user)
 
             actions.append(SecureProxy(act, perms=[perm], show=False))
@@ -103,7 +103,7 @@ class UserManager(HasTraits):
         if user_db.can_delete_user:
             perm = Permission(name='ets.permissions.management.delete_user',
                     description=u"Delete users", bootstrap=True)
-            act = Action(name='&Delete a user...',
+            act = Action(name='&Delete a User...',
                     on_perform=user_db.delete_user)
 
             actions.append(SecureProxy(act, perms=[perm], show=False))
@@ -119,7 +119,7 @@ class UserManager(HasTraits):
         if user_db.can_change_password:
             perm = Permission(name='ets.permissions.management.change_password',
                     description=u"Change user's password")
-            act = Action(name='&Change password...',
+            act = Action(name='&Change Password...',
                     on_perform=lambda: user_db.change_password(self.user))
 
             actions.append(SecureProxy(act, perms=[perm]))
