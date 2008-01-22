@@ -32,6 +32,15 @@ class Role(HasTraits):
     # The permissions that define the role.
     permissions = List(Instance(IPermission))
 
+    def __str__(self):
+        """Return a user friendly representation."""
+
+        s = self.description
+        if not s:
+            s = self.name
+
+        return s
+
 
 class Assignment(HasTraits):
     """This represents the assignment of roles to a user."""

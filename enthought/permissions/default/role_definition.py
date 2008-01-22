@@ -20,7 +20,7 @@ from enthought.traits.ui.api import Group, Handler, Item, SetEditor, View
 from enthought.traits.ui.menu import Action, CancelButton
 
 # Local imports.
-from enthought.permissions.i_permissions_policy import IPermissionsPolicy
+from i_policy_storage import IPolicyStorage, PolicyStorageError
 from policy_data import Role
 
 
@@ -60,7 +60,7 @@ class _RoleHandler(Handler):
 
     #### Private interface ####################################################
 
-    policy = Instance(IPermissionsPolicy)
+    ps = Instance(IPolicyStorage)
 
     ###########################################################################
     # Trait handlers.
@@ -74,7 +74,14 @@ class _RoleHandler(Handler):
     def _add_clicked(self, info):
         """Invoked by the "Add" button."""
 
-        print "Add"
+        role = self._validate(info)
+
+        if role is not None:
+            # Add the data to the database.
+            try:
+                self.ps.add_role(role)
+            except PolicyStorageError, e:
+                self._ps_error(e)
 
     def _modify_clicked(self, info):
         """Invoked by the "Modify" button."""
@@ -86,12 +93,47 @@ class _RoleHandler(Handler):
 
         print "Delete"
 
+    ###########################################################################
+    # Private interface.
+    ###########################################################################
+
+    def _validate(self, info):
+        """Validate the role and return the it if there were no problems."""
+
+        role = self._role(info)
+        role.name = role.name.strip()
+
+        if role.name:
+            self._error("A role name must be given.")
+            return None
+
+        return role
+
+    @staticmethod
+    def _role(info):
+        """Return the role instance being handled."""
+
+        return info.ui.context['object']
+
+    @staticmethod
+    def _error(msg):
+        """Display an error message to the user."""
+
+        error(None, msg)
+
+    @staticmethod
+    def _ps_error(e):
+        """Display a message to the user after a PolicyStorageError exception
+        has been raised."""
+
+        self._error(str(e))
+
 
 def role_definition(policy):
     """Implement the role definition for the given permissions policy."""
 
     role = Role()
-    view = _RoleView(policy=policy)
-    handler = _RoleHandler(policy=policy)
+    view = _RoleView(policy)
+    handler = _RoleHandler(ps=policy.policy_storage)
 
     role.edit_traits(view=view, handler=handler)

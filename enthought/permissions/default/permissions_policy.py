@@ -23,6 +23,7 @@ from enthought.permissions.i_permission import IPermission
 from enthought.permissions.permission import Permission
 from enthought.permissions.permissions_manager import PermissionsManager
 from enthought.permissions.secure_proxy import SecureProxy
+from i_policy_storage import IPolicyStorage
 from policy_data import Assignment, Role
 from role_definition import role_definition
 
@@ -49,6 +50,9 @@ class PermissionsPolicy(HasTraits):
 
     # The list of assignments.
     assignments = List(Instance(Assignment))
+
+    # The policy data storage.
+    policy_storage = Instance(IPolicyStorage)
 
     ###########################################################################
     # 'IPermissionsPolicy' interface.
@@ -96,6 +100,13 @@ class PermissionsPolicy(HasTraits):
         actions.append(SecureProxy(act, perms=[perm], show=False))
 
         return actions
+
+    def _policy_storage_default(self):
+        """Return the default storage for the policy data."""
+
+        from pickled_policy_storage import PickledPolicyStorage
+
+        return PickledPolicyStorage()
 
     ###########################################################################
     # Private interface.
