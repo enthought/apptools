@@ -12,8 +12,32 @@
 # Description: <Enthought permissions package component>
 #------------------------------------------------------------------------------
 
-from i_user_database import IUserDatabase
-from i_user_storage import IUserStorage, UserStorageError
-from permissions_policy import PermissionsPolicy
-from user_database import UserDatabase
-from user_manager import UserManager
+
+# Enthought library imports.
+from enthought.traits.api import HasTraits, Instance, List, Unicode
+
+# Local imports.
+from enthought.permissions.i_permission import IPermission
+
+
+class Role(HasTraits):
+    """This represents a role."""
+
+    # The role name.
+    name = Unicode
+
+    # The role description.
+    description = Unicode
+
+    # The permissions that define the role.
+    permissions = List(Instance(IPermission))
+
+
+class Assignment(HasTraits):
+    """This represents the assignment of roles to a user."""
+
+    # The user name.
+    user_name = Unicode
+
+    # The list of assigned roles.
+    roles = List(Instance(Role))

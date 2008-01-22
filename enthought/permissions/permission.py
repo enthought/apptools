@@ -51,6 +51,15 @@ class Permission(HasTraits):
         # Tell the current permissions policy.
         PermissionsManager.policy.perms.append(self)
 
+    def __str__(self):
+        """Return a user friendly representation."""
+
+        s = self.description
+        if not s:
+            s = self.name
+
+        return s
+
     ###########################################################################
     # Trait handlers.
     ###########################################################################

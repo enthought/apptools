@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -23,6 +23,8 @@ from enthought.permissions.i_permission import IPermission
 from enthought.permissions.i_user_manager import IUserManager
 from enthought.permissions.permission import Permission
 from enthought.permissions.secure_proxy import SecureProxy
+from policy_data import Assignment, Role
+from role_definition import role_definition
 
 
 class PermissionsPolicy(HasTraits):
@@ -41,6 +43,14 @@ class PermissionsPolicy(HasTraits):
     perms = List(Instance(IPermission))
 
     user_manager = Instance(IUserManager)
+
+    #### 'PermissionsPolicy' interface ########################################
+
+    # The list of roles.
+    roles = List(Instance(Role))
+
+    # The list of assignments.
+    assignments = List(Instance(Assignment))
 
     ###########################################################################
     # 'IPermissionsPolicy' interface.
@@ -83,12 +93,13 @@ class PermissionsPolicy(HasTraits):
 
         perm = Permission(name='ets.permissions.management.define_roles',
                 description=u"Define roles", bootstrap=True)
-        act = Action(name='&Role Definitions...', on_perform=self._define_role)
+        act = Action(name='&Role Definitions...',
+                on_perform=lambda: role_definition(self))
 
         actions.append(SecureProxy(act, perms=[perm], show=False))
 
         perm = Permission(name='ets.permissions.management.assign_roles',
-                description=u"Roles Assignments...", bootstrap=True)
+                description=u"Assignment Roles", bootstrap=True)
         act = Action(name='&Role Assignments...', on_perform=self._assign_role)
 
         actions.append(SecureProxy(act, perms=[perm], show=False))
@@ -103,13 +114,6 @@ class PermissionsPolicy(HasTraits):
     ###########################################################################
     # Private interface.
     ###########################################################################
-
-    def _define_role(self):
-        """Define the roles."""
-
-        from enthought.pyface.api import information
-
-        information(None, "This will eventually implement a TraitsUI based GUI for defining roles.")
 
     def _assign_role(self):
         """Assign the roles."""
