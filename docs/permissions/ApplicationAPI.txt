@@ -22,7 +22,7 @@ Defining Permissions
 
 A permission is the object that determines the user's access to a part of an
 application.  While it is possible to apply the same permission to more than
-part of an application, it is generally a bad idea to do so as it makes it
+one part of an application, it is generally a bad idea to do so as it makes it
 difficult to separate them at a later date.
 
 A permission has a name and a human readable description.  Permission names
@@ -165,7 +165,7 @@ The code fragment to authenticate the current user is::
 
     from enthought.permissions.api import PermissionsManager
 
-    PermissionsManager.policy.user_manager.authenticate_user()
+    PermissionsManager.user_manager.authenticate_user()
 
 Unauthorising the current user is done using the ``unauthenticate_user()``
 method.

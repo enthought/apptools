@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -35,4 +35,4 @@ class LoginAction(Action):
     def perform(self, event):
         """Perform the action."""
 
-        PermissionsManager.policy.user_manager.authenticate_user()
+        PermissionsManager.user_manager.authenticate_user()

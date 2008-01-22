@@ -46,30 +46,11 @@ The following are the concepts supported by the framework.
   This might be used, for example, to store sensitive user preferences, or to
   implement a roaming profile.
 
-- Permissions Policy
-
-  The permissions policy is responsible for assigning permissions to users and
-  for checking whether the current user has a particular permission.  To do
-  this it must maintain a persistent record of what permissions have been
-  granted to each user.  The permissions policy is also responsible for
-  supplying a user manager.
-  
-  The default permissions policy supplied with the framework uses roles to make
-  it easier for an administrator to manage the relationships between
-  permissions and users.  A role is defined as a named set of permissions, and
-  a user may have one or more roles assigned to them.
-
-  The permissions policy persists its data in a permissions database.  The
-  default permissions policy provides an API so that different implementations
-  of the permissions database can be used (for example to store the data in an
-  RDBMS).  A default permissions database is provided that pickles the data in
-  a local file.
-
 - User Manager
 
   The user manager is responsible for authorising the current user and,
-  therefore, determines how that is done.  It also provides information about
-  the user population to the permissions policy.  It may also, optionally,
+  therefore, defines how that is done.  It also provides information about the
+  user population to the permissions policy.  It may also, optionally,
   provide the ability to manage the user population (eg. add or delete users).
   The user manager must either maintain a persistent record of the user
   population, or interface with an external user database or directory service.
@@ -82,6 +63,23 @@ The following are the concepts supported by the framework.
   database can be used (for example to store the data in an RDBMS, or to
   integrate with an existing directory service).  A default user database is
   provided that pickles the data in a local file.
+
+- Permissions Policy
+
+  The permissions policy is responsible for assigning permissions to users and
+  for checking whether the current user has a particular permission.  To do
+  this it must maintain a persistent record of what permissions have been
+  granted to each user.
+  
+  The default permissions policy supplied with the framework uses roles to make
+  it easier for an administrator to manage the relationships between
+  permissions and users.  A role is defined as a named set of permissions, and
+  a user may have one or more roles assigned to them.
+
+  The permissions policy persists its data in a policy database.  The default
+  permissions policy provides an API so that different implementations of the
+  policy database can be used (for example to store the data in an RDBMS).  A
+  default policy database is provided that pickles the data in a local file.
 
 - Permissions Manager
 

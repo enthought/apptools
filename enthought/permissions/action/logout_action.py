@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -39,7 +39,7 @@ class LogoutAction(Action):
 
         super(LogoutAction, self).__init__(**traits)
 
-        PermissionsManager.policy.user_manager.on_trait_event(self._refresh_enabled, 'user_authenticated')
+        PermissionsManager.user_manager.on_trait_event(self._refresh_enabled, 'user_authenticated')
 
     ###########################################################################
     # 'Action' interface.
@@ -48,7 +48,7 @@ class LogoutAction(Action):
     def perform(self, event):
         """Perform the action."""
 
-        PermissionsManager.policy.user_manager.unauthenticate_user()
+        PermissionsManager.user_manager.unauthenticate_user()
 
     ###########################################################################
     # Private interface.

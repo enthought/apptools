@@ -97,21 +97,17 @@ class ExampleWorkbenchWindow(WorkbenchWindow):
                 name='&File', id='FileMenu')
         view_menu = ViewMenuManager(name='&View', id='ViewMenu', window=self)
 
-        # Construct the user menu containing all the permission related
-        # actions, some of which are optional.
-        policy = PermissionsManager.policy
-
         # Put them in a group so we can optionally append (because the PyFace
         # API doesn't do what you expect with append()).
         group = Group(LoginAction(), LogoutAction())
 
-        for act in policy.user_manager.user_actions:
+        for act in PermissionsManager.user_manager.user_actions:
             group.append(act)
         
-        for act in policy.user_manager.management_actions:
+        for act in PermissionsManager.user_manager.management_actions:
             group.append(act)
         
-        for act in policy.management_actions:
+        for act in PermissionsManager.policy.management_actions:
             group.append(act)
         
         user_menu = MenuManager(group, name='&User', id='UserMenu', window=self)

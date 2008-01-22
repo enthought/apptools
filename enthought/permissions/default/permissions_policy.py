@@ -20,8 +20,8 @@ from enthought.traits.api import Bool, HasTraits, implements, Instance, List
 # Local imports.
 from enthought.permissions.i_permissions_policy import IPermissionsPolicy
 from enthought.permissions.i_permission import IPermission
-from enthought.permissions.i_user_manager import IUserManager
 from enthought.permissions.permission import Permission
+from enthought.permissions.permissions_manager import PermissionsManager
 from enthought.permissions.secure_proxy import SecureProxy
 from policy_data import Assignment, Role
 from role_definition import role_definition
@@ -42,8 +42,6 @@ class PermissionsPolicy(HasTraits):
 
     perms = List(Instance(IPermission))
 
-    user_manager = Instance(IUserManager)
-
     #### 'PermissionsPolicy' interface ########################################
 
     # The list of roles.
@@ -56,26 +54,19 @@ class PermissionsPolicy(HasTraits):
     # 'IPermissionsPolicy' interface.
     ###########################################################################
 
-    def bootstrapping(self):
-        """Return True if we are bootstrapping, ie. no policy or user data
-        exists."""
-
-        if self.user_manager.bootstrapping():
-            return True
-
-        # FIXME: Check for policy data.
-        return True
-
     def check_perms(self, *perms):
         """TODO"""
+
+        # Get the current user.
+        user = PermissionsManager.user_manager.user
 
         for perm in perms:
             # If this is a bootstrap permission then see if we are in a
             # bootstrap situation.
-            if perm.bootstrap and self.allow_bootstrap_perms and self.bootstrapping():
+            if perm.bootstrap and self.allow_bootstrap_perms and self._bootstrapping():
                 return True
 
-            if self.user_manager.user.authenticated:
+            if user.authenticated:
                 # FIXME: Check that this permissions is in the current user's
                 # list.
                 return True
@@ -106,14 +97,19 @@ class PermissionsPolicy(HasTraits):
 
         return actions
 
-    def _user_manager_default(self):
-        from user_manager import UserManager
-
-        return UserManager()
-
     ###########################################################################
     # Private interface.
     ###########################################################################
+
+    def _bootstrapping(self):
+        """Return True if we are bootstrapping, ie. no policy or user data
+        exists."""
+
+        if PermissionsManager.user_manager.bootstrapping():
+            return True
+
+        # FIXME: Check for policy data.
+        return True
 
     def _assign_role(self):
         """Assign the roles."""

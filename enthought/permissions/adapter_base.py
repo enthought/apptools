@@ -69,7 +69,7 @@ class AdapterBase(HasTraits):
 
         # Refresh the state of the object when the authentication state of the
         # current user changes.
-        PermissionsManager.policy.user_manager.on_trait_event(adapter._refresh,
+        PermissionsManager.user_manager.on_trait_event(adapter._refresh,
                 'user_authenticated')
 
         return adapter

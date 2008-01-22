@@ -160,7 +160,7 @@ class SecureHandler(Handler):
 
         super(SecureHandler, self).__init__(**traits)
 
-        PermissionsManager.policy.user_manager.on_trait_event(self._refresh,
+        PermissionsManager.user_manager.on_trait_event(self._refresh,
                 'user_authenticated')
 
     def init_info(self, info):

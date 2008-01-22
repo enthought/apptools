@@ -19,15 +19,13 @@ from enthought.traits.api import Bool, Instance, Interface, List
 
 # Local imports.
 from i_permission import IPermission
-from i_user_manager import IUserManager
 
 
 class IPermissionsPolicy(Interface):
     """The interface implemented by a permissions policy.  A permissions policy
     completely defines how permissions and authorisation is handled.  A default
     permissions policy is provided, but it may be replaced using the
-    permissions manager.
-    """
+    permissions manager."""
 
     # Set if bootstrap permissions should be automatically enabled if the
     # policy is bootstrapping (ie. when no policy or user data has been
@@ -42,15 +40,7 @@ class IPermissionsPolicy(Interface):
     # The list of all permissions that the policy enforces.
     perms = List(Instance(IPermission))
 
-    # The user manager.  The policy uses this to add, modify and delete users.
-    user_manager = Instance(IUserManager)
-
-    def bootstrapping(self):
-        """Return True if the permissions policy is bootstrapping.  Typically
-        this is when no policy or user data has been defined."""
-
     def check_perms(self, *perms):
         """Check that the current user has one or more of the given
         permissions and return True if they have.  perms is a list of objects
-        that implement the IPermission interface.
-        """
+        that implement the IPermission interface."""
