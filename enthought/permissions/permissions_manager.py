@@ -57,8 +57,9 @@ class PermissionsManager(HasTraits):
         and return True if they have.  permissions is a list of Permission
         instances."""
 
-        # Get the current user.
+        # Get the current user and their assigned permissions.
         user = self.user_manager.user
+        user_perms = self.policy_manager.user_permissions
 
         for perm in permissions:
             # If this is a bootstrap permission then see if we are in a
@@ -66,9 +67,7 @@ class PermissionsManager(HasTraits):
             if perm.bootstrap and self._bootstrap:
                 return True
 
-            if user.authenticated:
-                # FIXME: Check that this permissions is in the current user's
-                # list.
+            if user.authenticated and perm in user_perms:
                 return True
 
         return False

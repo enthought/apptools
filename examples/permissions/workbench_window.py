@@ -9,7 +9,7 @@ from enthought.pyface.workbench.action.api import MenuBarManager
 from enthought.pyface.workbench.action.api import ToolBarManager
 from enthought.pyface.workbench.action.api import ViewMenuManager
 from enthought.permissions.api import PermissionsManager, SecureProxy
-from enthought.permissions.action.api import LoginAction, LogoutAction
+from enthought.permissions.action.api import UserMenuManager
 from enthought.traits.api import Callable, HasTraits, List, Instance
 
 # Local imports.
@@ -96,21 +96,7 @@ class ExampleWorkbenchWindow(WorkbenchWindow):
         file_menu = MenuManager(self._new_person_action, self._exit_action,
                 name='&File', id='FileMenu')
         view_menu = ViewMenuManager(name='&View', id='ViewMenu', window=self)
-
-        # Put them in a group so we can optionally append (because the PyFace
-        # API doesn't do what you expect with append()).
-        group = Group(LoginAction(), LogoutAction())
-
-        for act in PermissionsManager.user_manager.user_actions:
-            group.append(act)
-        
-        for act in PermissionsManager.user_manager.management_actions:
-            group.append(act)
-        
-        for act in PermissionsManager.policy_manager.management_actions:
-            group.append(act)
-        
-        user_menu = MenuManager(group, name='&User', id='UserMenu', window=self)
+        user_menu = UserMenuManager(id='UserMenu', window=self)
 
         return MenuBarManager(file_menu, view_menu, user_menu, window=self)
 

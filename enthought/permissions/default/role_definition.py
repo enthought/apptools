@@ -104,7 +104,7 @@ class _RoleHandler(Handler):
         role = self._role(info)
         role.name = role.name.strip()
 
-        if role.name:
+        if not role.name:
             self._error("A role name must be given.")
             return None
 

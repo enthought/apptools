@@ -56,20 +56,15 @@ class UserManager(HasTraits):
 
         return self.user_db.bootstrapping()
 
-    def authenticate_user(self, user=None):
-        """Authenticate a user."""
+    def authenticate_user(self):
+        """Authenticate the user."""
 
-        if user is None:
-            user = self.user
-
-        if self.user_db.authenticate_user(user):
-            user.authenticated = True
-
-            self.user = user
-            self.user_authenticated = user
+        if self.user_db.authenticate_user(self.user):
+            self.user.authenticated = True
+            self.user_authenticated = self.user
 
     def unauthenticate_user(self):
-        """Unauthenticate a user."""
+        """Unauthenticate the user."""
 
         if self.user.authenticated and self.user_db.unauthenticate_user(self.user):
             self.user.authenticated = False

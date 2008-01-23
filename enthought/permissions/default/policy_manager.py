@@ -112,7 +112,10 @@ class PolicyManager(HasTraits):
         """Invoked when the user's authentication state changes."""
 
         # FIXME
-        print "ZZZZZZZZZZZZZZZ", user
+        if user is None:
+            self.user_permissions = []
+        else:
+            print "ZZZZZZZZZZZZZZZ", user
 
     def _assign_role(self):
         """Assign the roles."""

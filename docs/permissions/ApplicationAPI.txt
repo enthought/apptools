@@ -171,8 +171,14 @@ Unauthorising the current user is done using the ``unauthenticate_user()``
 method.
 
 As a convenience two PyFace actions, called ``LoginAction`` and
-``LogoutAction``, are provided that wrap these two methods.  They can be
-imported from ``enthought.permissions.action.api``.
+``LogoutAction``, are provided that wrap these two methods.
+
+As a further convenience a PyFace menu manager, called ``UserMenuManager``, is
+provided that contains all the user and management actions (see below) in the
+permissions framework.  This is used by the example.
+
+The user menu, login and logout actions can be imported from
+``enthought.permissions.action.api``.
 
 
 Getting and Setting User Data

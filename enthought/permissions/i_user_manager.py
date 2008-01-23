@@ -43,12 +43,11 @@ class IUserManager(Interface):
         """Return True if the user manager is bootstrapping.  Typically this is
         when no users have been defined."""
 
-    def authenticate_user(self, user=None):
-        """The user is authenticated.  The user defaults to the current user.
-        Nothing is done if the user is already authenticated.  If successfully
-        authenticated the user becomes the current user and all secured objects
-        are re-enabled according to the user's permissions."""
+    def authenticate_user(self):
+        """Authenticate (ie. login) the user.  If successfully authenticated
+        all secured objects are re-enabled according to the user's permissions.
+        """
 
     def unauthenticate_user(self):
-        """Unauthenticate (ie. logout) the current user.  All secured objects
-        are disabled."""
+        """Unauthenticate (ie. logout) the user.  All secured objects are
+        disabled."""
