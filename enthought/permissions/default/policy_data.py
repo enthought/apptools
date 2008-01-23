@@ -17,7 +17,7 @@
 from enthought.traits.api import HasTraits, Instance, List, Unicode
 
 # Local imports.
-from enthought.permissions.i_permission import IPermission
+from enthought.permissions.permission import Permission
 
 
 class Role(HasTraits):
@@ -30,7 +30,7 @@ class Role(HasTraits):
     description = Unicode
 
     # The permissions that define the role.
-    permissions = List(Instance(IPermission))
+    permissions = List(Instance(Permission))
 
     def __str__(self):
         """Return a user friendly representation."""

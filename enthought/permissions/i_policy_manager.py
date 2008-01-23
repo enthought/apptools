@@ -17,9 +17,6 @@
 from enthought.pyface.action.api import Action
 from enthought.traits.api import Instance, Interface, List
 
-# Local imports.
-from i_permission import IPermission
-
 
 class IPolicyManager(Interface):
     """The interface implemented by a policy manager.  A policy manager defines
@@ -30,7 +27,7 @@ class IPolicyManager(Interface):
     management_actions = List(Instance(Action))
 
     # The list of permissions assigned to the current user.
-    user_permissions = List(Instance(IPermission))
+    user_permissions = List(Instance('enthought.permissions.api.Permission'))
 
     def bootstrapping(self):
         """Return True if the policy manager is bootstrapping.  Typically this

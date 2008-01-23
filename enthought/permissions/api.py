@@ -13,7 +13,6 @@
 #------------------------------------------------------------------------------
 
 from adapter_base import AdapterBase
-from i_permission import IPermission
 from i_policy_manager import IPolicyManager
 from i_user import IUser
 from i_user_manager import IUserManager

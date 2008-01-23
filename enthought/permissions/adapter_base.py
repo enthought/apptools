@@ -17,7 +17,7 @@
 from enthought.traits.api import Any, Bool, HasTraits, Instance, List
 
 # Local imports.
-from i_permission import IPermission
+from permission import Permission
 from permissions_manager import PermissionsManager
 
 
@@ -28,7 +28,7 @@ class AdapterBase(HasTraits):
     proxied = Any
 
     # The list of permissions applied to the proxied object.
-    permissions = List(Instance(IPermission))
+    permissions = List(Instance(Permission))
 
     # Set if the proxied object should be shown when it is enabled.
     show = Bool

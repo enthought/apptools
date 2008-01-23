@@ -18,9 +18,8 @@ from enthought.pyface.action.api import Action
 from enthought.traits.api import HasTraits, implements, Instance, List
 
 # Local imports.
-from enthought.permissions.i_permission import IPermission
-from enthought.permissions.permission import Permission
 from enthought.permissions.i_policy_manager import IPolicyManager
+from enthought.permissions.permission import Permission
 from enthought.permissions.permissions_manager import PermissionsManager
 from enthought.permissions.secure_proxy import SecureProxy
 from i_policy_storage import IPolicyStorage
@@ -38,7 +37,7 @@ class PolicyManager(HasTraits):
 
     management_actions = List(Instance(Action))
 
-    user_permissions = List(Instance(IPermission))
+    user_permissions = List(Instance(Permission))
 
     #### 'PolicyManager' interface ############################################
 
@@ -109,11 +108,11 @@ class PolicyManager(HasTraits):
     # Private interface.
     ###########################################################################
 
-    def _load_user_perms(self, *args):
+    def _load_user_perms(self, user):
         """Invoked when the user's authentication state changes."""
 
         # FIXME
-        print "ZZZZZZZZZZZZZZZ", args
+        print "ZZZZZZZZZZZZZZZ", user
 
     def _assign_role(self):
         """Assign the roles."""

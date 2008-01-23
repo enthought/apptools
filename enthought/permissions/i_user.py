@@ -37,3 +37,6 @@ class IUser(Interface):
     # user database whenever it is changed, and will be read from the user
     # database whenever the user is authenticated.
     blob = Str
+
+    def __str__(self):
+        """Return a user friendly representation of the user."""

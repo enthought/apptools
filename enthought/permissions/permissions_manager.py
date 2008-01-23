@@ -17,7 +17,6 @@
 from enthought.traits.api import Bool, HasTraits, Instance, List
 
 # Local imports.
-from i_permission import IPermission
 from i_policy_manager import IPolicyManager
 from i_user_manager import IUserManager
 
@@ -36,7 +35,7 @@ class PermissionsManager(HasTraits):
     allow_bootstrap_permissions = Bool(True)
 
     # The list of all known permissions.
-    permissions = List(Instance(IPermission))
+    permissions = List(Instance('enthought.permissions.api.Permission'))
 
     # The current policy manager.
     policy_manager = Instance(IPolicyManager)
@@ -55,8 +54,8 @@ class PermissionsManager(HasTraits):
 
     def check_permissions(self, *permissions):
         """Check that the current user has one or more of the given permissions
-        and return True if they have.  permissions is a list of objects that
-        implement the IPermission interface."""
+        and return True if they have.  permissions is a list of Permission
+        instances."""
 
         # Get the current user.
         user = self.user_manager.user
