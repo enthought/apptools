@@ -156,7 +156,7 @@ class ExampleWorkbenchWindow(WorkbenchWindow):
         
         # Create the action and secure it with the appropriate permission.
         act = Action(name='New Person', on_perform=self._new_person)
-        act = SecureProxy(act, perms=[NewPersonPerm])
+        act = SecureProxy(act, permissions=[NewPersonPerm])
 
         return act
 

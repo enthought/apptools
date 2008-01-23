@@ -28,7 +28,7 @@ class AdapterBase(HasTraits):
     proxied = Any
 
     # The list of permissions applied to the proxied object.
-    perms = List(Instance(IPermission))
+    permissions = List(Instance(IPermission))
 
     # Set if the proxied object should be shown when it is enabled.
     show = Bool
@@ -52,8 +52,8 @@ class AdapterBase(HasTraits):
             cls._adapter_types[t] = adapter
 
     @classmethod
-    def factory(cls, proxied, perms, show):
-        """Return an adapter for the proxied object.  perms is a list of
+    def factory(cls, proxied, permissions, show):
+        """Return an adapter for the proxied object.  permissions is a list of
         permissions to attach to the object.  show is set if the proxied object
         should be visible when it is disabled.
         """
@@ -65,7 +65,8 @@ class AdapterBase(HasTraits):
         else:
             raise TypeError, "no SecureProxy adapter registered for %s" % proxied
 
-        adapter = adapter_type(proxied=proxied, perms=perms, show=show)
+        adapter = adapter_type(proxied=proxied, permissions=permissions,
+                show=show)
 
         # Refresh the state of the object when the authentication state of the
         # current user changes.
@@ -103,7 +104,7 @@ class AdapterBase(HasTraits):
         attribute.
         """
 
-        if PermissionsManager.policy_manager.check_perms(*self.perms):
+        if PermissionsManager.check_permissions(*self.permissions):
             self.set_enabled(value)
             self.set_visible(self._desired_visible)
         else:
@@ -129,7 +130,7 @@ class AdapterBase(HasTraits):
         attribute.
         """
 
-        if PermissionsManager.policy_manager.check_perms(*self.perms):
+        if PermissionsManager.check_permissions(*self.permissions):
             self.set_visible(value)
         else:
             self.set_visible(self.show and value)

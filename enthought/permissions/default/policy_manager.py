@@ -15,7 +15,7 @@
 
 # Enthought library imports.
 from enthought.pyface.action.api import Action
-from enthought.traits.api import Bool, HasTraits, implements, Instance, List
+from enthought.traits.api import HasTraits, implements, Instance, List
 
 # Local imports.
 from enthought.permissions.i_permission import IPermission
@@ -24,7 +24,6 @@ from enthought.permissions.i_policy_manager import IPolicyManager
 from enthought.permissions.permissions_manager import PermissionsManager
 from enthought.permissions.secure_proxy import SecureProxy
 from i_policy_storage import IPolicyStorage
-from policy_data import Assignment, Role
 from role_definition import role_definition
 
 
@@ -37,45 +36,43 @@ class PolicyManager(HasTraits):
 
     #### 'IPolicyManager' interface ###########################################
 
-    allow_bootstrap_perms = Bool(True)
-
     management_actions = List(Instance(Action))
 
-    perms = List(Instance(IPermission))
+    user_permissions = List(Instance(IPermission))
 
     #### 'PolicyManager' interface ############################################
-
-    # The list of roles.
-    roles = List(Instance(Role))
-
-    # The list of assignments.
-    assignments = List(Instance(Assignment))
 
     # The policy data storage.
     policy_storage = Instance(IPolicyStorage)
 
     ###########################################################################
+    # 'object' interface.
+    ###########################################################################
+
+    def __init__(self, **traits):
+        """Initialise the object."""
+
+        super(PolicyManager, self).__init__(**traits)
+
+        # Load the user permissions when they become authenticated.
+        PermissionsManager.user_manager.on_trait_event(self._load_user_perms,
+                'user_authenticated')
+
+    ###########################################################################
     # 'IPolicyManager' interface.
     ###########################################################################
 
-    def check_perms(self, *perms):
-        """TODO"""
+    def bootstrapping(self):
+        """Return True if we are bootstrapping, ie. no roles have been defined
+        or assigned."""
 
-        # Get the current user.
-        user = PermissionsManager.user_manager.user
+        try:
+            bootstrap = self.policy_storage.is_empty()
+        except UserStorageError:
+            # Suppress the error and assume it isn't empty.
+            bootstrap = False
 
-        for perm in perms:
-            # If this is a bootstrap permission then see if we are in a
-            # bootstrap situation.
-            if perm.bootstrap and self.allow_bootstrap_perms and self._bootstrapping():
-                return True
-
-            if user.authenticated:
-                # FIXME: Check that this permissions is in the current user's
-                # list.
-                return True
-
-        return False
+        return bootstrap
 
     ###########################################################################
     # Trait handlers.
@@ -91,13 +88,13 @@ class PolicyManager(HasTraits):
         act = Action(name='&Role Definitions...',
                 on_perform=lambda: role_definition(self))
 
-        actions.append(SecureProxy(act, perms=[perm], show=False))
+        actions.append(SecureProxy(act, permissions=[perm], show=False))
 
         perm = Permission(name='ets.permissions.management.assign_roles',
                 description=u"Assignment Roles", bootstrap=True)
         act = Action(name='&Role Assignments...', on_perform=self._assign_role)
 
-        actions.append(SecureProxy(act, perms=[perm], show=False))
+        actions.append(SecureProxy(act, permissions=[perm], show=False))
 
         return actions
 
@@ -112,15 +109,11 @@ class PolicyManager(HasTraits):
     # Private interface.
     ###########################################################################
 
-    def _bootstrapping(self):
-        """Return True if we are bootstrapping, ie. no policy or user data
-        exists."""
+    def _load_user_perms(self, *args):
+        """Invoked when the user's authentication state changes."""
 
-        if PermissionsManager.user_manager.bootstrapping():
-            return True
-
-        # FIXME: Check for policy data.
-        return True
+        # FIXME
+        print "ZZZZZZZZZZZZZZZ", args
 
     def _assign_role(self):
         """Assign the roles."""

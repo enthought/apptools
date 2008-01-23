@@ -90,7 +90,7 @@ class UserManager(HasTraits):
                     description=u"Add users", bootstrap=True)
             act = Action(name='&Add a User...', on_perform=user_db.add_user)
 
-            actions.append(SecureProxy(act, perms=[perm], show=False))
+            actions.append(SecureProxy(act, permissions=[perm], show=False))
 
         if user_db.can_modify_user:
             perm = Permission(name='ets.permissions.management.modify_user',
@@ -98,7 +98,7 @@ class UserManager(HasTraits):
             act = Action(name='&Modify a User...',
                     on_perform=user_db.modify_user)
 
-            actions.append(SecureProxy(act, perms=[perm], show=False))
+            actions.append(SecureProxy(act, permissions=[perm], show=False))
 
         if user_db.can_delete_user:
             perm = Permission(name='ets.permissions.management.delete_user',
@@ -106,7 +106,7 @@ class UserManager(HasTraits):
             act = Action(name='&Delete a User...',
                     on_perform=user_db.delete_user)
 
-            actions.append(SecureProxy(act, perms=[perm], show=False))
+            actions.append(SecureProxy(act, permissions=[perm], show=False))
 
         return actions
 
@@ -122,7 +122,7 @@ class UserManager(HasTraits):
             act = Action(name='&Change Password...',
                     on_perform=lambda: user_db.change_password(self.user))
 
-            actions.append(SecureProxy(act, perms=[perm]))
+            actions.append(SecureProxy(act, permissions=[perm]))
 
         return actions
 

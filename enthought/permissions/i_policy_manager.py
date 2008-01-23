@@ -15,7 +15,7 @@
 
 # Enthought library imports.
 from enthought.pyface.action.api import Action
-from enthought.traits.api import Bool, Instance, Interface, List
+from enthought.traits.api import Instance, Interface, List
 
 # Local imports.
 from i_permission import IPermission
@@ -26,20 +26,12 @@ class IPolicyManager(Interface):
     how permissions are assigned to users and stored.  A default policy manager
     is provided, but it may be replaced using the permissions manager."""
 
-    # Set if bootstrap permissions should be automatically enabled if the
-    # policy is bootstrapping (ie. when no policy or user data has been
-    # defined).  Bootstrap permissions are normally attached to actions used to
-    # define policy and user data.  Normally this is True, unless policy and
-    # user data is to be managed by an external application.
-    allow_bootstrap_perms = Bool(True)
-
     # The list of PyFace policy management actions implemented by this policy.
     management_actions = List(Instance(Action))
 
-    # The list of all permissions that the policy enforces.
-    perms = List(Instance(IPermission))
+    # The list of permissions assigned to the current user.
+    user_permissions = List(Instance(IPermission))
 
-    def check_perms(self, *perms):
-        """Check that the current user has one or more of the given
-        permissions and return True if they have.  perms is a list of objects
-        that implement the IPermission interface."""
+    def bootstrapping(self):
+        """Return True if the policy manager is bootstrapping.  Typically this
+        is when no permissions have been assigned."""

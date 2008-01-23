@@ -40,7 +40,9 @@ class PickledPolicyStorage(HasTraits):
 
     def add_role(self, role):
         """Add a new role."""
+        # FIXME
         print "Adding role", role
+        return
 
         self._db.lock()
 
@@ -74,6 +76,8 @@ class PickledPolicyStorage(HasTraits):
     def is_empty(self):
         """See if the database is empty."""
 
+        # FIXME
+        return True
         return (len(self._readonly_copy()) == 0)
 
     def get_user(self, name):

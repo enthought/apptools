@@ -47,8 +47,8 @@ class Permission(HasTraits):
 
         super(Permission, self).__init__(**traits)
 
-        # Tell the current policy manager.
-        PermissionsManager.policy_manager.perms.append(self)
+        # Tell the permissions manager.
+        PermissionsManager.permissions.append(self)
 
     def __str__(self):
         """Return a user friendly representation."""
@@ -66,4 +66,4 @@ class Permission(HasTraits):
     def _get_granted(self):
         """Check the user has this permission."""
 
-        return PermissionsManager.policy_manager.check_perms(self)
+        return PermissionsManager.check_permissions(self)

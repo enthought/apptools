@@ -18,7 +18,7 @@ import os
 
 # Enthought library imports.
 from enthought.pyface.api import confirm, error, information, YES
-from enthought.traits.api import Bool, HasTraits, implements, Instance, Int, \
+from enthought.traits.api import Bool, HasTraits, implements, Instance, \
         Password, Str, Unicode
 from enthought.traits.ui.api import Handler, Item, View
 from enthought.traits.ui.menu import Action, OKCancelButtons
@@ -339,9 +339,6 @@ class UserDatabase(HasTraits):
 
     #### Private interface ####################################################
 
-    # The saved result of whether or not the database is empty.
-    _bootstrap = Int(-1)
-
     # Set if updating the user blob internally.
     _updating_blob_internally = Bool(False)
 
@@ -352,15 +349,13 @@ class UserDatabase(HasTraits):
     def bootstrapping(self):
         """See if we are bootstrapping."""
 
-        # This might be called often so we only check once and save the result.
-        if self._bootstrap < 0:
-            try:
-                self._bootstrap = int(self.user_storage.is_empty())
-            except UserStorageError:
-                # Suppress the error and assume it isn't empty.
-                self._bootstrap = 0
+        try:
+            bootstrap = self.user_storage.is_empty()
+        except UserStorageError:
+            # Suppress the error and assume it isn't empty.
+            bootstrap = False
 
-        return (self._bootstrap > 0)
+        return bootstrap
 
     def authenticate_user(self, user):
         """Authenticate a user."""

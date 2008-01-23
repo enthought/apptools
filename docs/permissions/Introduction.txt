@@ -66,10 +66,9 @@ The following are the concepts supported by the framework.
 - Policy Manager
 
   The policy manager is responsible for assigning permissions to users and for
-  checking whether the current user has a particular permission.  To do this it
-  must maintain a persistent record of what permissions have been granted to
-  each user.
-  
+  determining the permissions assigned to the current user.  To do this it must
+  maintain a persistent record of those assignments.
+
   The default policy manager supplied with the framework uses roles to make it
   easier for an administrator to manage the relationships between permissions
   and users.  A role is defined as a named set of permissions, and a user may

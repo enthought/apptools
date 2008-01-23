@@ -34,17 +34,16 @@ class SecureProxy(object):
     visible states can be managed.  It attaches one or more permissions to the
     object and enables and shows the object only if those permissions allow it.
     In all other respects it behaves exactly like the object.  It is based on
-    Tomer Filiba's Object Proxy cookbook recipe.
-    """
+    Tomer Filiba's Object Proxy cookbook recipe."""
 
     __slots__ = ('_ets', '__weakref__')
 
-    def __init__(self, proxied, perms, show=True):
+    def __init__(self, proxied, permissions, show=True):
         """Initialise the instance.  proxied is the object whose enabled and
         visible states are managed according to the permissions of the current
-        user.  perms is a list of permissions to attach to the object.  show is
-        set if the proxied object should be visible when it is disabled.
-        """
+        user.  permissions is a list of permissions to attach to the object.
+        show is set if the proxied object should be visible when it is
+        disabled."""
 
         adapter = object.__getattribute__(self, '_ets')
 
@@ -107,14 +106,14 @@ class SecureProxy(object):
         return type("%s(%s)" % (cls.__name__, theclass.__name__), (cls,),
                 namespace)
     
-    def __new__(cls, proxied, perms, show=True):
+    def __new__(cls, proxied, permissions, show=True):
         """Apply a set of permissions to an object.  This may be done by
         creating a proxy or by modifying the object in situ depending on its
         type.
         """
 
         # Create the adapter.
-        adapter = AdapterBase.factory(proxied, perms, show)
+        adapter = AdapterBase.factory(proxied, permissions, show)
 
         # Try and adapt the object itself.
         adapted = adapter.adapt()

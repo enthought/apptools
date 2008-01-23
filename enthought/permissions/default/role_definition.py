@@ -20,6 +20,7 @@ from enthought.traits.ui.api import Group, Handler, Item, SetEditor, View
 from enthought.traits.ui.menu import Action, CancelButton
 
 # Local imports.
+from enthought.permissions.permissions_manager import PermissionsManager
 from i_policy_storage import IPolicyStorage, PolicyStorageError
 from policy_data import Role
 
@@ -37,13 +38,13 @@ class _RoleView(View):
     # 'object' interface.
     ###########################################################################
 
-    def __init__(self, policy, **traits):
+    def __init__(self, **traits):
         """Initialise the object."""
 
         buttons = [Action(name="Search"), Action(name="Add"),
                 Action(name="Modify"), Action(name="Delete"), CancelButton]
 
-        perms_editor = SetEditor(values=policy.perms,
+        perms_editor = SetEditor(values=PermissionsManager.permissions,
                 left_column_title="Available Permissions",
                 right_column_title="Assigned Permissions")
 
@@ -133,7 +134,7 @@ def role_definition(policy):
     """Implement the role definition for the given permissions policy."""
 
     role = Role()
-    view = _RoleView(policy)
+    view = _RoleView()
     handler = _RoleHandler(ps=policy.policy_storage)
 
     role.edit_traits(view=view, handler=handler)
