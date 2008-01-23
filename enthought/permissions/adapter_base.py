@@ -103,7 +103,7 @@ class AdapterBase(HasTraits):
         attribute.
         """
 
-        if PermissionsManager.policy.check_perms(*self.perms):
+        if PermissionsManager.policy_manager.check_perms(*self.perms):
             self.set_enabled(value)
             self.set_visible(self._desired_visible)
         else:
@@ -129,7 +129,7 @@ class AdapterBase(HasTraits):
         attribute.
         """
 
-        if PermissionsManager.policy.check_perms(*self.perms):
+        if PermissionsManager.policy_manager.check_perms(*self.perms):
             self.set_visible(value)
         else:
             self.set_visible(self.show and value)

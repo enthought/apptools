@@ -18,9 +18,9 @@ from enthought.pyface.action.api import Action
 from enthought.traits.api import Bool, HasTraits, implements, Instance, List
 
 # Local imports.
-from enthought.permissions.i_permissions_policy import IPermissionsPolicy
 from enthought.permissions.i_permission import IPermission
 from enthought.permissions.permission import Permission
+from enthought.permissions.i_policy_manager import IPolicyManager
 from enthought.permissions.permissions_manager import PermissionsManager
 from enthought.permissions.secure_proxy import SecureProxy
 from i_policy_storage import IPolicyStorage
@@ -28,14 +28,14 @@ from policy_data import Assignment, Role
 from role_definition import role_definition
 
 
-class PermissionsPolicy(HasTraits):
-    """The default permissions policy implementation.  This policy enforces the
-    use of roles.  Permissions are associated with roles rather than directly
-    with users.  Users are then associated with one or more roles."""
+class PolicyManager(HasTraits):
+    """The default policy manager implementation.  This policy enforces the use
+    of roles.  Permissions are associated with roles rather than directly with
+    users.  Users are then associated with one or more roles."""
 
-    implements(IPermissionsPolicy)
+    implements(IPolicyManager)
 
-    #### 'IPermissionsPolicy' interface #######################################
+    #### 'IPolicyManager' interface ###########################################
 
     allow_bootstrap_perms = Bool(True)
 
@@ -43,7 +43,7 @@ class PermissionsPolicy(HasTraits):
 
     perms = List(Instance(IPermission))
 
-    #### 'PermissionsPolicy' interface ########################################
+    #### 'PolicyManager' interface ############################################
 
     # The list of roles.
     roles = List(Instance(Role))
@@ -55,7 +55,7 @@ class PermissionsPolicy(HasTraits):
     policy_storage = Instance(IPolicyStorage)
 
     ###########################################################################
-    # 'IPermissionsPolicy' interface.
+    # 'IPolicyManager' interface.
     ###########################################################################
 
     def check_perms(self, *perms):

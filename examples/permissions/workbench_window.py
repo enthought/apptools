@@ -107,7 +107,7 @@ class ExampleWorkbenchWindow(WorkbenchWindow):
         for act in PermissionsManager.user_manager.management_actions:
             group.append(act)
         
-        for act in PermissionsManager.policy.management_actions:
+        for act in PermissionsManager.policy_manager.management_actions:
             group.append(act)
         
         user_menu = MenuManager(group, name='&User', id='UserMenu', window=self)

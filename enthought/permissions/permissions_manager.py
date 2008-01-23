@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -17,18 +17,18 @@
 from enthought.traits.api import HasTraits, Instance
 
 # Local imports.
-from i_permissions_policy import IPermissionsPolicy
+from i_policy_manager import IPolicyManager
 from i_user_manager import IUserManager
 
 
 class PermissionsManager(HasTraits):
-    """A singleton class that provides access to the current permissions
-    policy and user manager."""
+    """A singleton class that provides access to the current policy and user
+    managers."""
 
     #### 'PermissionsManager' interface #######################################
 
-    # The current permissions policy.
-    policy = Instance(IPermissionsPolicy)
+    # The current policy manager.
+    policy_manager = Instance(IPolicyManager)
 
     # The current user manager.
     user_manager = Instance(IUserManager)
@@ -37,12 +37,12 @@ class PermissionsManager(HasTraits):
     # Trait handlers.
     ###########################################################################
 
-    def _policy_default(self):
-        """Provide a default permissions policy."""
+    def _policy_manager_default(self):
+        """Provide a default policy manager."""
 
-        from default.api import PermissionsPolicy
+        from default.api import PolicyManager
 
-        return PermissionsPolicy()
+        return PolicyManager()
 
     def _user_manager_default(self):
         """Provide a default user manager."""

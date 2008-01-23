@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -24,8 +24,7 @@ from permissions_manager import PermissionsManager
 
 class Permission(HasTraits):
     """The default implementation of a permission.  It will automatically add
-    itself to the current permissions policy's list of permissions.
-    """
+    itself to the current policy manager's list of permissions."""
 
     implements(IPermission)
 
@@ -48,8 +47,8 @@ class Permission(HasTraits):
 
         super(Permission, self).__init__(**traits)
 
-        # Tell the current permissions policy.
-        PermissionsManager.policy.perms.append(self)
+        # Tell the current policy manager.
+        PermissionsManager.policy_manager.perms.append(self)
 
     def __str__(self):
         """Return a user friendly representation."""
@@ -67,4 +66,4 @@ class Permission(HasTraits):
     def _get_granted(self):
         """Check the user has this permission."""
 
-        return PermissionsManager.policy.check_perms(self)
+        return PermissionsManager.policy_manager.check_perms(self)

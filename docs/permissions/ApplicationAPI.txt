@@ -189,19 +189,19 @@ data will be written whenever it is changed.
 Integrating Management Actions
 ------------------------------
 
-Both permissions policies and user managers can provide actions that provide
-access to various management functions.  Both have a ``management_actions``
-trait that is a list of PyFace actions that invoke appropriate dialogs that
-allow the user to manage the policy and the user population appropriately.
+Both policy and user managers can provide actions that provide access to
+various management functions.  Both have a ``management_actions`` trait that is
+a list of PyFace actions that invoke appropriate dialogs that allow the user to
+manage the policy and the user population appropriately.
 
 User managers also have a ``user_actions`` trait that is a list of PyFace
 actions that invoke appropriate dialogs that allow the user to manage
 themselves.  For example, the default user manager provides an action that
 allows a user to change their password.
 
-The default permissions policy provides actions that allows roles to be
-defined in terms of sets of permissions, and allows users to be assigned one
-or more roles.
+The default policy manager provides actions that allows roles to be defined in
+terms of sets of permissions, and allows users to be assigned one or more
+roles.
 
 The default user manager provides actions that allows users to be added,
 modified and deleted.  A user manager that integrates with an enterprise's

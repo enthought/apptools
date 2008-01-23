@@ -21,11 +21,10 @@ from enthought.traits.api import Bool, Instance, Interface, List
 from i_permission import IPermission
 
 
-class IPermissionsPolicy(Interface):
-    """The interface implemented by a permissions policy.  A permissions policy
-    completely defines how permissions and authorisation is handled.  A default
-    permissions policy is provided, but it may be replaced using the
-    permissions manager."""
+class IPolicyManager(Interface):
+    """The interface implemented by a policy manager.  A policy manager defines
+    how permissions are assigned to users and stored.  A default policy manager
+    is provided, but it may be replaced using the permissions manager."""
 
     # Set if bootstrap permissions should be automatically enabled if the
     # policy is bootstrapping (ie. when no policy or user data has been

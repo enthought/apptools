@@ -24,8 +24,8 @@ class PolicyStorageError(Exception):
 
 
 class IPolicyStorage(Interface):
-    """This defines the interface expected by a PermissionsPolicy instance to
-    handle the low level storage of the user data."""
+    """This defines the interface expected by a PolicyManager to handle the low
+    level storage of the user data."""
 
     ###########################################################################
     # 'IPolicyStorage' interface.

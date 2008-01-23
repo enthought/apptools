@@ -50,13 +50,12 @@ The following are the concepts supported by the framework.
 
   The user manager is responsible for authorising the current user and,
   therefore, defines how that is done.  It also provides information about the
-  user population to the permissions policy.  It may also, optionally,
-  provide the ability to manage the user population (eg. add or delete users).
-  The user manager must either maintain a persistent record of the user
-  population, or interface with an external user database or directory service.
+  user population to the policy manager.  It may also, optionally, provide the
+  ability to manage the user population (eg. add or delete users).  The user
+  manager must either maintain a persistent record of the user population, or
+  interface with an external user database or directory service.
 
-  The default user manager supplied by the default permissions policy uses
-  password based authorisation.
+  The default user manager uses password based authorisation.
   
   The user manager persists its data in a user database.  The default user
   manager provides an API so that different implementations of the user
@@ -64,31 +63,31 @@ The following are the concepts supported by the framework.
   integrate with an existing directory service).  A default user database is
   provided that pickles the data in a local file.
 
-- Permissions Policy
+- Policy Manager
 
-  The permissions policy is responsible for assigning permissions to users and
-  for checking whether the current user has a particular permission.  To do
-  this it must maintain a persistent record of what permissions have been
-  granted to each user.
+  The policy manager is responsible for assigning permissions to users and for
+  checking whether the current user has a particular permission.  To do this it
+  must maintain a persistent record of what permissions have been granted to
+  each user.
   
-  The default permissions policy supplied with the framework uses roles to make
-  it easier for an administrator to manage the relationships between
-  permissions and users.  A role is defined as a named set of permissions, and
-  a user may have one or more roles assigned to them.
+  The default policy manager supplied with the framework uses roles to make it
+  easier for an administrator to manage the relationships between permissions
+  and users.  A role is defined as a named set of permissions, and a user may
+  have one or more roles assigned to them.
 
-  The permissions policy persists its data in a policy database.  The default
-  permissions policy provides an API so that different implementations of the
+  The policy manager persists its data in a policy database.  The default
+  policy manager provides an API so that different implementations of the
   policy database can be used (for example to store the data in an RDBMS).  A
   default policy database is provided that pickles the data in a local file.
 
 - Permissions Manager
 
   The permissions manager is a singleton object used to get and set the current
-  permissions policy and user manager.
+  policy and user managers.
 
-**FIXME:** We need to say something about how alternative user managers (and
-permissions policies) would be delivered - as Envisage3 plugins seems to be the
-obvious choice, unless plain eggs would do.
+**FIXME:** We need to say something about how alternative policy and user
+managers would be delivered - as Envisage3 plugins seems to be the obvious
+choice, unless plain eggs would do.
 
 
 Framework APIs
@@ -101,14 +100,14 @@ groups.
 
   This part of the API is used by application developers.
 
-- `Permissions Policy API`_
+- `Policy Manager API`_
 
-  This is the interface that an alternative permissions policy must implement.
-  The need to implement an alternative is expected to be very rare and so the
-  API isn't covered further.  See the definition of the IPermissionsPolicy
-  interface for the details.
+  This is the interface that an alternative policy manager must implement.  The
+  need to implement an alternative is expected to be very rare and so the API
+  isn't covered further.  See the definition of the IPolicyManager interface
+  for the details.
 
-- `Default Permissions Policy Data API`_
+- `Default Policy Manager Data API`_
 
   This part of the API is used by developers to store the policy's persistent
   data in a more secure location (eg. on a remote server) than that provided by
@@ -140,8 +139,8 @@ needs to be reimplemented depending on your environment.
 
 Q: Do you want to use roles to group permissions and assign them to users?
 
-A: If yes then use the supplied PermissionsPolicy, otherwise provide your own
-   IPermissionsPolicy implementation.
+A: If yes then use the supplied PolicyManager, otherwise provide your own
+   IPolicyManager implementation.
 
 Q: Do you want users to be authenticated using a password?
 
@@ -162,17 +161,17 @@ A: If yes then use the supplied default, otherwise provide UserDatabase with
 Q: Do you want to store your policy data (ie. roles and role assignments) as
    pickled data in a local file?
 
-A: If yes then use the supplied default, otherwise provide PermissionsPolicy
-   with your own IPolicyStorage implementation.
+A: If yes then use the supplied default, otherwise provide PolicyManager with
+   your own IPolicyStorage implementation.
 
 
-Using the Default Implementations
----------------------------------
+Using the Default Storage Implementations
+-----------------------------------------
 
-The default permissions policy and its default user manager both (again by
-default) persist their data as pickles in local files called
-``ets_perms_policydb`` and ``ets_perms_userdb`` respectively.  By default these
-are stored in the application's home directory (ie. that returned by
+The default policy and user managers both (again by default) persist their data
+as pickles in local files called ``ets_perms_policydb`` and
+``ets_perms_userdb`` respectively.  By default these are stored in the
+application's home directory (ie. that returned by
 ``ETSConfig.application_home``).
 
 Note that this directory is normally in the user's own directory structure
@@ -190,7 +189,7 @@ environment and as working examples.
 
 .. _API: api/index.html
 .. _`Application API`: ApplicationAPI.html
-.. _`Permissions Policy API`: https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/i_permissions_policy.py
-.. _`Default Permissions Policy Data API`: DefaultPermissionsPolicyDataAPI.html
+.. _`Policy Manager API`: https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/i_policy_manager.py
+.. _`Default Policy Manager Data API`: DefaultPolicyManagerDataAPI.html
 .. _`User Manager API`: https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/i_user_manager.py
 .. _`Default User Manager Data API`: DefaultUserManagerDataAPI.html

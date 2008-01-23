@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -14,7 +14,7 @@
 
 from adapter_base import AdapterBase
 from i_permission import IPermission
-from i_permissions_policy import IPermissionsPolicy
+from i_policy_manager import IPolicyManager
 from i_user import IUser
 from i_user_manager import IUserManager
 from permission import Permission
