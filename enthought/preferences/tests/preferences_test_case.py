@@ -383,6 +383,17 @@ class PreferencesTestCase(unittest.TestCase):
         # Load the preferences from an 'ini' file.
         p.load('example.ini')
 
+        # Make sure it was all loaded!
+        self.assertEqual('blue', p.get('acme.ui.bgcolor'))
+        self.assertEqual('50', p.get('acme.ui.width'))
+        self.assertEqual('1.0', p.get('acme.ui.ratio'))
+        self.assertEqual('True', p.get('acme.ui.visible'))
+        self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
+        self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
+
+        # Make a change.
+        p.set('acme.ui.bgcolor', 'yellow')
+        
         # Save it to another file.
         p.save('tmp.ini')
 
@@ -391,7 +402,7 @@ class PreferencesTestCase(unittest.TestCase):
         p.load('tmp.ini')
         
         # Make sure it was all loaded!
-        self.assertEqual('blue', p.get('acme.ui.bgcolor'))
+        self.assertEqual('yellow', p.get('acme.ui.bgcolor'))
         self.assertEqual('50', p.get('acme.ui.width'))
         self.assertEqual('1.0', p.get('acme.ui.ratio'))
         self.assertEqual('True', p.get('acme.ui.visible'))

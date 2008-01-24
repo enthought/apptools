@@ -7,11 +7,14 @@ from enthought.traits.ui.api import View
 
 # Local imports.
 from enthought.preferences.api import Preferences, PreferencesHelper
+from enthought.preferences.api import get_default_preferences
+from enthought.preferences.api import set_default_preferences
 from enthought.preferences.ui.api import PreferencesManager, PreferencesPage
 
 
-# Create a preferences collection from a file.
-PreferencesHelper.preferences = Preferences(filename='example.ini')
+# Create a preferences collection from a file and make it the default root
+# preferences node for all preferences helpers etc.
+set_default_preferences(Preferences(filename='example.ini'))
 
 
 class AcmePreferencesPage(PreferencesPage):
@@ -86,6 +89,6 @@ if __name__ == '__main__':
     preferences_manager.configure_traits()
 
     # Save the preferences...
-    PreferencesHelper.preferences.flush()
+    get_default_preferences().flush()
 
 #### EOF ######################################################################

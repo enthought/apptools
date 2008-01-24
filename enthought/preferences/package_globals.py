@@ -1,4 +1,11 @@
-""" Package-scope globals. """
+""" Package-scope globals.
+
+The default preferences node is currently used by 'PreferencesHelper' and
+'PreferencesBinding' instances if no specific preferences node is set. This
+makes it easy for them to access the root node of an application-wide
+preferences hierarchy.
+
+"""
 
 
 # The default preferences node.

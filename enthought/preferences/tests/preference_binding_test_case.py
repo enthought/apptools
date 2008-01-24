@@ -2,7 +2,7 @@
 
 
 # Standard library imports.
-import unittest
+import os, unittest
 
 # Enthought library imports.
 from enthought.preferences.api import Preferences, PreferenceBinding
@@ -131,8 +131,6 @@ class PreferenceBindingTestCase(unittest.TestCase):
         bind_preference(acme_ui, 'ratio',   'acme.ui.ratio')
         bind_preference(acme_ui, 'visible', 'acme.ui.visible')
             
-        acme_ui = AcmeUI()
-
         # Make sure the helper was initialized properly.
         self.assertEqual('blue', acme_ui.bgcolor)
         self.assertEqual(50, acme_ui.width)
@@ -140,6 +138,69 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual(True, acme_ui.visible)
 
         return
+
+    def test_load_and_save(self):
+        """ load and save """
+        
+        p = self.preferences
+        p.load('example.ini')
+        
+        class AcmeUI(HasTraits):
+            """ The Acme UI class! """
+
+            # The traits that we want to initialize from preferences.
+            bgcolor = Str('red')
+            width   = Int(60)
+            ratio   = Float(2.0)
+            visible = Bool(False)
+
+        acme_ui = AcmeUI()
+        
+        # Make some bindings.
+        bind_preference(acme_ui, 'bgcolor', 'acme.ui.bgcolor')
+        bind_preference(acme_ui, 'width',   'acme.ui.width')
+        bind_preference(acme_ui, 'ratio',   'acme.ui.ratio')
+        bind_preference(acme_ui, 'visible', 'acme.ui.visible')
+            
+        # Make sure the helper was initialized properly (with the values in
+        # the loaded .ini file *not* the trait defaults!).
+        self.assertEqual('blue', acme_ui.bgcolor)
+        self.assertEqual(50, acme_ui.width)
+        self.assertEqual(1.0, acme_ui.ratio)
+        self.assertEqual(True, acme_ui.visible)
+
+        # Make a change to one of the preference values.
+        p.set('acme.ui.bgcolor', 'yellow') 
+        self.assertEqual('yellow', acme_ui.bgcolor)
+        self.assertEqual('yellow', p.get('acme.ui.bgcolor'))
+
+        # Save the preferences.
+        p.save('tmp.ini')
+
+        # Load the preferences again.
+        p = set_default_preferences(Preferences())
+        p.load('tmp.ini')
+
+        acme_ui = AcmeUI()
+        
+        # Make some bindings.
+        bind_preference(acme_ui, 'bgcolor', 'acme.ui.bgcolor')
+        bind_preference(acme_ui, 'width',   'acme.ui.width')
+        bind_preference(acme_ui, 'ratio',   'acme.ui.ratio')
+        bind_preference(acme_ui, 'visible', 'acme.ui.visible')
+            
+        # Make sure the helper was initialized properly (with the values in
+        # the .ini file *not* the trait defaults!).
+        self.assertEqual('yellow', acme_ui.bgcolor)
+        self.assertEqual(50, acme_ui.width)
+        self.assertEqual(1.0, acme_ui.ratio)
+        self.assertEqual(True, acme_ui.visible)
+
+        # Clean up!
+        os.remove('tmp.ini')
+        
+        return
+
 
 
 # Entry point for stand-alone testing.
