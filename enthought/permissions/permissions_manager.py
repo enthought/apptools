@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Bool, HasTraits, Instance, List
+from enthought.traits.api import Bool, HasTraits, Instance
 
 # Local imports.
 from i_policy_manager import IPolicyManager
@@ -33,9 +33,6 @@ class PermissionsManager(HasTraits):
     # policy and user data.  Normally this is True, unless policy and user data
     # is to be managed by an external application.
     allow_bootstrap_permissions = Bool(True)
-
-    # The list of all known permissions.
-    permissions = List(Instance('enthought.permissions.api.Permission'))
 
     # The current policy manager.
     policy_manager = Instance(IPolicyManager)

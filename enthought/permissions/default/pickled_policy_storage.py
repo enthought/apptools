@@ -29,147 +29,99 @@ class PickledPolicyStorage(HasTraits):
 
     #### Private interface ###################################################
 
-    # The persisted database.  The database itself is a dictionary, keyed by
-    # the user name, and with a value that is a tuple of the description, blob
-    # and clear text password.
+    # The persisted database.  The database itself is a tuple of the role and
+    # assignment dictionaries.  The role dictionary is keyed by the role name,
+    # and has a value that is a tuple of the description and the list of
+    # permission names.  The assigment dictionary is keyed by the user name and
+    # has a value that is the list of role names.
     _db = Instance(Persistent)
 
     ###########################################################################
     # 'IPolicyStorage' interface.
     ###########################################################################
 
-    def add_role(self, role):
+    def add_role(self, name, description, perm_names):
         """Add a new role."""
-        # FIXME
-        print "Adding role", role
-        return
 
         self._db.lock()
 
         try:
-            users = self._db.read()
+            roles, assigns = self._db.read()
 
-            if users.has_key(name):
-                raise PolicyStorageError("The user \"%s\" already exists." % name)
+            if roles.has_key(name):
+                raise PolicyStorageError("The role \"%s\" already exists." % name)
 
-            users[name] = (description, '', password)
-            self._db.write(users)
+            roles[name] = (description, perm_names)
+            self._db.write((roles, assigns))
         finally:
             self._db.unlock()
 
-    def delete_user(self, name):
-        """Delete a user."""
+    def delete_role(self, name):
+        """Delete a role."""
 
         self._db.lock()
 
         try:
-            users = self._db.read()
+            roles, assigns = self._db.read()
 
-            if not users.has_key(name):
-                raise PolicyStorageError("The user \"%s\" doesn't exist." % name)
+            if not roles.has_key(name):
+                raise PolicyStorageError("The role \"%s\" doesn't exist." % name)
 
-            del users[name]
-            self._db.write(users)
+            del roles[name]
+
+            # Remove the role from any users who have it.
+            for user, role_names in assigns.items():
+                try:
+                    role_names.remove(name)
+                except ValueError:
+                    continue
+
+                assigns[user] = role_names
+
+            self._db.write((roles, assigns))
         finally:
             self._db.unlock()
 
     def is_empty(self):
         """See if the database is empty."""
 
-        # FIXME
-        return True
-        return (len(self._readonly_copy()) == 0)
+        roles, assigns = self._readonly_copy()
 
-    def get_user(self, name):
-        """Return the details of the user with the given name."""
+        # Both have to be non-empty for the whole thing to be non-empty.
+        return (len(roles) == 0 or len(assigns) == 0)
 
-        users = self._readonly_copy()
+    def search_role(self, name):
+        """Return the full name, description and permissions of the role with
+        the given name, or one that starts with the given name."""
 
-        try:
-            description, blob, password = users[name]
-        except KeyError:
-            return None, None, None, None
-
-        return name, description, blob, password
-
-    def search_user(self, name):
-        """Return the full name, description and password of the user with the
-        given name, or one that starts with the given name."""
-
-        users = self._readonly_copy()
+        roles, _ = self._readonly_copy()
 
         # Try the exact name first.
         try:
-            description, _, password = users[name]
+            description, perm_names = roles[name]
         except KeyError:
             # Find the first user that starts with the name.
-            for n, (description, _, password) in users.items():
+            for n, (description, perm_names) in roles.items():
                 if n.startswith(name):
                     name = n
                     break
             else:
                 return None, None, None
 
-        return name, description, password
+        return name, description, perm_names
 
-    def update_blob(self, name, blob):
-        """Update the blob for the given user."""
-
-        self._db.lock()
-
-        try:
-            users = self._db.read()
-
-            try:
-                description, _, password = users[name]
-            except KeyError:
-                raise PolicyStorageError("The user has been removed from the user database.")
-
-            users[name] = (description, blob, password)
-            self._db.write(users)
-        finally:
-            self._db.unlock()
-
-    def update_password(self, name, password):
-        """Update the password for the given user."""
+    def update_role(self, name, description, perm_names):
+        """Update the description and permissions for the given role."""
 
         self._db.lock()
 
         try:
-            users = self._db.read()
+            roles, assigns = self._db.read()
 
-            try:
-                description, blob, _ = users[name]
-            except KeyError:
-                raise PolicyStorageError("The user has been removed from the user database.")
-
-            users[name] = (description, blob, password)
-            self._db.write(users)
+            roles[name] = (description, perm_names)
+            self._db.write((roles, assigns))
         finally:
             self._db.unlock()
-
-    def update_user(self, name, description, password):
-        """Update the description and password for the given user."""
-
-        self._db.lock()
-
-        try:
-            users = self._db.read()
-
-            try:
-                _, blob, _ = users[name]
-            except KeyError:
-                raise PolicyStorageError("The user has been removed from the user database.")
-
-            users[name] = (description, blob, password)
-            self._db.write(users)
-        finally:
-            self._db.unlock()
-
-    def user_exists(self, name):
-        """See if the given user exists."""
-
-        return self._readonly_copy().has_key(name)
 
     ###########################################################################
     # Trait handlers.
@@ -178,23 +130,30 @@ class PickledPolicyStorage(HasTraits):
     def __db_default(self):
         """Return the default persisted database."""
 
-        return Persistent(dict, 'ets_perms_policydb', "the policy database")
+        return Persistent(self._db_factory, 'ets_perms_policydb',
+                "the policy database")
 
     ###########################################################################
     # Private interface.
     ###########################################################################
 
     def _readonly_copy(self):
-        """Return the current user database (which should not be modified)."""
+        """Return the policy database (which should not be modified)."""
 
         try:
             self._db.lock()
 
             try:
-                users = self._db.read()
+                data = self._db.read()
             finally:
                 self._db.unlock()
         except PersistentError, e:
             raise PolicyStorageError(str(e))
 
-        return users
+        return data
+
+    @staticmethod
+    def _db_factory():
+        """Return an empty policy database."""
+
+        return ({}, {})

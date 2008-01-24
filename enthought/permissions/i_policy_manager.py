@@ -32,3 +32,6 @@ class IPolicyManager(Interface):
     def bootstrapping(self):
         """Return True if the policy manager is bootstrapping.  Typically this
         is when no permissions have been assigned."""
+
+    def register_permission(self, permission):
+        """Register the given permission defined by the application."""

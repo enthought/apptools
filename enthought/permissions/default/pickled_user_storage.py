@@ -180,16 +180,16 @@ class PickledUserStorage(HasTraits):
     ###########################################################################
 
     def _readonly_copy(self):
-        """Return the current user database (which should not be modified)."""
+        """Return the user database (which should not be modified)."""
 
         try:
             self._db.lock()
 
             try:
-                users = self._db.read()
+                data = self._db.read()
             finally:
                 self._db.unlock()
         except PersistentError, e:
             raise UserStorageError(str(e))
 
-        return users
+        return data

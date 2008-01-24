@@ -46,6 +46,10 @@ class Permission(HasTraits):
     # permissions information has been defined.
     bootstrap = Bool(False)
 
+    # Set if the permission has been defined by application code rather than as
+    # a result of loading the policy database.
+    application_defined = Bool(True)
+
     ###########################################################################
     # 'object' interface.
     ###########################################################################
@@ -55,8 +59,8 @@ class Permission(HasTraits):
 
         super(Permission, self).__init__(**traits)
 
-        # Tell the permissions manager.
-        PermissionsManager.permissions.append(self)
+        # Register the permission.
+        PermissionsManager.policy_manager.register_permission(self)
 
     def __str__(self):
         """Return a user friendly representation."""

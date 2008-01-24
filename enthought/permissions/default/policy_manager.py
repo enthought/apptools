@@ -15,7 +15,7 @@
 
 # Enthought library imports.
 from enthought.pyface.action.api import Action
-from enthought.traits.api import HasTraits, implements, Instance, List
+from enthought.traits.api import Dict, HasTraits, implements, Instance, List
 
 # Local imports.
 from enthought.permissions.i_policy_manager import IPolicyManager
@@ -40,6 +40,9 @@ class PolicyManager(HasTraits):
     user_permissions = List(Instance(Permission))
 
     #### 'PolicyManager' interface ############################################
+
+    # The dictionary of registered permissions keyed on the permission name.
+    permissions = Dict
 
     # The policy data storage.
     policy_storage = Instance(IPolicyStorage)
@@ -73,6 +76,33 @@ class PolicyManager(HasTraits):
 
         return bootstrap
 
+    def register_permission(self, permission):
+        """Register the given permission."""
+
+        if self.permissions.has_key(permission.name):
+            other = self.permissions[permission.name]
+
+            if other.application_defined:
+                if permission.application_defined:
+                    raise KeyError, 'permission "%s" has already been defined' % permission.name
+
+                # Use the description from the policy manager, if there is
+                # one, in preference to the application supplied one.
+                if permission.description:
+                    other.description = permission.description
+            elif permission.application_defined:
+                # Again, prefer the policy manager description.
+                if other.description:
+                    permission.description = other.description
+
+                self.permissions[permission.name] = permission
+            else:
+                # This should never happen if the policy manager is working
+                # properly.
+                raise KeyError, 'permission "%s" has already been defined by the same policy manager' % permission.name
+        else:
+            self.permissions[permission.name] = permission
+
     ###########################################################################
     # Trait handlers.
     ###########################################################################
@@ -90,7 +120,7 @@ class PolicyManager(HasTraits):
         actions.append(SecureProxy(act, permissions=[perm], show=False))
 
         perm = Permission(name='ets.permissions.management.assign_roles',
-                description=u"Assignment Roles", bootstrap=True)
+                description=u"Assign roles", bootstrap=True)
         act = Action(name='&Role Assignments...', on_perform=self._assign_role)
 
         actions.append(SecureProxy(act, permissions=[perm], show=False))
