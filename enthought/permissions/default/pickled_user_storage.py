@@ -70,11 +70,6 @@ class PickledUserStorage(HasTraits):
         finally:
             self._db.unlock()
 
-    def is_empty(self):
-        """See if the database is empty."""
-
-        return (len(self._readonly_copy()) == 0)
-
     def get_user(self, name):
         """Return the details of the user with the given name."""
 
@@ -87,25 +82,20 @@ class PickledUserStorage(HasTraits):
 
         return name, description, blob, password
 
-    def search_user(self, name):
-        """Return the full name, description and password of the user with the
-        given name, or one that starts with the given name."""
+    def get_users(self, name):
+        """Return the full name, description, blob and password of all the
+        users that match the given name."""
 
-        users = self._readonly_copy()
+        # Return any user that starts with the name.
+        return [(full_name, description, blob, password)
+                for full_name, (description, blob, password)
+                        in self._readonly_copy().items()
+                        if full_name.startswith(name)]
 
-        # Try the exact name first.
-        try:
-            description, _, password = users[name]
-        except KeyError:
-            # Find the first user that starts with the name.
-            for n, (description, _, password) in users.items():
-                if n.startswith(name):
-                    name = n
-                    break
-            else:
-                return None, None, None
+    def is_empty(self):
+        """See if the database is empty."""
 
-        return name, description, password
+        return (len(self._readonly_copy()) == 0)
 
     def update_blob(self, name, blob):
         """Update the blob for the given user."""
@@ -160,11 +150,6 @@ class PickledUserStorage(HasTraits):
             self._db.write(users)
         finally:
             self._db.unlock()
-
-    def user_exists(self, name):
-        """See if the given user exists."""
-
-        return self._readonly_copy().has_key(name)
 
     ###########################################################################
     # Trait handlers.

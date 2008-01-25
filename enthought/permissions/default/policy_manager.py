@@ -23,6 +23,7 @@ from enthought.permissions.permission import Permission
 from enthought.permissions.permissions_manager import PermissionsManager
 from enthought.permissions.secure_proxy import SecureProxy
 from i_policy_storage import IPolicyStorage
+from role_assignment import role_assignment
 from role_definition import role_definition
 
 
@@ -114,14 +115,13 @@ class PolicyManager(HasTraits):
 
         perm = Permission(name='ets.permissions.management.define_roles',
                 description=u"Define roles", bootstrap=True)
-        act = Action(name='&Role Definitions...',
-                on_perform=lambda: role_definition(self))
+        act = Action(name='&Role Definitions...', on_perform=role_definition)
 
         actions.append(SecureProxy(act, permissions=[perm], show=False))
 
         perm = Permission(name='ets.permissions.management.assign_roles',
                 description=u"Assign roles", bootstrap=True)
-        act = Action(name='&Role Assignments...', on_perform=self._assign_role)
+        act = Action(name='&Role Assignments...', on_perform=role_assignment)
 
         actions.append(SecureProxy(act, permissions=[perm], show=False))
 
@@ -146,10 +146,3 @@ class PolicyManager(HasTraits):
             self.user_permissions = []
         else:
             print "ZZZZZZZZZZZZZZZ", user
-
-    def _assign_role(self):
-        """Assign the roles."""
-
-        from enthought.pyface.api import information
-
-        information(None, "This will eventually implement a TraitsUI based GUI for assigning roles.")

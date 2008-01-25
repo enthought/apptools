@@ -70,6 +70,11 @@ class UserManager(HasTraits):
             self.user.authenticated = False
             self.user_authenticated = None
 
+    def select_user(self, name):
+        """Select a user."""
+
+        return self.user_db.select_user(name)
+
     ###########################################################################
     # Trait handlers.
     ###########################################################################

@@ -17,7 +17,7 @@
 import os
 
 # Enthought library imports.
-from enthought.pyface.api import confirm, error, information, YES
+from enthought.pyface.api import confirm, error, YES
 from enthought.traits.api import Bool, HasTraits, implements, Instance, \
         Password, Str, Unicode
 from enthought.traits.ui.api import Handler, Item, View
@@ -83,7 +83,7 @@ class _ViewUserAccount(HasTraits):
     confirm_password = Password
 
     # The user database.
-    us = Instance(IUserStorage)
+    user_db = Instance(IUserDatabase)
 
 
 class _UserAccountHandler(Handler):
@@ -108,28 +108,20 @@ class _UserAccountHandler(Handler):
     ###########################################################################
 
     def validate(self, vuac):
-        """This must be reimplemented to validate the given object and return
-        True if there were no problems."""
+        """Validate the given object and return True if there were no problems.
+        """
 
-        raise NotImplementedError
+        if not vuac.name.strip():
+            self.error("A user name must be given.")
+            return False
+
+        return True
 
     @staticmethod
     def error(msg):
         """Display an error message to the user."""
 
         error(None, msg)
-
-    @staticmethod
-    def inform(msg):
-        """Display an information message to the user."""
-
-        information(None, msg)
-
-    def search(self, vuac, name, users):
-        """This must be reimplemented to search the user database and update
-        the viewed object appropriately."""
-
-        raise NotImplementedError
 
     ###########################################################################
     # Trait handlers.
@@ -140,15 +132,15 @@ class _UserAccountHandler(Handler):
 
         # Get the user name.
         vuac = self._user_account(info)
-        name = vuac.name.strip()
 
-        if name:
-            try:
-                self.search(vuac, name)
-            except UserStorageError, e:
-                self.error(str(e))
-        else:
-            self.error("Please give a user name to search for.")
+        name, description, _, password = vuac.user_db._select_user(vuac.name)
+        if name is None:
+            return
+
+        # Update the viewed object.
+        vuac.name = name
+        vuac.description = description
+        vuac.password = vuac.confirm_password = password
 
     ###########################################################################
     # Private interface.
@@ -172,64 +164,10 @@ class _AddUserAccountHandler(_UserAccountHandler):
         """Validate the given object and return True if there were no problems.
         """
 
-        if not vuac.name.strip():
-            self.error("A user name must be given.")
+        if not super(_AddUserAccountHandler, self).validate(vuac):
             return False
 
         if not _validate_password(vuac.password, vuac.confirm_password):
-            return False
-
-        return True
-
-    def search(self, vuac, name):
-        """Search the user database to see if a user already exists."""
-
-        # See if there is a user with the name.
-        if vuac.us.user_exists(name):
-            self.error("A user called \"%s\" already exists." % name)
-        else:
-            self.inform("A user called \"%s\" doesn't currently exist." % name)
-
-
-class _ModifyUserAccountHandler(_AddUserAccountHandler):
-    """The traits handler for the modify user account view that validates the
-    data."""
-
-    ###########################################################################
-    # '_UserAccountHandler' interface.
-    ###########################################################################
-
-    def search(self, vuac, name):
-        """Search the user database and update the viewed object appropriately.
-        """
-
-        full_name, description, password = vuac.us.search_user(name)
-
-        if full_name is None:
-            if name:
-                self.error("There is no user whose name starts with \"%s\"." % name)
-            else:
-                self.error("No users have been defined.")
-        else:
-            # Update the viewed object.
-            vuac.name = full_name
-            vuac.description = description
-            vuac.password = vuac.confirm_password = password
-
-
-class _DeleteUserAccountHandler(_ModifyUserAccountHandler):
-    """The traits handler for the delete user account view."""
-
-    ###########################################################################
-    # '_UserAccountHandler' interface.
-    ###########################################################################
-
-    def validate(self, vuac):
-        """Validate the given object and return True if there were no problems.
-        """
-
-        if not vuac.name.strip():
-            self.error("A user name must be given.")
             return False
 
         return True
@@ -421,7 +359,7 @@ class UserDatabase(HasTraits):
         """Add a user."""
 
         # Get the data from the user.
-        vuac = _ViewUserAccount(us=self.user_storage)
+        vuac = _ViewUserAccount(user_db=self)
         view = _AddUserAccountView()
         handler = _AddUserAccountHandler()
 
@@ -437,9 +375,9 @@ class UserDatabase(HasTraits):
         """Modify a user."""
 
         # Get the data from the user.
-        vuac = _ViewUserAccount(us=self.user_storage)
+        vuac = _ViewUserAccount(user_db=self)
         view = _ModifyUserAccountView()
-        handler = _ModifyUserAccountHandler()
+        handler = _UserAccountHandler()
 
         if vuac.edit_traits(view=view, handler=handler).result:
             # Update the data in the database.
@@ -453,9 +391,9 @@ class UserDatabase(HasTraits):
         """Delete a user."""
 
         # Get the data from the user.
-        vuac = _ViewUserAccount(us=self.user_storage)
+        vuac = _ViewUserAccount(user_db=self)
         view = _DeleteUserAccountView()
-        handler = _DeleteUserAccountHandler()
+        handler = _UserAccountHandler()
 
         if vuac.edit_traits(view=view, handler=handler).result:
             # Make absolutely sure.
@@ -467,6 +405,15 @@ class UserDatabase(HasTraits):
                     self.user_storage.delete_user(name)
                 except UserStorageError, e:
                     self._us_error(e)
+
+    def select_user(self, name):
+        """Select a user."""
+
+        name, description, blob, _ = self._select_user(name)
+        if name is None:
+            return None
+
+        return User(name=name, description=description, blob=blob)
 
     def user_factory(self):
         """Create a new user object."""
@@ -501,6 +448,32 @@ class UserDatabase(HasTraits):
     ###########################################################################
     # Private interface.
     ###########################################################################
+
+    def _select_user(self, name):
+        """Select a user returning the data as a tuple."""
+
+        # Get all users that satisfy the criteria.
+        try:
+            users = self.user_storage.get_users(name)
+        except UserStorageError, e:
+            self._us_error(e)
+            return (None, None, None, None)
+
+        if len(users) == 0:
+            error(None, "There is no user that matches \"%s\"." % name)
+            return (None, None, None, None)
+
+        # FIXME: Instead of the following, if there is more than one user then
+        # allow the user to select a particular one.
+        name = name.strip()
+
+        for u in users:
+            if u[0] == name:
+                break
+        else:
+            u = users[0]
+
+        return u
 
     @staticmethod
     def _us_error(e):

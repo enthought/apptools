@@ -15,46 +15,15 @@
 
 # Enthought library imports.
 from enthought.pyface.api import confirm, error, YES
-from enthought.traits.api import HasTraits, Instance, List, Unicode
+from enthought.traits.api import Instance
 from enthought.traits.ui.api import Group, Handler, Item, SetEditor, View
 from enthought.traits.ui.menu import Action, CancelButton
 
 # Local imports.
-from enthought.permissions.i_policy_manager import IPolicyManager
 from enthought.permissions.permission import Permission
+from enthought.permissions.permissions_manager import PermissionsManager
 from i_policy_storage import PolicyStorageError
-
-
-class _Role(HasTraits):
-    """This represents a role."""
-
-    # The role name.
-    name = Unicode
-
-    # The role description.
-    description = Unicode
-
-    # The permissions that define the role.
-    permissions = List(Instance(Permission))
-
-    def __str__(self):
-        """Return a user friendly representation."""
-
-        s = self.description
-        if not s:
-            s = self.name
-
-        return s
-
-
-class _Assignment(HasTraits):
-    """This represents the assignment of roles to a user."""
-
-    # The user name.
-    user_name = Unicode
-
-    # The list of assigned roles.
-    roles = List(Instance(_Role))
+from policy_data import Role
 
 
 class _RoleView(View):
@@ -70,13 +39,15 @@ class _RoleView(View):
     # 'object' interface.
     ###########################################################################
 
-    def __init__(self, policy, **traits):
+    def __init__(self, **traits):
         """Initialise the object."""
 
         buttons = [Action(name="Search"), Action(name="Add"),
                 Action(name="Modify"), Action(name="Delete"), CancelButton]
 
-        perms_editor = SetEditor(values=policy.permissions.values(),
+        all_perms = PermissionsManager.policy_manager.permissions.values()
+
+        perms_editor = SetEditor(values=all_perms,
                 left_column_title="Available Permissions",
                 right_column_title="Assigned Permissions")
 
@@ -91,10 +62,6 @@ class _RoleView(View):
 class _RoleHandler(Handler):
     """The view handler for roles."""
 
-    #### Private interface ####################################################
-
-    pm = Instance(IPolicyManager)
-
     ###########################################################################
     # Trait handlers.
     ###########################################################################
@@ -102,17 +69,33 @@ class _RoleHandler(Handler):
     def _search_clicked(self, info):
         """Invoked by the "Search" button."""
 
-        role = self._validate(info)
-        if role is None:
+        role = self._role(info)
+
+        # Get all roles that satisfy the criteria.
+        try:
+            roles = PermissionsManager.policy_manager.policy_storage.get_roles(role.name)
+        except PolicyStorageError, e:
+            self._ps_error(e)
             return
 
-        full_name, description, perm_names = self.pm.policy_storage.search_role(role.name)
-        if full_name is None:
-            self._error("There is no role whose name starts with \"%s\"." % role.name)
+        if len(roles) == 0:
+            self._error("There is no role that matches \"%s\"." % role.name)
             return
+
+        # FIXME: Instead of the following, if there is more than one role then
+        # allow the user to select a particular one.
+        name = role.name.strip()
+
+        for r in roles:
+            if r[0] == name:
+                break
+        else:
+            r = roles[0]
+
+        name, description, perm_names = r
 
         # Update the viewed object.
-        role.name = full_name
+        role.name = name
         role.description = description
         role.permissions = self._perms_to_list(perm_names)
 
@@ -125,7 +108,8 @@ class _RoleHandler(Handler):
 
         # Add the data to the database.
         try:
-            self.pm.policy_storage.add_role(role.name, role.description,
+            PermissionsManager.policy_manager.policy_storage.add_role(
+                    role.name, role.description,
                     [p.name for p in role.permissions])
             info.ui.dispose()
         except PolicyStorageError, e:
@@ -140,7 +124,8 @@ class _RoleHandler(Handler):
 
         # Update the data in the database.
         try:
-            self.pm.policy_storage.update_role(role.name, role.description,
+            PermissionsManager.policy_manager.policy_storage.update_role(
+                    role.name, role.description,
                     [p.name for p in role.permissions])
             info.ui.dispose()
         except PolicyStorageError, e:
@@ -156,7 +141,8 @@ class _RoleHandler(Handler):
         if confirm(None, "Are you sure you want to delete the role \"%s\"?" % role.name) == YES:
             # Delete the data from the database.
             try:
-                self.pm.policy_storage.delete_role(role.name)
+                PermissionsManager.policy_manager.policy_storage.delete_role(
+                        role.name)
                 info.ui.dispose()
             except PolicyStorageError, e:
                 self._ps_error(e)
@@ -166,7 +152,7 @@ class _RoleHandler(Handler):
     ###########################################################################
 
     def _validate(self, info):
-        """Validate the role and return the it if there were no problems."""
+        """Validate the role and return it if there were no problems."""
 
         role = self._role(info)
         role.name = role.name.strip()
@@ -185,7 +171,7 @@ class _RoleHandler(Handler):
 
         for name in perm_names:
             try:
-                p = self.pm.permissions[name]
+                p = PermissionsManager.policy_manager.permissions[name]
             except KeyError:
                 # FIXME: permissions should be populated from the policy
                 # database - or is it needed at all?  Should it just be read
@@ -216,11 +202,11 @@ class _RoleHandler(Handler):
         error(None, str(e))
 
 
-def role_definition(policy_manager):
-    """Implement the role definition for the given policy manager."""
+def role_definition():
+    """Implement the role definition for the current policy manager."""
 
-    role = _Role()
-    view = _RoleView(policy_manager)
-    handler = _RoleHandler(pm=policy_manager)
+    role = Role()
+    view = _RoleView()
+    handler = _RoleHandler()
 
     role.edit_traits(view=view, handler=handler)

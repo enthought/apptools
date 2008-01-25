@@ -51,3 +51,9 @@ class IUserManager(Interface):
     def unauthenticate_user(self):
         """Unauthenticate (ie. logout) the user.  All secured objects are
         disabled."""
+
+    def select_user(self, name):
+        """Return an object that implements IUser for the user selected based
+        on the given name.  If there was no user selected then return None.
+        How the name is interpreted (eg. as a regular expression) is determined
+        by the user manager."""

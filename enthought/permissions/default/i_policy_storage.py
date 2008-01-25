@@ -25,7 +25,7 @@ class PolicyStorageError(Exception):
 
 class IPolicyStorage(Interface):
     """This defines the interface expected by a PolicyManager to handle the low
-    level storage of the user data."""
+    level storage of the policy data."""
 
     ###########################################################################
     # 'IPolicyStorage' interface.
@@ -34,17 +34,30 @@ class IPolicyStorage(Interface):
     def add_role(self, name, description, perm_names):
         """Add a new role."""
 
+    def all_roles(self):
+        """Return a list of all roles where each element is a tuple of the name
+        and description."""
+
     def delete_role(self, name):
         """Delete the role with the given name (which will not be empty)."""
+
+    def get_assignment(self, user_name):
+        """Return a tuple of the user name and roles of the assignment for the
+        given user name."""
+
+    def get_roles(self, name):
+        """Return a list of tuples of the full name, description and
+        permissions of all roles that match the given name.  How the name is
+        interpreted (eg. as a regular expression) is determined by the storage.
+        """
 
     def is_empty(self):
         """Return True if the user database is empty.  It will only ever be
         called once."""
 
-    def search_role(self, name):
-        """Return a tuple of the full name, description and permissions of the
-        role with either the given name, or the first role whose name starts
-        with the given name."""
+    def save_assignment(self, user_name, role_names):
+        """Save the assignment of the given role names to the given user.  Note
+        that there may or may not be an existing assignment for the user."""
 
     def update_role(self, name, description, perm_names):
         """Update the description and permissions for the role with the given

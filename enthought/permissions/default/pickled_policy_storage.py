@@ -56,6 +56,13 @@ class PickledPolicyStorage(HasTraits):
         finally:
             self._db.unlock()
 
+    def all_roles(self):
+        """Return a list of all roles."""
+
+        roles, _ = self._readonly_copy()
+
+        return [(name, description) for name, (description, _) in roles.items()]
+
     def delete_role(self, name):
         """Delete a role."""
 
@@ -82,6 +89,29 @@ class PickledPolicyStorage(HasTraits):
         finally:
             self._db.unlock()
 
+    def get_assignment(self, user_name):
+        """Return the details of the assignment for the given user name."""
+
+        _, assigns = self._readonly_copy()
+
+        try:
+            role_names = assigns[user_name]
+        except KeyError:
+            return None, None
+
+        return user_name, role_names
+
+    def get_roles(self, name):
+        """Return the full name, description and permissions of all the roles
+        that match the given name."""
+
+        roles, _ = self._readonly_copy()
+
+        # Return any role that starts with the name.
+        return [(full_name, description, perm_names)
+                for full_name, (description, perm_names) in roles.items()
+                    if full_name.startswith(name)]
+
     def is_empty(self):
         """See if the database is empty."""
 
@@ -90,25 +120,27 @@ class PickledPolicyStorage(HasTraits):
         # Both have to be non-empty for the whole thing to be non-empty.
         return (len(roles) == 0 or len(assigns) == 0)
 
-    def search_role(self, name):
-        """Return the full name, description and permissions of the role with
-        the given name, or one that starts with the given name."""
+    def save_assignment(self, user_name, role_names):
+        """Save the roles assigned to a user."""
 
-        roles, _ = self._readonly_copy()
+        self._db.lock()
 
-        # Try the exact name first.
         try:
-            description, perm_names = roles[name]
-        except KeyError:
-            # Find the first user that starts with the name.
-            for n, (description, perm_names) in roles.items():
-                if n.startswith(name):
-                    name = n
-                    break
-            else:
-                return None, None, None
+            roles, assigns = self._db.read()
 
-        return name, description, perm_names
+            if len(role_names) == 0:
+                # Delete the user, but don't worry if there is no current
+                # assignment.
+                try:
+                    del assigns[user_name]
+                except KeyError:
+                    pass
+            else:
+                assigns[user_name] = role_names
+
+            self._db.write((roles, assigns))
+        finally:
+            self._db.unlock()
 
     def update_role(self, name, description, perm_names):
         """Update the description and permissions for the given role."""
