@@ -42,14 +42,18 @@ class IPolicyStorage(Interface):
         """Delete the role with the given name (which will not be empty)."""
 
     def get_assignment(self, user_name):
-        """Return a tuple of the user name and roles of the assignment for the
-        given user name."""
+        """Return a tuple of the user name and list of role names of the
+        assignment for the given user name.""" 
+
+    def get_policy(self, user_name):
+        """Return a tuple of the user name and list of permission names for the
+        user with the given name."""
 
     def get_roles(self, name):
-        """Return a list of tuples of the full name, description and
-        permissions of all roles that match the given name.  How the name is
-        interpreted (eg. as a regular expression) is determined by the storage.
-        """
+        """Return a list of tuples of the full name, description and list of
+        permission names of all roles that match the given name.  How the name
+        is interpreted (eg. as a regular expression) is determined by the
+        storage."""
 
     def is_empty(self):
         """Return True if the user database is empty.  It will only ever be

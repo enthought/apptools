@@ -22,6 +22,7 @@ from enthought.traits.api import Bool, Event, HasTraits, implements, \
 from enthought.permissions.i_user import IUser
 from enthought.permissions.i_user_manager import IUserManager
 from enthought.permissions.permission import Permission
+from enthought.permissions.permissions_manager import PermissionsManager
 from enthought.permissions.secure_proxy import SecureProxy
 from i_user_database import IUserDatabase
 
@@ -61,6 +62,10 @@ class UserManager(HasTraits):
 
         if self.user_db.authenticate_user(self.user):
             self.user.authenticated = True
+
+            # Tell the policy manager before everybody else.
+            PermissionsManager.policy_manager.load_policy(self.user)
+
             self.user_authenticated = self.user
 
     def unauthenticate_user(self):
@@ -68,6 +73,10 @@ class UserManager(HasTraits):
 
         if self.user.authenticated and self.user_db.unauthenticate_user(self.user):
             self.user.authenticated = False
+
+            # Tell the policy manager before everybody else.
+            PermissionsManager.policy_manager.load_policy(None)
+
             self.user_authenticated = None
 
     def select_user(self, name):

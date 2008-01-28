@@ -101,6 +101,24 @@ class PickledPolicyStorage(HasTraits):
 
         return user_name, role_names
 
+    def get_policy(self, user_name):
+        """Return the details of the policy for the given user name."""
+
+        roles, assigns = self._readonly_copy()
+
+        try:
+            role_names = assigns[user_name]
+        except KeyError:
+            return None, None
+
+        perm_names = []
+
+        for r in role_names:
+            _, perms = roles[r]
+            perm_names.extend(perms)
+
+        return user_name, perm_names
+
     def get_roles(self, name):
         """Return the full name, description and permissions of all the roles
         that match the given name."""

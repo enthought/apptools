@@ -14,6 +14,7 @@
 
 
 # Enthought library imports.
+from enthought.pyface.api import error
 from enthought.pyface.action.api import Action
 from enthought.traits.api import Dict, HasTraits, implements, Instance, List
 
@@ -22,7 +23,7 @@ from enthought.permissions.i_policy_manager import IPolicyManager
 from enthought.permissions.permission import Permission
 from enthought.permissions.permissions_manager import PermissionsManager
 from enthought.permissions.secure_proxy import SecureProxy
-from i_policy_storage import IPolicyStorage
+from i_policy_storage import IPolicyStorage, PolicyStorageError
 from role_assignment import role_assignment
 from role_definition import role_definition
 
@@ -49,19 +50,6 @@ class PolicyManager(HasTraits):
     policy_storage = Instance(IPolicyStorage)
 
     ###########################################################################
-    # 'object' interface.
-    ###########################################################################
-
-    def __init__(self, **traits):
-        """Initialise the object."""
-
-        super(PolicyManager, self).__init__(**traits)
-
-        # Load the user permissions when they become authenticated.
-        PermissionsManager.user_manager.on_trait_event(self._load_user_perms,
-                'user_authenticated')
-
-    ###########################################################################
     # 'IPolicyManager' interface.
     ###########################################################################
 
@@ -76,6 +64,35 @@ class PolicyManager(HasTraits):
             bootstrap = False
 
         return bootstrap
+
+    def load_policy(self, user):
+        """Load the policy for the given user."""
+
+        self.user_permissions = []
+
+        # See if the policy is to be unloaded.
+        if user is None:
+            return
+
+        # Get the user's policy.
+        try:
+            user_name, perm_names = self.policy_storage.get_policy(user.name)
+        except PolicyStorageError, e:
+            error(None, str(e))
+            return
+
+        # Make sure the user has a policy.
+        if user_name is None:
+            return
+
+        for p in perm_names:
+            try:
+                permission = self.permissions[p]
+            except KeyError:
+                # This shouldn't happen if referential integrity is maintained.
+                continue
+
+            self.user_permissions.append(permission)
 
     def register_permission(self, permission):
         """Register the given permission."""
@@ -133,16 +150,3 @@ class PolicyManager(HasTraits):
         from pickled_policy_storage import PickledPolicyStorage
 
         return PickledPolicyStorage()
-
-    ###########################################################################
-    # Private interface.
-    ###########################################################################
-
-    def _load_user_perms(self, user):
-        """Invoked when the user's authentication state changes."""
-
-        # FIXME
-        if user is None:
-            self.user_permissions = []
-        else:
-            print "ZZZZZZZZZZZZZZZ", user

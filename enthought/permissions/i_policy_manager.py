@@ -33,5 +33,10 @@ class IPolicyManager(Interface):
         """Return True if the policy manager is bootstrapping.  Typically this
         is when no permissions have been assigned."""
 
+    def load_user(self, user):
+        """Load the policy for the given user.  user is an object that
+        implements IUser.  If it is None then unload the policy for the current
+        user."""
+
     def register_permission(self, permission):
         """Register the given permission defined by the application."""
