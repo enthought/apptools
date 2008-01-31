@@ -72,9 +72,10 @@ class Persistent(object):
             f = open(self._fname, 'r')
 
             try:
-                data = pickle.load(f)
-            except:
-                raise PersistentError("Unable to read %s." % self._desc)
+                try:
+                    data = pickle.load(f)
+                except:
+                    raise PersistentError("Unable to read %s." % self._desc)
             finally:
                 f.close()
         except IOError, e:
@@ -92,9 +93,10 @@ class Persistent(object):
             f = open(self._fname, 'w')
 
             try:
-                pickle.dump(data, f)
-            except:
-                raise PersistentError("Unable to write %s." % self._desc)
+                try:
+                    pickle.dump(data, f)
+                except:
+                    raise PersistentError("Unable to write %s." % self._desc)
             finally:
                 f.close()
         except IOError, e:

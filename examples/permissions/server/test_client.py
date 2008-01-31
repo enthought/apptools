@@ -39,16 +39,57 @@ def check_name(opts):
     return opts.name
 
 
+def check_password(opts):
+    """Check the password was specified with the --password flag and return the
+    value."""
+
+    if not opts.password:
+        raise Exception("the --password flag to specify a password")
+
+    return opts.password
+
+
+def add_role(opts):
+    """Add a new role."""
+
+    return ([check_name(opts), opts.description, opts.permissions, opts.key],
+            ['Status'])
+
+
+def add_user(opts):
+    """Add a new user."""
+
+    return ([check_name(opts), opts.description, check_password(opts),
+                    opts.key],
+            ['Status'])
+
+
 def get_user(opts):
     """Get the details of a user."""
 
     return ([check_name(opts)], ['Name', 'Description', 'Blob', 'Password'])
 
 
+def is_empty_policy(opts):
+    """Check if there is any policy data."""
+
+    return ([], ['Policy is empty'])
+
+
 # The list of actions that can be invoked from the command line.
 actions = [
+    add_role,
+    add_user,
     get_user,
+    is_empty_policy,
 ]
+
+
+def store_list(option, opt_str, value, p):
+    """An option parser callback that converts space separated words into a
+    list of strings."""
+
+    setattr(p.values, option.dest, value.split(' '))
 
 
 # Parse the command line.
@@ -56,10 +97,20 @@ p = optparse.OptionParser(usage="%prog [options] action", description="This "
         "is a client used to test the XML-RPC server.  The following actions "
         "are supported: %s" % ', '.join([a.func_name for a in actions]))
 
-p.add_option('-a', '--ip-address', default=DEFAULT_ADDR, dest='addr',
+p.add_option('--ip-address', default=DEFAULT_ADDR, dest='addr',
         help="the IP address to connect to [default: %s]" % DEFAULT_ADDR)
-p.add_option('-n', '--name', dest='name', help="a name (used by get_user)")
-p.add_option('-p', '--port', type='int', default=DEFAULT_PORT, dest='port',
+p.add_option('-d', '--description', default='', dest='description',
+        help="a description (used by add_role, add_user)")
+p.add_option('-k', '--key', default='', dest='key',
+        help="the session key returned by login (used by add_role, add_user)")
+p.add_option('-n', '--name', dest='name',
+        help="a name (used by add_role, add_user, get_user)")
+p.add_option('--permissions', action='callback', callback=store_list,
+        default=[], dest='permissions', type='string',
+        help="a space separated list of permission names (used by add_role)")
+p.add_option('-p', '--password', dest='password',
+        help="a password (used by add_user)")
+p.add_option('--port', type='int', default=DEFAULT_PORT, dest='port',
         help="the TCP port to connect to [default: %d]" % DEFAULT_PORT)
 p.add_option('-v', '--verbose', action='store_true', default=False,
         dest='verbose', help="display the progress of the RPC")
@@ -91,10 +142,26 @@ try:
 except socket.error, e:
     sys.stderr.write("socket error: %s\n" % e.args[1])
     sys.exit(1)
+except xmlrpclib.Fault, e:
+    # Extract the text of the exception.  If we don't recognise the format then
+    # display the lot.
+    tail = e.faultString.find(':')
+    if tail < 0:
+        msg = e.faultString
+    else:
+        msg = e.faultString[tail + 1:]
+
+    print "The call raised an exception: %s" % msg
+    sys.exit(0)
 
 # Show the result.
 nr_names = len(result_names)
-nr_values = len(result)
+
+try:
+    nr_values = len(result)
+except TypeError:
+    nr_values = 1
+    result = [result]
 
 if nr_names != nr_values:
     print "Expected %d result values but received %d" % (nr_names, nr_values)
