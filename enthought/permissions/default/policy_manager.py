@@ -24,6 +24,7 @@ from enthought.permissions.permission import Permission
 from enthought.permissions.permissions_manager import PermissionsManager
 from enthought.permissions.secure_proxy import SecureProxy
 from i_policy_storage import IPolicyStorage, PolicyStorageError
+from i_user_storage import UserStorageError
 from role_assignment import role_assignment
 from role_definition import role_definition
 

@@ -16,6 +16,7 @@
 
 
 # Standard library imports.
+import errno
 import optparse
 import socket
 import sys
@@ -67,7 +68,8 @@ def add_user(opts):
 def get_user(opts):
     """Get the details of a user."""
 
-    return ([check_name(opts)], ['Name', 'Description', 'Blob', 'Password'])
+    return ([check_name(opts), opts.key],
+            ['Name', 'Description', 'Blob', 'Password'])
 
 
 def is_empty_policy(opts):
@@ -102,7 +104,8 @@ p.add_option('--ip-address', default=DEFAULT_ADDR, dest='addr',
 p.add_option('-d', '--description', default='', dest='description',
         help="a description (used by add_role, add_user)")
 p.add_option('-k', '--key', default='', dest='key',
-        help="the session key returned by login (used by add_role, add_user)")
+        help="the session key returned by login (used by add_role, add_user, "
+                "get_user)")
 p.add_option('-n', '--name', dest='name',
         help="a name (used by add_role, add_user, get_user)")
 p.add_option('--permissions', action='callback', callback=store_list,
@@ -140,7 +143,13 @@ proxy = xmlrpclib.ServerProxy(uri='http://%s:%d' % (opts.addr, opts.port),
 try:
     result = getattr(proxy, action.func_name)(*action_args)
 except socket.error, e:
-    sys.stderr.write("socket error: %s\n" % e.args[1])
+    err, msg = e.args
+
+    if err == errno.ECONNREFUSED:
+        sys.stderr.write("Unable to connect to permissions server at %s:%d\n" % (opts.addr, opts.port))
+    else:
+        sys.stderr.write("socket error: %s\n" % msg)
+
     sys.exit(1)
 except xmlrpclib.Fault, e:
     # Extract the text of the exception.  If we don't recognise the format then

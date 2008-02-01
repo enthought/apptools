@@ -22,7 +22,7 @@ from persistent import Persistent, PersistentError
 
 
 class PickledPolicyStorage(HasTraits):
-    """This implements a user database that pickles its data in a local file.
+    """This implements a policy database that pickles its data in a local file.
     """
 
     implements(IPolicyStorage)

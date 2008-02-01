@@ -43,14 +43,15 @@ DEFAULT_DATADIR = os.path.expanduser('~/.ets_perms_server')
 class ServerImplementation(object):
     """This is a container for all the functions implemented by the server."""
 
-    def __init__(self, data_dir, insecure):
+    def __init__(self, data_dir, insecure, local_user_db):
         """Initialise the object."""
 
         self._data_dir = data_dir
         self._insecure = insecure
+        self._local_user_db = local_user_db
 
         # Make sure we can call _close() at any time.
-        self._roles = self._assignments = None
+        self._roles = self._assignments = self._blobs = self._users = None
 
         # Make sure the data directory exists.
         if not os.path.isdir(self._data_dir):
@@ -59,6 +60,10 @@ class ServerImplementation(object):
         # Load the data.
         self._roles = self._open_shelf('roles')
         self._assignments = self._open_shelf('assignments')
+        self._blobs = self._open_shelf('blobs')
+
+        if self._local_user_db:
+            self._users = self._open_shelf('users')
 
     def _close(self):
         """Close all the databases."""
@@ -70,6 +75,16 @@ class ServerImplementation(object):
         if self._assignments is not None:
             self._assignments.close()
             self._assignments = None
+
+        if self._blobs is not None:
+            self._blobs.close()
+            self._blobs = None
+
+        if self._users is not None:
+            if self._local_user_db:
+                self._users.close()
+
+            self._users = None
 
     def _open_shelf(self, name):
         """Open a shelf."""
@@ -118,22 +133,54 @@ class ServerImplementation(object):
         return True
 
     def add_user(self, name, description, password, key=None):
+        """Add a new user."""
 
-        raise Exception("add_user not yet implemented")
+        self._check_authorisation(key)
+
+        if self._local_user_db:
+            if self._users.has_key(name):
+                raise Exception("The user \"%s\" already exists." % name)
+
+            self._users[name] = (description, password)
+            self._sync(self._users)
+        else:
+            raise Exception("Adding a user isn't supported.")
 
         return True
 
-    def get_user(self, name):
+    def get_user(self, name, key=None):
+        """Return the tuple of the user name, description, blob and password.
+        """
 
-        if name == 'phil':
-            return ('phil', 'Phil Thompson', '', 'foobar')
+        self._check_authorisation(key)
 
-        raise Exception("The user \"%s\" doesn't exist." % name)
+        if self._local_user_db:
+            try:
+                description, password = self._users[name]
+            except KeyError:
+                name = description = password = ''
+        else:
+            # FIXME
+            raise Exception("Getting a user isn't yet supported.")
+
+        # Get the blob if there is one.
+        try:
+            blob = self._blobs[name]
+        except KeyError:
+            blob = ''
+
+        return (name, description, blob, password)
 
     def is_empty_policy(self):
-        """Return True if there is no policy data."""
+        """Return True if there is no useful data."""
 
-        return (len(self._roles) == 0 or len(self._assignments) == 0)
+        empty = (len(self._roles) == 0 or len(self._assignments) == 0)
+
+        # Include the users as well if the database is local.
+        if self._local_user_db and len(self._users) == 0:
+            empty = True
+
+        return empty
 
 
 class RPCServer(SimpleXMLRPCServer.SimpleXMLRPCServer):
@@ -141,12 +188,12 @@ class RPCServer(SimpleXMLRPCServer.SimpleXMLRPCServer):
     initialisation."""
 
     def __init__(self, addr=DEFAULT_ADDR, port=DEFAULT_PORT,
-            data_dir=DEFAULT_DATADIR, insecure=False):
+            data_dir=DEFAULT_DATADIR, insecure=False, local_user_db=False):
         """Initialise the object."""
 
         SimpleXMLRPCServer.SimpleXMLRPCServer.__init__(self, (addr, port))
 
-        self._impl = ServerImplementation(data_dir, insecure)
+        self._impl = ServerImplementation(data_dir, insecure, local_user_db)
         self.register_instance(self._impl)
 
     def server_close(self):
@@ -166,14 +213,17 @@ if __name__ == '__main__':
             "provides user, role and permissions data to a user and policy "
             "manager that is part of the ETS Permissions Framework.")
 
+    p.add_option('--data-dir', default=DEFAULT_DATADIR, dest='data_dir',
+            metavar="DIR",
+            help="the server's data directory [default: %s]" % DEFAULT_DATADIR)
     p.add_option('--insecure', action='store_true', default=False,
             dest='insecure',
             help="don't require a session key for data changes")
     p.add_option('--ip-address', default=DEFAULT_ADDR, dest='addr',
             help="the IP address to listen on [default: %s]" % DEFAULT_ADDR)
-    p.add_option('--data-dir', default=DEFAULT_DATADIR, dest='data_dir',
-            metavar="DIR",
-            help="the server's data directory [default: %s]" % DEFAULT_DATADIR)
+    p.add_option('--local-user-db', action='store_true', default=False,
+            dest='local_user_db',
+            help="use a local user database instead of an LDAP directory")
     p.add_option('--port', type='int', default=DEFAULT_PORT, dest='port',
             help="the TCP port to listen on [default: %d]" % DEFAULT_PORT)
 
@@ -182,9 +232,14 @@ if __name__ == '__main__':
     if args:
         p.error("unexpected additional arguments: %s" % " ".join(args))
 
+    # FIXME: Add LDAP support.
+    if not opts.local_user_db:
+        sys.stderr.write("Until LDAP support is implemented use the --local-user-db flag\n")
+        sys.exit(1)
+
     # Create and start the server.
     server = RPCServer(addr=opts.addr, port=opts.port, data_dir=opts.data_dir,
-            insecure=opts.insecure)
+            insecure=opts.insecure, local_user_db=opts.local_user_db)
 
     if opts.insecure:
         logger.warn("Server starting in insecure mode")
