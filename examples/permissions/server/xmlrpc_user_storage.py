@@ -15,10 +15,37 @@
 
 # Enthought library imports.
 from enthought.permissions.default.api import IUserStorage, UserStorageError
-from enthought.traits.api import HasTraits, implements
+from enthought.traits.api import HasTraits, implements, Instance
+
+# Local imports.
+from proxy_server import ProxyServer
 
 
 class XMLRPCUserStorage(HasTraits):
     """This implements a user database accessed via XML RPC."""
 
     implements(IUserStorage)
+
+    #### Private interface ###################################################
+
+    # The proxy for the XML RPC server.
+    _server = Instance(ProxyServer)
+
+    ###########################################################################
+    # 'IUserStorage' interface.
+    ###########################################################################
+
+    def is_empty(self):
+        """See if the database is empty."""
+
+        # We leave it to the policy storage to answer this question.
+        return False
+
+    ###########################################################################
+    # Trait handlers.
+    ###########################################################################
+
+    def __server_default(self):
+        """Return the default proxy server."""
+
+        return ProxyServer()
