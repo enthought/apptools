@@ -70,17 +70,10 @@ class PyConfigFile(dict):
 
         """
 
-        # Get an open file to write to.
         f = self._get_file(file_or_filename, 'w')
 
-        # Write each section to the file.
         for section_name, section_data in self.items():
-            f.write('[%s]\n' % section_name)
-
-            for name, value in section_data.items():
-                f.write('%s = %s\n' % (name, repr(value)))
-
-            f.write('\n')
+            self._write_section(f, section_name, section_data)
 
         f.close()
         
@@ -89,6 +82,17 @@ class PyConfigFile(dict):
     ###########################################################################
     # Private interface.
     ###########################################################################
+
+    def _get_file(self, file_or_filename, mode='r'):
+        """ Return an open file object from a file or a filename. """
+
+        if isinstance(file_or_filename, basestring):
+            f = file(file_or_filename, mode)
+                
+        else:
+            f = file_or_filename
+
+        return f
 
     def _parse_section(self, section_name, section_body):
         """ Parse a section. """
@@ -100,16 +104,17 @@ class PyConfigFile(dict):
         exec section_body in globals(), section
 
         return
-    
-    def _get_file(self, file_or_filename, mode='r'):
-        """ Return an open file object from a file or a filename. """
 
-        if isinstance(file_or_filename, basestring):
-            f = file(file_or_filename, mode)
-                
-        else:
-            f = file_or_filename
+    def _write_section(self, f, section_name, section_data):
+        """ Write a section to a file. """
 
-        return f
+        f.write('[%s]\n' % section_name)
+
+        for name, value in section_data.items():
+            f.write('%s = %s\n' % (name, repr(value)))
+
+        f.write('\n')
+
+        return
         
 #### EOF ######################################################################
