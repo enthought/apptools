@@ -68,6 +68,12 @@ def all_roles(opts):
     return [opts.key]
 
 
+def authenticate_user(opts):
+    """Authenticate a user and return their details."""
+
+    return [check_name(opts), check_password(opts)]
+
+
 def delete_role(opts):
     """Delete a role."""
 
@@ -98,12 +104,6 @@ def get_policy(opts):
     return [check_name(opts), opts.key]
 
 
-def get_user(opts):
-    """Get the details of a user."""
-
-    return [check_name(opts), opts.key]
-
-
 def is_empty_policy(opts):
     """Check if there is any policy data."""
 
@@ -114,6 +114,12 @@ def save_assignment(opts):
     """Save the details of a user's assignment."""
 
     return [check_name(opts), opts.roles, opts.key]
+
+
+def unauthenticate_user(opts):
+    """Unauthenticate a user."""
+
+    return [opts.key]
 
 
 def update_role(opts):
@@ -127,14 +133,15 @@ actions = [
     add_role,
     add_user,
     all_roles,
+    authenticate_user,
     capabilities,
     delete_role,
     get_assignment,
     get_policy,
     get_roles,
-    get_user,
     is_empty_policy,
     save_assignment,
+    unauthenticate_user,
     update_role,
 ]
 
@@ -157,18 +164,18 @@ p.add_option('-d', '--description', default='', dest='description',
         help="a description (used by add_role, add_user, update_role)")
 p.add_option('-k', '--key', default='', dest='key',
         help="the session key returned by login (used by add_role, add_user, "
-                "all_roles, get_assignment, get_policy, get_user, "
-                "save_assignment, update_role)")
+                "all_roles, get_assignment, get_policy, save_assignment, "
+                "unauthenticate_user, update_role)")
 p.add_option('-n', '--name', dest='name',
-        help="a name (used by add_role, add_user, delete_role, "
-                "get_assignment, get_policy, get_roles, get_user, "
+        help="a name (used by add_role, add_user, authenticate_user, "
+                "delete_role, get_assignment, get_policy, get_roles, "
                 "save_assignment, update_role)")
 p.add_option('--permissions', action='callback', callback=store_list,
         default=[], dest='permissions', type='string',
         help="a space separated list of permission names (used by add_role, "
                 "update_role)")
 p.add_option('-p', '--password', dest='password',
-        help="a password (used by add_user)")
+        help="a password (used by add_user, authenticate_user)")
 p.add_option('--port', type='int', default=DEFAULT_PORT, dest='port',
         help="the TCP port to connect to [default: %d]" % DEFAULT_PORT)
 p.add_option('--roles', action='callback', callback=store_list, default=[],

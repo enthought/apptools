@@ -42,12 +42,14 @@ class IUserStorage(Interface):
     def add_user(self, name, description, password):
         """Add a new user with the given name, description and password."""
 
+    def authenticate_user(self, name, password):
+        """Return a tuple of the name, description, and blob of the user with
+        the given name if they are successfully authenticated with the given
+        password.  A tuple of empty strings will be returned if the
+        authentication failed."""
+
     def delete_user(self, name):
         """Delete the user with the given name (which will not be empty)."""
-
-    def get_user(self, name):
-        """Return a tuple of the name, description, blob and password of the
-        user with the given name."""
 
     def get_users(self, name):
         """Return a list of tuples of the full name, description, blob and
@@ -58,6 +60,10 @@ class IUserStorage(Interface):
     def is_empty(self):
         """Return True if the user database is empty.  It will only ever be
         called once."""
+
+    def unauthenticate_user(self, user):
+        """Unauthenticate the given user (which is an object implementing
+        IUser) and return True if it was successful."""
 
     def update_blob(self, name, blob):
         """Update the blob for the user with the given name (which will not be

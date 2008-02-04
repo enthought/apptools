@@ -39,11 +39,39 @@ class XMLRPCUserStorage(HasTraits):
     # 'IUserStorage' interface.
     ###########################################################################
 
+    def add_user(self, name, description, password):
+        """Add a new user."""
+
+        try:
+            # FIXME: Need to pass session key.
+            self._server.add_user(name, description, password)
+        except Exception, e:
+            raise UserStorageError(self._server.error(e))
+
+    def authenticate_user(self, name, password):
+        """Return the tuple of the user name, description, and blob if the user
+        was successfully authenticated."""
+
+        try:
+            # FIXME: Handle the session key when it is returned.
+            return self._server.authenticate_user(name, password)
+        except Exception, e:
+            raise UserStorageError(self._server.error(e))
+
     def is_empty(self):
         """See if the database is empty."""
 
         # We leave it to the policy storage to answer this question.
         return False
+
+    def unauthenticate_user(self, user):
+        """Unauthenticate the given user."""
+
+        try:
+            # FIXME: Need to pass session key.
+            return self._server.unauthenticate_user()
+        except Exception, e:
+            raise UserStorageError(self._server.error(e))
 
     ###########################################################################
     # Trait handlers.

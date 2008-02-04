@@ -147,22 +147,24 @@ class ServerImplementation(object):
         else:
             raise Exception("Adding a user isn't supported.")
 
+        # Return a non-None value.
         return True
 
-    def get_user(self, name, key=None):
-        """Return the tuple of the user name, description, blob and password.
-        """
-
-        self._check_authorisation(key)
+    def authenticate_user(self, name, password):
+        """Return the tuple of the user name, description, and blob if the user
+        was successfully authenticated."""
 
         if self._local_user_db:
             try:
-                description, password = self._users[name]
+                description, pword = self._users[name]
             except KeyError:
-                name = description = password = ''
+                return '', '', ''
+
+            if password != pword:
+                return '', '', ''
         else:
             # FIXME
-            raise Exception("Getting a user isn't yet supported.")
+            raise Exception("Authenticating a user isn't yet supported.")
 
         # Get the blob if there is one.
         try:
@@ -170,7 +172,23 @@ class ServerImplementation(object):
         except KeyError:
             blob = ''
 
-        return (name, description, blob, password)
+        # FIXME: Return the session key.
+        return name, description, blob
+
+    def unauthenticate_user(self, key=None):
+        """Unauthenticate the given user (ie. identified by the session key).
+        """
+
+        if not self._local_user_db:
+            # FIXME: LDAP may or may not need anything here.
+            raise Exception("Unauthenticating a user isn't yet supported.")
+
+        # Invalidate any session key:
+        if key is not None:
+            # FIXME
+            pass
+
+        return True
 
     def add_role(self, name, description, perm_names, key=None):
         """Add a new role."""

@@ -58,6 +58,22 @@ class PickledUserStorage(HasTraits):
         finally:
             self._db.unlock()
 
+    def authenticate_user(self, name, password):
+        """Return the tuple of the user name, description, and blob if the user
+        was successfully authenticated."""
+
+        users = self._readonly_copy()
+
+        try:
+            description, blob, pword = users[name]
+        except KeyError:
+            return '', '', ''
+
+        if password != pword:
+            return '', '', ''
+
+        return name, description, blob
+
     def delete_user(self, name):
         """Delete a user."""
 
@@ -73,18 +89,6 @@ class PickledUserStorage(HasTraits):
             self._db.write(users)
         finally:
             self._db.unlock()
-
-    def get_user(self, name):
-        """Return the details of the user with the given name."""
-
-        users = self._readonly_copy()
-
-        try:
-            description, blob, password = users[name]
-        except KeyError:
-            return None, None, None, None
-
-        return name, description, blob, password
 
     def get_users(self, name):
         """Return the full name, description, blob and password of all the
@@ -118,6 +122,12 @@ class PickledUserStorage(HasTraits):
             self._db.write(users)
         finally:
             self._db.unlock()
+
+    def unauthenticate_user(self, user):
+        """Unauthenticate the given user."""
+
+        # There is nothing to do.
+        return True
 
     def update_password(self, name, password):
         """Update the password for the given user."""

@@ -307,13 +307,13 @@ class UserDatabase(HasTraits):
 
         # Get the user account and compare passwords.
         try:
-            name, description, blob, password = self.user_storage.get_user(
-                    lu.name.strip())
+            name, description, blob = self.user_storage.authenticate_user(
+                    lu.name.strip(), lu.password)
         except UserStorageError, e:
             self._us_error(e)
             return False
 
-        if name is None or password != lu.password:
+        if not name:
             # It's bad security to give too much information...
             error(None, "The user name or password is invalid.")
             return False
@@ -332,8 +332,7 @@ class UserDatabase(HasTraits):
     def unauthenticate_user(self, user):
         """Unauthenticate a user."""
 
-        # There is nothing to do to unauthenticate so it is always successful.
-        return True
+        return self.user_storage.unauthenticate_user(user)
 
     def change_password(self, user):
         """Change a user's password."""
