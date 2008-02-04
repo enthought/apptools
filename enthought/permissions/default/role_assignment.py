@@ -81,10 +81,6 @@ class _AssignmentHandler(Handler):
             self._ps_error(e)
             return
 
-        # Default to an empty assignment.
-        if user_name is None:
-            role_names = []
-
         # Update the viewed object.
         assignment.user_name = user.name
         assignment.description = user.description

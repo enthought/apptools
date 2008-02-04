@@ -53,37 +53,89 @@ def check_password(opts):
 def add_role(opts):
     """Add a new role."""
 
-    return ([check_name(opts), opts.description, opts.permissions, opts.key],
-            ['Status'])
+    return [check_name(opts), opts.description, opts.permissions, opts.key]
 
 
 def add_user(opts):
     """Add a new user."""
 
-    return ([check_name(opts), opts.description, check_password(opts),
-                    opts.key],
-            ['Status'])
+    return [check_name(opts), opts.description, check_password(opts), opts.key]
+
+
+def all_roles(opts):
+    """Return all roles."""
+
+    return [opts.key]
+
+
+def delete_role(opts):
+    """Delete a role."""
+
+    return [check_name(opts)]
+
+
+def capabilities(opts):
+    """Get the capabilities of the server."""
+
+    return []
+
+
+def get_roles(opts):
+    """Get the roles that match a name."""
+
+    return [check_name(opts)]
+
+
+def get_assignment(opts):
+    """Get the details of a user's assignment."""
+
+    return [check_name(opts), opts.key]
+
+
+def get_policy(opts):
+    """Get the details of a user's policy."""
+
+    return [check_name(opts), opts.key]
 
 
 def get_user(opts):
     """Get the details of a user."""
 
-    return ([check_name(opts), opts.key],
-            ['Name', 'Description', 'Blob', 'Password'])
+    return [check_name(opts), opts.key]
 
 
 def is_empty_policy(opts):
     """Check if there is any policy data."""
 
-    return ([], ['Policy is empty'])
+    return []
+
+
+def save_assignment(opts):
+    """Save the details of a user's assignment."""
+
+    return [check_name(opts), opts.roles, opts.key]
+
+
+def update_role(opts):
+    """Update an existing role."""
+
+    return [check_name(opts), opts.description, opts.permissions, opts.key]
 
 
 # The list of actions that can be invoked from the command line.
 actions = [
     add_role,
     add_user,
+    all_roles,
+    capabilities,
+    delete_role,
+    get_assignment,
+    get_policy,
+    get_roles,
     get_user,
     is_empty_policy,
+    save_assignment,
+    update_role,
 ]
 
 
@@ -102,19 +154,26 @@ p = optparse.OptionParser(usage="%prog [options] action", description="This "
 p.add_option('--ip-address', default=DEFAULT_ADDR, dest='addr',
         help="the IP address to connect to [default: %s]" % DEFAULT_ADDR)
 p.add_option('-d', '--description', default='', dest='description',
-        help="a description (used by add_role, add_user)")
+        help="a description (used by add_role, add_user, update_role)")
 p.add_option('-k', '--key', default='', dest='key',
         help="the session key returned by login (used by add_role, add_user, "
-                "get_user)")
+                "all_roles, get_assignment, get_policy, get_user, "
+                "save_assignment, update_role)")
 p.add_option('-n', '--name', dest='name',
-        help="a name (used by add_role, add_user, get_user)")
+        help="a name (used by add_role, add_user, delete_role, "
+                "get_assignment, get_policy, get_roles, get_user, "
+                "save_assignment, update_role)")
 p.add_option('--permissions', action='callback', callback=store_list,
         default=[], dest='permissions', type='string',
-        help="a space separated list of permission names (used by add_role)")
+        help="a space separated list of permission names (used by add_role, "
+                "update_role)")
 p.add_option('-p', '--password', dest='password',
         help="a password (used by add_user)")
 p.add_option('--port', type='int', default=DEFAULT_PORT, dest='port',
         help="the TCP port to connect to [default: %d]" % DEFAULT_PORT)
+p.add_option('--roles', action='callback', callback=store_list, default=[],
+        dest='roles', type='string',
+        help="a space separated list of role names (used by save_assignment)")
 p.add_option('-v', '--verbose', action='store_true', default=False,
         dest='verbose', help="display the progress of the RPC")
 
@@ -131,7 +190,7 @@ else:
 
 # Get the action's arguments.
 try:
-    action_args, result_names = action(opts)
+    action_args = action(opts)
 except Exception, e:
     sys.stderr.write("The %s action requires %s\n" % (action.func_name, e))
     sys.exit(2)
@@ -164,31 +223,4 @@ except xmlrpclib.Fault, e:
     sys.exit(0)
 
 # Show the result.
-nr_names = len(result_names)
-
-try:
-    nr_values = len(result)
-except TypeError:
-    nr_values = 1
-    result = [result]
-
-if nr_names != nr_values:
-    print "Expected %d result values but received %d" % (nr_names, nr_values)
-
-for i in range(nr_names, nr_values):
-    result_names.append("Result %d" % i)
-
-for i in range(nr_values, nr_names):
-    result.append("Result missing")
-
-width = 1
-for i, name in enumerate(result_names):
-    name += ':'
-
-    if width < len(name):
-        width = len(name)
-
-    result_names[i] = name
-
-for name, value in zip(result_names, result):
-    print "%-*s %s" % (width, name, value)
+print "Result:", result

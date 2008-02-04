@@ -27,7 +27,11 @@ class PickledUserStorage(HasTraits):
 
     implements(IUserStorage)
 
-    #### Private interface ###################################################
+    #### 'IUserStorage' interface #############################################
+
+    capabilities = ['user_password', 'user_add', 'user_modify', 'user_delete']
+
+    #### Private interface ####################################################
 
     # The persisted database.  The database itself is a dictionary, keyed by
     # the user name, and with a value that is a tuple of the description, blob
@@ -63,7 +67,7 @@ class PickledUserStorage(HasTraits):
             users = self._db.read()
 
             if not users.has_key(name):
-                raise UserStorageError("The user \"%s\" doesn't exist." % name)
+                raise UserStorageError("The user \"%s\" does not exist." % name)
 
             del users[name]
             self._db.write(users)
@@ -108,7 +112,7 @@ class PickledUserStorage(HasTraits):
             try:
                 description, _, password = users[name]
             except KeyError:
-                raise UserStorageError("The user has been removed from the user database.")
+                raise UserStorageError("The user \"%s\" does not exist." % name)
 
             users[name] = (description, blob, password)
             self._db.write(users)
@@ -126,7 +130,7 @@ class PickledUserStorage(HasTraits):
             try:
                 description, blob, _ = users[name]
             except KeyError:
-                raise UserStorageError("The user has been removed from the user database.")
+                raise UserStorageError("The user \"%s\" does not exist." % name)
 
             users[name] = (description, blob, password)
             self._db.write(users)
@@ -144,7 +148,7 @@ class PickledUserStorage(HasTraits):
             try:
                 _, blob, _ = users[name]
             except KeyError:
-                raise UserStorageError("The user has been removed from the user database.")
+                raise UserStorageError("The user \"%s\" does not exist." % name)
 
             users[name] = (description, blob, password)
             self._db.write(users)

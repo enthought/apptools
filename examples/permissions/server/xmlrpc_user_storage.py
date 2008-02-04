@@ -15,7 +15,7 @@
 
 # Enthought library imports.
 from enthought.permissions.default.api import IUserStorage, UserStorageError
-from enthought.traits.api import HasTraits, implements, Instance
+from enthought.traits.api import HasTraits, implements, Instance, List, Str
 
 # Local imports.
 from proxy_server import ProxyServer
@@ -26,7 +26,11 @@ class XMLRPCUserStorage(HasTraits):
 
     implements(IUserStorage)
 
-    #### Private interface ###################################################
+    #### 'IUserStorage' interface #############################################
+
+    capabilities = List(Str)
+
+    #### Private interface ####################################################
 
     # The proxy for the XML RPC server.
     _server = Instance(ProxyServer)
@@ -44,6 +48,16 @@ class XMLRPCUserStorage(HasTraits):
     ###########################################################################
     # Trait handlers.
     ###########################################################################
+
+    def _capabilities_default(self):
+        """Return the storage capabilities."""
+
+        try:
+            caps = self._server.capabilities()
+        except:
+            caps = []
+
+        return caps
 
     def __server_default(self):
         """Return the default proxy server."""

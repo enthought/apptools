@@ -119,18 +119,19 @@ class ServerImplementation(object):
         # FIXME: Check the key and the user permissions.
         raise Exception("You do not have the appropriate authority.")
 
-    def add_role(self, name, description, perm_names, key=None):
-        """Add a new role."""
+    def capabilities(self):
+        """Return a list of capabilities that the implementation supports.  The
+        full list is 'user_password', 'user_add', 'user_modify', 'user_delete'.
+        """
 
-        self._check_authorisation(key)
+        caps = ['user_password']
 
-        if self._roles.has_key(name):
-            raise Exception("The role \"%s\" already exists." % name)
+        if self._local_user_db:
+            # FIXME
+            #caps.extend(['user_add', 'user_modify', 'user_delete'])
+            caps.extend(['user_add'])
 
-        self._roles[name] = (description, perm_names)
-        self._sync(self._roles)
-
-        return True
+        return caps
 
     def add_user(self, name, description, password, key=None):
         """Add a new user."""
@@ -171,6 +172,94 @@ class ServerImplementation(object):
 
         return (name, description, blob, password)
 
+    def add_role(self, name, description, perm_names, key=None):
+        """Add a new role."""
+
+        self._check_authorisation(key)
+
+        if self._roles.has_key(name):
+            raise Exception("The role \"%s\" already exists." % name)
+
+        self._roles[name] = (description, perm_names)
+        self._sync(self._roles)
+
+        # Return a non-None value.
+        return True
+
+    def all_roles(self, key=None):
+        """Return a list of all roles."""
+
+        self._check_authorisation(key)
+
+        return [(name, description)
+                for name, (description, _) in self._roles.items()]
+
+    def delete_role(self, name, key=None):
+        """Delete a role."""
+
+        self._check_authorisation(key)
+
+        if not self._roles.has_key(name):
+            raise Exception("The role \"%s\" does not exist." % name)
+
+        del self._roles[name]
+
+        # Remove the role from any users who have it.
+        for user, role_names in self._assignments.items():
+            try:
+                role_names.remove(name)
+            except ValueError:
+                continue
+
+            self._assignments[user] = role_names
+
+        self._sync(self._roles)
+        self._sync(self._assignments)
+
+        # Return a non-None value.
+        return True
+
+    def get_assignment(self, user_name, key=None):
+        """Return the details of the assignment for the given user name."""
+
+        self._check_authorisation(key)
+
+        try:
+            role_names = self._assignments[user_name]
+        except KeyError:
+            return '', []
+
+        return user_name, role_names
+
+    def get_policy(self, user_name, key=None):
+        """Return the details of the policy for the given user name."""
+
+        self._check_authorisation(key)
+
+        try:
+            role_names = self._assignments[user_name]
+        except KeyError:
+            return '', []
+
+        perm_names = []
+
+        for r in role_names:
+            _, perms = self._roles[r]
+            perm_names.extend(perms)
+
+        return user_name, perm_names
+
+    def get_roles(self, name, key=None):
+        """Return the full name, description and permissions of all the roles
+        that match the given name."""
+
+        self._check_authorisation(key)
+
+        # Return any role that starts with the name.
+        return [(full_name, description, perm_names)
+                for full_name, (description, perm_names) in self._roles.items()
+                        if full_name.startswith(name)]
+
     def is_empty_policy(self):
         """Return True if there is no useful data."""
 
@@ -181,6 +270,40 @@ class ServerImplementation(object):
             empty = True
 
         return empty
+
+    def save_assignment(self, user_name, role_names, key=None):
+        """Save the roles assigned to a user."""
+
+        self._check_authorisation(key)
+
+        if len(role_names) == 0:
+            # Delete the user, but don't worry if there is no current
+            # assignment.
+            try:
+                del self._assignments[user_name]
+            except KeyError:
+                pass
+        else:
+            self._assignments[user_name] = role_names
+
+        self._sync(self._assignments)
+
+        # Return a non-None value.
+        return True
+
+    def update_role(self, name, description, perm_names, key=None):
+        """Update an existing role."""
+
+        self._check_authorisation(key)
+
+        if not self._roles.has_key(name):
+            raise Exception("The role \"%s\" does not exist." % name)
+
+        self._roles[name] = (description, perm_names)
+        self._sync(self._roles)
+
+        # Return a non-None value.
+        return True
 
 
 class RPCServer(SimpleXMLRPCServer.SimpleXMLRPCServer):

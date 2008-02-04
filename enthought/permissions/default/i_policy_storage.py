@@ -43,11 +43,13 @@ class IPolicyStorage(Interface):
 
     def get_assignment(self, user_name):
         """Return a tuple of the user name and list of role names of the
-        assignment for the given user name.""" 
+        assignment for the given user name.  The tuple will contain an empty
+        string and list if the user isn't known.""" 
 
     def get_policy(self, user_name):
         """Return a tuple of the user name and list of permission names for the
-        user with the given name."""
+        user with the given name.  The tuple will contain an empty string and
+        list if the user isn't known."""
 
     def get_roles(self, name):
         """Return a list of tuples of the full name, description and list of

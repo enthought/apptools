@@ -27,7 +27,7 @@ class XMLRPCPolicyStorage(HasTraits):
 
     implements(IPolicyStorage)
 
-    #### Private interface ###################################################
+    #### Private interface ####################################################
 
     # The proxy for the XML RPC server.
     _server = Instance(ProxyServer)
@@ -36,11 +36,84 @@ class XMLRPCPolicyStorage(HasTraits):
     # 'IPolicyStorage' interface.
     ###########################################################################
 
+    def add_role(self, name, description, perm_names):
+        """Add a new role."""
+
+        try:
+            # FIXME: Need to pass session key.
+            self._server.add_role(name, description, perm_names)
+        except Exception, e:
+            raise PolicyStorageError(self._server.error(e))
+
+    def all_roles(self):
+        """Return a list of all roles."""
+
+        try:
+            # FIXME: Need to pass session key.
+            return self._server.all_roles()
+        except Exception, e:
+            raise PolicyStorageError(self._server.error(e))
+
+    def delete_role(self, name):
+        """Delete a role."""
+
+        try:
+            # FIXME: Need to pass session key.
+            self._server.delete_role(name)
+        except Exception, e:
+            raise PolicyStorageError(self._server.error(e))
+
+    def get_assignment(self, user_name):
+        """Return the details of the assignment for the given user name."""
+
+        try:
+            # FIXME: Need to pass session key.
+            return self._server.get_assignment(user_name)
+        except Exception, e:
+            raise PolicyStorageError(self._server.error(e))
+
+    def get_policy(self, user_name):
+        """Return the details of the policy for the given user name."""
+
+        try:
+            # FIXME: Need to pass session key.
+            return self._server.get_policy(user_name)
+        except Exception, e:
+            raise PolicyStorageError(self._server.error(e))
+
+    def get_roles(self, name):
+        """Return the full name, description and permissions of all the roles
+        that match the given name."""
+
+        try:
+            # FIXME: Need to pass session key.
+            return self._server.get_roles(name)
+        except Exception, e:
+            raise PolicyStorageError(self._server.error(e))
+
     def is_empty(self):
         """See if the database is empty."""
 
         try:
             return self._server.is_empty_policy()
+        except Exception, e:
+            raise PolicyStorageError(self._server.error(e))
+
+    def save_assignment(self, user_name, role_names):
+        """Save the roles assigned to a user."""
+
+        try:
+            # FIXME: Need to pass session key.
+            self._server.save_assignment(user_name, role_names)
+        except Exception, e:
+            raise PolicyStorageError(self._server.error(e))
+
+    def update_role(self, name, description, perm_names):
+        """Update the description and permissions for the given role."""
+
+        try:
+            # FIXME: Need to pass session key.
+            self._server.update_role(name, description, perm_names)
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 

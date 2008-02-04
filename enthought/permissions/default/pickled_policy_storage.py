@@ -27,7 +27,7 @@ class PickledPolicyStorage(HasTraits):
 
     implements(IPolicyStorage)
 
-    #### Private interface ###################################################
+    #### Private interface ####################################################
 
     # The persisted database.  The database itself is a tuple of the role and
     # assignment dictionaries.  The role dictionary is keyed by the role name,
@@ -72,7 +72,7 @@ class PickledPolicyStorage(HasTraits):
             roles, assigns = self._db.read()
 
             if not roles.has_key(name):
-                raise PolicyStorageError("The role \"%s\" doesn't exist." % name)
+                raise PolicyStorageError("The role \"%s\" does not exist." % name)
 
             del roles[name]
 
@@ -97,7 +97,7 @@ class PickledPolicyStorage(HasTraits):
         try:
             role_names = assigns[user_name]
         except KeyError:
-            return None, None
+            return '', []
 
         return user_name, role_names
 
@@ -109,7 +109,7 @@ class PickledPolicyStorage(HasTraits):
         try:
             role_names = assigns[user_name]
         except KeyError:
-            return None, None
+            return '', []
 
         perm_names = []
 
@@ -128,7 +128,7 @@ class PickledPolicyStorage(HasTraits):
         # Return any role that starts with the name.
         return [(full_name, description, perm_names)
                 for full_name, (description, perm_names) in roles.items()
-                    if full_name.startswith(name)]
+                        if full_name.startswith(name)]
 
     def is_empty(self):
         """See if the database is empty."""
@@ -167,6 +167,9 @@ class PickledPolicyStorage(HasTraits):
 
         try:
             roles, assigns = self._db.read()
+
+            if not roles.has_key(name):
+                raise PolicyStorageError("The role \"%s\" does not exist." % name)
 
             roles[name] = (description, perm_names)
             self._db.write((roles, assigns))

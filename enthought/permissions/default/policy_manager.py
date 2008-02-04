@@ -81,10 +81,6 @@ class PolicyManager(HasTraits):
             error(None, str(e))
             return
 
-        # Make sure the user has a policy.
-        if user_name is None:
-            return
-
         for p in perm_names:
             try:
                 permission = self.permissions[p]

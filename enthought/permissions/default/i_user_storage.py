@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Interface
+from enthought.traits.api import Interface, List, Str
 
 
 class UserStorageError(Exception):
@@ -26,6 +26,14 @@ class UserStorageError(Exception):
 class IUserStorage(Interface):
     """This defines the interface expected by a UserManager instance to handle
     the low level storage of the user data."""
+
+    #### 'IUserStorage' interface #############################################
+
+    # A list of strings describing the storage capabilities.  'user_password'
+    # means a user's password can be changed.  'user_add' means a user can be
+    # added.  'user_modify' means a user can be modified.  'user_delete' means
+    # a user can be deleted.
+    capabilities = List(Str)
 
     ###########################################################################
     # 'IUserStorage' interface.

@@ -18,8 +18,8 @@ import os
 
 # Enthought library imports.
 from enthought.pyface.api import confirm, error, YES
-from enthought.traits.api import Bool, HasTraits, implements, Instance, \
-        Password, Str, Unicode
+from enthought.traits.api import Bool, HasTraits, implements, Instance, List, \
+        Password, Property, Str, Unicode
 from enthought.traits.ui.api import Handler, Item, View
 from enthought.traits.ui.menu import Action, OKCancelButtons
 
@@ -265,13 +265,13 @@ class UserDatabase(HasTraits):
 
     #### 'IUserDatabase' interface ############################################
 
-    can_change_password = True
+    can_change_password = Property
 
-    can_add_user = True
+    can_add_user = Property
 
-    can_modify_user = True
+    can_modify_user = Property
 
-    can_delete_user = True
+    can_delete_user = Property
 
     user_storage = Instance(IUserStorage)
 
@@ -428,6 +428,26 @@ class UserDatabase(HasTraits):
     ###########################################################################
     # Trait handlers.
     ###########################################################################
+
+    def _get_can_change_password(self):
+        """See if a user can change their password."""
+
+        return 'user_password' in self.user_storage.capabilities
+
+    def _get_can_add_user(self):
+        """See if a user can be added."""
+
+        return 'user_add' in self.user_storage.capabilities
+
+    def _get_can_modify_user(self):
+        """See if a user can be modified."""
+
+        return 'user_modify' in self.user_storage.capabilities
+
+    def _get_can_delete_user(self):
+        """See if a user can be deleted."""
+
+        return 'user_delete' in self.user_storage.capabilities
 
     def _user_storage_default(self):
         """Return the default storage for the user data."""
