@@ -30,6 +30,16 @@ DEFAULT_ADDR = socket.gethostbyname(socket.gethostname())
 DEFAULT_PORT = 3800
 
 
+def check_blob(opts):
+    """Check the blob was specified with the --blob flag and return the value.
+    """
+
+    if not opts.blob:
+        raise Exception("the --blob flag to specify a blob")
+
+    return opts.blob
+
+
 def check_name(opts):
     """Check the name was specified with the --name flag and return the value.
     """
@@ -77,7 +87,13 @@ def authenticate_user(opts):
 def delete_role(opts):
     """Delete a role."""
 
-    return [check_name(opts)]
+    return [check_name(opts), opts.key]
+
+
+def delete_user(opts):
+    """Delete a user."""
+
+    return [check_name(opts), opts.key]
 
 
 def capabilities(opts):
@@ -86,8 +102,14 @@ def capabilities(opts):
     return []
 
 
-def get_roles(opts):
+def matching_roles(opts):
     """Get the roles that match a name."""
+
+    return [check_name(opts)]
+
+
+def matching_users(opts):
+    """Get the users that match a name."""
 
     return [check_name(opts)]
 
@@ -110,7 +132,7 @@ def is_empty_policy(opts):
     return []
 
 
-def save_assignment(opts):
+def set_assignment(opts):
     """Save the details of a user's assignment."""
 
     return [check_name(opts), opts.roles, opts.key]
@@ -122,10 +144,28 @@ def unauthenticate_user(opts):
     return [opts.key]
 
 
-def update_role(opts):
-    """Update an existing role."""
+def modify_role(opts):
+    """Modify an existing role."""
 
     return [check_name(opts), opts.description, opts.permissions, opts.key]
+
+
+def modify_user(opts):
+    """Modify an existing user."""
+
+    return [check_name(opts), opts.description, check_password(opts), opts.key]
+
+
+def update_blob(opts):
+    """Update the blob for a user."""
+
+    return [check_name(opts), check_blob(opts)]
+
+
+def update_password(opts):
+    """Update the password for a user."""
+
+    return [check_name(opts), check_password(opts)]
 
 
 # The list of actions that can be invoked from the command line.
@@ -136,13 +176,18 @@ actions = [
     authenticate_user,
     capabilities,
     delete_role,
+    delete_user,
     get_assignment,
     get_policy,
-    get_roles,
     is_empty_policy,
-    save_assignment,
+    matching_roles,
+    matching_users,
+    modify_role,
+    modify_user,
+    set_assignment,
     unauthenticate_user,
-    update_role,
+    update_blob,
+    update_password,
 ]
 
 
@@ -160,27 +205,33 @@ p = optparse.OptionParser(usage="%prog [options] action", description="This "
 
 p.add_option('--ip-address', default=DEFAULT_ADDR, dest='addr',
         help="the IP address to connect to [default: %s]" % DEFAULT_ADDR)
+p.add_option('-b', '--blob', dest='blob',
+        help="a blob string (used by update_blob)")
 p.add_option('-d', '--description', default='', dest='description',
-        help="a description (used by add_role, add_user, update_role)")
+        help="a description (used by add_role, add_user, modify_role, "
+                "modify_user)")
 p.add_option('-k', '--key', default='', dest='key',
         help="the session key returned by login (used by add_role, add_user, "
-                "all_roles, get_assignment, get_policy, save_assignment, "
-                "unauthenticate_user, update_role)")
+                "all_roles, delete_role, delete_user, get_assignment, "
+                "get_policy, modify_role, modify_user, set_assignment, "
+                "unauthenticate_user)")
 p.add_option('-n', '--name', dest='name',
         help="a name (used by add_role, add_user, authenticate_user, "
-                "delete_role, get_assignment, get_policy, get_roles, "
-                "save_assignment, update_role)")
+                "delete_role, delete_user, get_assignment, get_policy, "
+                "matching_roles, matching_users, modify_role, modify_user, "
+                "set_assignment, update_blob, update_user)")
 p.add_option('--permissions', action='callback', callback=store_list,
         default=[], dest='permissions', type='string',
         help="a space separated list of permission names (used by add_role, "
-                "update_role)")
+                "modify_role)")
 p.add_option('-p', '--password', dest='password',
-        help="a password (used by add_user, authenticate_user)")
+        help="a password (used by add_user, authenticate_user, modify_user "
+                "update_password)")
 p.add_option('--port', type='int', default=DEFAULT_PORT, dest='port',
         help="the TCP port to connect to [default: %d]" % DEFAULT_PORT)
 p.add_option('--roles', action='callback', callback=store_list, default=[],
         dest='roles', type='string',
-        help="a space separated list of role names (used by save_assignment)")
+        help="a space separated list of role names (used by set_assignment)")
 p.add_option('-v', '--verbose', action='store_true', default=False,
         dest='verbose', help="display the progress of the RPC")
 

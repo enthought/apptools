@@ -51,20 +51,20 @@ class IPolicyStorage(Interface):
         user with the given name.  The tuple will contain an empty string and
         list if the user isn't known."""
 
-    def get_roles(self, name):
+    def is_empty(self):
+        """Return True if the user database is empty.  It will only ever be
+        called once."""
+
+    def matching_roles(self, name):
         """Return a list of tuples of the full name, description and list of
         permission names of all roles that match the given name.  How the name
         is interpreted (eg. as a regular expression) is determined by the
         storage."""
 
-    def is_empty(self):
-        """Return True if the user database is empty.  It will only ever be
-        called once."""
-
-    def save_assignment(self, user_name, role_names):
-        """Save the assignment of the given role names to the given user.  Note
-        that there may or may not be an existing assignment for the user."""
-
-    def update_role(self, name, description, perm_names):
+    def modify_role(self, name, description, perm_names):
         """Update the description and permissions for the role with the given
         name (which will not be empty)."""
+
+    def set_assignment(self, user_name, role_names):
+        """Save the assignment of the given role names to the given user.  Note
+        that there may or may not be an existing assignment for the user."""

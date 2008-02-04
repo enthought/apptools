@@ -81,16 +81,6 @@ class XMLRPCPolicyStorage(HasTraits):
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 
-    def get_roles(self, name):
-        """Return the full name, description and permissions of all the roles
-        that match the given name."""
-
-        try:
-            # FIXME: Need to pass session key.
-            return self._server.get_roles(name)
-        except Exception, e:
-            raise PolicyStorageError(self._server.error(e))
-
     def is_empty(self):
         """See if the database is empty."""
 
@@ -99,21 +89,31 @@ class XMLRPCPolicyStorage(HasTraits):
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 
-    def save_assignment(self, user_name, role_names):
-        """Save the roles assigned to a user."""
+    def matching_roles(self, name):
+        """Return the full name, description and permissions of all the roles
+        that match the given name."""
 
         try:
             # FIXME: Need to pass session key.
-            self._server.save_assignment(user_name, role_names)
+            return self._server.matching_roles(name)
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 
-    def update_role(self, name, description, perm_names):
+    def modify_role(self, name, description, perm_names):
         """Update the description and permissions for the given role."""
 
         try:
             # FIXME: Need to pass session key.
             self._server.update_role(name, description, perm_names)
+        except Exception, e:
+            raise PolicyStorageError(self._server.error(e))
+
+    def set_assignment(self, user_name, role_names):
+        """Save the roles assigned to a user."""
+
+        try:
+            # FIXME: Need to pass session key.
+            self._server.set_assignment(user_name, role_names)
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 

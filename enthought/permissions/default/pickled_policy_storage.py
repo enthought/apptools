@@ -119,7 +119,15 @@ class PickledPolicyStorage(HasTraits):
 
         return user_name, perm_names
 
-    def get_roles(self, name):
+    def is_empty(self):
+        """See if the database is empty."""
+
+        roles, assigns = self._readonly_copy()
+
+        # Both have to be non-empty for the whole thing to be non-empty.
+        return (len(roles) == 0 or len(assigns) == 0)
+
+    def matching_roles(self, name):
         """Return the full name, description and permissions of all the roles
         that match the given name."""
 
@@ -130,15 +138,23 @@ class PickledPolicyStorage(HasTraits):
                 for full_name, (description, perm_names) in roles.items()
                         if full_name.startswith(name)]
 
-    def is_empty(self):
-        """See if the database is empty."""
+    def modify_role(self, name, description, perm_names):
+        """Update the description and permissions for the given role."""
 
-        roles, assigns = self._readonly_copy()
+        self._db.lock()
 
-        # Both have to be non-empty for the whole thing to be non-empty.
-        return (len(roles) == 0 or len(assigns) == 0)
+        try:
+            roles, assigns = self._db.read()
 
-    def save_assignment(self, user_name, role_names):
+            if not roles.has_key(name):
+                raise PolicyStorageError("The role \"%s\" does not exist." % name)
+
+            roles[name] = (description, perm_names)
+            self._db.write((roles, assigns))
+        finally:
+            self._db.unlock()
+
+    def set_assignment(self, user_name, role_names):
         """Save the roles assigned to a user."""
 
         self._db.lock()
@@ -156,22 +172,6 @@ class PickledPolicyStorage(HasTraits):
             else:
                 assigns[user_name] = role_names
 
-            self._db.write((roles, assigns))
-        finally:
-            self._db.unlock()
-
-    def update_role(self, name, description, perm_names):
-        """Update the description and permissions for the given role."""
-
-        self._db.lock()
-
-        try:
-            roles, assigns = self._db.read()
-
-            if not roles.has_key(name):
-                raise PolicyStorageError("The role \"%s\" does not exist." % name)
-
-            roles[name] = (description, perm_names)
             self._db.write((roles, assigns))
         finally:
             self._db.unlock()

@@ -51,15 +51,18 @@ class IUserStorage(Interface):
     def delete_user(self, name):
         """Delete the user with the given name (which will not be empty)."""
 
-    def get_users(self, name):
-        """Return a list of tuples of the full name, description, blob and
-        password of all users that match the given name.  How the name is
-        interpreted (eg. as a regular expression) is determined by the storage.
-        """
-
     def is_empty(self):
         """Return True if the user database is empty.  It will only ever be
         called once."""
+
+    def matching_users(self, name):
+        """Return a list of tuples of the full name and description of all
+        users that match the given name.  How the name is interpreted (eg. as a
+        regular expression) is determined by the storage."""
+
+    def modify_user(self, name, description, password):
+        """Update the description and password for the user with the given name
+        (which will not be empty)."""
 
     def unauthenticate_user(self, user):
         """Unauthenticate the given user (which is an object implementing
@@ -72,7 +75,3 @@ class IUserStorage(Interface):
     def update_password(self, name, password):
         """Update the password for the user with the given name (which will not
         be empty)."""
-
-    def update_user(self, name, description, password):
-        """Update the description and password for the user with the given name
-        (which will not be empty)."""

@@ -58,11 +58,39 @@ class XMLRPCUserStorage(HasTraits):
         except Exception, e:
             raise UserStorageError(self._server.error(e))
 
+    def delete_user(self, name):
+        """Delete a new user."""
+
+        try:
+            # FIXME: Need to pass session key.
+            self._server.delete_user(name)
+        except Exception, e:
+            raise UserStorageError(self._server.error(e))
+
     def is_empty(self):
         """See if the database is empty."""
 
         # We leave it to the policy storage to answer this question.
         return False
+
+    def matching_users(self, name):
+        """Return the full name and description of all the users that match the
+        given name."""
+
+        try:
+            # FIXME: Need to pass session key.
+            return self._server.matching_users(name)
+        except Exception, e:
+            raise UserStorageError(self._server.error(e))
+
+    def modify_user(self, name, description, password):
+        """Update the description and password for the given user."""
+
+        try:
+            # FIXME: Need to pass session key.
+            self._server.modify_user(name, description, password)
+        except Exception, e:
+            raise UserStorageError(self._server.error(e))
 
     def unauthenticate_user(self, user):
         """Unauthenticate the given user."""
@@ -70,6 +98,24 @@ class XMLRPCUserStorage(HasTraits):
         try:
             # FIXME: Need to pass session key.
             return self._server.unauthenticate_user()
+        except Exception, e:
+            raise UserStorageError(self._server.error(e))
+
+    def update_blob(self, name, blob):
+        """Update the blob for the given user."""
+
+        try:
+            # FIXME: Need to pass session key.
+            self._server.update_blob(name, blob)
+        except Exception, e:
+            raise UserStorageError(self._server.error(e))
+
+    def update_password(self, name, password):
+        """Update the password for the given user."""
+
+        try:
+            # FIXME: Need to pass session key.
+            self._server.update_password(name, password)
         except Exception, e:
             raise UserStorageError(self._server.error(e))
 

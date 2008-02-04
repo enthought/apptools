@@ -82,28 +82,45 @@ class PickledUserStorage(HasTraits):
         try:
             users = self._db.read()
 
-            if not users.has_key(name):
+            try:
+                del users[name]
+            except KeyError:
                 raise UserStorageError("The user \"%s\" does not exist." % name)
 
-            del users[name]
             self._db.write(users)
         finally:
             self._db.unlock()
-
-    def get_users(self, name):
-        """Return the full name, description, blob and password of all the
-        users that match the given name."""
-
-        # Return any user that starts with the name.
-        return [(full_name, description, blob, password)
-                for full_name, (description, blob, password)
-                        in self._readonly_copy().items()
-                        if full_name.startswith(name)]
 
     def is_empty(self):
         """See if the database is empty."""
 
         return (len(self._readonly_copy()) == 0)
+
+    def matching_users(self, name):
+        """Return the full name and description of all the users that match the
+        given name."""
+
+        # Return any user that starts with the name.
+        return [(full_name, description) for full_name, (description, _, _)
+                in self._readonly_copy().items() if full_name.startswith(name)]
+
+    def modify_user(self, name, description, password):
+        """Update the description and password for the given user."""
+
+        self._db.lock()
+
+        try:
+            users = self._db.read()
+
+            try:
+                _, blob, _ = users[name]
+            except KeyError:
+                raise UserStorageError("The user \"%s\" does not exist." % name)
+
+            users[name] = (description, blob, password)
+            self._db.write(users)
+        finally:
+            self._db.unlock()
 
     def update_blob(self, name, blob):
         """Update the blob for the given user."""
@@ -139,24 +156,6 @@ class PickledUserStorage(HasTraits):
 
             try:
                 description, blob, _ = users[name]
-            except KeyError:
-                raise UserStorageError("The user \"%s\" does not exist." % name)
-
-            users[name] = (description, blob, password)
-            self._db.write(users)
-        finally:
-            self._db.unlock()
-
-    def update_user(self, name, description, password):
-        """Update the description and password for the given user."""
-
-        self._db.lock()
-
-        try:
-            users = self._db.read()
-
-            try:
-                _, blob, _ = users[name]
             except KeyError:
                 raise UserStorageError("The user \"%s\" does not exist." % name)
 

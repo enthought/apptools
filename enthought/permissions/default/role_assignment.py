@@ -71,7 +71,7 @@ class _AssignmentHandler(Handler):
 
         assignment = self._assignment(info)
 
-        user = PermissionsManager.user_manager.select_user(assignment.user_name)
+        user = PermissionsManager.user_manager.matching_user(assignment.user_name)
         if user is None:
             return
 
@@ -95,7 +95,7 @@ class _AssignmentHandler(Handler):
 
         # Update the data in the database.
         try:
-            PermissionsManager.policy_manager.policy_storage.save_assignment(
+            PermissionsManager.policy_manager.policy_storage.set_assignment(
                     assignment.user_name, [r.name for r in assignment.roles])
             info.ui.dispose()
         except PolicyStorageError, e:

@@ -73,7 +73,7 @@ class _RoleHandler(Handler):
 
         # Get all roles that satisfy the criteria.
         try:
-            roles = PermissionsManager.policy_manager.policy_storage.get_roles(role.name)
+            roles = PermissionsManager.policy_manager.policy_storage.matching_roles(role.name)
         except PolicyStorageError, e:
             self._ps_error(e)
             return
@@ -124,7 +124,7 @@ class _RoleHandler(Handler):
 
         # Update the data in the database.
         try:
-            PermissionsManager.policy_manager.policy_storage.update_role(
+            PermissionsManager.policy_manager.policy_storage.modify_role(
                     role.name, role.description,
                     [p.name for p in role.permissions])
             info.ui.dispose()

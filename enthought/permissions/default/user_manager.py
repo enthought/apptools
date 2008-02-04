@@ -79,10 +79,10 @@ class UserManager(HasTraits):
 
             self.user_authenticated = None
 
-    def select_user(self, name):
+    def matching_user(self, name):
         """Select a user."""
 
-        return self.user_db.select_user(name)
+        return self.user_db.matching_user(name)
 
     ###########################################################################
     # Trait handlers.

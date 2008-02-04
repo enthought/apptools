@@ -127,9 +127,7 @@ class ServerImplementation(object):
         caps = ['user_password']
 
         if self._local_user_db:
-            # FIXME
-            #caps.extend(['user_add', 'user_modify', 'user_delete'])
-            caps.extend(['user_add'])
+            caps.extend(['user_add', 'user_modify', 'user_delete'])
 
         return caps
 
@@ -166,18 +164,66 @@ class ServerImplementation(object):
             # FIXME
             raise Exception("Authenticating a user isn't yet supported.")
 
-        # Get the blob if there is one.
-        try:
-            blob = self._blobs[name]
-        except KeyError:
-            blob = ''
-
         # FIXME: Return the session key.
-        return name, description, blob
+        return name, description, self._blobs.get(name, '')
+
+    def matching_users(self, name, key=None):
+        """Return the full name and description of all the users that match the
+        given name."""
+
+        self._check_authorisation(key)
+
+        if self._local_user_db:
+            # Get any user that starts with the name.
+            users = [(full_name, description) for full_name, (description, _)
+                            in self._users().items()
+                            if full_name.startswith(name)]
+        else:
+            # FIXME
+            raise Exception("Searching for users isn't yet supported.")
+
+        return users
+
+    def modify_user(self, name, description, password, key=None):
+        """Update the description and password for the given user."""
+
+        self._check_authorisation(key)
+
+        if self._local_user_db:
+            if not self._users.has_key(name):
+                raise Exception("The user \"%s\" does not exist." % name)
+
+            self._users[name] = (description, password)
+            self._sync(self._users)
+        else:
+            raise Exception("Modifying a user isn't supported.")
+
+        # Return a non-None value.
+        return True
+
+    def delete_user(self, name, key=None):
+        """Delete a user."""
+
+        self._check_authorisation(key)
+
+        if self._local_user_db:
+            try:
+                del self._users[name]
+            except KeyError:
+                raise UserStorageError("The user \"%s\" does not exist." % name)
+
+            self._sync(self._users)
+        else:
+            raise Exception("Deleting a user isn't supported.")
+
+        # Return a non-None value.
+        return True
 
     def unauthenticate_user(self, key=None):
         """Unauthenticate the given user (ie. identified by the session key).
         """
+
+        self._check_authorisation(key)
 
         if not self._local_user_db:
             # FIXME: LDAP may or may not need anything here.
@@ -188,6 +234,37 @@ class ServerImplementation(object):
             # FIXME
             pass
 
+        return True
+
+    def update_blob(self, name, blob, key=None):
+        """Update the blob for the given user."""
+
+        self._check_authorisation(key)
+
+        self._blobs[name] = blob
+        self._sync(self._blobs)
+
+        # Return a non-None value.
+        return True
+
+    def update_password(self, name, password, key=None):
+        """Update the password for the given user."""
+
+        self._check_authorisation(key)
+
+        if not self._local_user_db:
+            try:
+                description, _ = self._users[name]
+            except KeyError:
+                raise Exception("The user \"%s\" does not exist." % name)
+
+            self._users[name] = (description, password)
+            self._sync(self._users)
+        else:
+            # FIXME
+            raise Exception("Updating a user password isn't yet supported.")
+
+        # Return a non-None value.
         return True
 
     def add_role(self, name, description, perm_names, key=None):
@@ -267,17 +344,6 @@ class ServerImplementation(object):
 
         return user_name, perm_names
 
-    def get_roles(self, name, key=None):
-        """Return the full name, description and permissions of all the roles
-        that match the given name."""
-
-        self._check_authorisation(key)
-
-        # Return any role that starts with the name.
-        return [(full_name, description, perm_names)
-                for full_name, (description, perm_names) in self._roles.items()
-                        if full_name.startswith(name)]
-
     def is_empty_policy(self):
         """Return True if there is no useful data."""
 
@@ -289,7 +355,32 @@ class ServerImplementation(object):
 
         return empty
 
-    def save_assignment(self, user_name, role_names, key=None):
+    def matching_roles(self, name, key=None):
+        """Return the full name, description and permissions of all the roles
+        that match the given name."""
+
+        self._check_authorisation(key)
+
+        # Return any role that starts with the name.
+        return [(full_name, description, perm_names)
+                for full_name, (description, perm_names) in self._roles.items()
+                        if full_name.startswith(name)]
+
+    def modify_role(self, name, description, perm_names, key=None):
+        """Update an existing role."""
+
+        self._check_authorisation(key)
+
+        if not self._roles.has_key(name):
+            raise Exception("The role \"%s\" does not exist." % name)
+
+        self._roles[name] = (description, perm_names)
+        self._sync(self._roles)
+
+        # Return a non-None value.
+        return True
+
+    def set_assignment(self, user_name, role_names, key=None):
         """Save the roles assigned to a user."""
 
         self._check_authorisation(key)
@@ -305,20 +396,6 @@ class ServerImplementation(object):
             self._assignments[user_name] = role_names
 
         self._sync(self._assignments)
-
-        # Return a non-None value.
-        return True
-
-    def update_role(self, name, description, perm_names, key=None):
-        """Update an existing role."""
-
-        self._check_authorisation(key)
-
-        if not self._roles.has_key(name):
-            raise Exception("The role \"%s\" does not exist." % name)
-
-        self._roles[name] = (description, perm_names)
-        self._sync(self._roles)
 
         # Return a non-None value.
         return True

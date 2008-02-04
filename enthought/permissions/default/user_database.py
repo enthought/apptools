@@ -133,14 +133,14 @@ class _UserAccountHandler(Handler):
         # Get the user name.
         vuac = self._user_account(info)
 
-        name, description, _, password = vuac.user_db._select_user(vuac.name)
-        if name is None:
+        name, description = vuac.user_db._select_user(vuac.name)
+        if not name:
             return
 
         # Update the viewed object.
         vuac.name = name
         vuac.description = description
-        vuac.password = vuac.confirm_password = password
+        vuac.password = vuac.confirm_password = ''
 
     ###########################################################################
     # Private interface.
@@ -381,7 +381,7 @@ class UserDatabase(HasTraits):
         if vuac.edit_traits(view=view, handler=handler).result:
             # Update the data in the database.
             try:
-                self.user_storage.update_user(vuac.name.strip(),
+                self.user_storage.modify_user(vuac.name.strip(),
                         vuac.description, vuac.password)
             except UserStorageError, e:
                 self._us_error(e)
@@ -405,14 +405,14 @@ class UserDatabase(HasTraits):
                 except UserStorageError, e:
                     self._us_error(e)
 
-    def select_user(self, name):
+    def matching_user(self, name):
         """Select a user."""
 
-        name, description, blob, _ = self._select_user(name)
-        if name is None:
+        name, description = self._select_user(name)
+        if not name:
             return None
 
-        return User(name=name, description=description, blob=blob)
+        return User(name=name, description=description)
 
     def user_factory(self):
         """Create a new user object."""
@@ -469,18 +469,19 @@ class UserDatabase(HasTraits):
     ###########################################################################
 
     def _select_user(self, name):
-        """Select a user returning the data as a tuple."""
+        """Select a user returning the data as a tuple of name and description.
+        """
 
         # Get all users that satisfy the criteria.
         try:
-            users = self.user_storage.get_users(name)
+            users = self.user_storage.matching_users(name)
         except UserStorageError, e:
             self._us_error(e)
-            return (None, None, None, None)
+            return '', ''
 
         if len(users) == 0:
             error(None, "There is no user that matches \"%s\"." % name)
-            return (None, None, None, None)
+            return '', ''
 
         # FIXME: Instead of the following, if there is more than one user then
         # allow the user to select a particular one.

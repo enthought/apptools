@@ -67,11 +67,12 @@ class IUserDatabase(Interface):
         """Delete a user account from the database.  This only needs to be
         reimplemented if 'can_delete_user' is True."""
 
-    def select_user(self, name):
+    def matching_user(self, name):
         """Return an object that implements IUser for the user selected based
         on the given name.  If there was no user selected then return None.
         How the name is interpreted (eg. as a regular expression) is determined
-        by the user database."""
+        by the user database.  Note that the blob attribute of the user will
+        not be set."""
 
     def user_factory(self):
         """Return a new object that implements the IUser interface."""
