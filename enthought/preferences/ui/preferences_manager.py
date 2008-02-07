@@ -138,10 +138,19 @@ class PreferencesManager(HasTraits):
         # easy for us to create the preference hierarchy as we know that all of
         # a node's ancestors will have already been created.
         def sort(a, b):
-            ca = a.category.split('/')
-            cb = b.category.split('/')
+            if len(a.category) == 0:
+                len_a = 0
 
-            return cmp(len(ca), len(cb))
+            else:
+                len_a = len(a.category.split('/'))
+
+            if len(b.category) == 0:
+                len_b = 0
+
+            else:
+                len_b = len(b.category.split('/'))
+
+            return cmp(len_a, len_b)
 
         self.pages.sort(sort)
         
