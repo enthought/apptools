@@ -138,6 +138,9 @@ class PreferencesManager(HasTraits):
         # easy for us to create the preference hierarchy as we know that all of
         # a node's ancestors will have already been created.
         def sort(a, b):
+            # We have the guard because if the category is the empty string
+            # then split will still return a list containing one item (and not
+            # the empty list).
             if len(a.category) == 0:
                 len_a = 0
 
