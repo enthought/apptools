@@ -36,12 +36,12 @@ class XMLRPCPolicyStorage(HasTraits):
     # 'IPolicyStorage' interface.
     ###########################################################################
 
-    def add_role(self, name, description, perm_names):
+    def add_role(self, name, description, perm_ids):
         """Add a new role."""
 
         try:
             # FIXME: Need to pass session key.
-            self._server.add_role(name, description, perm_names)
+            self._server.add_role(name, description, perm_ids)
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 
@@ -99,12 +99,12 @@ class XMLRPCPolicyStorage(HasTraits):
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 
-    def modify_role(self, name, description, perm_names):
+    def modify_role(self, name, description, perm_ids):
         """Update the description and permissions for the given role."""
 
         try:
             # FIXME: Need to pass session key.
-            self._server.update_role(name, description, perm_names)
+            self._server.update_role(name, description, perm_ids)
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 

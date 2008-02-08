@@ -92,12 +92,12 @@ class _RoleHandler(Handler):
         else:
             r = roles[0]
 
-        name, description, perm_names = r
+        name, description, perm_ids = r
 
         # Update the viewed object.
         role.name = name
         role.description = description
-        role.permissions = self._perms_to_list(perm_names)
+        role.permissions = self._perms_to_list(perm_ids)
 
     def _add_clicked(self, info):
         """Invoked by the "Add" button."""
@@ -110,7 +110,7 @@ class _RoleHandler(Handler):
         try:
             PermissionsManager.policy_manager.policy_storage.add_role(
                     role.name, role.description,
-                    [p.name for p in role.permissions])
+                    [p.id for p in role.permissions])
             info.ui.dispose()
         except PolicyStorageError, e:
             self._ps_error(e)
@@ -126,7 +126,7 @@ class _RoleHandler(Handler):
         try:
             PermissionsManager.policy_manager.policy_storage.modify_role(
                     role.name, role.description,
-                    [p.name for p in role.permissions])
+                    [p.id for p in role.permissions])
             info.ui.dispose()
         except PolicyStorageError, e:
             self._ps_error(e)
@@ -163,20 +163,20 @@ class _RoleHandler(Handler):
 
         return role
 
-    def _perms_to_list(self, perm_names):
+    def _perms_to_list(self, perm_ids):
         """Return a list of Permission instances created from the given list of
-        permission names."""
+        permission ids."""
 
         pl = []
 
-        for name in perm_names:
+        for id in perm_ids:
             try:
-                p = PermissionsManager.policy_manager.permissions[name]
+                p = PermissionsManager.policy_manager.permissions[id]
             except KeyError:
                 # FIXME: permissions should be populated from the policy
                 # database - or is it needed at all?  Should it just be read
                 # when managing roles?
-                p = Permission(name=name, application_defined=False)
+                p = Permission(id=id, application_defined=False)
 
             pl.append(p)
 

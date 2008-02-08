@@ -25,9 +25,9 @@ application.  While it is possible to apply the same permission to more than
 one part of an application, it is generally a bad idea to do so as it makes it
 difficult to separate them at a later date.
 
-A permission has a name and a human readable description.  Permission names
-must be unique.  By convention a dotted notation is used for names to give
-them a structure.  Names should at least be given an application or plugin
+A permission has an id and a human readable description.  Permission ids
+must be unique.  By convention a dotted notation is used for ids to give
+them a structure.  Ids should at least be given an application or plugin
 specific prefix to ensure their uniqueness.
 
 Conventionally all an applications permissions are defined in a single
@@ -37,15 +37,15 @@ Conventionally all an applications permissions are defined in a single
     from enthought.permissions.api import Permission
 
     # Add a new person.
-    NewPersonPerm = Permission(name='ets.permissions.example.person.new',
+    NewPersonPerm = Permission(id='ets.permissions.example.person.new',
             description=u"Add a new person")
 
     # Update a person's age.
-    UpdatePersonAgePerm = Permission(name='ets.permissions.example.person.age.update',
+    UpdatePersonAgePerm = Permission(id='ets.permissions.example.person.age.update',
             description=u"Update a person's age")
 
     # View or update a person's salary.
-    PersonSalaryPerm = Permission(name='ets.permissions.example.person.salary',
+    PersonSalaryPerm = Permission(id='ets.permissions.example.person.salary',
             description=u"View or update a person's salary")
 
 

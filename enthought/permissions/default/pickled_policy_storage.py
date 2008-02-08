@@ -40,7 +40,7 @@ class PickledPolicyStorage(HasTraits):
     # 'IPolicyStorage' interface.
     ###########################################################################
 
-    def add_role(self, name, description, perm_names):
+    def add_role(self, name, description, perm_ids):
         """Add a new role."""
 
         self._db.lock()
@@ -51,7 +51,7 @@ class PickledPolicyStorage(HasTraits):
             if roles.has_key(name):
                 raise PolicyStorageError("The role \"%s\" already exists." % name)
 
-            roles[name] = (description, perm_names)
+            roles[name] = (description, perm_ids)
             self._db.write((roles, assigns))
         finally:
             self._db.unlock()
@@ -111,13 +111,13 @@ class PickledPolicyStorage(HasTraits):
         except KeyError:
             return '', []
 
-        perm_names = []
+        perm_ids = []
 
         for r in role_names:
             _, perms = roles[r]
-            perm_names.extend(perms)
+            perm_ids.extend(perms)
 
-        return user_name, perm_names
+        return user_name, perm_ids
 
     def is_empty(self):
         """See if the database is empty."""
@@ -134,11 +134,11 @@ class PickledPolicyStorage(HasTraits):
         roles, _ = self._readonly_copy()
 
         # Return any role that starts with the name.
-        return [(full_name, description, perm_names)
-                for full_name, (description, perm_names) in roles.items()
+        return [(full_name, description, perm_ids)
+                for full_name, (description, perm_ids) in roles.items()
                         if full_name.startswith(name)]
 
-    def modify_role(self, name, description, perm_names):
+    def modify_role(self, name, description, perm_ids):
         """Update the description and permissions for the given role."""
 
         self._db.lock()
@@ -149,7 +149,7 @@ class PickledPolicyStorage(HasTraits):
             if not roles.has_key(name):
                 raise PolicyStorageError("The role \"%s\" does not exist." % name)
 
-            roles[name] = (description, perm_names)
+            roles[name] = (description, perm_ids)
             self._db.write((roles, assigns))
         finally:
             self._db.unlock()

@@ -76,14 +76,14 @@ class PolicyManager(HasTraits):
 
         # Get the user's policy.
         try:
-            user_name, perm_names = self.policy_storage.get_policy(user.name)
+            user_name, perm_ids = self.policy_storage.get_policy(user.name)
         except PolicyStorageError, e:
             error(None, str(e))
             return
 
-        for p in perm_names:
+        for id in perm_ids:
             try:
-                permission = self.permissions[p]
+                permission = self.permissions[id]
             except KeyError:
                 # This shouldn't happen if referential integrity is maintained.
                 continue
@@ -93,12 +93,12 @@ class PolicyManager(HasTraits):
     def register_permission(self, permission):
         """Register the given permission."""
 
-        if self.permissions.has_key(permission.name):
-            other = self.permissions[permission.name]
+        if self.permissions.has_key(permission.id):
+            other = self.permissions[permission.id]
 
             if other.application_defined:
                 if permission.application_defined:
-                    raise KeyError, 'permission "%s" has already been defined' % permission.name
+                    raise KeyError, 'permission "%s" has already been defined' % permission.id
 
                 # Use the description from the policy manager, if there is
                 # one, in preference to the application supplied one.
@@ -109,13 +109,13 @@ class PolicyManager(HasTraits):
                 if other.description:
                     permission.description = other.description
 
-                self.permissions[permission.name] = permission
+                self.permissions[permission.id] = permission
             else:
                 # This should never happen if the policy manager is working
                 # properly.
-                raise KeyError, 'permission "%s" has already been defined by the same policy manager' % permission.name
+                raise KeyError, 'permission "%s" has already been defined by the same policy manager' % permission.id
         else:
-            self.permissions[permission.name] = permission
+            self.permissions[permission.id] = permission
 
     ###########################################################################
     # Trait handlers.
@@ -126,13 +126,13 @@ class PolicyManager(HasTraits):
 
         actions = []
 
-        perm = Permission(name='ets.permissions.management.define_roles',
+        perm = Permission(id='ets.permissions.management.define_roles',
                 description=u"Define roles", bootstrap=True)
         act = Action(name='&Role Definitions...', on_perform=role_definition)
 
         actions.append(SecureProxy(act, permissions=[perm], show=False))
 
-        perm = Permission(name='ets.permissions.management.assign_roles',
+        perm = Permission(id='ets.permissions.management.assign_roles',
                 description=u"Assign roles", bootstrap=True)
         act = Action(name='&Role Assignments...', on_perform=role_assignment)
 

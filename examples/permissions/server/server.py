@@ -267,7 +267,7 @@ class ServerImplementation(object):
         # Return a non-None value.
         return True
 
-    def add_role(self, name, description, perm_names, key=None):
+    def add_role(self, name, description, perm_ids, key=None):
         """Add a new role."""
 
         self._check_authorisation(key)
@@ -275,7 +275,7 @@ class ServerImplementation(object):
         if self._roles.has_key(name):
             raise Exception("The role \"%s\" already exists." % name)
 
-        self._roles[name] = (description, perm_names)
+        self._roles[name] = (description, perm_ids)
         self._sync(self._roles)
 
         # Return a non-None value.
@@ -336,13 +336,13 @@ class ServerImplementation(object):
         except KeyError:
             return '', []
 
-        perm_names = []
+        perm_ids = []
 
         for r in role_names:
             _, perms = self._roles[r]
-            perm_names.extend(perms)
+            perm_ids.extend(perms)
 
-        return user_name, perm_names
+        return user_name, perm_ids
 
     def is_empty_policy(self):
         """Return True if there is no useful data."""
@@ -362,11 +362,11 @@ class ServerImplementation(object):
         self._check_authorisation(key)
 
         # Return any role that starts with the name.
-        return [(full_name, description, perm_names)
-                for full_name, (description, perm_names) in self._roles.items()
+        return [(full_name, description, perm_ids)
+                for full_name, (description, perm_ids) in self._roles.items()
                         if full_name.startswith(name)]
 
-    def modify_role(self, name, description, perm_names, key=None):
+    def modify_role(self, name, description, perm_ids, key=None):
         """Update an existing role."""
 
         self._check_authorisation(key)
@@ -374,7 +374,7 @@ class ServerImplementation(object):
         if not self._roles.has_key(name):
             raise Exception("The role \"%s\" does not exist." % name)
 
-        self._roles[name] = (description, perm_names)
+        self._roles[name] = (description, perm_ids)
         self._sync(self._roles)
 
         # Return a non-None value.

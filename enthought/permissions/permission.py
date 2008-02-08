@@ -27,9 +27,9 @@ class Permission(HasTraits):
 
     #### 'Permission' interface ###############################################
 
-    # The name of the permission.  By convention a dotted format is used for
-    # the name with the name of the application being the first part.
-    name = Str
+    # The id of the permission.  By convention a dotted format is used for the
+    # id with the id of the application being the first part.
+    id = Str
 
     # A user friendly description of the permission.
     description = Unicode
@@ -67,7 +67,7 @@ class Permission(HasTraits):
 
         s = self.description
         if not s:
-            s = self.name
+            s = self.id
 
         return s
 

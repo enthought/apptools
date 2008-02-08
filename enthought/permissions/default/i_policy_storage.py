@@ -31,7 +31,7 @@ class IPolicyStorage(Interface):
     # 'IPolicyStorage' interface.
     ###########################################################################
 
-    def add_role(self, name, description, perm_names):
+    def add_role(self, name, description, perm_ids):
         """Add a new role."""
 
     def all_roles(self):
@@ -61,7 +61,7 @@ class IPolicyStorage(Interface):
         is interpreted (eg. as a regular expression) is determined by the
         storage."""
 
-    def modify_role(self, name, description, perm_names):
+    def modify_role(self, name, description, perm_ids):
         """Update the description and permissions for the role with the given
         name (which will not be empty)."""
 
