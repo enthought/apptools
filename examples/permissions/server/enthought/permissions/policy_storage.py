@@ -22,7 +22,7 @@ from enthought.traits.api import HasTraits, implements, Instance
 from proxy_server import ProxyServer
 
 
-class XMLRPCPolicyStorage(HasTraits):
+class PolicyStorage(HasTraits):
     """This implements a policy database accessed via XML RPC."""
 
     implements(IPolicyStorage)

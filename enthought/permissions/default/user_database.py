@@ -451,9 +451,13 @@ class UserDatabase(HasTraits):
     def _user_storage_default(self):
         """Return the default storage for the user data."""
 
-        from pickled_user_storage import PickledUserStorage
+        # Defer to an external storage manager if there is one.
+        try:
+            from enthought.permissions.external.user_storage import UserStorage
+        except ImportError:
+            from enthought.permissions.default.user_storage import UserStorage
 
-        return PickledUserStorage()
+        return UserStorage()
 
     def _blob_changed(self, user, tname, old, new):
         """Invoked when the user's blob data changes."""

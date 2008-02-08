@@ -42,22 +42,6 @@ class ExampleWorkbench(Workbench):
 def main(argv):
     """A simple example of using the workbench."""
 
-    # FIXME: This is a hack to be replaced when we know how to distribute
-    # alternate storage managers.
-    if '-use-server' in argv:
-        # Add the directory containing the server package to the path.
-        import os
-        import sys
-
-        sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-        # Install the server based storage managers.
-        from enthought.permissions.api import PermissionsManager
-        from server.api import XMLRPCPolicyStorage, XMLRPCUserStorage
-
-        PermissionsManager.policy_manager.policy_storage = XMLRPCPolicyStorage()
-        PermissionsManager.user_manager.user_db.user_storage = XMLRPCUserStorage()
-
     # Create the GUI.
     gui = GUI()
 

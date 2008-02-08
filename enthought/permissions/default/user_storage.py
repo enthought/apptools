@@ -21,7 +21,7 @@ from i_user_storage import IUserStorage, UserStorageError
 from persistent import Persistent, PersistentError
 
 
-class PickledUserStorage(HasTraits):
+class UserStorage(HasTraits):
     """This implements a user database that pickles its data in a local file.
     """
 

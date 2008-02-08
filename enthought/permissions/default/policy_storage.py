@@ -21,7 +21,7 @@ from i_policy_storage import IPolicyStorage, PolicyStorageError
 from persistent import Persistent, PersistentError
 
 
-class PickledPolicyStorage(HasTraits):
+class PolicyStorage(HasTraits):
     """This implements a policy database that pickles its data in a local file.
     """
 

@@ -76,14 +76,22 @@ class PermissionsManager(HasTraits):
     def _policy_manager_default(self):
         """Provide a default policy manager."""
 
-        from default.api import PolicyManager
+        # Defer to an external manager if there is one.
+        try:
+            from enthought.permissions.external.policy_manager import PolicyManager
+        except ImportError:
+            from enthought.permissions.default.policy_manager import PolicyManager
 
         return PolicyManager()
 
     def _user_manager_default(self):
         """Provide a default user manager."""
 
-        from default.api import UserManager
+        # Defer to an external manager if there is one.
+        try:
+            from enthought.permissions.external.user_manager import UserManager
+        except ImportError:
+            from enthought.permissions.default.user_manager import UserManager
 
         return UserManager()
 

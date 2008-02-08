@@ -143,6 +143,10 @@ class PolicyManager(HasTraits):
     def _policy_storage_default(self):
         """Return the default storage for the policy data."""
 
-        from pickled_policy_storage import PickledPolicyStorage
+        # Defer to an external storage manager if there is one.
+        try:
+            from enthought.permissions.external.policy_storage import PolicyStorage
+        except ImportError:
+            from enthought.permissions.default.policy_storage import PolicyStorage
 
-        return PickledPolicyStorage()
+        return PolicyStorage()

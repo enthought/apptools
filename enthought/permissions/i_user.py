@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Bool, Interface, Str, Unicode
+from enthought.traits.api import Bool, Dict, Interface, Unicode
 
 
 class IUser(Interface):
@@ -32,11 +32,13 @@ class IUser(Interface):
     # meaning is defined by the user manager.
     description = Unicode
 
-    # An optional piece of application defined binary data (eg. a pickled
-    # object).  If supported by the user manager this data will be saved in the
-    # user database whenever it is changed, and will be read from the user
-    # database whenever the user is authenticated.
-    blob = Str
+    # This allows application defined, user specific data to be persisted in
+    # the user database.  An application (or plugin) should save the data as a
+    # single value in the dictionary keyed on the application's (or plugin's)
+    # unique id.  The data will be saved in the user database whenever it is
+    # changed, and will be read from the user database whenever the user is
+    # authenticated.
+    blob = Dict
 
     def __str__(self):
         """Return a user friendly representation of the user."""

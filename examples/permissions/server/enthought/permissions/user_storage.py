@@ -21,7 +21,7 @@ from enthought.traits.api import HasTraits, implements, Instance, List, Str
 from proxy_server import ProxyServer
 
 
-class XMLRPCUserStorage(HasTraits):
+class UserStorage(HasTraits):
     """This implements a user database accessed via XML RPC."""
 
     implements(IUserStorage)

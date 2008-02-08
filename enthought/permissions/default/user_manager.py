@@ -143,6 +143,10 @@ class UserManager(HasTraits):
     def _user_db_default(self):
         """Return the default user database."""
 
-        from user_database import UserDatabase
+        # Defer to an external user database if there is one.
+        try:
+            from enthought.permissions.external.user_database import UserDatabase
+        except ImportError:
+            from enthought.permissions.default.user_database import UserDatabase
 
         return UserDatabase()

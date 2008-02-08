@@ -44,6 +44,11 @@ class Persistent(object):
         self._fname = os.path.join(data_dir, file_name)
         self._lock = self._fname + '.lock'
 
+        try:
+            os.makedirs(data_dir)
+        except OSError:
+            pass
+
     def lock(self):
         """Obtain a lock on the persisted data."""
 
