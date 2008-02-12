@@ -176,7 +176,7 @@ class ServerImplementation(object):
         if self._local_user_db:
             # Get any user that starts with the name.
             users = [(full_name, description) for full_name, (description, _)
-                            in self._users().items()
+                            in self._users.items()
                             if full_name.startswith(name)]
         else:
             # FIXME
