@@ -105,13 +105,13 @@ def capabilities(opts):
 def matching_roles(opts):
     """Get the roles that match a name."""
 
-    return [check_name(opts)]
+    return [opts.name, opts.key]
 
 
 def matching_users(opts):
     """Get the users that match a name."""
 
-    return [check_name(opts)]
+    return [opts.name, opts.key]
 
 
 def get_assignment(opts):
@@ -215,7 +215,7 @@ p.add_option('-k', '--key', default='', dest='key',
                 "all_roles, delete_role, delete_user, get_assignment, "
                 "get_policy, modify_role, modify_user, set_assignment, "
                 "unauthenticate_user)")
-p.add_option('-n', '--name', dest='name',
+p.add_option('-n', '--name', default='', dest='name',
         help="a name (used by add_role, add_user, authenticate_user, "
                 "delete_role, delete_user, get_assignment, get_policy, "
                 "matching_roles, matching_users, modify_role, modify_user, "

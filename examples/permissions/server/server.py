@@ -117,7 +117,8 @@ class ServerImplementation(object):
             return
 
         # FIXME: Check the key and the user permissions.
-        raise Exception("You do not have the appropriate authority.")
+        if key != 'dummy':
+            raise Exception("You do not have the appropriate authority.")
 
     def capabilities(self):
         """Return a list of capabilities that the implementation supports.  The
@@ -156,16 +157,18 @@ class ServerImplementation(object):
             try:
                 description, pword = self._users[name]
             except KeyError:
-                return '', '', ''
+                return '', '', '', ''
 
             if password != pword:
-                return '', '', ''
+                return '', '', '', ''
         else:
             # FIXME
             raise Exception("Authenticating a user isn't yet supported.")
 
-        # FIXME: Return the session key.
-        return name, description, self._blobs.get(name, '')
+        # FIXME: Create the session key.
+        key = 'dummy'
+
+        return key, name, description, self._blobs.get(name, '')
 
     def matching_users(self, name, key=None):
         """Return the full name and description of all the users that match the

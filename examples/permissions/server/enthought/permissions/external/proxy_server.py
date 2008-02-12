@@ -31,6 +31,9 @@ class ProxyServer(xmlrpclib.ServerProxy):
     """This is a thin wrapper around xmlrpclib.ServerProxy that handles the
     server address and error reporting."""
 
+    # The session key.
+    key = ''
+
     def __init__(self):
         """Initialise the object.  The server address and TCP/IP port are taken
         from the ETS_PERMS_SERVER environment variable if set."""
@@ -39,6 +42,12 @@ class ProxyServer(xmlrpclib.ServerProxy):
                 '%s:%d' % (DEFAULT_ADDR, DEFAULT_PORT))
 
         xmlrpclib.ServerProxy.__init__(self, uri='http://%s' % self._server)
+
+    @classmethod
+    def set_session_key(cls, key=''):
+        """Set the session key."""
+
+        cls.key = key
 
     def error(self, e):
         """Return a user friendly string describing the given exception."""

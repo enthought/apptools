@@ -40,8 +40,8 @@ class PolicyStorage(HasTraits):
         """Add a new role."""
 
         try:
-            # FIXME: Need to pass session key.
-            self._server.add_role(name, description, perm_ids)
+            self._server.add_role(name, description, perm_ids,
+                    self._server.key)
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 
@@ -49,8 +49,7 @@ class PolicyStorage(HasTraits):
         """Return a list of all roles."""
 
         try:
-            # FIXME: Need to pass session key.
-            return self._server.all_roles()
+            return self._server.all_roles(self._server.key)
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 
@@ -58,8 +57,7 @@ class PolicyStorage(HasTraits):
         """Delete a role."""
 
         try:
-            # FIXME: Need to pass session key.
-            self._server.delete_role(name)
+            self._server.delete_role(name, self._server.key)
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 
@@ -67,8 +65,7 @@ class PolicyStorage(HasTraits):
         """Return the details of the assignment for the given user name."""
 
         try:
-            # FIXME: Need to pass session key.
-            return self._server.get_assignment(user_name)
+            return self._server.get_assignment(user_name, self._server.key)
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 
@@ -76,8 +73,7 @@ class PolicyStorage(HasTraits):
         """Return the details of the policy for the given user name."""
 
         try:
-            # FIXME: Need to pass session key.
-            return self._server.get_policy(user_name)
+            return self._server.get_policy(user_name, self._server.key)
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 
@@ -94,8 +90,7 @@ class PolicyStorage(HasTraits):
         that match the given name."""
 
         try:
-            # FIXME: Need to pass session key.
-            return self._server.matching_roles(name)
+            return self._server.matching_roles(name, self._server.key)
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 
@@ -103,8 +98,8 @@ class PolicyStorage(HasTraits):
         """Update the description and permissions for the given role."""
 
         try:
-            # FIXME: Need to pass session key.
-            self._server.update_role(name, description, perm_ids)
+            self._server.modify_role(name, description, perm_ids,
+                    self._server.key)
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 
@@ -112,8 +107,8 @@ class PolicyStorage(HasTraits):
         """Save the roles assigned to a user."""
 
         try:
-            # FIXME: Need to pass session key.
-            self._server.set_assignment(user_name, role_names)
+            self._server.set_assignment(user_name, role_names,
+                    self._server.key)
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 

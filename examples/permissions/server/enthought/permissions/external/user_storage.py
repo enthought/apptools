@@ -43,8 +43,8 @@ class UserStorage(HasTraits):
         """Add a new user."""
 
         try:
-            # FIXME: Need to pass session key.
-            self._server.add_user(name, description, password)
+            self._server.add_user(name, description, password,
+                    self._server.key)
         except Exception, e:
             raise UserStorageError(self._server.error(e))
 
@@ -53,17 +53,20 @@ class UserStorage(HasTraits):
         was successfully authenticated."""
 
         try:
-            # FIXME: Handle the session key when it is returned.
-            return self._server.authenticate_user(name, password)
+            key, name, description, blob = self._server.authenticate_user(name,
+                    password)
         except Exception, e:
             raise UserStorageError(self._server.error(e))
+
+        self._server.set_session_key(key)
+
+        return name, description, blob
 
     def delete_user(self, name):
         """Delete a new user."""
 
         try:
-            # FIXME: Need to pass session key.
-            self._server.delete_user(name)
+            self._server.delete_user(name, self._server.key)
         except Exception, e:
             raise UserStorageError(self._server.error(e))
 
@@ -78,8 +81,7 @@ class UserStorage(HasTraits):
         given name."""
 
         try:
-            # FIXME: Need to pass session key.
-            return self._server.matching_users(name)
+            return self._server.matching_users(name, self._server.key)
         except Exception, e:
             raise UserStorageError(self._server.error(e))
 
@@ -87,8 +89,8 @@ class UserStorage(HasTraits):
         """Update the description and password for the given user."""
 
         try:
-            # FIXME: Need to pass session key.
-            self._server.modify_user(name, description, password)
+            self._server.modify_user(name, description, password,
+                    self._server.key)
         except Exception, e:
             raise UserStorageError(self._server.error(e))
 
@@ -96,17 +98,17 @@ class UserStorage(HasTraits):
         """Unauthenticate the given user."""
 
         try:
-            # FIXME: Need to pass session key.
-            return self._server.unauthenticate_user()
+            return self._server.unauthenticate_user(self._server.key)
         except Exception, e:
             raise UserStorageError(self._server.error(e))
+
+        self._server.set_session_key()
 
     def update_blob(self, name, blob):
         """Update the blob for the given user."""
 
         try:
-            # FIXME: Need to pass session key.
-            self._server.update_blob(name, blob)
+            self._server.update_blob(name, blob, self._server.key)
         except Exception, e:
             raise UserStorageError(self._server.error(e))
 
@@ -114,8 +116,7 @@ class UserStorage(HasTraits):
         """Update the password for the given user."""
 
         try:
-            # FIXME: Need to pass session key.
-            self._server.update_password(name, password)
+            self._server.update_password(name, password, self._server.key)
         except Exception, e:
             raise UserStorageError(self._server.error(e))
 
