@@ -474,6 +474,12 @@ class Preferences(HasTraits):
 
         """
 
+        # fixme: SERIOUS ISSUE! HOW IS THIS HAPPENING! It occurs when the
+        # preferences node is used in a preferences page. It is something to
+        # do with a modal traits UI attempting to clone an object!
+        if not hasattr(self, '_lk'):
+            self._lk = threading.Lock()
+            
         self._lk.acquire()
         child = self._children.get(name)
         self._lk.release()
