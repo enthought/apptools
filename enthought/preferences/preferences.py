@@ -43,6 +43,14 @@ class Preferences(HasTraits):
 
     #### Protected 'Preferences' interface ####################################
 
+    # A lock to make access to the node thread-safe.
+    #
+    # fixme: There *should* be no need to declare this as a trait, but if we
+    # don't then we have problems using nodes in the preferences manager UI.
+    # It is something to do with 'cloning' the node for use in a 'modal' traits
+    # UI... Hmmm...
+    _lk = Any
+    
     # The node's children.
     _children = Dict(Str, IPreferences)
 
@@ -473,12 +481,6 @@ class Preferences(HasTraits):
         Return None if no such child exists.
 
         """
-
-        # fixme: SERIOUS ISSUE! HOW IS THIS HAPPENING! It occurs when the
-        # preferences node is used in a preferences page. It is something to
-        # do with a modal traits UI attempting to clone an object!
-        if not hasattr(self, '_lk'):
-            self._lk = threading.Lock()
             
         self._lk.acquire()
         child = self._children.get(name)
