@@ -90,6 +90,30 @@ class PreferencesTestCase(unittest.TestCase):
 
         return
 
+    def test_get_and_set_list_of_str(self):
+        """ get and set list of str """
+
+        p = self.preferences
+
+        # Note that we can pass an actual 'int' to 'set', but the preference
+        # manager *always* returns preference values as strings.
+        p.set('acme.ui.names', ['fred', 'wilma', 'barney'])
+        self.assertEqual("['fred', 'wilma', 'barney']", p.get('acme.ui.names'))
+
+        return
+
+    def test_get_and_set_list_of_int(self):
+        """ get and set list of int """
+
+        p = self.preferences
+
+        # Note that we can pass an actual 'int' to 'set', but the preference
+        # manager *always* returns preference values as strings.
+        p.set('acme.ui.offsets', [1, 2, 3])
+        self.assertEqual('[1, 2, 3]', p.get('acme.ui.offsets'))
+
+        return
+
     def test_empty_path(self):
         """ empty path """
 
@@ -317,6 +341,9 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual('50', p.get('acme.ui.width'))
         self.assertEqual('1.0', p.get('acme.ui.ratio'))
         self.assertEqual('True', p.get('acme.ui.visible'))
+        self.assertEqual('acme ui', p.get('acme.ui.description'))
+        self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
+        self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
         self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
         self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
 
@@ -338,6 +365,9 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual('50', p.get('acme.ui.width'))
         self.assertEqual('1.0', p.get('acme.ui.ratio'))
         self.assertEqual('True', p.get('acme.ui.visible'))
+        self.assertEqual('acme ui', p.get('acme.ui.description'))
+        self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
+        self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
         self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
         self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
 
@@ -357,6 +387,9 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual('50', p.get('acme.ui.width'))
         self.assertEqual('1.0', p.get('acme.ui.ratio'))
         self.assertEqual('True', p.get('acme.ui.visible'))
+        self.assertEqual('acme ui', p.get('acme.ui.description'))
+        self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
+        self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
         self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
         self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
 
@@ -370,6 +403,9 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual('50', p.get('acme.ui.width'))
         self.assertEqual('1.0', p.get('acme.ui.ratio'))
         self.assertEqual('True', p.get('acme.ui.visible'))
+        self.assertEqual('acme ui', p.get('acme.ui.description'))
+        self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
+        self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
         self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
         self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
 
@@ -388,6 +424,9 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual('50', p.get('acme.ui.width'))
         self.assertEqual('1.0', p.get('acme.ui.ratio'))
         self.assertEqual('True', p.get('acme.ui.visible'))
+        self.assertEqual('acme ui', p.get('acme.ui.description'))
+        self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
+        self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
         self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
         self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
 
@@ -406,6 +445,9 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual('50', p.get('acme.ui.width'))
         self.assertEqual('1.0', p.get('acme.ui.ratio'))
         self.assertEqual('True', p.get('acme.ui.visible'))
+        self.assertEqual('acme ui', p.get('acme.ui.description'))
+        self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
+        self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
         self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
         self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
 
