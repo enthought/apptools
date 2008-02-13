@@ -25,7 +25,8 @@ class PreferencesHelper(HasTraits):
 
     #### Private interface ####################################################
 
-    # A flag that prevents us from setting a preference value twice.
+    # A flag that prevents us from setting a preference value twice (see the
+    # usage for more details).
     _event_handled = False
     
     ###########################################################################
@@ -51,6 +52,8 @@ class PreferencesHelper(HasTraits):
     def _preferences_default(self):
         """ Trait initializer. """
 
+        # If no specific preferences node is set then we use the package-wide
+        # global node.
         return get_default_preferences()
     
     #### Trait change handlers ################################################
@@ -58,6 +61,8 @@ class PreferencesHelper(HasTraits):
     def _anytrait_changed(self, trait_name, old, new):
         """ Static trait change handler. """
 
+        # If we were the one that set the trait (because the underlying
+        # preferences node changed) then do nothing.
         if not self._event_handled:
             if self._is_preference_trait(trait_name):
                 path = self._get_path()
@@ -71,6 +76,9 @@ class PreferencesHelper(HasTraits):
         """ Listener called when a preference value is changed. """
 
         if key in self.trait_names():
+            # We set this flag so that when we set the trait we don't try
+            # to set the value in the preferences node again in the
+            # '_anytrait_changed' method!
             self._event_handled = True
             setattr(self, key, self._get_value(key, new))
             self._event_handled = False
@@ -144,11 +152,13 @@ class PreferencesHelper(HasTraits):
 
         return
 
+    # fixme: Pretty much duplicated in 'PreferencesPage' (except for the
+    # class name of course!).
     def _is_preference_trait(self, trait_name):
         """ Return True if a trait represents a preference value. """
 
         if trait_name.startswith('_') or trait_name.endswith('_') \
-           or trait_name in ['preferences', 'preferences_path']:
+           or trait_name in PreferencesHelper.class_traits():
             return False
 
         return True

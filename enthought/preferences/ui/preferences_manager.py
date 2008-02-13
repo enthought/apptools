@@ -9,7 +9,10 @@ from enthought.traits.ui.api import TreeNode, View
 # Local imports.
 from preferences_node import PreferencesNode
 from preferences_page import PreferencesPage
-from widget_editor import WidgetEditor
+
+# fixme: This is part of the attempt to allow developers to use non-Traits UI
+# preferences pages. It doesn't work yet!
+##from widget_editor import WidgetEditor
 
 
 # A tree editor for preferences nodes.
@@ -104,14 +107,14 @@ class PreferencesManager(HasTraits):
                 name       = 'root',
                 editor     = tree_editor,
                 show_label = False,
-                width      = 200,
+                width      = 250,
             ),
 
             Item(
                 name       = 'selected_page',
                 #editor     = WidgetEditor(),
                 show_label = False,
-                width      = 500
+                width      = 450
             ),
         ),
 
