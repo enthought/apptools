@@ -104,14 +104,14 @@ class PreferencesManager(HasTraits):
                 name       = 'root',
                 editor     = tree_editor,
                 show_label = False,
-                width      = 0.1,
+                width      = 200,
             ),
 
             Item(
                 name       = 'selected_page',
                 #editor     = WidgetEditor(),
                 show_label = False,
-                width      = 0.9
+                width      = 500
             ),
         ),
 
