@@ -91,7 +91,14 @@ class PreferencesPage(PreferencesHelper):
         
         """
 
-        if self._is_preference_trait(trait_name):
+        # If the trait was a list or dict '_items' trait then just treat it as
+        # if the entire list or dict was changed.
+        if trait_name.endswith('_items'):
+            trait_name = trait_name[:-6]
+            if self._is_preference_trait(trait_name):
+                self._changed[trait_name] = getattr(self, trait_name)
+
+        elif self._is_preference_trait(trait_name):
             self._changed[trait_name] = new
 
         return
