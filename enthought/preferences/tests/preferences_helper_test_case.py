@@ -8,7 +8,7 @@ import unittest
 from enthought.preferences.api import Preferences, PreferencesHelper
 from enthought.preferences.api import ScopedPreferences
 from enthought.preferences.api import set_default_preferences
-from enthought.traits.api import Bool, HasTraits, Int, Float, Str
+from enthought.traits.api import Bool, HasTraits, Int, Float, Str, Unicode
 
 
 def listener(obj, trait_name, old, new):
@@ -62,6 +62,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             width   = Int
             ratio   = Float
             visible = Bool
+            desc    = Unicode
             
         helper = AcmeUIPreferencesHelper()
         helper.on_trait_change(listener)
@@ -71,6 +72,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(50, helper.width)
         self.assertEqual(1.0, helper.ratio)
         self.assertEqual(True, helper.visible)
+        self.assertEqual(u'acme ui', helper.desc)
 
         # Make sure we can set the preference via the helper...
         helper.bgcolor = 'yellow'
@@ -145,7 +147,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         return
 
     def test_default_values(self):
-        """ instance scope preferences path """
+        """ default values """
 
         p = self.preferences
 
@@ -160,6 +162,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             width   = Int(50)
             ratio   = Float(1.0)
             visible = Bool(True)
+            desc    = Unicode(u'description')
             
         helper = AcmeUIPreferencesHelper()
 
@@ -168,6 +171,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(50, helper.width)
         self.assertEqual(1.0, helper.ratio)
         self.assertEqual(True, helper.visible)
+        self.assertEqual(u'description', helper.desc)
 
         return
 
