@@ -21,7 +21,7 @@ from enthought.traits.api import Bool, Event, HasTraits, implements, \
 # Local imports.
 from enthought.permissions.i_user import IUser
 from enthought.permissions.i_user_manager import IUserManager
-from enthought.permissions.permission import Permission
+from enthought.permissions.permission import ManageUsersPermission
 from enthought.permissions.permissions_manager import PermissionsManager
 from enthought.permissions.secure_proxy import SecureProxy
 from i_user_database import IUserDatabase
@@ -93,28 +93,20 @@ class UserManager(HasTraits):
 
         user_db = self.user_db
         actions = []
+        perm = ManageUsersPermission()
 
         if user_db.can_add_user:
-            perm = Permission(id='ets.permissions.management.add_user',
-                    description=u"Add users", bootstrap=True)
             act = Action(name='&Add a User...', on_perform=user_db.add_user)
-
             actions.append(SecureProxy(act, permissions=[perm], show=False))
 
         if user_db.can_modify_user:
-            perm = Permission(id='ets.permissions.management.modify_user',
-                    description=u"Modify users", bootstrap=True)
             act = Action(name='&Modify a User...',
                     on_perform=user_db.modify_user)
-
             actions.append(SecureProxy(act, permissions=[perm], show=False))
 
         if user_db.can_delete_user:
-            perm = Permission(id='ets.permissions.management.delete_user',
-                    description=u"Delete users", bootstrap=True)
             act = Action(name='&Delete a User...',
                     on_perform=user_db.delete_user)
-
             actions.append(SecureProxy(act, permissions=[perm], show=False))
 
         return actions
@@ -126,12 +118,9 @@ class UserManager(HasTraits):
         actions = []
 
         if user_db.can_change_password:
-            perm = Permission(id='ets.permissions.management.change_password',
-                    description=u"Change user's password")
-            act = Action(name='&Change Password...',
-                    on_perform=lambda: user_db.change_password(self.user))
-
-            actions.append(SecureProxy(act, permissions=[perm]))
+            # FIXME: Disable when not logged in.
+            actions.append(Action(name='&Change Password...',
+                    on_perform=lambda: user_db.change_password(self.user)))
 
         return actions
 

@@ -69,11 +69,11 @@ class PolicyStorage(HasTraits):
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 
-    def get_policy(self, user_name):
+    def get_policy(self, name):
         """Return the details of the policy for the given user name."""
 
         try:
-            return self._server.get_policy(user_name, self._server.key)
+            return self._server.get_policy(name, self._server.key)
         except Exception, e:
             raise PolicyStorageError(self._server.error(e))
 

@@ -79,3 +79,17 @@ class Permission(HasTraits):
         """Check the user has this permission."""
 
         return PermissionsManager.check_permissions(self)
+
+
+def ManagePolicyPermission():
+    """Return the standard permission for managing permissions policies."""
+
+    return Permission(id='ets.permissions.manage_policy',
+            description=u"Manage policy", bootstrap=True)
+
+
+def ManageUsersPermission():
+    """Return the standard permission for managing permissions users."""
+
+    return Permission(id='ets.permissions.manage_users',
+            description=u"Manage users", bootstrap=True)

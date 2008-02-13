@@ -20,7 +20,7 @@ from enthought.traits.api import Dict, HasTraits, implements, Instance, List
 
 # Local imports.
 from enthought.permissions.i_policy_manager import IPolicyManager
-from enthought.permissions.permission import Permission
+from enthought.permissions.permission import ManagePolicyPermission, Permission
 from enthought.permissions.permissions_manager import PermissionsManager
 from enthought.permissions.secure_proxy import SecureProxy
 from i_policy_storage import IPolicyStorage, PolicyStorageError
@@ -125,17 +125,12 @@ class PolicyManager(HasTraits):
         """Return the management actions to manage the policy."""
 
         actions = []
+        perm = ManagePolicyPermission()
 
-        perm = Permission(id='ets.permissions.management.define_roles',
-                description=u"Define roles", bootstrap=True)
         act = Action(name='&Role Definitions...', on_perform=role_definition)
-
         actions.append(SecureProxy(act, permissions=[perm], show=False))
 
-        perm = Permission(id='ets.permissions.management.assign_roles',
-                description=u"Assign roles", bootstrap=True)
         act = Action(name='&Role Assignments...', on_perform=role_assignment)
-
         actions.append(SecureProxy(act, permissions=[perm], show=False))
 
         return actions

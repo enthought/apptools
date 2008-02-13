@@ -23,6 +23,7 @@ import shelve
 import SimpleXMLRPCServer
 import socket
 import sys
+import time
 
 
 # Log to stderr.
@@ -39,6 +40,9 @@ DEFAULT_PORT = 3800
 # The default data directory.
 DEFAULT_DATADIR = os.path.expanduser('~/.ets_perms_server')
 
+# The session timeout in seconds.
+SESSION_TIMEOUT = 90 * 60
+
 
 class ServerImplementation(object):
     """This is a container for all the functions implemented by the server."""
@@ -51,13 +55,15 @@ class ServerImplementation(object):
         self._local_user_db = local_user_db
 
         # Make sure we can call _close() at any time.
-        self._roles = self._assignments = self._blobs = self._users = None
+        self._keys = self._roles = self._assignments = self._blobs = \
+                self._users = None
 
         # Make sure the data directory exists.
         if not os.path.isdir(self._data_dir):
             os.mkdir(self._data_dir)
 
         # Load the data.
+        self._keys = self._open_shelf('keys')
         self._roles = self._open_shelf('roles')
         self._assignments = self._open_shelf('assignments')
         self._blobs = self._open_shelf('blobs')
@@ -65,8 +71,24 @@ class ServerImplementation(object):
         if self._local_user_db:
             self._users = self._open_shelf('users')
 
+        # Remove any expired session keys.
+        now = time.time()
+        keys = self._keys.keys()
+        for k in keys:
+            name, perm_ids, used_at = self._keys[k]
+
+            if now - used_at >= SESSION_TIMEOUT:
+                logger.info("Expiring session key for user %s" % name)
+                del self._keys[k]
+
+        self._sync(self._keys)
+
     def _close(self):
         """Close all the databases."""
+
+        if self._keys is not None:
+            self._keys.close()
+            self._keys = None
 
         if self._roles is not None:
             self._roles.close()
@@ -107,18 +129,67 @@ class ServerImplementation(object):
             logger.error("Unable to sync:" % e)
             Exception("An error occurred on the permissions server.")
 
-    def _check_authorisation(self, key):
-        """Check that the action is authorised, either because the user
-        associated with the key has the appropriate permission, or we are
-        running in insecure mode, or we are bootstrapping."""
+    def _session_data(self, key):
+        """Validate the session key and return the user name and list of
+        permission ids."""
+
+        # Get the session details.
+        try:
+            session_name, perm_ids, used_at = self._keys[key]
+        except KeyError:
+            # Force the timeout test to fail.
+            used_at = -SESSION_TIMEOUT
+
+        # See if the session should be timed out.
+        now = time.time()
+        if now - used_at >= SESSION_TIMEOUT:
+            try:
+                del self._keys[key]
+            except KeyError:
+                pass
+
+            self._sync(self._keys)
+
+            raise Exception("Your session has timed out. Please login again.")
+
+        # Update when the session was last used.
+        self._keys[key] = session_name, perm_ids, now
+        self._sync(self._keys)
+
+        return session_name, perm_ids
+
+    def _check_user(self, key, name):
+        """Check that the session is current and the session user matches the
+        given user and return the permission ids."""
+
+        session_name, perm_ids = self._session_data(key)
+
+        if session_name != name:
+            raise Exception("You do not have the appropriate authority.")
+
+        return perm_ids
+
+    def _check_authorisation(self, key, perm_id):
+        """Check the user has the given permission."""
 
         # Handle the easy cases first.
         if self._insecure or self.is_empty_policy():
             return
 
-        # FIXME: Check the key and the user permissions.
-        if key != 'dummy':
+        _, perm_ids = self._session_data(key)
+
+        if perm_id not in perm_ids:
             raise Exception("You do not have the appropriate authority.")
+
+    def _check_policy_authorisation(self, key):
+        """Check that a policy management action is authorised."""
+
+        self._check_authorisation(key, 'ets.permissions.manage_policy')
+
+    def _check_users_authorisation(self, key):
+        """Check that a users management action is authorised."""
+
+        self._check_authorisation(key, 'ets.permissions.manage_users')
 
     def capabilities(self):
         """Return a list of capabilities that the implementation supports.  The
@@ -135,7 +206,7 @@ class ServerImplementation(object):
     def add_user(self, name, description, password, key=None):
         """Add a new user."""
 
-        self._check_authorisation(key)
+        self._check_users_authorisation(key)
 
         if self._local_user_db:
             if self._users.has_key(name):
@@ -165,8 +236,32 @@ class ServerImplementation(object):
             # FIXME
             raise Exception("Authenticating a user isn't yet supported.")
 
-        # FIXME: Create the session key.
-        key = 'dummy'
+        # Create the session key.  The only reason for using a human readable
+        # string is to make the test client easier to use.  We only make
+        # limited attempts at creating a unique key.
+        for i in range(5):
+            key = ''
+
+            for ch in os.urandom(16):
+                key += '%02x' % ord(ch)
+
+            if not self._keys.has_key(key):
+                break
+        else:
+            # Something is seriously wrong if we get here.
+            msg = "Unable to create unique session key."
+            logger.error(msg)
+            raise Exception(msg)
+
+        # Get the user's permissions.
+        perm_ids = []
+
+        for r in self._assignments.get(name, []):
+            _, perms = self._roles[r]
+            perm_ids.extend(perms)
+
+        # Save the session data.
+        self._keys[key] = name, perm_ids, time.time()
 
         return key, name, description, self._blobs.get(name, '')
 
@@ -174,7 +269,7 @@ class ServerImplementation(object):
         """Return the full name and description of all the users that match the
         given name."""
 
-        self._check_authorisation(key)
+        self._check_users_authorisation(key)
 
         if self._local_user_db:
             # Get any user that starts with the name.
@@ -190,7 +285,7 @@ class ServerImplementation(object):
     def modify_user(self, name, description, password, key=None):
         """Update the description and password for the given user."""
 
-        self._check_authorisation(key)
+        self._check_users_authorisation(key)
 
         if self._local_user_db:
             if not self._users.has_key(name):
@@ -207,7 +302,7 @@ class ServerImplementation(object):
     def delete_user(self, name, key=None):
         """Delete a user."""
 
-        self._check_authorisation(key)
+        self._check_users_authorisation(key)
 
         if self._local_user_db:
             try:
@@ -226,23 +321,26 @@ class ServerImplementation(object):
         """Unauthenticate the given user (ie. identified by the session key).
         """
 
-        self._check_authorisation(key)
-
         if not self._local_user_db:
             # FIXME: LDAP may or may not need anything here.
             raise Exception("Unauthenticating a user isn't yet supported.")
 
         # Invalidate any session key:
         if key is not None:
-            # FIXME
-            pass
+            try:
+                del self._keys[key]
+            except KeyError:
+                pass
 
+            self._sync(self._keys)
+
+        # Return a non-None value.
         return True
 
     def update_blob(self, name, blob, key=None):
         """Update the blob for the given user."""
 
-        self._check_authorisation(key)
+        self._check_user(key, name)
 
         self._blobs[name] = blob
         self._sync(self._blobs)
@@ -253,7 +351,7 @@ class ServerImplementation(object):
     def update_password(self, name, password, key=None):
         """Update the password for the given user."""
 
-        self._check_authorisation(key)
+        self._check_user(key, name)
 
         if not self._local_user_db:
             try:
@@ -273,7 +371,7 @@ class ServerImplementation(object):
     def add_role(self, name, description, perm_ids, key=None):
         """Add a new role."""
 
-        self._check_authorisation(key)
+        self._check_policy_authorisation(key)
 
         if self._roles.has_key(name):
             raise Exception("The role \"%s\" already exists." % name)
@@ -287,7 +385,7 @@ class ServerImplementation(object):
     def all_roles(self, key=None):
         """Return a list of all roles."""
 
-        self._check_authorisation(key)
+        self._check_policy_authorisation(key)
 
         return [(name, description)
                 for name, (description, _) in self._roles.items()]
@@ -295,7 +393,7 @@ class ServerImplementation(object):
     def delete_role(self, name, key=None):
         """Delete a role."""
 
-        self._check_authorisation(key)
+        self._check_policy_authorisation(key)
 
         if not self._roles.has_key(name):
             raise Exception("The role \"%s\" does not exist." % name)
@@ -320,7 +418,7 @@ class ServerImplementation(object):
     def get_assignment(self, user_name, key=None):
         """Return the details of the assignment for the given user name."""
 
-        self._check_authorisation(key)
+        self._check_policy_authorisation(key)
 
         try:
             role_names = self._assignments[user_name]
@@ -329,23 +427,10 @@ class ServerImplementation(object):
 
         return user_name, role_names
 
-    def get_policy(self, user_name, key=None):
+    def get_policy(self, name, key=None):
         """Return the details of the policy for the given user name."""
 
-        self._check_authorisation(key)
-
-        try:
-            role_names = self._assignments[user_name]
-        except KeyError:
-            return '', []
-
-        perm_ids = []
-
-        for r in role_names:
-            _, perms = self._roles[r]
-            perm_ids.extend(perms)
-
-        return user_name, perm_ids
+        return name, self._check_user(key, name)
 
     def is_empty_policy(self):
         """Return True if there is no useful data."""
@@ -362,7 +447,7 @@ class ServerImplementation(object):
         """Return the full name, description and permissions of all the roles
         that match the given name."""
 
-        self._check_authorisation(key)
+        self._check_policy_authorisation(key)
 
         # Return any role that starts with the name.
         return [(full_name, description, perm_ids)
@@ -372,7 +457,7 @@ class ServerImplementation(object):
     def modify_role(self, name, description, perm_ids, key=None):
         """Update an existing role."""
 
-        self._check_authorisation(key)
+        self._check_policy_authorisation(key)
 
         if not self._roles.has_key(name):
             raise Exception("The role \"%s\" does not exist." % name)
@@ -386,7 +471,7 @@ class ServerImplementation(object):
     def set_assignment(self, user_name, role_names, key=None):
         """Save the roles assigned to a user."""
 
-        self._check_authorisation(key)
+        self._check_policy_authorisation(key)
 
         if len(role_names) == 0:
             # Delete the user, but don't worry if there is no current
@@ -452,6 +537,14 @@ if __name__ == '__main__':
 
     if args:
         p.error("unexpected additional arguments: %s" % " ".join(args))
+
+    # We need a decent RNG for session keys.
+    if not opts.insecure:
+        try:
+            os.urandom(1)
+        except AttributeError, NotImplementedError:
+            sys.stderr.write("os.urandom() isn't implemented so the --insecure flag must be used\n")
+            sys.exit(1)
 
     # FIXME: Add LDAP support.
     if not opts.local_user_db:
