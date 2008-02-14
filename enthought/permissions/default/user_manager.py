@@ -16,7 +16,7 @@
 # Enthought library imports.
 from enthought.pyface.action.api import Action
 from enthought.traits.api import Bool, Event, HasTraits, implements, \
-        Instance, List
+        Instance, List, Unicode
 
 # Local imports.
 from enthought.permissions.i_user import IUser
@@ -42,7 +42,7 @@ class UserManager(HasTraits):
 
     user_authenticated = Event(IUser)
 
-    #### 'UserManger' interface ###############################################
+    #### 'UserManager' interface ##############################################
 
     # The user database.
     user_db = Instance(IUserDatabase)
@@ -96,16 +96,16 @@ class UserManager(HasTraits):
         perm = ManageUsersPermission()
 
         if user_db.can_add_user:
-            act = Action(name='&Add a User...', on_perform=user_db.add_user)
+            act = Action(name="&Add a User...", on_perform=user_db.add_user)
             actions.append(SecureProxy(act, permissions=[perm], show=False))
 
         if user_db.can_modify_user:
-            act = Action(name='&Modify a User...',
+            act = Action(name="&Modify a User...",
                     on_perform=user_db.modify_user)
             actions.append(SecureProxy(act, permissions=[perm], show=False))
 
         if user_db.can_delete_user:
-            act = Action(name='&Delete a User...',
+            act = Action(name="&Delete a User...",
                     on_perform=user_db.delete_user)
             actions.append(SecureProxy(act, permissions=[perm], show=False))
 
@@ -114,13 +114,10 @@ class UserManager(HasTraits):
     def _user_actions_default(self):
         """Return the list of user actions."""
 
-        user_db = self.user_db
         actions = []
 
-        if user_db.can_change_password:
-            # FIXME: Disable when not logged in.
-            actions.append(Action(name='&Change Password...',
-                    on_perform=lambda: user_db.change_password(self.user)))
+        if self.user_db.can_change_password:
+            actions.append(_ChangePasswordAction())
 
         return actions
 
@@ -139,3 +136,45 @@ class UserManager(HasTraits):
             from enthought.permissions.default.user_database import UserDatabase
 
         return UserDatabase()
+
+
+class _ChangePasswordAction(Action):
+    """An action that allows the current user to change their password.  It
+    isn't exported through actions/api.py because it is specific to this user
+    manager implementation."""
+
+    #### 'Action' interface ###################################################
+
+    enabled = Bool(False)
+
+    name = Unicode("&Change Password...")
+
+    ###########################################################################
+    # 'object' interface.
+    ###########################################################################
+
+    def __init__(self, **traits):
+        """Initialise the object."""
+
+        super(_ChangePasswordAction, self).__init__(**traits)
+
+        PermissionsManager.user_manager.on_trait_event(self._refresh_enabled, 'user_authenticated')
+
+    ###########################################################################
+    # 'Action' interface.
+    ###########################################################################
+
+    def perform(self, event):
+        """Perform the action."""
+
+        um = PermissionsManager.user_manager
+        um.user_db.change_password(um.user)
+
+    ###########################################################################
+    # Private interface.
+    ###########################################################################
+
+    def _refresh_enabled(self, user):
+        """Invoked whenever the current user's authorisation state changes."""
+
+        self.enabled = user is not None
