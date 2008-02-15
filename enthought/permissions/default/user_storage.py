@@ -67,10 +67,10 @@ class UserStorage(HasTraits):
         try:
             description, blob, pword = users[name]
         except KeyError:
-            return '', '', ''
+            raise UserStorageError("The name or password is invalid.")
 
         if password != pword:
-            return '', '', ''
+            raise UserStorageError("The name or password is invalid.")
 
         return name, description, blob
 

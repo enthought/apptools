@@ -13,9 +13,13 @@
 #------------------------------------------------------------------------------
 
 
+# Standard library imports.
+import errno
+import socket
+
 # Enthought library imports.
 from enthought.permissions.default.api import IUserStorage, UserStorageError
-from enthought.traits.api import HasTraits, implements, Instance, List, Str
+from enthought.traits.api import HasTraits, implements, List, Str
 
 # Local imports.
 from proxy_server import ProxyServer
@@ -30,11 +34,6 @@ class UserStorage(HasTraits):
 
     capabilities = List(Str)
 
-    #### Private interface ####################################################
-
-    # The proxy for the XML RPC server.
-    _server = Instance(ProxyServer)
-
     ###########################################################################
     # 'IUserStorage' interface.
     ###########################################################################
@@ -43,22 +42,44 @@ class UserStorage(HasTraits):
         """Add a new user."""
 
         try:
-            self._server.add_user(name, description, password,
-                    self._server.key)
+            ProxyServer.add_user(name, description, password, ProxyServer.key)
         except Exception, e:
-            raise UserStorageError(self._server.error(e))
+            raise UserStorageError(ProxyServer.error(e))
 
     def authenticate_user(self, name, password):
         """Return the tuple of the user name, description, and blob if the user
         was successfully authenticated."""
 
         try:
-            key, name, description, blob = self._server.authenticate_user(name,
+            key, name, description, blob = ProxyServer.authenticate_user(name,
                     password)
-        except Exception, e:
-            raise UserStorageError(self._server.error(e))
 
-        self._server.set_session_key(key)
+            # We don't save the cache because we should be about to read the
+            # real permission ids and we do it then.
+            ProxyServer.cache = description, blob, []
+        except Exception, e:
+            # See if we couldn't connect to the server.
+            if not isinstance(e, socket.error):
+                raise UserStorageError(ProxyServer.error(e))
+
+            err, _ = e.args
+
+            if err != errno.ECONNREFUSED:
+                raise UserStorageError(ProxyServer.error(e))
+
+            try:
+                ok = ProxyServer.read_cache()
+            except Exception, e:
+                raise UserStorageError(str(e))
+
+            if not ok:
+                raise UserStorageError(ProxyServer.error(e))
+
+            # We are in "disconnect" mode.
+            key = None
+            description, blob, _ = ProxyServer.cache
+
+        ProxyServer.key = key
 
         return name, description, blob
 
@@ -66,9 +87,9 @@ class UserStorage(HasTraits):
         """Delete a new user."""
 
         try:
-            self._server.delete_user(name, self._server.key)
+            ProxyServer.delete_user(name, ProxyServer.key)
         except Exception, e:
-            raise UserStorageError(self._server.error(e))
+            raise UserStorageError(ProxyServer.error(e))
 
     def is_empty(self):
         """See if the database is empty."""
@@ -81,44 +102,71 @@ class UserStorage(HasTraits):
         given name."""
 
         try:
-            return self._server.matching_users(name, self._server.key)
+            return ProxyServer.matching_users(name, ProxyServer.key)
         except Exception, e:
-            raise UserStorageError(self._server.error(e))
+            raise UserStorageError(ProxyServer.error(e))
 
     def modify_user(self, name, description, password):
         """Update the description and password for the given user."""
 
         try:
-            self._server.modify_user(name, description, password,
-                    self._server.key)
+            ProxyServer.modify_user(name, description, password,
+                    ProxyServer.key)
         except Exception, e:
-            raise UserStorageError(self._server.error(e))
+            raise UserStorageError(ProxyServer.error(e))
 
     def unauthenticate_user(self, user):
         """Unauthenticate the given user."""
 
-        try:
-            return self._server.unauthenticate_user(self._server.key)
-        except Exception, e:
-            raise UserStorageError(self._server.error(e))
+        if ProxyServer.key is None:
+            ok = True
+        else:
+            try:
+                ok = ProxyServer.unauthenticate_user(ProxyServer.key)
+            except Exception, e:
+                raise UserStorageError(ProxyServer.error(e))
 
-        self._server.set_session_key()
+        if ok:
+            ProxyServer.key = ''
+            ProxyServer.cache = None
+
+        return ok
 
     def update_blob(self, name, blob):
         """Update the blob for the given user."""
 
-        try:
-            self._server.update_blob(name, blob, self._server.key)
-        except Exception, e:
-            raise UserStorageError(self._server.error(e))
+        # Update the cache.
+        description, _, perm_ids = ProxyServer.cache
+        ProxyServer.cache = description, blob, perm_ids
+
+        if ProxyServer.key is None:
+            # Write the cache and tell the user about any errors.
+            ProxyServer.write_cache()
+        else:
+            try:
+                ProxyServer.update_blob(name, blob, ProxyServer.key)
+            except Exception, e:
+                raise UserStorageError(ProxyServer.error(e))
+
+            # Write the cache but ignore any errors.
+            try:
+                ProxyServer.write_cache()
+            except:
+                pass
 
     def update_password(self, name, password):
         """Update the password for the given user."""
 
+        # If the remote server disappeared after the capabilities were read but
+        # before the user was authenticated then we could get here.
+        if ProxyServer.key is None:
+            raise UserStorageError("It is not possible to change password "
+                    "when disconnected from the permissions server.")
+
         try:
-            self._server.update_password(name, password, self._server.key)
+            ProxyServer.update_password(name, password, ProxyServer.key)
         except Exception, e:
-            raise UserStorageError(self._server.error(e))
+            raise UserStorageError(ProxyServer.error(e))
 
     ###########################################################################
     # Trait handlers.
@@ -128,13 +176,8 @@ class UserStorage(HasTraits):
         """Return the storage capabilities."""
 
         try:
-            caps = self._server.capabilities()
+            caps = ProxyServer.capabilities()
         except:
             caps = []
 
         return caps
-
-    def __server_default(self):
-        """Return the default proxy server."""
-
-        return ProxyServer()

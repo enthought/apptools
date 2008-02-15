@@ -18,8 +18,8 @@ import os
 
 # Enthought library imports.
 from enthought.pyface.api import confirm, error, YES
-from enthought.traits.api import Bool, HasTraits, implements, Instance, List, \
-        Password, Property, Str, Unicode
+from enthought.traits.api import Bool, Dict, HasTraits, implements, Instance, \
+        List, Password, Property, Unicode
 from enthought.traits.ui.api import Handler, Item, View
 from enthought.traits.ui.menu import Action, OKCancelButtons
 
@@ -253,7 +253,7 @@ class User(HasTraits):
 
     description = Unicode
 
-    blob = Str
+    blob = Dict
 
 
 class UserDatabase(HasTraits):
@@ -311,11 +311,6 @@ class UserDatabase(HasTraits):
                     lu.name.strip(), lu.password)
         except UserStorageError, e:
             self._us_error(e)
-            return False
-
-        if not name:
-            # It's bad security to give too much information...
-            error(None, "The user name or password is invalid.")
             return False
 
         # Update the user details.
@@ -502,9 +497,12 @@ class UserDatabase(HasTraits):
     @staticmethod
     def _us_error(e):
         """Display a message to the user after a UserStorageError exception has
-        been raised."""
+        been raised.  If the message is empty then we assume the user has
+        already been informed."""
 
-        error(None, str(e))
+        msg = str(e)
+        if msg:
+            error(None, msg)
 
 
 def _validate_password(password, confirmation):

@@ -228,10 +228,10 @@ class ServerImplementation(object):
             try:
                 description, pword = self._users[name]
             except KeyError:
-                return '', '', '', ''
+                raise Exception("The name or password is invalid.")
 
             if password != pword:
-                return '', '', '', ''
+                raise Exception("The name or password is invalid.")
         else:
             # FIXME
             raise Exception("Authenticating a user isn't yet supported.")
@@ -263,7 +263,7 @@ class ServerImplementation(object):
         # Save the session data.
         self._keys[key] = name, perm_ids, time.time()
 
-        return key, name, description, self._blobs.get(name, '')
+        return key, name, description, self._blobs.get(name, {})
 
     def matching_users(self, name, key=None):
         """Return the full name and description of all the users that match the

@@ -16,7 +16,7 @@
 # Enthought library imports.
 from enthought.permissions.default.api import IPolicyStorage, \
         PolicyStorageError
-from enthought.traits.api import HasTraits, implements, Instance
+from enthought.traits.api import HasTraits, implements
 
 # Local imports.
 from proxy_server import ProxyServer
@@ -27,11 +27,6 @@ class PolicyStorage(HasTraits):
 
     implements(IPolicyStorage)
 
-    #### Private interface ####################################################
-
-    # The proxy for the XML RPC server.
-    _server = Instance(ProxyServer)
-
     ###########################################################################
     # 'IPolicyStorage' interface.
     ###########################################################################
@@ -40,83 +35,85 @@ class PolicyStorage(HasTraits):
         """Add a new role."""
 
         try:
-            self._server.add_role(name, description, perm_ids,
-                    self._server.key)
+            ProxyServer.add_role(name, description, perm_ids, ProxyServer.key)
         except Exception, e:
-            raise PolicyStorageError(self._server.error(e))
+            raise PolicyStorageError(ProxyServer.error(e))
 
     def all_roles(self):
         """Return a list of all roles."""
 
         try:
-            return self._server.all_roles(self._server.key)
+            return ProxyServer.all_roles(ProxyServer.key)
         except Exception, e:
-            raise PolicyStorageError(self._server.error(e))
+            raise PolicyStorageError(ProxyServer.error(e))
 
     def delete_role(self, name):
         """Delete a role."""
 
         try:
-            self._server.delete_role(name, self._server.key)
+            ProxyServer.delete_role(name, ProxyServer.key)
         except Exception, e:
-            raise PolicyStorageError(self._server.error(e))
+            raise PolicyStorageError(ProxyServer.error(e))
 
     def get_assignment(self, user_name):
         """Return the details of the assignment for the given user name."""
 
         try:
-            return self._server.get_assignment(user_name, self._server.key)
+            return ProxyServer.get_assignment(user_name, ProxyServer.key)
         except Exception, e:
-            raise PolicyStorageError(self._server.error(e))
+            raise PolicyStorageError(ProxyServer.error(e))
 
     def get_policy(self, name):
         """Return the details of the policy for the given user name."""
 
-        try:
-            return self._server.get_policy(name, self._server.key)
-        except Exception, e:
-            raise PolicyStorageError(self._server.error(e))
+        description, blob, perm_ids = ProxyServer.cache
+
+        if ProxyServer.key is not None:
+            try:
+                name, perm_ids = ProxyServer.get_policy(name, ProxyServer.key)
+            except Exception, e:
+                raise PolicyStorageError(ProxyServer.error(e))
+
+            # Save the permissions ids in the persistent cache.
+            ProxyServer.cache = description, blob, perm_ids
+
+            try:
+                ProxyServer.write_cache()
+            except:
+                pass
+
+        return name, perm_ids
 
     def is_empty(self):
         """See if the database is empty."""
 
         try:
-            return self._server.is_empty_policy()
+            return ProxyServer.is_empty_policy()
         except Exception, e:
-            raise PolicyStorageError(self._server.error(e))
+            raise PolicyStorageError(ProxyServer.error(e))
 
     def matching_roles(self, name):
         """Return the full name, description and permissions of all the roles
         that match the given name."""
 
         try:
-            return self._server.matching_roles(name, self._server.key)
+            return ProxyServer.matching_roles(name, ProxyServer.key)
         except Exception, e:
-            raise PolicyStorageError(self._server.error(e))
+            raise PolicyStorageError(ProxyServer.error(e))
 
     def modify_role(self, name, description, perm_ids):
         """Update the description and permissions for the given role."""
 
         try:
-            self._server.modify_role(name, description, perm_ids,
-                    self._server.key)
+            ProxyServer.modify_role(name, description, perm_ids,
+                    ProxyServer.key)
         except Exception, e:
-            raise PolicyStorageError(self._server.error(e))
+            raise PolicyStorageError(ProxyServer.error(e))
 
     def set_assignment(self, user_name, role_names):
         """Save the roles assigned to a user."""
 
         try:
-            self._server.set_assignment(user_name, role_names,
-                    self._server.key)
+            ProxyServer.set_assignment(user_name, role_names, ProxyServer.key)
         except Exception, e:
-            raise PolicyStorageError(self._server.error(e))
-
-    ###########################################################################
-    # Trait handlers.
-    ###########################################################################
-
-    def __server_default(self):
-        """Return the default proxy server."""
-
-        return ProxyServer()
+            raise PolicyStorageError(ProxyServer.error(e))

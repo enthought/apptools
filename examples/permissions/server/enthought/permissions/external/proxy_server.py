@@ -14,10 +14,15 @@
 
 
 # Standard library imports.
+import cPickle as pickle
 import errno
 import os
 import socket
 import xmlrpclib
+
+# Enthought library imports.
+from enthought.etsconfig.api import ETSConfig
+from enthought.pyface.api import confirm, YES
 
 
 # The default IP address to connect to.
@@ -31,8 +36,9 @@ class ProxyServer(xmlrpclib.ServerProxy):
     """This is a thin wrapper around xmlrpclib.ServerProxy that handles the
     server address and error reporting."""
 
-    # The session key.
-    key = ''
+    # The name of the user data cache file.
+    _cache_file = os.path.join(ETSConfig.application_home,
+            'ets_perms_user_cache')
 
     def __init__(self):
         """Initialise the object.  The server address and TCP/IP port are taken
@@ -43,11 +49,53 @@ class ProxyServer(xmlrpclib.ServerProxy):
 
         xmlrpclib.ServerProxy.__init__(self, uri='http://%s' % self._server)
 
-    @classmethod
-    def set_session_key(cls, key=''):
-        """Set the session key."""
+        # The session key.  It is an empty string if the user is not
+        # authenticated and None if the user is in "disconnected" mode.
+        self.key = ''
 
-        cls.key = key
+        # The user data cache.  This is a tuple of the user description, blob
+        # and list of permission ids when the session key is not an empty
+        # string.
+        self.cache = None
+
+    def write_cache(self):
+        """Write the user cache to persistent storage."""
+
+        f = open(self._cache_file, 'w')
+        pickle.dump(self.cache, f)
+        f.close()
+
+    def read_cache(self):
+        """Read the user cache from persistent storage.  Returns False if
+        there was no cache to read."""
+
+        try:
+            f = open(self._cache_file, 'r')
+
+            try:
+                if confirm(None, "It was not possible to connect to the "
+                        "permissions server. Instead you can use the settings "
+                        "used when you last logged in from this system. If "
+                        "you do this then any changes made to settings "
+                        "normally held on the permissions server will be lost "
+                        "when you next login successfully.\n\nDo you want to "
+                        "use the saved settings?") != YES:
+                    raise Exception("")
+
+                try:
+                    self.cache = pickle.load(f)
+                except:
+                    raise Exception("Unable to read %s." % self._cache_file)
+            finally:
+                f.close()
+        except IOError, e:
+            if e.errno == errno.ENOENT:
+                # There is no cache file.
+                return False
+
+            raise Exception("Unable to open %s: %s." % (self._cache_file, e))
+
+        return True
 
     def error(self, e):
         """Return a user friendly string describing the given exception."""
@@ -72,3 +120,7 @@ class ProxyServer(xmlrpclib.ServerProxy):
             raise e
 
         return emsg
+
+
+# Create a singleton.
+ProxyServer = ProxyServer()
