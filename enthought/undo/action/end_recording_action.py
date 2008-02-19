@@ -21,7 +21,8 @@ from abstract_undo_action import AbstractUndoAction
 
 
 class EndRecordingAction(AbstractUndoAction):
-    """ An action that ends the recording of commands to a script. """
+    """ An action that ends the recording of changes to scriptable objects to a
+    script. """
 
     #### 'Action' interface ###################################################
 

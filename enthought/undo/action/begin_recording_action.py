@@ -21,7 +21,8 @@ from abstract_undo_action import AbstractUndoAction
 
 
 class BeginRecordingAction(AbstractUndoAction):
-    """ An action that starts the recording of commands to a script. """
+    """ An action that starts the recording of changes to scriptable objects to
+    a script. """
 
     #### 'Action' interface ###################################################
 

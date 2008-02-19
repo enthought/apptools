@@ -16,7 +16,7 @@
 # Enthought library imports.
 from enthought.pyface.action.api import Action
 from enthought.traits.api import Any, Instance, Type
-from enthought.undo.api import ICommand, ICommandStack
+from enthought.undo.api import AbstractCommand, ICommand, ICommandStack
 
 
 class CommandAction(Action):
@@ -28,7 +28,7 @@ class CommandAction(Action):
     #### 'CommandAction' interface ############################################
 
     # The command to create when the action is performed.
-    command = Type(Instance(ICommand))
+    command = Type(AbstractCommand)
 
     # The command stack onto which the command will be pushed when the action
     # is performed.

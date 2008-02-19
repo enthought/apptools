@@ -1,0 +1,194 @@
+Undo & Scripting Framework
+==========================
+
+The Undo & Scripting Framework is a component of the Enthought Tool Suite that
+provides developers with an API that implements the standard pattern for
+do/undo/redo commands.
+
+The scripting element of the framework allows the creation and subsequent
+modification of data to be recorded as a Python script.  Typically these data
+changes are the result of commands being executed.  Even though it is not the
+execution of commands that is recorded, scripting is part of the undo
+framework because, for recordings to be correct, both elements must share the
+same concept of an ordered sequence of operations.  (Note that the scripting
+support requires further development before it is ready for production use.)
+
+The framework is completely configurable.  Alternate implementations of all
+major components can be provided if necessary.
+
+
+Framework Concepts
+------------------
+
+The following are the concepts supported by the framework.
+
+- Command
+
+  A command is an application defined operation that can be done and,
+  optionally, undone and redone.
+
+  A command operates on some data and maintains sufficient state to allow it to
+  revert or repeat a change to the data.
+
+  Commands may be merged so that potentially long sequences of similar
+  commands (e.g. to add a character to some text) can be collapsed into a
+  single command (e.g. to add a word to some text).
+
+- Macro
+
+  A macro is a sequence of commands that is treated as a single command when
+  being undone or redone.
+
+- Command Stack
+
+  A command is done, i.e. executed, by pushing it onto a command stack.  The
+  last command can be undone and redone by calling appropriate command stack
+  methods.  It is also possible to move the *stack pointer* to any point and
+  the command stack will ensure that commands are undone or redone as
+  required.
+
+  A command stack maintains a *clean* state which is updated as commands are
+  done and undone.  It may be explicitly set, for example when the data being
+  manipulated by the commands is saved to disk.
+
+  Canned PyFace actions are provided as wrappers around command stack methods
+  to implement common menu items.
+
+- Scriptable Objects
+
+  A scriptable object is a sub-class of ``HasTraits`` whose attribute changes
+  and method invocations can be recorded in a script.
+
+- Undo Manager
+
+  An undo manager is responsible for one or more command stacks and maintains
+  a reference to the currently active stack.  It provides convenience undo and
+  redo methods that operate on the currently active stack.
+
+  An undo manager ensures that each command execution is allocated a unique
+  sequence number, irrespective of which command stack it is pushed to.  Using
+  this it is possible to synchronise multiple command stacks and restore them
+  to a particular point in time.
+
+  An undo manager will generate an event whenever the clean state of the active
+  stack changes.  This can be used to maintain some sort of GUI status
+  indicator to tell the user that their data has been modified since it was
+  last saved.
+
+  An undo manager is responsible for the recording of scripts.
+
+Typically an application will have one undo manager and one undo stack for
+each data type that can be edited.  However this is not a requirement, how the
+command stack's in particular are organised and linked (with the user
+manager's sequence number) can need careful thought so as not to confuse the
+user - particularly in a plugin based application that may have many editors.
+
+To support this typical usage the PyFace ``Workbench`` class has an
+``undo_manager`` trait and the PyFace ``Editor`` class has a ``command_stack``
+trait.  Both are lazy loaded so can be completely ignored if they are not used.
+
+
+API Overview
+------------
+
+This section gives a brief overview of the various classes implemented in the
+framework.  The complete API_ documentation is available as endo generated
+HTML.
+
+
+UndoManager
+...........
+
+The ``UndoManager`` class is the default implementation of the ``IUndoManager``
+interface.
+
+**FIXME:** TODO
+
+
+CommandStack
+............
+
+The ``CommandStack`` class is the default implementation of the
+``ICommandStack`` interface.
+
+
+AbstractCommand
+...............
+
+``AbstractCommand`` is an abstract base class that implements the ``ICommand``
+interface.
+
+**FIXME:** TODO
+
+
+ScriptableObject
+................
+
+The ``ScriptableObject`` class is a ``HasTraits`` sub-class for any class that
+has scriptable traits or methods.
+
+
+Scriptable
+..........
+
+The ``Scriptable`` factory function creates a wrapper for a trait so that
+changes to the value of the trait can be recorded.
+
+Simple reads of the trait will not be recorded unless unless the value read is
+bound to another scriptable trait or passed as an argument to a scriptable
+method.  Passing ``has_side_effects=True`` ensures that a read will always be
+recorded.
+
+
+scriptable
+..........
+
+The ``scriptable`` decorator is applied to methods of objects that sub-class
+``ScriptableObject`` so that calls to the method can be recorded.
+
+
+CommandAction
+.............
+
+The ``CommandAction`` class is a sub-class of the PyFace ``Action`` class that
+is used to wrap undo/redo commands.
+
+**FIXME:** TODO
+
+
+UndoAction
+..........
+
+The ``UndoAction`` class is a canned PyFace action that undoes the last
+command of the active command stack.
+
+
+RedoAction
+..........
+
+The ``RedoAction`` class is a canned PyFace action that redoes the last
+command undone of the active command stack.
+
+
+BeginRecordingAction
+....................
+
+The ``BeginRecordingAction`` class is a canned PyFace action that starts the
+recording of changes to scriptable objects to a script.
+
+
+EndRecordingAction
+..................
+
+The ``EndRecordingAction`` class is a canned PyFace action that ends the
+recording of changes to scriptable objects to a script.
+
+
+ClearRecordingAction
+....................
+
+The ``ClearRecordingAction`` class is a canned PyFace action that clears the
+current recorded script.
+
+
+.. _API: api/index.html
