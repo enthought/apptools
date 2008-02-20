@@ -95,6 +95,8 @@ This section gives a brief overview of the various classes implemented in the
 framework.  The complete API_ documentation is available as endo generated
 HTML.
 
+The example_ application demonstrates all the major features of the framework.
+
 
 UndoManager
 ...........
@@ -111,14 +113,23 @@ CommandStack
 The ``CommandStack`` class is the default implementation of the
 ``ICommandStack`` interface.
 
+**FIXME:** TODO
+
+
+ICommand
+........
+
+The ``ICommand`` interface defines the interface that must be implemented by
+any undoable/redoable command.
+
+**FIXME:** TODO
+
 
 AbstractCommand
 ...............
 
 ``AbstractCommand`` is an abstract base class that implements the ``ICommand``
-interface.
-
-**FIXME:** TODO
+interface.  It provides a default implementation of the ``merge()`` method.
 
 
 ScriptableObject
@@ -153,7 +164,18 @@ CommandAction
 The ``CommandAction`` class is a sub-class of the PyFace ``Action`` class that
 is used to wrap undo/redo commands.
 
-**FIXME:** TODO
+``command``
+    This callable attribute must be set to a factory that will return an
+    object that implements ``ICommand``.  It will be called when the action is
+    invoked and the object created pushed onto the command stack.
+
+``command_stack``
+    This instance attribute must be set to the command stack that commands
+    invoked by the action are pushed to.
+
+``data``
+    This optional attribute is a reference to the data object that will be
+    passed to the ``command`` factory when it is called.
 
 
 UndoAction
@@ -192,3 +214,4 @@ current recorded script.
 
 
 .. _API: api/index.html
+.. _example: https://svn.enthought.com/enthought/browser/AppTools/trunk/examples/undo/
