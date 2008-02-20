@@ -201,7 +201,42 @@ class PreferenceBindingTestCase(unittest.TestCase):
         
         return
 
+    def test_explicit_preferences(self):
+        """ explicit preferences """
 
+        p = self.preferences
+        p.load('example.ini')
+
+        class AcmeUI(HasTraits):
+            """ The Acme UI class! """
+
+            # The traits that we want to initialize from preferences.
+            bgcolor = Str
+            width   = Int
+            ratio   = Float
+            visible = Bool
+
+        acme_ui = AcmeUI()
+        acme_ui.on_trait_change(listener)
+
+        # Create an empty preferences node and use that in some of the
+        # bindings!
+        preferences = Preferences()
+        
+        # Make some bindings.
+        bind_preference(acme_ui, 'bgcolor', 'acme.ui.bgcolor', preferences)
+        bind_preference(acme_ui, 'width',   'acme.ui.width')
+        bind_preference(acme_ui, 'ratio',   'acme.ui.ratio', preferences)
+        bind_preference(acme_ui, 'visible', 'acme.ui.visible')
+
+        # Make sure the object was initialized properly.
+        self.assertEqual('', acme_ui.bgcolor)
+        self.assertEqual(50, acme_ui.width)
+        self.assertEqual(0.0, acme_ui.ratio)
+        self.assertEqual(True, acme_ui.visible)
+
+        return
+    
 
 # Entry point for stand-alone testing.
 if __name__ == '__main__':
