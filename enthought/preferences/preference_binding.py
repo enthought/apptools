@@ -151,12 +151,22 @@ class PreferenceBinding(HasTraits):
 def bind_preference(obj, trait_name, preference_path, preferences=None):
     """ Create a new preference binding. """
 
-    binding = PreferenceBinding(
-        obj             = obj,
-        trait_name      = trait_name,
-        preference_path = preference_path
-    )
-
-    return binding
+    # This may lokk a bit wierd, but we build up the dictionary of traits to
+    # set when we construct the binding object so that we only pass the
+    # 'preferences' argument if it is specified. If we passed it in as
+    # normal then the default value of None counts as 'setting' the trait which
+    # prevents the default initializer from running. If we try to set the
+    # trait after construction time, it is too late as the binding has already
+    # been initialized.
+    traits = {
+        'obj'             : obj,
+        'trait_name'      : trait_name,
+        'preference_path' : preference_path
+    }
+    
+    if preferences is not None:
+        traits['preferences'] = preferences
+        
+    return PreferenceBinding(**traits)
 
 #### EOF ######################################################################
