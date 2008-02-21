@@ -40,7 +40,8 @@ class UndoManager(HasTraits):
     # maintained by the undo manager.
     active_stack_clean = Property(Bool)
 
-    # This is set if commands are being recorded as a script.
+    # This is set if commands are being recorded as a script.  It is maintained
+    # by the undo manager.
     recording = Bool
 
     # This is the name of the command that can be redone.  It will be empty if
@@ -135,9 +136,12 @@ class UndoManager(HasTraits):
         """
 
         if self.recording:
-            self._script_manager.add_trait_get(so, name, result, self.sequence_nr)
+            side_effects = self._script_manager.add_trait_get(so, name, result,
+                    self.sequence_nr)
 
-            self.script_updated = self
+            # Don't needlessly fire the event if there are no side effects.
+            if side_effects:
+                self.script_updated = self
 
     def record_trait_set(self, so, name, value):
         """ Record the set of a trait of a scriptable object.  This is intended

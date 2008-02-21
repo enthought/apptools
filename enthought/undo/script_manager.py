@@ -74,7 +74,7 @@ class _ScriptTraitGet(_ScriptCall):
     #### '_ScriptTraitGet' interface ##########################################
 
     # Set if the getter has side effects.
-    has_side_effects = Bool
+    has_side_effects = Bool(False)
 
     # The result of the get.  Keeping a reference to it means that the memory
     # can't get reused.
@@ -313,7 +313,7 @@ class ScriptManager(HasTraits):
 
     def add_trait_get(self, so, name, result, id):
         """ Add a call to a trait getter, with it's associated result and ID,
-        to the current script.
+        to the current script.  Return True if the get had side effects.
         """
 
         self._start_script()
@@ -330,6 +330,8 @@ class ScriptManager(HasTraits):
 
         self._calls.append(_ScriptTraitGet(so=so, name=name, result=result,
                 id=id, has_side_effects=side_effects))
+
+        return side_effects
 
     def add_trait_set(self, so, name, value, id):
         """ Add a call to a trait setter, with it's associated value and ID,

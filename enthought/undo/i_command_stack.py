@@ -53,10 +53,10 @@ class ICommandStack(Interface):
 
     def begin_macro(self, name):
         """ This begins a macro by creating an empty command with the given
-        'name'.  All subsequent calls to 'push()' create commands that will be
-        children of the empty command until the next call to 'end_macro()'.
-        Macros may be nested.  The stack is disabled (ie. nothing can be undone
-        or redone) while a macro is being created (ie. while there is an
+        'name'.  The commands passed to all subsequent calls to 'push()' will
+        be contained in the macro until the next call to 'end_macro()'.  Macros
+        may be nested.  The stack is disabled (ie. nothing can be undone or
+        redone) while a macro is being created (ie. while there is an
         outstanding 'end_macro()' call).
         """
 

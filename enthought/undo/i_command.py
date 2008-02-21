@@ -28,9 +28,9 @@ class ICommand(Interface):
     # This is the data on which the command operates.
     data = Any
 
-    # This is the name of the command as it will appear in any GUI element and
-    # as comments in a recorded script.  It may include '&' which will be
-    # automatically removed whenever it is inappropriate.
+    # This is the name of the command as it will appear in any GUI element.  It
+    # may include '&' which will be automatically removed whenever it is
+    # inappropriate.
     name = Unicode
 
     # This is set if the command can be undone.

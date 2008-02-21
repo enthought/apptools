@@ -60,6 +60,10 @@ class ExampleUndoWindow(WorkbenchWindow):
     def __file_menu_default(self):
         """ Trait initialiser. """
 
+        # ZZZ: This is temporary until we put the script into a view.
+        self.workbench.undo_manager.on_trait_change(self._on_script_updated,
+                'script_updated')
+
         return MenuManager(self._exit_action, name="&File")
 
     def __undo_menu_default(self):
@@ -119,7 +123,6 @@ class ExampleUndoWindow(WorkbenchWindow):
         return ToolBarManager(self._exit_action, show_tool_names=False)
 
     # ZZZ: This is temporary until we put the script into a view.
-    @on_trait_change('workbench.undo_manager.script_updated')
     def _on_script_updated(self, undo_manager):
         if str(undo_manager) == "<undefined>":
             return

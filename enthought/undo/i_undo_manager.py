@@ -34,7 +34,8 @@ class IUndoManager(Interface):
     # maintained by the undo manager.
     active_stack_clean = Bool
 
-    # This is set if commands are being recorded as a script.
+    # This is set if commands are being recorded as a script.  It is maintained
+    # by the undo manager.
     recording = Bool
 
     # This is the name of the command that can be redone.  It will be empty if
@@ -46,6 +47,10 @@ class IUndoManager(Interface):
     # recorded script if none is currently being recorded).  It is updated
     # automatically as the user does, redos or undos commands.
     script = Unicode
+
+    # This event is fired when the recorded script changes.  The value of the
+    # event will be the UndoManager instance.
+    script_updated = Event(Instance('enthought.undo.api.IUndoManager'))
 
     # This is the sequence number of the next command to be performed.  It is
     # incremented immediately before a command is invoked (by its 'do()'
