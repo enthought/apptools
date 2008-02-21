@@ -52,7 +52,7 @@ class PreferenceBinding(HasTraits):
         return
 
     ###########################################################################
-    # Private interface.
+    # 'PreferenceBinding' interface.
     ###########################################################################
 
     #### Trait initializers ###################################################
@@ -61,6 +61,10 @@ class PreferenceBinding(HasTraits):
         """ Trait initializer. """
 
         return get_default_preferences()
+
+    ###########################################################################
+    # Private interface.
+    ###########################################################################
 
     #### Trait change handlers ################################################
 
