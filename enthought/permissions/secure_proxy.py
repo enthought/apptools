@@ -26,7 +26,7 @@ from permissions_manager import PermissionsManager
 from adapters import pyface_action
 
 if ETSConfig.toolkit == 'wx':
-    from adapters import wx_widget
+    from adapters import wx_window
 elif ETSConfig.toolkit == 'qt4':
     from adapters import qt4_widget
 
