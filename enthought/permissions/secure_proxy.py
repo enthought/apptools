@@ -25,7 +25,9 @@ from permissions_manager import PermissionsManager
 # Register the bundled adapters.
 from adapters import pyface_action
 
-if ETSConfig.toolkit == 'qt4':
+if ETSConfig.toolkit == 'wx':
+    from adapters import wx_widget
+elif ETSConfig.toolkit == 'qt4':
     from adapters import qt4_widget
 
 

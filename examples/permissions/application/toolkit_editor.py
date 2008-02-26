@@ -23,14 +23,17 @@ class ToolkitEditor(Editor):
         tk = ETSConfig.toolkit
 
         if tk == 'wx':
-            raise NotImplementedError
+            import wx
+
+            control = wx.StaticText(parent, -1, self.obj,
+                    style=wx.ALIGN_CENTER)
         elif tk == 'qt4':
             from PyQt4 import QtCore, QtGui
 
             control = QtGui.QLabel(self.obj, parent)
-            control.setAlignment(QtCore.Qt.AlignCenter)
+            control.setAlignment(QtCore.Qt.AlignHCenter)
         else:
-            raise ValueError, "unsupoorted toolkit: %s" % tk
+            raise ValueError, "unsupported toolkit: %s" % tk
 
         # Return the wrapped control.
         return SecureProxy(control, [EnableWidgetPerm])
@@ -41,7 +44,7 @@ class ToolkitEditor(Editor):
         tk = ETSConfig.toolkit
 
         if tk == 'wx':
-            raise NotImplementedError
+            self.control.Destroy()
         elif tk == 'qt4':
             self.control.setParent(None)
 

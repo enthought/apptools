@@ -127,7 +127,7 @@ Adapters are included for the following types of object:
 
 - Qt widgets
 
-- wx widgets **FIXME:** TODO
+- wx widgets
 
 See `Writing SecureProxy Adapters`_ for a description of how to write adapters
 for other types of objects.
