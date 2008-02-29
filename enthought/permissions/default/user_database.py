@@ -27,6 +27,7 @@ from enthought.traits.ui.menu import Action, OKCancelButtons
 from enthought.permissions.i_user import IUser
 from i_user_database import IUserDatabase
 from i_user_storage import IUserStorage, UserStorageError
+from select_user import select_user
 
 
 class _LoginUser(HasTraits):
@@ -482,17 +483,7 @@ class UserDatabase(HasTraits):
             error(None, "There is no user that matches \"%s\"." % name)
             return '', ''
 
-        # FIXME: Instead of the following, if there is more than one user then
-        # allow the user to select a particular one.
-        name = name.strip()
-
-        for u in users:
-            if u[0] == name:
-                break
-        else:
-            u = users[0]
-
-        return u
+        return select_user(users)
 
     @staticmethod
     def _us_error(e):

@@ -134,9 +134,11 @@ class PolicyStorage(HasTraits):
         roles, _ = self._readonly_copy()
 
         # Return any role that starts with the name.
-        return [(full_name, description, perm_ids)
+        roles = [(full_name, description, perm_ids)
                 for full_name, (description, perm_ids) in roles.items()
                         if full_name.startswith(name)]
+
+        return sorted(roles)
 
     def modify_role(self, name, description, perm_ids):
         """Update the description and permissions for the given role."""

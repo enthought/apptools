@@ -276,6 +276,8 @@ class ServerImplementation(object):
             users = [(full_name, description) for full_name, (description, _)
                             in self._users.items()
                             if full_name.startswith(name)]
+
+            users = sorted(users)
         else:
             # FIXME
             raise Exception("Searching for users isn't yet supported.")
@@ -450,9 +452,11 @@ class ServerImplementation(object):
         self._check_policy_authorisation(key)
 
         # Return any role that starts with the name.
-        return [(full_name, description, perm_ids)
+        roles = [(full_name, description, perm_ids)
                 for full_name, (description, perm_ids) in self._roles.items()
                         if full_name.startswith(name)]
+
+        return sorted(roles)
 
     def modify_role(self, name, description, perm_ids, key=None):
         """Update an existing role."""

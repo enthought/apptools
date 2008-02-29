@@ -101,8 +101,10 @@ class UserStorage(HasTraits):
         given name."""
 
         # Return any user that starts with the name.
-        return [(full_name, description) for full_name, (description, _, _)
+        users = [(full_name, description) for full_name, (description, _, _)
                 in self._readonly_copy().items() if full_name.startswith(name)]
+
+        return sorted(users)
 
     def modify_user(self, name, description, password):
         """Update the description and password for the given user."""

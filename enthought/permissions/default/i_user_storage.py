@@ -57,8 +57,9 @@ class IUserStorage(Interface):
 
     def matching_users(self, name):
         """Return a list of tuples of the full name and description of all
-        users that match the given name.  How the name is interpreted (eg. as a
-        regular expression) is determined by the storage."""
+        users, sorted by the full name, that match the given name.  How the
+        name is interpreted (eg. as a regular expression) is determined by the
+        storage."""
 
     def modify_user(self, name, description, password):
         """Update the description and password for the user with the given name

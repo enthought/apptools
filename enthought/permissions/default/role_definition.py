@@ -24,6 +24,7 @@ from enthought.permissions.permission import Permission
 from enthought.permissions.permissions_manager import PermissionsManager
 from i_policy_storage import PolicyStorageError
 from policy_data import Role
+from select_role import select_role
 
 
 class _RoleView(View):
@@ -82,22 +83,13 @@ class _RoleHandler(Handler):
             self._error("There is no role that matches \"%s\"." % role.name)
             return
 
-        # FIXME: Instead of the following, if there is more than one role then
-        # allow the user to select a particular one.
-        name = role.name.strip()
+        name, description, perm_ids = select_role(roles)
 
-        for r in roles:
-            if r[0] == name:
-                break
-        else:
-            r = roles[0]
-
-        name, description, perm_ids = r
-
-        # Update the viewed object.
-        role.name = name
-        role.description = description
-        role.permissions = self._perms_to_list(perm_ids)
+        if name:
+            # Update the viewed object.
+            role.name = name
+            role.description = description
+            role.permissions = self._perms_to_list(perm_ids)
 
     def _add_clicked(self, info):
         """Invoked by the "Add" button."""

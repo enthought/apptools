@@ -57,9 +57,9 @@ class IPolicyStorage(Interface):
 
     def matching_roles(self, name):
         """Return a list of tuples of the full name, description and list of
-        permission names of all roles that match the given name.  How the name
-        is interpreted (eg. as a regular expression) is determined by the
-        storage."""
+        permission names, sorted by the full name, of all roles that match the
+        given name.  How the name is interpreted (eg. as a regular expression)
+        is determined by the storage."""
 
     def modify_role(self, name, description, perm_ids):
         """Update the description and permissions for the role with the given
