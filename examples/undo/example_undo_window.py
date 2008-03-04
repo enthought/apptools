@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -16,20 +16,17 @@
 # Enthought library imports.
 from enthought.pyface.action.api import Action, Group, MenuManager
 from enthought.pyface.workbench.api import WorkbenchWindow
-from enthought.pyface.workbench.action.api import MenuBarManager
-from enthought.pyface.workbench.action.api import ToolBarManager
+from enthought.pyface.workbench.action.api import MenuBarManager, \
+        ToolBarManager
 from enthought.traits.api import Instance, on_trait_change
-from enthought.undo.action.api import BeginRecordingAction
-from enthought.undo.action.api import ClearRecordingAction, EndRecordingAction
-from enthought.undo.action.api import CommandAction, RedoAction, UndoAction
+from enthought.undo.action.api import BeginRecordingAction, \
+        ClearRecordingAction, EndRecordingAction, CommandAction, RedoAction, \
+        UndoAction
 
 # Local imports.
 from example_editor_manager import ExampleEditorManager
-from label import LabelIncrementSizeCommand
-from label import LabelDecrementSizeCommand
-from label import LabelNormalFontCommand
-from label import LabelBoldFontCommand
-from label import LabelItalicFontCommand
+from commands import LabelIncrementSizeCommand, LabelDecrementSizeCommand, \
+        LabelNormalFontCommand, LabelBoldFontCommand, LabelItalicFontCommand
 
 
 class ExampleUndoWindow(WorkbenchWindow):
@@ -110,7 +107,7 @@ class ExampleUndoWindow(WorkbenchWindow):
         """ Trait initialiser. """
 
         return ExampleEditorManager()
-    
+
     def _menu_bar_manager_default(self):
         """ Trait initialiser. """
 
@@ -126,7 +123,7 @@ class ExampleUndoWindow(WorkbenchWindow):
     def _on_script_updated(self, undo_manager):
         if str(undo_manager) == "<undefined>":
             return
-            
+
         script = undo_manager.script
 
         if script:

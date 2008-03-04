@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -22,7 +22,7 @@ from enthought.pyface.workbench.api import Workbench
 
 # Local imports.
 from example_undo_window import ExampleUndoWindow
-from label import Label
+from model import Label
 
 
 # Log to stderr.
@@ -56,10 +56,10 @@ class ExampleUndo(Workbench):
 
 def main(argv):
     """ A simple example of using the the undo framework in a workbench. """
-    
+
     # Create the GUI.
     gui = GUI()
-    
+
     # Create the workbench.
     workbench = ExampleUndo(state_location=gui.state_location)
 
@@ -78,11 +78,11 @@ def main(argv):
 
     # Start the GUI event loop.
     gui.start_event_loop()
-    
+
     return
 
 
 if __name__ == '__main__':
     import sys; main(sys.argv)
-    
+
 #### EOF ######################################################################
