@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -13,14 +13,21 @@
 #------------------------------------------------------------------------------
 
 
-# Local imports.
-from abstract_undo_action import AbstractUndoAction
+# Enthought library imports.
+from enthought.pyface.action.api import Action
+from enthought.traits.api import Instance
+from enthought.undo.api import IUndoManager
 
 
-class AbstractCommandStackAction(AbstractUndoAction):
+class AbstractCommandStackAction(Action):
     """ The abstract base class for all actions that operate on a command
     stack.
     """
+
+    #### 'AbstractCommandStackAction' interface ###############################
+
+    # The undo manager.
+    undo_manager = Instance(IUndoManager)
 
     ###########################################################################
     # 'object' interface.

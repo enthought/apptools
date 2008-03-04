@@ -12,9 +12,6 @@
 # Description: <Enthought undo package component>
 #------------------------------------------------------------------------------
 
-from begin_recording_action import BeginRecordingAction
-from clear_recording_action import ClearRecordingAction
 from command_action import CommandAction
-from end_recording_action import EndRecordingAction
 from redo_action import RedoAction
 from undo_action import UndoAction

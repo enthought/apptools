@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, Bool, Interface, Unicode
+from enthought.traits.api import Any, Interface, Unicode
 
 
 class ICommand(Interface):
@@ -32,9 +32,6 @@ class ICommand(Interface):
     # may include '&' which will be automatically removed whenever it is
     # inappropriate.
     name = Unicode
-
-    # This is set if the command can be undone.
-    undoable = Bool(True)
 
     ###########################################################################
     # 'ICommand' interface.

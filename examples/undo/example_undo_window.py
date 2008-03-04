@@ -19,9 +19,7 @@ from enthought.pyface.workbench.api import WorkbenchWindow
 from enthought.pyface.workbench.action.api import MenuBarManager, \
         ToolBarManager
 from enthought.traits.api import Instance, on_trait_change
-from enthought.undo.action.api import BeginRecordingAction, \
-        ClearRecordingAction, EndRecordingAction, CommandAction, RedoAction, \
-        UndoAction
+from enthought.undo.action.api import CommandAction, RedoAction, UndoAction
 
 # Local imports.
 from example_editor_manager import ExampleEditorManager
@@ -57,10 +55,6 @@ class ExampleUndoWindow(WorkbenchWindow):
     def __file_menu_default(self):
         """ Trait initialiser. """
 
-        # ZZZ: This is temporary until we put the script into a view.
-        self.workbench.undo_manager.on_trait_change(self._on_script_updated,
-                'script_updated')
-
         return MenuManager(self._exit_action, name="&File")
 
     def __undo_menu_default(self):
@@ -68,18 +62,10 @@ class ExampleUndoWindow(WorkbenchWindow):
 
         undo_manager = self.workbench.undo_manager
 
-        undo_group = Group(
-                    UndoAction(undo_manager=undo_manager),
-                    RedoAction(undo_manager=undo_manager)
-                )
+        undo_action = UndoAction(undo_manager=undo_manager)
+        redo_action = RedoAction(undo_manager=undo_manager)
 
-        script_group = Group(
-                    BeginRecordingAction(undo_manager=undo_manager),
-                    EndRecordingAction(undo_manager=undo_manager),
-                    ClearRecordingAction(undo_manager=undo_manager)
-                )
-
-        return MenuManager(undo_group, script_group, name="&Undo")
+        return MenuManager(undo_action, redo_action, name="&Undo")
 
     def __label_menu_default(self):
         """ Trait initialiser. """
@@ -111,25 +97,13 @@ class ExampleUndoWindow(WorkbenchWindow):
     def _menu_bar_manager_default(self):
         """ Trait initialiser. """
 
-        return MenuBarManager(self._file_menu, self._undo_menu,
-                self._label_menu, window=self)
+        return MenuBarManager(self._file_menu, self._label_menu,
+                self._undo_menu, window=self)
 
     def _tool_bar_manager_default(self):
         """ Trait initialiser. """
 
         return ToolBarManager(self._exit_action, show_tool_names=False)
-
-    # ZZZ: This is temporary until we put the script into a view.
-    def _on_script_updated(self, undo_manager):
-        if str(undo_manager) == "<undefined>":
-            return
-
-        script = undo_manager.script
-
-        if script:
-            print script,
-        else:
-            print "Script empty"
 
     def _active_editor_changed(self, old, new):
         """ Trait handler. """

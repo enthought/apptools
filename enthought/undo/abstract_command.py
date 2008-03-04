@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, Bool, HasTraits, implements, Unicode
+from enthought.traits.api import Any, HasTraits, implements, Unicode
 
 # Local imports.
 from i_command import ICommand
@@ -36,9 +36,6 @@ class AbstractCommand(HasTraits):
     # may include '&' which will be automatically removed whenever it is
     # inappropriate.
     name = Unicode
-
-    # This is set if the command can be undone.
-    undoable = Bool(True)
 
     ###########################################################################
     # 'ICommand' interface.

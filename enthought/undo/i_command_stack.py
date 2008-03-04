@@ -23,7 +23,7 @@ from i_undo_manager import IUndoManager
 class ICommandStack(Interface):
     """ The command stack interface.  A command stack is responsible for
     managing the changes to a data model and recording those changes so that
-    can be undone, redone or scripted.
+    they can be undone or redone.
     """
 
     #### 'ICommandStack' interface ############################################

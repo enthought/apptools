@@ -1,18 +1,9 @@
-Undo & Scripting Framework
-==========================
+Undo Framework
+==============
 
-The Undo & Scripting Framework is a component of the Enthought Tool Suite that
-provides developers with an API that implements the standard pattern for
-do/undo/redo commands.
-
-The scripting element of the framework allows the creation and subsequent
-modification of data to be recorded as a Python script.  Typically these data
-changes are the result of commands being executed.  Even though it is not the
-execution of commands that is recorded, scripting is part of the undo
-framework because, for recordings to be correct, both elements must share the
-same concept of an ordered sequence of operations.  (Note that the scripting
-support requires further development before it is ready for production use.)
-**FIXME:** Review this - it doesn't follow the standard pattern.
+The Undo Framework is a component of the Enthought Tool Suite that provides
+developers with an API that implements the standard pattern for do/undo/redo
+commands.
 
 The framework is completely configurable.  Alternate implementations of all
 major components can be provided if necessary.
@@ -25,8 +16,8 @@ The following are the concepts supported by the framework.
 
 - Command
 
-  A command is an application defined operation that can be done and,
-  optionally, undone and redone.
+  A command is an application defined operation that can be done (i.e.
+  executed), undone (i.e. reverted) and redone (i.e. repeated).
 
   A command operates on some data and maintains sufficient state to allow it to
   revert or repeat a change to the data.
@@ -42,11 +33,10 @@ The following are the concepts supported by the framework.
 
 - Command Stack
 
-  A command is done, i.e. executed, by pushing it onto a command stack.  The
-  last command can be undone and redone by calling appropriate command stack
-  methods.  It is also possible to move the *stack pointer* to any point and
-  the command stack will ensure that commands are undone or redone as
-  required.
+  A command is done by pushing it onto a command stack.  The last command can
+  be undone and redone by calling appropriate command stack methods.  It is
+  also possible to move the stack's position to any point and the command stack
+  will ensure that commands are undone or redone as required.
 
   A command stack maintains a *clean* state which is updated as commands are
   done and undone.  It may be explicitly set, for example when the data being
@@ -54,11 +44,6 @@ The following are the concepts supported by the framework.
 
   Canned PyFace actions are provided as wrappers around command stack methods
   to implement common menu items.
-
-- Scriptable Objects
-
-  A scriptable object is a sub-class of ``HasTraits`` whose trait changes and
-  method invocations can be recorded in a script.
 
 - Undo Manager
 
@@ -76,10 +61,8 @@ The following are the concepts supported by the framework.
   indicator to tell the user that their data has been modified since it was
   last saved.
 
-  An undo manager is responsible for the recording of scripts.
-
 Typically an application will have one undo manager and one undo stack for
-each data type that can be edited.  However this is not a requirement, how the
+each data type that can be edited.  However this is not a requirement: how the
 command stack's in particular are organised and linked (with the user
 manager's sequence number) can need careful thought so as not to confuse the
 user - particularly in a plugin based application that may have many editors.
@@ -138,18 +121,6 @@ interface.
     words, the sequence number allows otherwise independent command stacks to
     be synchronised.
 
-``recording``
-    This boolean trait is set if recording to a script is in progress.  It is
-    maintained by the undo manager.
-
-``script``
-    This Unicode trait is the text of the script currently being recorded, or
-    the last recorded script if none is currently being recorded.
-
-``script_updated``
-    This event is fired when the recorded script changes.  A reference to the
-    undo manager is passed as an argument to the event.
-
 ``undo()``
     This method calls the ``undo()`` method of the last command on the active
     command stack.
@@ -157,16 +128,6 @@ interface.
 ``redo()``
     This method calls the ``redo()`` method of the last undone command on the
     active command stack.
-
-``begin_recording()``
-    This method clears any existing recorded script and begins recording the
-    new one.
-
-``end_recording()``
-    This method ends the current recording.
-
-``clear_recording()``
-    This method clears the current recorded script.
 
 
 CommandStack
@@ -243,9 +204,6 @@ any undoable/redoable command.
     ``&`` to indicate a keyboard shortcut which will be automatically removed
     whenever it is inappropriate.
 
-``undoable``
-    This boolean trait is set if the command is undoable.
-
 ``__init__(*args)``
     If the command takes arguments then the command must ensure that deep
     copies should be made if appropriate.
@@ -261,10 +219,8 @@ any undoable/redoable command.
     This method is called by a command stack to undo the command.
 
 ``redo()``
-    This method is called by a command stack to redo the command.  Any
-    returned value will replace the value that the command stack references
-    from the original call to ``do()`` or previous call to ``redo()``.
-    **FIXME:** Check this - why save any result if commands aren't scripted?
+    This method is called by a command stack to redo the command and to return
+    any result.
 
 ``merge(other)``
     This method is called by the command stack to try and merge the ``other``
@@ -278,41 +234,14 @@ AbstractCommand
 ...............
 
 ``AbstractCommand`` is an abstract base class that implements the ``ICommand``
-interface.  It provides a default value for the ``undoable`` trait and a
-default implementation of the ``merge()`` method.
-
-
-ScriptableObject
-................
-
-The ``ScriptableObject`` class is a ``HasTraits`` sub-class for any class that
-has scriptable traits or methods.
-
-
-Scriptable
-..........
-
-The ``Scriptable`` factory function creates a wrapper for a trait so that
-changes to the value of the trait can be recorded.
-
-Simple reads of the trait will not be recorded unless unless the value read is
-bound to another scriptable trait or passed as an argument to a scriptable
-method.  Passing ``has_side_effects=True`` ensures that a read will always be
-recorded.
-
-
-scriptable
-..........
-
-The ``scriptable`` decorator is applied to methods of objects that sub-class
-``ScriptableObject`` so that calls to the method can be recorded.
+interface.  It provides a default implementation of the ``merge()`` method.
 
 
 CommandAction
 .............
 
 The ``CommandAction`` class is a sub-class of the PyFace ``Action`` class that
-is used to wrap undo/redo commands.
+is used to wrap commands.
 
 ``command``
     This callable trait must be set to a factory that will return an object
@@ -340,27 +269,6 @@ RedoAction
 
 The ``RedoAction`` class is a canned PyFace action that redoes the last
 command undone of the active command stack.
-
-
-BeginRecordingAction
-....................
-
-The ``BeginRecordingAction`` class is a canned PyFace action that starts the
-recording of changes to scriptable objects to a script.
-
-
-EndRecordingAction
-..................
-
-The ``EndRecordingAction`` class is a canned PyFace action that ends the
-recording of changes to scriptable objects to a script.
-
-
-ClearRecordingAction
-....................
-
-The ``ClearRecordingAction`` class is a canned PyFace action that clears the
-current recorded script.
 
 
 .. _API: api/index.html

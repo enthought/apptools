@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -34,23 +34,10 @@ class IUndoManager(Interface):
     # maintained by the undo manager.
     active_stack_clean = Bool
 
-    # This is set if commands are being recorded as a script.  It is maintained
-    # by the undo manager.
-    recording = Bool
-
     # This is the name of the command that can be redone.  It will be empty if
     # there is no command that can be redone.  It is maintained by the undo
     # manager.
     redo_name = Unicode
-
-    # This is the text of the script currently being recorded (or the last
-    # recorded script if none is currently being recorded).  It is updated
-    # automatically as the user does, redos or undos commands.
-    script = Unicode
-
-    # This event is fired when the recorded script changes.  The value of the
-    # event will be the UndoManager instance.
-    script_updated = Event(Instance('enthought.undo.api.IUndoManager'))
 
     # This is the sequence number of the next command to be performed.  It is
     # incremented immediately before a command is invoked (by its 'do()'
@@ -69,29 +56,6 @@ class IUndoManager(Interface):
     ###########################################################################
     # 'IUndoManager' interface.
     ###########################################################################
-
-    def begin_recording(self):
-        """ Begin the recording of commands.  The 'script' trait is cleared and
-        all subsequent commands are added to 'script'.  The recorded script is
-        in a form that can be run immediately.  The 'recording' trait is
-        updated appropriately.
-        """
-
-    def clear_recording(self):
-        """ Clear any currently recorded script.  The 'recording' trait is
-        updated appropriately.
-        """
-
-    def end_recording(self):
-        """ End the recording of commands.  The 'recording' trait is updated
-        appropriately.
-        """
-
-    def record(self, func, args, kwargs):
-        """ Record the call of a method of a ScriptableObject instance and
-        return the result.  This is intended to be used only by the scriptable
-        decorator.
-        """
 
     def redo(self):
         """ Redo the last undone command of the active command stack. """

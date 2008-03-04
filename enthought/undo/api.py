@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -17,6 +17,4 @@ from command_stack import CommandStack
 from i_command import ICommand
 from i_command_stack import ICommandStack
 from i_undo_manager import IUndoManager
-from scriptable import scriptable, Scriptable
-from scriptable_object import ScriptableObject
 from undo_manager import UndoManager

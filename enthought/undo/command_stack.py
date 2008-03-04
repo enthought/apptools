@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -14,8 +14,8 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, Bool, HasTraits, implements, Instance
-from enthought.traits.api import Int, List, Property, Unicode
+from enthought.traits.api import Bool, HasTraits, implements, Instance, \
+        Int, List, Property, Unicode
 
 # Local imports.
 from abstract_command import AbstractCommand
@@ -34,9 +34,6 @@ class _StackEntry(HasTraits):
 
     # The command instance.
     command = Instance(ICommand)
-
-    # The command's result.
-    result = Any
 
     # The sequence number of the entry.
     sequence_nr = Int
@@ -148,12 +145,7 @@ class CommandStack(HasTraits):
         changes to the data have been abandoned.
         """
 
-        # Tell the undo manager that all commands have been undone (so it can
-        # make sure any current script is updated appropriately).
-        while self._index >= 0:
-            self.undo_manager.undone(self._stack[self._index].sequence_nr)
-            self._index -= 1
-
+        self._index = -1
         self._stack = []
         self._macro_stack = []
 
@@ -172,9 +164,7 @@ class CommandStack(HasTraits):
         it can be subsequently undone and redone.  'command' is an instance
         that implements the ICommand interface.  Its 'do()' method is called
         to execute the command.  If any value is returned by 'do()' then it is
-        returned by 'push()'.  The command stack will keep a reference to the
-        result so that it can recognise it as an argument to a subsequent
-        command (which allows a script to properly save a result needed later).
+        returned by 'push()'.
         """
 
         # See if the command can be merged with the previous one.
@@ -195,7 +185,7 @@ class CommandStack(HasTraits):
 
         # Do nothing more if the command was merged.
         if merged:
-            return
+            return result
 
         # Only update the command stack if there is no current macro.
         if len(self._macro_stack) == 0:
@@ -205,14 +195,16 @@ class CommandStack(HasTraits):
             del self._stack[self._index:]
 
             # Create a new stack entry and add it to the stack.
-            entry = _StackEntry(command=command, result=result,
-                                sequence_nr=self.undo_manager.sequence_nr)
+            entry = _StackEntry(command=command,
+                    sequence_nr=self.undo_manager.sequence_nr)
 
             self._stack.append(entry)
             self.undo_manager.stack_updated = self
         else:
             # Add the command to the parent macro command.
             self._macro_stack[-1].macro_commands.append(command)
+
+        return result
 
     def redo(self, sequence_nr=0):
         """ If 'sequence_nr' is 0 then the last command that was undone is
@@ -223,7 +215,7 @@ class CommandStack(HasTraits):
 
         # Make sure a redo is valid in the current context.
         if self.redo_name == "":
-            return
+            return None
 
         if sequence_nr == 0:
             result = self._redo_one()
@@ -270,9 +262,7 @@ class CommandStack(HasTraits):
         self._index += 1
         entry = self._stack[self._index]
 
-        entry.result = entry.command.redo()
-
-        return entry.result
+        return entry.command.redo()
 
     def _undo_one(self):
         """ Undo the command at the current index. """
@@ -281,9 +271,6 @@ class CommandStack(HasTraits):
         self._index -= 1
 
         entry.command.undo()
-
-        # Tell the undo manager.
-        self.undo_manager.undone(entry.sequence_nr)
 
     def _get_clean(self):
         """ Get the clean state of the stack. """
@@ -318,8 +305,6 @@ class CommandStack(HasTraits):
 
         if len(self._macro_stack) == 0 and self._index >= 0:
             command = self._stack[self._index].command
-
-            if command.undoable:
-                undo_name = command.name.replace('&', '')
+            undo_name = command.name.replace('&', '')
 
         return undo_name

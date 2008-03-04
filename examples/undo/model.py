@@ -14,12 +14,11 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Enum, Int, Unicode
-from enthought.undo.api import scriptable, Scriptable, ScriptableObject
+from enthought.traits.api import Enum, HasTraits, Int, Unicode
 
 
-class Label(ScriptableObject):
-    """ The Label class implements the data model for a label. """
+class Label(HasTraits):
+    """The Label class implements the data model for a label."""
 
     #### 'Label' interface ####################################################
 
@@ -30,24 +29,18 @@ class Label(ScriptableObject):
     size = Int(18)
     
     # The style.
-    style = Scriptable(Enum('normal', 'bold', 'italic'))
+    style = Enum('normal', 'bold', 'italic')
 
     ###########################################################################
     # 'Label' interface.
     ###########################################################################
 
-    @scriptable
     def increment_size(self, by):
-        """ Increment the current font size.  This demonstrates a scriptable
-        method.
-        """
+        """Increment the current font size."""
 
         self.size += by
 
-    @scriptable
     def decrement_size(self, by):
-        """ decrement the current font size.  This demonstrates a scriptable
-        method.
-        """
+        """Decrement the current font size."""
 
         self.size -= by

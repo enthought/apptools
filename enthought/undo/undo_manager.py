@@ -1,5 +1,5 @@
 #------------------------------------------------------------------------------
-# Copyright (c) 2007, Riverbank Computing Limited
+# Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -14,12 +14,11 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Bool, Event, HasTraits, implements, Instance
-from enthought.traits.api import Int, Property, Unicode
+from enthought.traits.api import Bool, Event, HasTraits, implements, \
+        Instance, Int, Property, Unicode
 
 # Local imports.
 from i_undo_manager import IUndoManager
-from script_manager import ScriptManager
 
 
 class UndoManager(HasTraits):
@@ -40,23 +39,10 @@ class UndoManager(HasTraits):
     # maintained by the undo manager.
     active_stack_clean = Property(Bool)
 
-    # This is set if commands are being recorded as a script.  It is maintained
-    # by the undo manager.
-    recording = Bool
-
     # This is the name of the command that can be redone.  It will be empty if
     # there is no command that can be redone.  It is maintained by the undo
     # manager.
     redo_name = Property(Unicode)
-
-    # This is the text of the script currently being recorded (or the last
-    # recorded script if none is currently being recorded).  It is updated
-    # automatically as the user does, redos or undos commands.
-    script = Property(Unicode)
-
-    # This event is fired when the recorded script changes.  The value of the
-    # event will be the UndoManager instance.
-    script_updated = Event
 
     # This is the sequence number of the next command to be performed.  It is
     # incremented immediately before a command is invoked (by its 'do()'
@@ -73,85 +59,9 @@ class UndoManager(HasTraits):
     # manager.
     undo_name = Property(Unicode)
 
-    #### Private interface ####################################################
-
-    # The script manager.
-    _script_manager = Instance(ScriptManager)
-
-    # Set if recoring has been paused temporarily during an undo.
-    _was_recording = Bool
-
     ###########################################################################
     # 'IUndoManager' interface.
     ###########################################################################
-
-    def begin_recording(self):
-        """ Begin the recording of commands.  The 'script' trait is cleared and
-        all subsequent commands are added to 'script'.  The recorded script is
-        in a form that can be run immediately.  The 'recording' trait is
-        updated appropriately.
-        """
-
-        self.recording = True
-        self._script_manager.clear()
-        self.script_updated = self
-
-    def clear_recording(self):
-        """ Clear any currently recorded script.  The 'recording' trait is
-        updated appropriately.
-        """
-
-        self.recording = False
-        self._script_manager.clear()
-        self.script_updated = self
-
-    def end_recording(self):
-        """ End the recording of commands.  The 'recording' trait is updated
-        appropriately.
-        """
-
-        self.recording = False
-
-    def record_method(self, func, args, kwargs):
-        """ Record the call of a method of a ScriptableObject instance and
-        return the result.  This is intended to be used only by the scriptable
-        decorator.
-        """
-        if self.recording:
-            # Record the arguments before the function has a chance to modify
-            # them.
-            srec = self._script_manager.new_method(func, args, kwargs)
-            result = func(*args, **kwargs)
-            self._script_manager.add_method(srec, result, self.sequence_nr)
-
-            self.script_updated = self
-        else:
-            result = func(*args, **kwargs)
-
-        return result
-
-    def record_trait_get(self, so, name, result):
-        """ Record the get of a trait of a scriptable object.  This is intended
-        to be used only by the Scriptable trait getter.
-        """
-
-        if self.recording:
-            side_effects = self._script_manager.add_trait_get(so, name, result,
-                    self.sequence_nr)
-
-            # Don't needlessly fire the event if there are no side effects.
-            if side_effects:
-                self.script_updated = self
-
-    def record_trait_set(self, so, name, value):
-        """ Record the set of a trait of a scriptable object.  This is intended
-        to be used only by the Scriptable trait getter.
-        """
-
-        if self.recording:
-            self._script_manager.add_trait_set(so, name, value, self.sequence_nr)
-
-            self.script_updated = self
 
     def redo(self):
         """ Redo the last undone command of the active command stack. """
@@ -163,27 +73,7 @@ class UndoManager(HasTraits):
         """ Undo the last command of the active command stack. """
 
         if self.active_stack is not None:
-            # Temporarily pause any recording so that the undos don't get
-            # recorded.
-            self._was_recording = self.recording
-            self.recording = False
-
             self.active_stack.undo()
-
-            if self._was_recording:
-                # Resume recording.
-                self._was_recording = False
-                self.recording = True
-
-                self.script_updated = self
-
-    def undone(self, sequence_nr):
-        """ Called when the command with the given sequence number has been
-        undone.
-        """
-
-        if self._was_recording:
-            self._script_manager.remove_call(sequence_nr)
 
     ###########################################################################
     # Private interface.
@@ -215,11 +105,6 @@ class UndoManager(HasTraits):
 
         return redo_name
 
-    def _get_script(self):
-        """ Get the current script. """
-
-        return self._script_manager.script
-
     def _get_undo_name(self):
         """ Get the current undo name. """
 
@@ -229,8 +114,3 @@ class UndoManager(HasTraits):
             undo_name = self.active_stack.undo_name
 
         return undo_name
-
-    def __script_manager_default(self):
-        """ Create the initial script manager. """
-
-        return ScriptManager()
