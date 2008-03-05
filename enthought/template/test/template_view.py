@@ -34,9 +34,6 @@ from enthought.traits.ui.api \
 from enthought.traits.ui.wx.themed_text_editor \
     import ThemedTextEditor
     
-from enthought.traits.ui.dock_window_theme \
-    import white_dock_window_theme
-    
 from enthought.pyface.dock.features.api \
     import DropFile
     
@@ -189,7 +186,6 @@ class TemplateView ( HasPrivateTraits ):
                 ),
                 id          = 'tabbed',
                 dock        = 'horizontal',
-                dock_theme  = white_dock_window_theme,
                 show_labels = False
             ),
         ),
