@@ -18,8 +18,11 @@ import datetime
 import weakref
 
 # Enthought library imports.
-from enthought.traits.api import Any, Bool, Dict, HasTraits, Instance, Int
-from enthought.traits.api import List, Property, Str, Unicode
+from enthought.traits.api import Any, Bool, Dict, Event, HasTraits, \
+        implements, Instance, Int, List, Property, Str, Unicode
+
+# Local imports.
+from i_script_manager import IScriptManager
 
 
 class _ScriptInit(HasTraits):
@@ -47,9 +50,6 @@ class _ScriptCall(HasTraits):
     """ The _ScriptCall class is the base class for all script calls. """
 
     #### '_ScriptCall' interface ##############################################
-
-    # The optional ID of the call.
-    id = Int(-1)
 
     # The name of the call.
     name = Str
@@ -207,6 +207,8 @@ class ScriptManager(HasTraits):
     IScriptManager.
     """
 
+    implements(IScriptManager)
+
     #### 'IScriptManager' interface ###########################################
 
     # This is set if user actions are being recorded as a script.  It is
@@ -220,7 +222,7 @@ class ScriptManager(HasTraits):
 
     # This event is fired when the recorded script changes.  The value of the
     # event will be the ScriptManager instance.
-    script_updated = Event(Instance('enthought.appscripting.api.IScriptManager'))
+    script_updated = Event(IScriptManager)
 
     #### Private interface ####################################################
 
@@ -286,9 +288,9 @@ class ScriptManager(HasTraits):
         if self.recording:
             # Record the arguments before the function has a chance to modify
             # them.
-            srec = self.new_method(func, args, kwargs)
+            srec = self._new_method(func, args, kwargs)
             result = func(*args, **kwargs)
-            self.add_method(srec, result, self.sequence_nr)
+            self._add_method(srec, result)
 
             self.script_updated = self
         else:
@@ -302,8 +304,7 @@ class ScriptManager(HasTraits):
         """
 
         if self.recording:
-            side_effects = self.add_trait_get(so, name, result,
-                    self.sequence_nr)
+            side_effects = self._add_trait_get(so, name, result)
 
             # Don't needlessly fire the event if there are no side effects.
             if side_effects:
@@ -315,7 +316,7 @@ class ScriptManager(HasTraits):
         """
 
         if self.recording:
-            self.add_trait_set(so, name, value, self.sequence_nr)
+            self._add_trait_set(so, name, value)
 
             self.script_updated = self
 
@@ -338,91 +339,14 @@ class ScriptManager(HasTraits):
 
             nkwargs = {}
             for name, value in kwargs.iteritems():
-                # We don't save the undo manager because we don't want it
+                # We don't save the script manager because we don't want it
                 # appearing in the script.
-                if name != 'undo_manager':
+                if name != 'script_manager':
                     nkwargs[name] = ScriptManager._scriptable_object_as_string(value)
 
             obj_ref = weakref.ref(obj, ScriptManager._gc_script_init)
             init = _ScriptInit(args=nargs, kwargs=nkwargs, obj=obj_ref)
             ScriptManager._scriptable_objects[obj_id] = init
-
-    def new_method(self, func, args, kwargs):
-        """ Return an object that encapsulates a call to a scriptable method.
-        add_method() must be called to add it to the current script.
-        """
-
-        # Convert each argument to its string representation if possible.
-        # Doing this now avoids problems with mutable arguments.
-        nargs = [self._object_as_string(arg) for arg in args]
-
-        nkwargs = {}
-        for name, value in kwargs.iteritems():
-            nkwargs[name] = self._object_as_string(value)
-
-        return _ScriptMethod(name=func.func_name, args=nargs, kwargs=nkwargs)
-
-    def add_method(self, entry, result, id):
-        """ Add a method call (returned by new_method()), with it's associated
-        result and ID, to the current script.
-        """
-
-        self._start_script()
-
-        if result is not None:
-            # Assume that a tuple represents multiple returned values - not
-            # necessarily a valid assumption unless we make it a rule for
-            # scriptable functions.
-            if type(result) is type(()):
-                for r in result:
-                    self._save_result(r)
-            else:
-                self._save_result(result)
-
-            entry.result = result
-
-        entry.id = id
-
-        self._calls.append(entry)
-
-    def add_trait_get(self, so, name, result, id):
-        """ Add a call to a trait getter, with it's associated result and ID,
-        to the current script.  Return True if the get had side effects.
-        """
-
-        self._start_script()
-
-        side_effects = so.trait(name).has_side_effects
-
-        if side_effects is None:
-            side_effects = False
-
-        so = self._object_as_string(so)
-
-        if result is not None:
-            self._save_result(result)
-
-        self._calls.append(_ScriptTraitGet(so=so, name=name, result=result,
-                id=id, has_side_effects=side_effects))
-
-        return side_effects
-
-    def add_trait_set(self, so, name, value, id):
-        """ Add a call to a trait setter, with it's associated value and ID,
-        to the current script.
-        """
-
-        self._start_script()
-
-        so = self._object_as_string(so)
-        value = self._object_as_string(value)
-
-        self._calls.append(_ScriptTraitSet(so=so, name=name, value=value, id=id))
-
-    def remove_call(self, id):
-        """ Remove all calls with the given ID from the stack. """
-
-        self._calls = [e for e in self._calls if e.id != id]
 
     @staticmethod
     def args_as_string_list(args, kwargs, so_needed=None):
@@ -472,6 +396,76 @@ class ScriptManager(HasTraits):
     ###########################################################################
     # Private interface.
     ###########################################################################
+
+    def _new_method(self, func, args, kwargs):
+        """ Return an object that encapsulates a call to a scriptable method.
+        _add_method() must be called to add it to the current script.
+        """
+
+        # Convert each argument to its string representation if possible.
+        # Doing this now avoids problems with mutable arguments.
+        nargs = [self._object_as_string(arg) for arg in args]
+
+        nkwargs = {}
+        for name, value in kwargs.iteritems():
+            nkwargs[name] = self._object_as_string(value)
+
+        return _ScriptMethod(name=func.func_name, args=nargs, kwargs=nkwargs)
+
+    def _add_method(self, entry, result):
+        """ Add a method call (returned by _new_method()), with it's associated
+        result and ID, to the current script.
+        """
+
+        self._start_script()
+
+        if result is not None:
+            # Assume that a tuple represents multiple returned values - not
+            # necessarily a valid assumption unless we make it a rule for
+            # scriptable functions.
+            if type(result) is type(()):
+                for r in result:
+                    self._save_result(r)
+            else:
+                self._save_result(result)
+
+            entry.result = result
+
+        self._calls.append(entry)
+
+    def _add_trait_get(self, so, name, result):
+        """ Add a call to a trait getter, with it's associated result and ID,
+        to the current script.  Return True if the get had side effects.
+        """
+
+        self._start_script()
+
+        side_effects = so.trait(name).has_side_effects
+
+        if side_effects is None:
+            side_effects = False
+
+        so = self._object_as_string(so)
+
+        if result is not None:
+            self._save_result(result)
+
+        self._calls.append(_ScriptTraitGet(so=so, name=name, result=result,
+                has_side_effects=side_effects))
+
+        return side_effects
+
+    def _add_trait_set(self, so, name, value):
+        """ Add a call to a trait setter, with it's associated value and ID,
+        to the current script.
+        """
+
+        self._start_script()
+
+        so = self._object_as_string(so)
+        value = self._object_as_string(value)
+
+        self._calls.append(_ScriptTraitSet(so=so, name=name, value=value))
 
     def _clear(self):
         """ Clear the current recording. """

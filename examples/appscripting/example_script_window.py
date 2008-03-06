@@ -77,11 +77,11 @@ class ExampleScriptWindow(WorkbenchWindow):
     def __scripts_menu_default(self):
         """ Trait initialiser. """
 
-        # ZZZ: This is temporary until we put the script into a view.
-        self.workbench.script_manager.on_trait_change(self._on_script_updated,
-                'script_updated')
-
         script_manager = self.workbench.script_manager
+
+        # ZZZ: This is temporary until we put the script into a view.
+        script_manager.on_trait_event(self._on_script_updated,
+                'script_updated')
 
         return MenuManager(BeginRecordingAction(script_manager=script_manager),
                 EndRecordingAction(script_manager=script_manager),
@@ -111,9 +111,6 @@ class ExampleScriptWindow(WorkbenchWindow):
 
     # ZZZ: This is temporary until we put the script into a view.
     def _on_script_updated(self, script_manager):
-        if str(script_manager) == "<undefined>":
-            return
-
         script = script_manager.script
 
         if script:
