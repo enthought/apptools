@@ -102,6 +102,3 @@ class PermissionsManager(HasTraits):
         return (self.allow_bootstrap_permissions and
                 (self.policy_manager.bootstrapping() or
                         self.user_manager.bootstrapping()))
-
-
-PermissionsManager = PermissionsManager()

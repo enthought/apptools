@@ -8,7 +8,7 @@ from enthought.pyface.workbench.api import Perspective, PerspectiveItem
 from enthought.pyface.workbench.action.api import MenuBarManager
 from enthought.pyface.workbench.action.api import ToolBarManager
 from enthought.pyface.workbench.action.api import ViewMenuManager
-from enthought.permissions.api import PermissionsManager, SecureProxy
+from enthought.permissions.api import SecureProxy
 from enthought.permissions.action.api import UserMenuManager
 from enthought.traits.api import Callable, HasTraits, List, Instance
 

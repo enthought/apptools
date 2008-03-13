@@ -12,11 +12,28 @@
 # Description: <Enthought permissions package component>
 #------------------------------------------------------------------------------
 
-from adapter_base import AdapterBase
-from i_policy_manager import IPolicyManager
-from i_user import IUser
-from i_user_manager import IUserManager
-from package_globals import get_permissions_manager, set_permissions_manager
-from permission import ManagePolicyPermission, ManageUsersPermission, Permission
-from permissions_manager import PermissionsManager
-from secure_proxy import SecureHandler, SecureProxy
+
+# The permissions manager.
+_permissions_manager = None
+
+
+def get_permissions_manager():
+    """Return the IPermissionsManager implementation, creating a
+    PermissionsManager instance if no other implementation has been set."""
+
+    global _permissions_manager
+
+    if _permissions_manager is None:
+        from permissions_manager import PermissionsManager
+
+        _permissions_manager = PermissionsManager()
+
+    return _permissions_manager
+
+
+def set_permissions_manager(permissions_manager):
+    """Set the IPermissionsManager implementation to use."""
+
+    global _permissions_manager
+
+    _permissions_manager = permissions_manager

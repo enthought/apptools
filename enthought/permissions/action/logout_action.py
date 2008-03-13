@@ -18,7 +18,7 @@ from enthought.pyface.action.api import Action
 from enthought.traits.api import Bool, Unicode
 
 # Local imports.
-from enthought.permissions.permissions_manager import PermissionsManager
+from enthought.permissions.package_globals import get_permissions_manager
 
 
 class LogoutAction(Action):
@@ -39,7 +39,7 @@ class LogoutAction(Action):
 
         super(LogoutAction, self).__init__(**traits)
 
-        PermissionsManager.user_manager.on_trait_event(self._refresh_enabled, 'user_authenticated')
+        get_permissions_manager().user_manager.on_trait_event(self._refresh_enabled, 'user_authenticated')
 
     ###########################################################################
     # 'Action' interface.
@@ -48,7 +48,7 @@ class LogoutAction(Action):
     def perform(self, event):
         """Perform the action."""
 
-        PermissionsManager.user_manager.unauthenticate_user()
+        get_permissions_manager().user_manager.unauthenticate_user()
 
     ###########################################################################
     # Private interface.

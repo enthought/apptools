@@ -18,7 +18,7 @@ from enthought.pyface.action.api import Group, MenuManager
 from enthought.traits.api import Unicode
 
 # Local imports.
-from enthought.permissions.permissions_manager import PermissionsManager
+from enthought.permissions.package_globals import get_permissions_manager
 from login_action import LoginAction
 from logout_action import LogoutAction
 
@@ -38,21 +38,23 @@ class UserMenuManager(MenuManager):
     def __init__(self, **traits):
         """Initialise the object."""
 
+        pm = get_permissions_manager()
+
         # Put them in a group so we can optionally append (because the PyFace
         # API doesn't do what you expect with append()).
         group = Group()
 
         group.append(LoginAction())
 
-        for act in PermissionsManager.user_manager.user_actions:
+        for act in pm.user_manager.user_actions:
             group.append(act)
 
         group.append(LogoutAction())
 
-        for act in PermissionsManager.user_manager.management_actions:
+        for act in pm.user_manager.management_actions:
             group.append(act)
 
-        for act in PermissionsManager.policy_manager.management_actions:
+        for act in pm.policy_manager.management_actions:
             group.append(act)
 
         super(UserMenuManager, self).__init__(group, **traits)

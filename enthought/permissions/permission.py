@@ -17,7 +17,7 @@
 from enthought.traits.api import Bool, HasTraits, Property, Str, Unicode
 
 # Locals imports.
-from permissions_manager import PermissionsManager
+from package_globals import get_permissions_manager
 
 
 class Permission(HasTraits):
@@ -60,7 +60,7 @@ class Permission(HasTraits):
         super(Permission, self).__init__(**traits)
 
         # Register the permission.
-        PermissionsManager.policy_manager.register_permission(self)
+        get_permissions_manager().policy_manager.register_permission(self)
 
     def __str__(self):
         """Return a user friendly representation."""
@@ -78,7 +78,7 @@ class Permission(HasTraits):
     def _get_granted(self):
         """Check the user has this permission."""
 
-        return PermissionsManager.check_permissions(self)
+        return get_permissions_manager().check_permissions(self)
 
 
 class ManagePolicyPermission(Permission):

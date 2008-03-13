@@ -45,6 +45,9 @@ class _ScriptInit(HasTraits):
     # A weak reference to the object.
     obj = Any
 
+    # The type of the scriptable object.
+    scripted_type = Any
+
 
 class _ScriptCall(HasTraits):
     """ The _ScriptCall class is the base class for all script calls. """
@@ -321,7 +324,7 @@ class ScriptManager(HasTraits):
             self.script_updated = self
 
     @staticmethod
-    def new_object(obj, args, kwargs):
+    def new_object(obj, scripted_type, args, kwargs):
         """ Register a scriptable object and the arguments used to create it.
         """
 
@@ -341,11 +344,12 @@ class ScriptManager(HasTraits):
             for name, value in kwargs.iteritems():
                 # We don't save the script manager because we don't want it
                 # appearing in the script.
-                if name != 'script_manager':
+                if name != '_script_manager':
                     nkwargs[name] = ScriptManager._scriptable_object_as_string(value)
 
             obj_ref = weakref.ref(obj, ScriptManager._gc_script_init)
-            init = _ScriptInit(args=nargs, kwargs=nkwargs, obj=obj_ref)
+            init = _ScriptInit(args=nargs, kwargs=nkwargs, obj=obj_ref,
+                    scripted_type=scripted_type)
             ScriptManager._scriptable_objects[obj_id] = init
 
     @staticmethod
@@ -578,10 +582,10 @@ class ScriptManager(HasTraits):
         ctors = []
 
         for i, so in enumerate(so_needed):
-            so_type = type(so.obj())
+            so_type = so.scripted_type
             args = ScriptManager.args_as_string_list(so.args, so.kwargs)
 
-            ctors.append("o%d = %s(%s)" % (i, so_type.__name__, ", ".join(args)))
+            ctors.append("    o%d = %s(%s)" % (i, so_type.__name__, ", ".join(args)))
 
             # See if a new import is needed.
             if so_type not in types_needed:
@@ -593,7 +597,10 @@ class ScriptManager(HasTraits):
         imports = []
 
         for so_type in types_needed:
-            imports.append("from %s import %s" % (so_type.__module__, so_type.__name__))
+            imports.append("    from %s import %s" % (so_type.__module__, so_type.__name__))
+
+        if imports:
+            imports.insert(0, "if __name__ == '__main__':")
 
         imports = "\n".join(imports)
 

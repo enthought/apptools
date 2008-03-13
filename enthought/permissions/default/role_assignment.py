@@ -20,7 +20,7 @@ from enthought.traits.ui.api import Group, Handler, Item, SetEditor, View
 from enthought.traits.ui.menu import Action, CancelButton
 
 # Local imports.
-from enthought.permissions.permissions_manager import PermissionsManager
+from enthought.permissions.package_globals import get_permissions_manager
 from i_policy_storage import PolicyStorageError
 from policy_data import Assignment, Role
 
@@ -69,14 +69,15 @@ class _AssignmentHandler(Handler):
     def _search_clicked(self, info):
         """Invoked by the "Search" button."""
 
+        pm = get_permissions_manager()
         assignment = self._assignment(info)
 
-        user = PermissionsManager.user_manager.matching_user(assignment.user_name)
+        user = pm.user_manager.matching_user(assignment.user_name)
         if user is None:
             return
 
         try:
-            user_name, role_names = PermissionsManager.policy_manager.policy_storage.get_assignment(user.name)
+            user_name, role_names = pm.policy_manager.policy_storage.get_assignment(user.name)
         except PolicyStorageError, e:
             self._ps_error(e)
             return
@@ -95,8 +96,8 @@ class _AssignmentHandler(Handler):
 
         # Update the data in the database.
         try:
-            PermissionsManager.policy_manager.policy_storage.set_assignment(
-                    assignment.user_name, [r.name for r in assignment.roles])
+            get_permissions_manager().policy_manager.policy_storage.set_assignment(assignment.user_name, [r.name for r in assignment.roles])
+
             info.ui.dispose()
         except PolicyStorageError, e:
             self._ps_error(e)
@@ -162,7 +163,7 @@ def role_assignment():
     all_roles = {}
 
     try:
-        roles = PermissionsManager.policy_manager.policy_storage.all_roles()
+        roles = get_permissions_manager().policy_manager.policy_storage.all_roles()
     except PolicyStorageError, e:
         error(None, str(e))
         return

@@ -17,8 +17,8 @@
 from enthought.traits.api import Any, Bool, HasTraits, Instance, List
 
 # Local imports.
+from package_globals import get_permissions_manager
 from permission import Permission
-from permissions_manager import PermissionsManager
 
 
 class AdapterBase(HasTraits):
@@ -70,7 +70,7 @@ class AdapterBase(HasTraits):
 
         # Refresh the state of the object when the authentication state of the
         # current user changes.
-        PermissionsManager.user_manager.on_trait_event(adapter._refresh,
+        get_permissions_manager().user_manager.on_trait_event(adapter._refresh,
                 'user_authenticated')
 
         return adapter
@@ -104,7 +104,7 @@ class AdapterBase(HasTraits):
         attribute.
         """
 
-        if PermissionsManager.check_permissions(*self.permissions):
+        if get_permissions_manager().check_permissions(*self.permissions):
             self.set_enabled(value)
             self.set_visible(self._desired_visible)
         else:
@@ -130,7 +130,7 @@ class AdapterBase(HasTraits):
         attribute.
         """
 
-        if PermissionsManager.check_permissions(*self.permissions):
+        if get_permissions_manager().check_permissions(*self.permissions):
             self.set_visible(value)
         else:
             self.set_visible(self.show and value)

@@ -21,14 +21,14 @@ from script_manager import ScriptManager
 
 
 class ScriptableObject(HasTraits):
-    """ The ScriptableObject class is the base class for any class that has
-    scriptable traits or methods.
+    """ The ScriptableObject class can be used as the base class for a data
+    model that has scriptable traits or methods.
     """
 
     #### 'ScriptableObject' interface ########################################
 
     # This is the script manager that manages this object.
-    script_manager = Instance(ScriptManager)
+    _script_manager = Instance(ScriptManager)
 
     ###########################################################################
     # 'object' interface.
@@ -40,4 +40,4 @@ class ScriptableObject(HasTraits):
         super(ScriptableObject, self).__init__(*args, **kwargs)
 
         # Register the object in case __init__ wasn't decorated.
-        self.script_manager.new_object(self, args, kwargs)
+        self._script_manager.new_object(self, type(self), args, kwargs)

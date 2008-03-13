@@ -20,8 +20,8 @@ from enthought.traits.ui.api import Group, Handler, Item, SetEditor, View
 from enthought.traits.ui.menu import Action, CancelButton
 
 # Local imports.
+from enthought.permissions.package_globals import get_permissions_manager
 from enthought.permissions.permission import Permission
-from enthought.permissions.permissions_manager import PermissionsManager
 from i_policy_storage import PolicyStorageError
 from policy_data import Role
 from select_role import select_role
@@ -46,7 +46,7 @@ class _RoleView(View):
         buttons = [Action(name="Search"), Action(name="Add"),
                 Action(name="Modify"), Action(name="Delete"), CancelButton]
 
-        all_perms = PermissionsManager.policy_manager.permissions.values()
+        all_perms = get_permissions_manager().policy_manager.permissions.values()
 
         perms_editor = SetEditor(values=all_perms,
                 left_column_title="Available Permissions",
@@ -74,7 +74,7 @@ class _RoleHandler(Handler):
 
         # Get all roles that satisfy the criteria.
         try:
-            roles = PermissionsManager.policy_manager.policy_storage.matching_roles(role.name)
+            roles = get_permissions_manager().policy_manager.policy_storage.matching_roles(role.name)
         except PolicyStorageError, e:
             self._ps_error(e)
             return
@@ -100,7 +100,7 @@ class _RoleHandler(Handler):
 
         # Add the data to the database.
         try:
-            PermissionsManager.policy_manager.policy_storage.add_role(
+            get_permissions_manager().policy_manager.policy_storage.add_role(
                     role.name, role.description,
                     [p.id for p in role.permissions])
             info.ui.dispose()
@@ -116,7 +116,7 @@ class _RoleHandler(Handler):
 
         # Update the data in the database.
         try:
-            PermissionsManager.policy_manager.policy_storage.modify_role(
+            get_permissions_manager().policy_manager.policy_storage.modify_role(
                     role.name, role.description,
                     [p.id for p in role.permissions])
             info.ui.dispose()
@@ -133,8 +133,8 @@ class _RoleHandler(Handler):
         if confirm(None, "Are you sure you want to delete the role \"%s\"?" % role.name) == YES:
             # Delete the data from the database.
             try:
-                PermissionsManager.policy_manager.policy_storage.delete_role(
-                        role.name)
+                get_permissions_manager().policy_manager.policy_storage.delete_role(role.name)
+
                 info.ui.dispose()
             except PolicyStorageError, e:
                 self._ps_error(e)
@@ -163,7 +163,7 @@ class _RoleHandler(Handler):
 
         for id in perm_ids:
             try:
-                p = PermissionsManager.policy_manager.permissions[id]
+                p = get_permissions_manager().policy_manager.permissions[id]
             except KeyError:
                 # FIXME: permissions should be populated from the policy
                 # database - or is it needed at all?  Should it just be read

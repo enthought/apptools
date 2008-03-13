@@ -12,8 +12,28 @@
 # Description: <Enthought application scripting package component>
 #------------------------------------------------------------------------------
 
-from i_script_manager import IScriptManager
-from package_globals import get_script_manager, set_script_manager
-from script_manager import ScriptManager
-from scriptable import scriptable, Scriptable
-from scriptable_object import ScriptableObject
+
+# The script manager.
+_script_manager = None
+
+
+def get_script_manager():
+    """Return the IScriptManager implementation, creating a ScriptManager
+    instance if no other implementation has been set."""
+
+    global _script_manager
+
+    if _script_manager is None:
+        from script_manager import ScriptManager
+
+        _script_manager = ScriptManager()
+
+    return _script_manager
+
+
+def set_script_manager(script_manager):
+    """Set the IScriptManager implementation to use."""
+
+    global _script_manager
+
+    _script_manager = script_manager

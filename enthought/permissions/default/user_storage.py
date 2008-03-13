@@ -53,7 +53,7 @@ class UserStorage(HasTraits):
             if users.has_key(name):
                 raise UserStorageError("The user \"%s\" already exists." % name)
 
-            users[name] = (description, '', password)
+            users[name] = (description, {}, password)
             self._db.write(users)
         finally:
             self._db.unlock()

@@ -163,9 +163,9 @@ required).
 
 The code fragment to authenticate the current user is::
 
-    from enthought.permissions.api import PermissionsManager
+    from enthought.permissions.api import get_permissions_manager
 
-    PermissionsManager.user_manager.authenticate_user()
+    get_permissions_Manager().user_manager.authenticate_user()
 
 Unauthorising the current user is done using the ``unauthenticate_user()``
 method.

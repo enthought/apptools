@@ -19,7 +19,6 @@ from enthought.traits.traits import trait_cast
 
 # Local imports.
 from script_manager import ScriptManager
-from scriptable_object import ScriptableObject
 
 
 # This is the guard that ensures that only outermost scriptable methods get
@@ -37,8 +36,8 @@ def scriptable(func):
         method.
         """
 
-        if len(args) == 0 or not isinstance(args[0], ScriptableObject):
-            raise TypeError, "the scriptable decorator can only be applied to methods of objects that sub-class ScriptableObject"
+        if len(args) == 0 or not hasattr(args[0], '_script_manager'):
+            raise TypeError, "the scriptable decorator can only be applied to methods of scriptable types"
 
         global _outermost_call
 
@@ -46,7 +45,7 @@ def scriptable(func):
             _outermost_call = False
 
             # See if there is an script manager set.
-            script_manager = args[0].script_manager
+            script_manager = args[0]._script_manager
 
             if script_manager is None:
                 # This could either be because __init__ has been decorated or
@@ -81,8 +80,8 @@ def scriptable(func):
 def _scriptable_get(obj, name):
     """ The getter for a scriptable trait. """
 
-    if not isinstance(obj, ScriptableObject):
-        raise TypeError, "a Scriptable trait can only be contained in objects that sub-class ScriptableObject"
+    if not hasattr(obj, '_script_manager'):
+        raise TypeError, "a Scriptable trait can only be contained in scriptable types"
 
     global _outermost_call
 
@@ -97,8 +96,8 @@ def _scriptable_get(obj, name):
     finally:
         _outermost_call = saved_outermost
 
-    if saved_outermost and obj.script_manager is not None:
-        obj.script_manager.record_trait_get(obj, name, result)
+    if saved_outermost and obj._script_manager is not None:
+        obj._script_manager.record_trait_get(obj, name, result)
 
     return result
 
@@ -106,11 +105,11 @@ def _scriptable_get(obj, name):
 def _scriptable_set(obj, name, value):
     """ The setter for a scriptable trait. """
 
-    if not isinstance(obj, ScriptableObject):
-        raise TypeError, "a Scriptable trait can only be contained in objects that sub-class ScriptableObject"
+    if not hasattr(obj, '_script_manager'):
+        raise TypeError, "a Scriptable trait can only be contained in scriptable types"
 
-    if _outermost_call and obj.script_manager is not None:
-        obj.script_manager.record_trait_set(obj, name, value)
+    if _outermost_call and obj._script_manager is not None:
+        obj._script_manager.record_trait_set(obj, name, value)
 
     _name = '_' + name
     old_value = getattr(obj, _name, Undefined)

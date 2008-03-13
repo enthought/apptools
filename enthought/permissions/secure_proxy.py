@@ -19,7 +19,7 @@ from enthought.traits.ui.api import Handler
 
 # Local imports.
 from adapter_base import AdapterBase
-from permissions_manager import PermissionsManager
+from package_globals import get_permissions_manager
 
 
 # Register the bundled adapters.
@@ -161,7 +161,7 @@ class SecureHandler(Handler):
 
         super(SecureHandler, self).__init__(**traits)
 
-        PermissionsManager.user_manager.on_trait_event(self._refresh,
+        get_permissions_manager().user_manager.on_trait_event(self._refresh,
                 'user_authenticated')
 
     def init_info(self, info):

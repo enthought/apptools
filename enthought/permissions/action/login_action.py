@@ -18,7 +18,7 @@ from enthought.pyface.action.api import Action
 from enthought.traits.api import Unicode
 
 # Local imports.
-from enthought.permissions.permissions_manager import PermissionsManager
+from enthought.permissions.package_globals import get_permissions_manager
 
 
 class LoginAction(Action):
@@ -35,4 +35,4 @@ class LoginAction(Action):
     def perform(self, event):
         """Perform the action."""
 
-        PermissionsManager.user_manager.authenticate_user()
+        get_permissions_manager().user_manager.authenticate_user()

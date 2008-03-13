@@ -21,8 +21,8 @@ from enthought.traits.api import Bool, Event, HasTraits, implements, \
 # Local imports.
 from enthought.permissions.i_user import IUser
 from enthought.permissions.i_user_manager import IUserManager
+from enthought.permissions.package_globals import get_permissions_manager
 from enthought.permissions.permission import ManageUsersPermission
-from enthought.permissions.permissions_manager import PermissionsManager
 from enthought.permissions.secure_proxy import SecureProxy
 from i_user_database import IUserDatabase
 
@@ -64,7 +64,7 @@ class UserManager(HasTraits):
             self.user.authenticated = True
 
             # Tell the policy manager before everybody else.
-            PermissionsManager.policy_manager.load_policy(self.user)
+            get_permissions_manager().policy_manager.load_policy(self.user)
 
             self.user_authenticated = self.user
 
@@ -75,7 +75,7 @@ class UserManager(HasTraits):
             self.user.authenticated = False
 
             # Tell the policy manager before everybody else.
-            PermissionsManager.policy_manager.load_policy(None)
+            get_permissions_manager().policy_manager.load_policy(None)
 
             self.user_authenticated = None
 
@@ -158,7 +158,7 @@ class _ChangePasswordAction(Action):
 
         super(_ChangePasswordAction, self).__init__(**traits)
 
-        PermissionsManager.user_manager.on_trait_event(self._refresh_enabled, 'user_authenticated')
+        get_permissions_manager().user_manager.on_trait_event(self._refresh_enabled, 'user_authenticated')
 
     ###########################################################################
     # 'Action' interface.
@@ -167,7 +167,7 @@ class _ChangePasswordAction(Action):
     def perform(self, event):
         """Perform the action."""
 
-        um = PermissionsManager.user_manager
+        um = get_permissions_manager().user_manager
         um.user_db.change_password(um.user)
 
     ###########################################################################
