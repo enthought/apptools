@@ -12,6 +12,7 @@
 # Description: <Enthought application scripting package component>
 #------------------------------------------------------------------------------
 
+from create_scriptable_type import create_scriptable_type
 from i_script_manager import IScriptManager
 from package_globals import get_script_manager, set_script_manager
 from script_manager import ScriptManager
