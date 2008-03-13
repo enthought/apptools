@@ -71,10 +71,8 @@ def main(argv):
     # Create some objects to edit.
     # FIXME v3: The need to explicitly set the style to its default value is
     # due to a bug in the implementation of Scriptable.
-    label = Label(text="Label", script_manager=workbench.script_manager,
-            style='normal')
-    label2 = Label(text="Label2", script_manager=workbench.script_manager,
-            style='normal')
+    label = Label(text="Label", style='normal')
+    label2 = Label(text="Label2", style='normal')
 
     # Edit the objects.
     window.edit(label)

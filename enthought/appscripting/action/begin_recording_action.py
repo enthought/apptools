@@ -14,15 +14,16 @@
 
 
 # Enthought library imports.
+from enthought.pyface.action.api import Action
 from enthought.traits.api import Unicode
 
 # Local imports.
-from abstract_script_action import AbstractScriptAction
+from enthought.appscripting.package_globals import get_script_manager
 
 
-class BeginRecordingAction(AbstractScriptAction):
-    """ An action that starts the recording of changes to scriptable objects to
-    a script. """
+class BeginRecordingAction(Action):
+    """An action that starts the recording of changes to scriptable objects to
+    a script."""
 
     #### 'Action' interface ###################################################
 
@@ -35,4 +36,4 @@ class BeginRecordingAction(AbstractScriptAction):
     def perform(self, event):
         """ Perform the action. """
 
-        self.script_manager.begin_recording()
+        get_script_manager().begin_recording()

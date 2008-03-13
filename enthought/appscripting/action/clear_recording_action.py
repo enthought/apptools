@@ -14,14 +14,15 @@
 
 
 # Enthought library imports.
+from enthought.pyface.action.api import Action
 from enthought.traits.api import Unicode
 
 # Local imports.
-from abstract_script_action import AbstractScriptAction
+from enthought.appscripting.package_globals import get_script_manager
 
 
-class ClearRecordingAction(AbstractScriptAction):
-    """ An action that clears the current recorded script. """
+class ClearRecordingAction(Action):
+    """An action that clears the current recorded script."""
 
     #### 'Action' interface ###################################################
 
@@ -34,4 +35,4 @@ class ClearRecordingAction(AbstractScriptAction):
     def perform(self, event):
         """ Perform the action. """
 
-        self.script_manager.clear_recording()
+        get_script_manager().clear_recording()

@@ -14,15 +14,16 @@
 
 
 # Enthought library imports.
+from enthought.pyface.action.api import Action
 from enthought.traits.api import Bool, Unicode
 
 # Local imports.
-from abstract_script_action import AbstractScriptAction
+from enthought.appscripting.package_globals import get_script_manager
 
 
-class EndRecordingAction(AbstractScriptAction):
-    """ An action that ends the recording of changes to scriptable objects to a
-    script. """
+class EndRecordingAction(Action):
+    """An action that ends the recording of changes to scriptable objects to a
+    script."""
 
     #### 'Action' interface ###################################################
 
@@ -39,7 +40,7 @@ class EndRecordingAction(AbstractScriptAction):
 
         super(EndRecordingAction, self).__init__(**traits)
 
-        self.script_manager.on_trait_change(self._on_recording, 'recording')
+        get_script_manager().on_trait_change(self._on_recording, 'recording')
 
     ###########################################################################
     # 'Action' interface.
@@ -48,7 +49,7 @@ class EndRecordingAction(AbstractScriptAction):
     def perform(self, event):
         """ Perform the action. """
 
-        self.script_manager.end_recording()
+        get_script_manager().end_recording()
 
     ###########################################################################
     # Private interface.

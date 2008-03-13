@@ -16,4 +16,3 @@ from i_script_manager import IScriptManager
 from package_globals import get_script_manager, set_script_manager
 from script_manager import ScriptManager
 from scriptable import scriptable, Scriptable
-from scriptable_object import ScriptableObject

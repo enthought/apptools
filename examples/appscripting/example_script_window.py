@@ -19,6 +19,7 @@ from enthought.pyface.workbench.api import WorkbenchWindow
 from enthought.pyface.workbench.action.api import MenuBarManager, \
         ToolBarManager
 from enthought.traits.api import Instance, on_trait_change
+from enthought.appscripting.api import get_script_manager
 from enthought.appscripting.action.api import BeginRecordingAction, \
         ClearRecordingAction, EndRecordingAction
 
@@ -77,16 +78,12 @@ class ExampleScriptWindow(WorkbenchWindow):
     def __scripts_menu_default(self):
         """ Trait initialiser. """
 
-        script_manager = self.workbench.script_manager
-
         # ZZZ: This is temporary until we put the script into a view.
-        script_manager.on_trait_event(self._on_script_updated,
+        get_script_manager().on_trait_event(self._on_script_updated,
                 'script_updated')
 
-        return MenuManager(BeginRecordingAction(script_manager=script_manager),
-                EndRecordingAction(script_manager=script_manager),
-                ClearRecordingAction(script_manager=script_manager),
-                name="&Scripts")
+        return MenuManager(BeginRecordingAction(), EndRecordingAction(),
+                ClearRecordingAction(), name="&Scripts")
 
     def __exit_action_default(self):
         """ Trait initialiser. """

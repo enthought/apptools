@@ -14,11 +14,11 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Enum, Int, Unicode
-from enthought.appscripting.api import scriptable, Scriptable, ScriptableObject
+from enthought.traits.api import Enum, HasTraits, Int, Unicode
+from enthought.appscripting.api import scriptable, Scriptable
 
 
-class Label(ScriptableObject):
+class Label(HasTraits):
     """ The Label class implements the data model for a label. """
 
     #### 'Label' interface ####################################################
@@ -35,6 +35,13 @@ class Label(ScriptableObject):
     ###########################################################################
     # 'Label' interface.
     ###########################################################################
+
+    @scriptable
+    def __init__(self, **traits):
+        """ Initialise the object.  We only implement this so that it can be
+        decorated and so the script manager knows how to recreate it. """
+
+        super(Label, self).__init__(**traits)
 
     @scriptable
     def increment_size(self, by):
