@@ -42,11 +42,30 @@ class _ScriptInit(HasTraits):
     # converted.
     kwargs = Dict
 
+    # The name the object will be bound to.
+    name = Str
+
+    # The number that will make the name unique.
+    name_nr = Int(0)
+
     # A weak reference to the object.
     obj = Any
 
     # The type of the scriptable object.
     scripted_type = Any
+
+    ###########################################################################
+    # '_ScriptInit' interface.
+    ###########################################################################
+
+    def unique_name(self):
+        """ Return the unique name that the object is bound to. """
+
+        name = self.name
+        if self.name_nr > 0:
+            name += str(self.name_nr)
+
+        return name
 
 
 class _ScriptCall(HasTraits):
@@ -241,9 +260,8 @@ class ScriptManager(HasTraits):
     # object itself.
     _results = Dict
 
-    # The dictionary of _ScriptInit instances keyed by the object's id().  Note
-    # that this isn't a trait.
-    _scriptable_objects = {}
+    # The dictionary of _ScriptInit instances keyed by the object's id().
+    _scriptable_objects = Dict
 
     # The date and time when the script was recorded.
     _when_started = Any
@@ -323,8 +341,7 @@ class ScriptManager(HasTraits):
 
             self.script_updated = self
 
-    @staticmethod
-    def new_object(obj, scripted_type, args, kwargs):
+    def new_object(self, obj, scripted_type, args, kwargs, name=None):
         """ Register a scriptable object and the arguments used to create it.
         """
 
@@ -335,22 +352,24 @@ class ScriptManager(HasTraits):
         # the decorator and ScriptableObject.__init__.  The former would happen
         # first and would have a complete set of arguments.  Therefore, if we
         # do already know about it we don't do anything more.
-        if not ScriptManager._scriptable_objects.has_key(obj_id):
+        if not self._scriptable_objects.has_key(obj_id):
             # Convert each argument to its string representation if possible.
             # Doing this now avoids problems with mutable arguments.
-            nargs = [ScriptManager._scriptable_object_as_string(a) for a in args]
+            nargs = [self._scriptable_object_as_string(a) for a in args]
 
             nkwargs = {}
-            for name, value in kwargs.iteritems():
-                # We don't save the script manager because we don't want it
-                # appearing in the script.
-                if name != '_script_manager':
-                    nkwargs[name] = ScriptManager._scriptable_object_as_string(value)
+            for n, value in kwargs.iteritems():
+                nkwargs[n] = self._scriptable_object_as_string(value)
 
-            obj_ref = weakref.ref(obj, ScriptManager._gc_script_init)
-            init = _ScriptInit(args=nargs, kwargs=nkwargs, obj=obj_ref,
-                    scripted_type=scripted_type)
-            ScriptManager._scriptable_objects[obj_id] = init
+            # The name defaults to the type name.
+            if not name:
+                name = scripted_type.__name__
+                name = name[0].lower() + name[1:]
+
+            obj_ref = weakref.ref(obj, self._gc_script_init)
+            init = _ScriptInit(args=nargs, kwargs=nkwargs, name=name,
+                    obj=obj_ref, scripted_type=scripted_type)
+            self._scriptable_objects[obj_id] = init
 
     @staticmethod
     def args_as_string_list(args, kwargs, so_needed=None):
@@ -386,14 +405,20 @@ class ScriptManager(HasTraits):
 
         if isinstance(arg, _ScriptInit):
             # Add it to the needed list if it isn't already there and generate
-            # a named based on the position in the list.
-            try:
-                id = so_needed.index(arg)
-            except ValueError:
-                id = len(so_needed)
-                so_needed.append(arg)
+            # a named based on the type and how many of the type already exist.
+            name_count = 0
 
-            arg = "o%d" % id
+            for so in so_needed:
+                if so is arg:
+                    break
+
+                if so.name == arg.name:
+                    name_count += 1
+            else:
+                so_needed.append(arg)
+                arg.name_nr = name_count
+
+            arg = arg.unique_name()
 
         return arg
 
@@ -483,10 +508,10 @@ class ScriptManager(HasTraits):
         """ The callback invoked when a scriptable object is garbage collected.
         """
 
-        # Check for None since this may be called at process exit time when
-        # objects start disappearing.
-        if ScriptManager is not None:
-            ScriptManager._scriptable_objects.pop(id(obj), None)
+        # Avoid recursive imports.
+        from package_globals import get_script_manager
+
+        get_script_manager()._scriptable_objects.pop(id(obj), None)
 
     def _start_script(self):
         """ Save when a script recording is started. """
@@ -516,10 +541,9 @@ class ScriptManager(HasTraits):
 
             return "r%d" % nr
 
-        return ScriptManager._scriptable_object_as_string(obj)
+        return self._scriptable_object_as_string(obj)
 
-    @staticmethod
-    def _scriptable_object_as_string(obj):
+    def _scriptable_object_as_string(self, obj):
         """ Convert an object to a string as it will appear in a script.  An
         exception may be returned (not raised) if there was an error in the
         conversion.
@@ -529,7 +553,7 @@ class ScriptManager(HasTraits):
 
         # If it is a scriptable object we return the object and convert it to a
         # string later when we know it is really needed.
-        so = ScriptManager._scriptable_objects.get(obj_id)
+        so = self._scriptable_objects.get(obj_id)
 
         if so is not None:
             return so
@@ -581,11 +605,11 @@ class ScriptManager(HasTraits):
         types_needed = []
         ctors = []
 
-        for i, so in enumerate(so_needed):
+        for so in so_needed:
             so_type = so.scripted_type
             args = ScriptManager.args_as_string_list(so.args, so.kwargs)
 
-            ctors.append("    o%d = %s(%s)" % (i, so_type.__name__, ", ".join(args)))
+            ctors.append("    %s = %s(%s)" % (so.unique_name(), so_type.__name__, ", ".join(args)))
 
             # See if a new import is needed.
             if so_type not in types_needed:

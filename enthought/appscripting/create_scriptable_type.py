@@ -25,7 +25,7 @@ from package_globals import get_script_manager
 from scriptable import scriptable, Scriptable
 
 
-def create_scriptable_type(scripted_type, api=None, includes=None, excludes=None):
+def create_scriptable_type(scripted_type, api=None, includes=None, excludes=None, name=None):
     """Create and return a new type based on the given scripted_type that will
     (by default) have its public methods and traits (ie. those not beginning
     with an underscore) made scriptable.  If api is given then it is a class,
@@ -33,12 +33,14 @@ def create_scriptable_type(scripted_type, api=None, includes=None, excludes=None
     scriptable.  Otherwise if includes is given it is a list of names of
     attributes that will be made scriptable.  Otherwise all the public
     attributes of scripted_type will be made scriptable except those in the
-    excludes list."""
+    excludes list.  name is the name that objects of this type will be bound
+    to.  It defaults to the name of scripted_type.  A numerical suffix will be
+    added to the name if necessary to make it unique."""
 
     def __init__(self, *args, **kwargs):
         """Initialise the dynamic sub-class instance."""
 
-        get_script_manager().new_object(self, scripted_type, args, kwargs)
+        get_script_manager().new_object(self, scripted_type, args, kwargs, name)
         scripted_type.__init__(self, *args, **kwargs)
 
     # See if we need to pull all attribute names from a type.
