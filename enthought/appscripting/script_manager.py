@@ -15,57 +15,51 @@
 
 # Standard library imports.
 import datetime
+import types
 import weakref
 
 # Enthought library imports.
-from enthought.traits.api import Any, Bool, Dict, Event, HasTraits, \
+from enthought.traits.api import Any, Bool, Dict, Enum, Event, HasTraits, \
         implements, Instance, Int, List, Property, Str, Unicode
 
 # Local imports.
+from bind_event import BindEvent
+from i_bind_event import IBindEvent
 from i_script_manager import IScriptManager
 
 
-class _ScriptInit(HasTraits):
-    """ The _ScriptInit class encapsulates a single call to a scriptable
-    object's __init__ method.
-    """
+class _ScriptObject(HasTraits):
+    """The _ScriptObject class encapsulates a scriptable object."""
 
-    #### '_ScriptInit' interface ##############################################
+    #### '_ScriptObject' interface ############################################
 
     # The positional arguments passed to __init__ after being converted to
     # strings.  A particular argument may be an exception if it couldn't be
     # converted.
     args = List
 
+    # The policy to follow when a bound name already exists.  'auto'
+    # automatically appends a numeric suffix to the name, if necessary, in
+    # order to ensure that it is unique.  'unique' causes an exception to be
+    # raised.  'rebind' discards the previous binding.
+    bind_policy = Enum('auto', 'unique', 'rebind')
+
     # The keyword arguments passed to __init__ after being converted to
     # strings.  A particular argument may be an exception if it couldn't be
     # converted.
     kwargs = Dict
 
-    # The name the object will be bound to.
+    # The name the object is bound to.
     name = Str
 
-    # The number that will make the name unique.
-    name_nr = Int(0)
+    # The id of the object.
+    obj_id = Int
 
     # A weak reference to the object.
-    obj = Any
+    obj_ref = Any
 
     # The type of the scriptable object.
     scripted_type = Any
-
-    ###########################################################################
-    # '_ScriptInit' interface.
-    ###########################################################################
-
-    def unique_name(self):
-        """ Return the unique name that the object is bound to. """
-
-        name = self.name
-        if self.name_nr > 0:
-            name += str(self.name_nr)
-
-        return name
 
 
 class _ScriptCall(HasTraits):
@@ -75,6 +69,9 @@ class _ScriptCall(HasTraits):
 
     # The name of the call.
     name = Str
+
+    # The scriptable object.
+    so = Any
 
     ###########################################################################
     # '_ScriptCall' interface.
@@ -102,9 +99,6 @@ class _ScriptTraitGet(_ScriptCall):
     # can't get reused.
     result = Any
 
-    # The scriptable object containing the trait.
-    so = Any
-
     ###########################################################################
     # '_ScriptCall' interface.
     ###########################################################################
@@ -113,6 +107,10 @@ class _ScriptTraitGet(_ScriptCall):
         """ Return the string equivalent of the call, updated the list of
         needed scriptable objects if required.
         """
+
+        # Ignore if it is no longer bound.
+        if not self.so.name:
+            return None
 
         if self.result is None:
             rstr = ""
@@ -129,7 +127,7 @@ class _ScriptTraitGet(_ScriptCall):
         if not self.has_side_effects and rstr == "":
             return None
 
-        so = ScriptManager.arg_as_string(self.so, so_needed)
+        so = sm.arg_as_string(self.so, so_needed)
 
         return "%s%s.%s" % (rstr, so, self.name)
 
@@ -144,9 +142,6 @@ class _ScriptTraitSet(_ScriptCall):
     # The value the trait is set to.
     value = Any
 
-    # The scriptable object containing the trait.
-    so = Any
-
     ###########################################################################
     # '_ScriptCall' interface.
     ###########################################################################
@@ -156,8 +151,12 @@ class _ScriptTraitSet(_ScriptCall):
         needed scriptable objects if required.
         """
 
-        so = ScriptManager.arg_as_string(self.so, so_needed)
-        value = ScriptManager.arg_as_string(self.value, so_needed)
+        # Ignore if it is no longer bound.
+        if not self.so.name:
+            return None
+
+        so = sm.arg_as_string(self.so, so_needed)
+        value = sm.arg_as_string(self.value, so_needed)
 
         return "%s.%s = %s" % (so, self.name, value)
 
@@ -192,6 +191,10 @@ class _ScriptMethod(_ScriptCall):
         needed scriptable objects if required.
         """
 
+        # Ignore if it is no longer bound.
+        if self.so and not self.so.name:
+            return None
+
         if self.result is None:
             rstr = ""
         elif type(self.result) is type(()):
@@ -219,9 +222,14 @@ class _ScriptMethod(_ScriptCall):
             else:
                 rstr = ""
 
-        args = ScriptManager.args_as_string_list(self.args, self.kwargs, so_needed)
+        if self.so:
+            so = sm.arg_as_string(self.so, so_needed) + '.'
+        else:
+            so = ''
 
-        return "%s%s.%s(%s)" % (rstr, args[0], self.name, ", ".join(args[1:]))
+        args = sm.args_as_string_list(self.args, self.kwargs, so_needed)
+
+        return "%s%s%s(%s)" % (rstr, so, self.name, ", ".join(args))
 
 
 class ScriptManager(HasTraits):
@@ -232,6 +240,11 @@ class ScriptManager(HasTraits):
     implements(IScriptManager)
 
     #### 'IScriptManager' interface ###########################################
+
+    # This event is fired whenever a scriptable object is bound or unbound.  It
+    # is intended to be used by an interactive Python shell to give the
+    # advanced user access to the scriptable objects.
+    bind_event = Event(IBindEvent)
 
     # This is set if user actions are being recorded as a script.  It is
     # maintained by the script manager.
@@ -251,6 +264,10 @@ class ScriptManager(HasTraits):
     # The list of calls to scriptable calls.
     _calls = List(Instance(_ScriptCall))
 
+    # The dictionary of bound names.  The value is the next numerical suffix
+    # to use when the binding policy is 'auto'.
+    _names = Dict
+
     # The next sequential result number.
     _next_result_nr = Int
 
@@ -260,8 +277,16 @@ class ScriptManager(HasTraits):
     # object itself.
     _results = Dict
 
-    # The dictionary of _ScriptInit instances keyed by the object's id().
-    _scriptable_objects = Dict
+    # The dictionary of _ScriptObject instances keyed by the object's id().
+    _so_by_id = Dict
+
+    # The dictionary of _ScriptObject instances keyed by the name the object is
+    # bound to.
+    _so_by_name = Dict
+
+    # The dictionary of _ScriptObject instances keyed by the a weak reference
+    # to the object.
+    _so_by_ref = Dict
 
     # The date and time when the script was recorded.
     _when_started = Any
@@ -312,57 +337,75 @@ class ScriptManager(HasTraits):
 
         return result
 
-    def record_trait_get(self, so, name, result):
+    def record_trait_get(self, obj, name, result):
         """ Record the get of a trait of a scriptable object.  This is intended
         to be used only by the Scriptable trait getter.
         """
 
         if self.recording:
-            side_effects = self._add_trait_get(so, name, result)
+            side_effects = self._add_trait_get(obj, name, result)
 
             # Don't needlessly fire the event if there are no side effects.
             if side_effects:
                 self.script_updated = self
 
-    def record_trait_set(self, so, name, value):
+    def record_trait_set(self, obj, name, value):
         """ Record the set of a trait of a scriptable object.  This is intended
         to be used only by the Scriptable trait getter.
         """
 
         if self.recording:
-            self._add_trait_set(so, name, value)
+            self._add_trait_set(obj, name, value)
 
             self.script_updated = self
 
-    def new_object(self, obj, scripted_type, args, kwargs, name=None):
+    def new_object(self, obj, scripted_type, args, kwargs, name=None,
+            bind_policy='auto'):
         """ Register a scriptable object and the arguments used to create it.
         """
 
+        # The name defaults to the type name.
+        if not name:
+            name = scripted_type.__name__
+            name = name[0].lower() + name[1:]
+
+        # See if the name is already is use.
+        so = self._so_by_name.get(name)
+
+        if so is None:
+            self._names[name] = 1
+        elif bind_policy == 'auto':
+            suff = self._names[name]
+            self._names[name] = suff + 1
+
+            name = '%s%d' % (name, suff)
+        elif bind_policy == 'rebind':
+            self._unbind(so)
+        else:
+            raise NameError("\"%s\" is already bound to a scriptable object" % name)
+
+        # Convert each argument to its string representation if possible.
+        # Doing this now avoids problems with mutable arguments.
+        nargs = [self._scriptable_object_as_string(a) for a in args]
+
+        nkwargs = {}
+        for n, value in kwargs.iteritems():
+            nkwargs[n] = self._scriptable_object_as_string(value)
+
         obj_id = id(obj)
+        obj_ref = weakref.ref(obj, self._gc_script_obj)
 
-        # See if we already know about the object.  This can happen if the
-        # object had a decorated __init__ method so it would get registered by
-        # the decorator and ScriptableObject.__init__.  The former would happen
-        # first and would have a complete set of arguments.  Therefore, if we
-        # do already know about it we don't do anything more.
-        if not self._scriptable_objects.has_key(obj_id):
-            # Convert each argument to its string representation if possible.
-            # Doing this now avoids problems with mutable arguments.
-            nargs = [self._scriptable_object_as_string(a) for a in args]
+        so = _ScriptObject(args=nargs, kwargs=nkwargs, bind_policy=bind_policy,
+                name=name, obj_id=obj_id, obj_ref=obj_ref,
+                scripted_type=scripted_type)
 
-            nkwargs = {}
-            for n, value in kwargs.iteritems():
-                nkwargs[n] = self._scriptable_object_as_string(value)
+        self._so_by_id[obj_id] = so
+        self._so_by_name[name] = so
+        self._so_by_ref[obj_ref] = so
 
-            # The name defaults to the type name.
-            if not name:
-                name = scripted_type.__name__
-                name = name[0].lower() + name[1:]
-
-            obj_ref = weakref.ref(obj, self._gc_script_init)
-            init = _ScriptInit(args=nargs, kwargs=nkwargs, name=name,
-                    obj=obj_ref, scripted_type=scripted_type)
-            self._scriptable_objects[obj_id] = init
+        # Note that if anything listening to this event doesn't use weak
+        # references then the object will be kept alive.
+        self.bind_event = BindEvent(name=name, obj=obj)
 
     @staticmethod
     def args_as_string_list(args, kwargs, so_needed=None):
@@ -396,22 +439,16 @@ class ScriptManager(HasTraits):
         if isinstance(arg, Exception):
             raise arg
 
-        if isinstance(arg, _ScriptInit):
-            # Add it to the needed list if it isn't already there and generate
-            # a named based on the type and how many of the type already exist.
-            name_count = 0
+        if isinstance(arg, _ScriptObject):
+            # Check it hasn't been unbound.
+            if not arg.name:
+                raise NameError("%s has been unbound but is needed by the script" % arg.obj_ref())
 
-            for so in so_needed:
-                if so is arg:
-                    break
-
-                if so.name == arg.name:
-                    name_count += 1
-            else:
+            # Add it to the needed list if it isn't already there.
+            if arg not in so_needed:
                 so_needed.append(arg)
-                arg.name_nr = name_count
 
-            arg = arg.unique_name()
+            arg = arg.name
 
         return arg
 
@@ -428,11 +465,18 @@ class ScriptManager(HasTraits):
         # Doing this now avoids problems with mutable arguments.
         nargs = [self._object_as_string(arg) for arg in args]
 
+        if type(func) is types.FunctionType:
+            so = None
+        else:
+            so = nargs[0]
+            nargs = nargs[1:]
+
         nkwargs = {}
         for name, value in kwargs.iteritems():
             nkwargs[name] = self._object_as_string(value)
 
-        return _ScriptMethod(name=func.func_name, args=nargs, kwargs=nkwargs)
+        return _ScriptMethod(name=func.func_name, so=so, args=nargs,
+                kwargs=nkwargs)
 
     def _add_method(self, entry, result):
         """ Add a method call (returned by _new_method()), with it's associated
@@ -455,19 +499,19 @@ class ScriptManager(HasTraits):
 
         self._calls.append(entry)
 
-    def _add_trait_get(self, so, name, result):
+    def _add_trait_get(self, obj, name, result):
         """ Add a call to a trait getter, with it's associated result and ID,
         to the current script.  Return True if the get had side effects.
         """
 
         self._start_script()
 
-        side_effects = so.trait(name).has_side_effects
+        side_effects = obj.trait(name).has_side_effects
 
         if side_effects is None:
             side_effects = False
 
-        so = self._object_as_string(so)
+        so = self._object_as_string(obj)
 
         if result is not None:
             self._save_result(result)
@@ -477,27 +521,44 @@ class ScriptManager(HasTraits):
 
         return side_effects
 
-    def _add_trait_set(self, so, name, value):
+    def _add_trait_set(self, obj, name, value):
         """ Add a call to a trait setter, with it's associated value and ID,
         to the current script.
         """
 
         self._start_script()
 
-        so = self._object_as_string(so)
+        so = self._object_as_string(obj)
         value = self._object_as_string(value)
 
         self._calls.append(_ScriptTraitSet(so=so, name=name, value=value))
 
+    def _unbind(self, so):
+        """Unbind the given scriptable object."""
+
+        # Tell everybody it is no longer bound.
+        self.bind_event = BindEvent(name=so.name, obj=None)
+
+        # Forget about it.
+        del self._so_by_name[so.name]
+        so.name = ''
+
     @staticmethod
-    def _gc_script_init(obj):
+    def _gc_script_obj(obj_ref):
         """ The callback invoked when a scriptable object is garbage collected.
         """
 
         # Avoid recursive imports.
         from package_globals import get_script_manager
 
-        get_script_manager()._scriptable_objects.pop(id(obj), None)
+        sm = get_script_manager()
+        so = sm._so_by_ref[obj_ref]
+
+        if so.name:
+            sm._unbind(so)
+
+        del sm._so_by_id[so.obj_id]
+        del sm._so_by_ref[so.obj_ref]
 
     def _start_script(self):
         """ Save when a script recording is started. """
@@ -539,7 +600,7 @@ class ScriptManager(HasTraits):
 
         # If it is a scriptable object we return the object and convert it to a
         # string later when we know it is really needed.
-        so = self._scriptable_objects.get(obj_id)
+        so = self._so_by_id.get(obj_id)
 
         if so is not None:
             return so
@@ -593,9 +654,9 @@ class ScriptManager(HasTraits):
 
         for so in so_needed:
             so_type = so.scripted_type
-            args = ScriptManager.args_as_string_list(so.args, so.kwargs)
+            args = self.args_as_string_list(so.args, so.kwargs)
 
-            ctors.append("    %s = %s(%s)" % (so.unique_name(), so_type.__name__, ", ".join(args)))
+            ctors.append("%s = %s(%s)" % (so.name, so_type.__name__, ", ".join(args)))
 
             # See if a new import is needed.
             if so_type not in types_needed:
@@ -607,10 +668,7 @@ class ScriptManager(HasTraits):
         imports = []
 
         for so_type in types_needed:
-            imports.append("    from %s import %s" % (so_type.__module__, so_type.__name__))
-
-        if imports:
-            imports.insert(0, "if __name__ == '__main__':")
+            imports.append("from %s import %s" % (so_type.__module__, so_type.__name__))
 
         imports = "\n".join(imports)
 

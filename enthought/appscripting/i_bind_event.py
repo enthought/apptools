@@ -12,9 +12,21 @@
 # Description: <Enthought application scripting package component>
 #------------------------------------------------------------------------------
 
-from create_scriptable_type import create_scriptable_type
-from i_bind_event import IBindEvent
-from i_script_manager import IScriptManager
-from package_globals import get_script_manager, set_script_manager
-from script_manager import ScriptManager
-from scriptable import scriptable, Scriptable
+
+# Enthought library imports.
+from enthought.traits.api import Any, Interface, Str
+
+
+class IBindEvent(Interface):
+    """The bind event interface.  A corresponding instance is the value of the
+    event fired when a scriptable object is bound or unbound to or from a name.
+    """
+
+    #### 'IBindEvent' interface ###############################################
+
+    # This is the name being bound or unbound.
+    name = Str
+
+    # This is the object being bound to the name.  It is None if the name is
+    # being unbound.
+    obj = Any

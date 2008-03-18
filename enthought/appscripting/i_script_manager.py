@@ -16,6 +16,9 @@
 # Enthought library imports.
 from enthought.traits.api import Bool, Event, Instance, Interface, Unicode
 
+# Local imports.
+from i_bind_event import IBindEvent
+
 
 class IScriptManager(Interface):
     """ The script manager interface.  A script manager is responsible for the
@@ -25,6 +28,11 @@ class IScriptManager(Interface):
     """
 
     #### 'IScriptManager' interface ###########################################
+
+    # This event is fired whenever a scriptable object is bound or unbound.  It
+    # is intended to be used by an interactive Python shell to give the
+    # advanced user access to the scriptable objects.
+    bind_event = Event(IBindEvent)
 
     # This is set if user actions are being recorded as a script.  It is
     # maintained by the script manager.
@@ -43,19 +51,13 @@ class IScriptManager(Interface):
     # 'IScriptManager' interface.
     ###########################################################################
 
-    def begin_recording(self):
-        """ Begin the recording of user actions.  The 'script' trait is cleared
-        and all subsequent actions are added to 'script'.  The recorded script
-        is in a form that can be run immediately.  The 'recording' trait is
-        updated appropriately.
+    def start_recording(self):
+        """ Start the recording of user actions.  The 'script' trait is cleared
+        and all subsequent actions are added to 'script'.  The 'recording'
+        trait is updated appropriately.
         """
 
-    def clear_recording(self):
-        """ Clear any currently recorded script.  The 'recording' trait is
-        updated appropriately.
-        """
-
-    def end_recording(self):
-        """ End the recording of user actions.  The 'recording' trait is
+    def stop_recording(self):
+        """ Stop the recording of user actions.  The 'recording' trait is
         updated appropriately.
         """

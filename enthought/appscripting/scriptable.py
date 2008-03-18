@@ -27,8 +27,8 @@ _outermost_call = True
 
 
 def scriptable(func):
-    """ This is the decorator applied to methods of objects that sub-class
-    ScriptableObject to mark them as being scriptable.
+    """ This is the decorator applied to functions and methods to mark them as
+    being scriptable.
     """
 
     def _scripter(*args, **kwargs):
