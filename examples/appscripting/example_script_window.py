@@ -20,8 +20,8 @@ from enthought.pyface.workbench.action.api import MenuBarManager, \
         ToolBarManager
 from enthought.traits.api import Instance, on_trait_change
 from enthought.appscripting.api import get_script_manager
-from enthought.appscripting.action.api import BeginRecordingAction, \
-        ClearRecordingAction, EndRecordingAction
+from enthought.appscripting.action.api import StartRecordingAction, \
+        StopRecordingAction
 
 # Local imports.
 from example_editor_manager import ExampleEditorManager
@@ -82,8 +82,8 @@ class ExampleScriptWindow(WorkbenchWindow):
         get_script_manager().on_trait_event(self._on_script_updated,
                 'script_updated')
 
-        return MenuManager(BeginRecordingAction(), EndRecordingAction(),
-                ClearRecordingAction(), name="&Scripts")
+        return MenuManager(StartRecordingAction(), StopRecordingAction(),
+                name="&Scripts")
 
     def __exit_action_default(self):
         """ Trait initialiser. """

@@ -21,12 +21,13 @@ from enthought.traits.api import Unicode
 from enthought.appscripting.package_globals import get_script_manager
 
 
-class ClearRecordingAction(Action):
-    """An action that clears the current recorded script."""
+class StartRecordingAction(Action):
+    """An action that starts the recording of changes to scriptable objects to
+    a script."""
 
     #### 'Action' interface ###################################################
 
-    name = Unicode("Clear recording")
+    name = Unicode("Start recording")
 
     ###########################################################################
     # 'Action' interface.
@@ -35,4 +36,4 @@ class ClearRecordingAction(Action):
     def perform(self, event):
         """ Perform the action. """
 
-        get_script_manager().clear_recording()
+        get_script_manager().start_recording()

@@ -270,28 +270,21 @@ class ScriptManager(HasTraits):
     # 'IScriptManager' interface.
     ###########################################################################
 
-    def begin_recording(self):
-        """ Begin the recording of user actions.  The 'script' trait is cleared
-        and all subsequent actions are added to 'script'.  The recorded script
-        is in a form that can be run immediately.  The 'recording' trait is
-        updated appropriately.
+    def start_recording(self):
+        """ Start the recording of user actions.  The 'script' trait is cleared
+        and all subsequent actions are added to 'script'.  The 'recording'
+        trait is updated appropriately.
         """
+
+        self._calls = []
+        self._next_result_nr = 0
+        self._results = {}
 
         self.recording = True
-        self._clear()
         self.script_updated = self
 
-    def clear_recording(self):
-        """ Clear any currently recorded script.  The 'recording' trait is
-        updated appropriately.
-        """
-
-        self.recording = False
-        self._clear()
-        self.script_updated = self
-
-    def end_recording(self):
-        """ End the recording of user actions.  The 'recording' trait is
+    def stop_recording(self):
+        """ Stop the recording of user actions.  The 'recording' trait is
         updated appropriately.
         """
 
@@ -495,13 +488,6 @@ class ScriptManager(HasTraits):
         value = self._object_as_string(value)
 
         self._calls.append(_ScriptTraitSet(so=so, name=name, value=value))
-
-    def _clear(self):
-        """ Clear the current recording. """
-
-        self._calls = []
-        self._next_result_nr = 0
-        self._results = {}
 
     @staticmethod
     def _gc_script_init(obj):

@@ -12,6 +12,5 @@
 # Description: <Enthought application scripting package component>
 #------------------------------------------------------------------------------
 
-from begin_recording_action import BeginRecordingAction
-from clear_recording_action import ClearRecordingAction
-from end_recording_action import EndRecordingAction
+from start_recording_action import StartRecordingAction
+from stop_recording_action import StopRecordingAction

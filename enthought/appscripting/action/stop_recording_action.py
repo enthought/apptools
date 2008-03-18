@@ -15,19 +15,32 @@
 
 # Enthought library imports.
 from enthought.pyface.action.api import Action
-from enthought.traits.api import Unicode
+from enthought.traits.api import Bool, Unicode
 
 # Local imports.
 from enthought.appscripting.package_globals import get_script_manager
 
 
-class BeginRecordingAction(Action):
-    """An action that starts the recording of changes to scriptable objects to
-    a script."""
+class StopRecordingAction(Action):
+    """An action that stops the recording of changes to scriptable objects to a
+    script."""
 
     #### 'Action' interface ###################################################
 
-    name = Unicode("Begin recording")
+    enabled = Bool(False)
+
+    name = Unicode("Stop recording")
+
+    ###########################################################################
+    # 'object' interface.
+    ###########################################################################
+
+    def __init__(self, **traits):
+        """ Initialise the instance. """
+
+        super(EndRecordingAction, self).__init__(**traits)
+
+        get_script_manager().on_trait_change(self._on_recording, 'recording')
 
     ###########################################################################
     # 'Action' interface.
@@ -36,4 +49,13 @@ class BeginRecordingAction(Action):
     def perform(self, event):
         """ Perform the action. """
 
-        get_script_manager().begin_recording()
+        get_script_manager().stop_recording()
+
+    ###########################################################################
+    # Private interface.
+    ###########################################################################
+
+    def _on_recording(self, new):
+        """ Handle a change to the script manager's recording trait. """
+
+        self.enabled = new
