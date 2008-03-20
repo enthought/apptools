@@ -67,11 +67,21 @@ class IScriptManager(Interface):
         Otherwise all the public attributes of scripted_type will be made
         scriptable except those in the excludes list.
 
-        bind_policy determines what happens if a name is already bound.  If the
-        policy is 'auto' then a numerical suffix will be added to the name, if
-        necessary, to make it unique.  If the policy is 'unique' then an
+        bind_policy determines what happens if the name is already bound.  If
+        the policy is 'auto' then a numerical suffix will be added to the name,
+        if necessary, to make it unique.  If the policy is 'unique' then an
         exception is raised.  If the policy is 'rebind' then the previous
         binding is discarded.  The default is 'unique'
+        """
+
+    def bind_factory(self, factory, name, bind_policy='unique'):
+        """ Bind factory to name.  The first time that the name is referenced
+        when a script is run will cause the factory to be invoked.  Subsequent
+        references to the name will reference the object returned by the
+        factory.
+
+        bind_policy determibes what happens if the name is already bound.  See
+        bind() for a full description.
         """
 
     def run(self, script):

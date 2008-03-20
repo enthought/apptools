@@ -19,7 +19,7 @@ import types
 import weakref
 
 # Enthought library imports.
-from enthought.traits.api import Any, Bool, Dict, Event, HasTraits, \
+from enthought.traits.api import Any, Bool, Callable, Dict, Event, HasTraits, \
         implements, Instance, Int, List, Property, Str, Unicode
 
 # Local imports.
@@ -29,8 +29,28 @@ from i_bind_event import IBindEvent
 from i_script_manager import IScriptManager
 
 
-class _ScriptObject(HasTraits):
+class _BoundObject(HasTraits):
+    """The base class for any object that can be bound to a name."""
+
+    #### '_BoundObject' interface ############################################
+
+    # Set if the object was explicitly bound.
+    explicitly_bound = Bool(True)
+
+    # The name the object is bound to.
+    name = Str
+
+    # The object being bound.
+    obj = Any
+
+
+class _ScriptObject(_BoundObject):
     """The _ScriptObject class encapsulates a scriptable object."""
+
+    #### '_BoundObject' interface ############################################
+
+    # The object being bound.
+    obj = Property
 
     #### '_ScriptObject' interface ############################################
 
@@ -39,16 +59,10 @@ class _ScriptObject(HasTraits):
     # converted.
     args = List
 
-    # Set if the object was explicitly bound.
-    explicitly_bound = Bool(True)
-
     # The keyword arguments passed to __init__ after being converted to
     # strings.  A particular argument may be an exception if it couldn't be
     # converted.
     kwargs = Dict
-
-    # The name the object is bound to.
-    name = Str
 
     # The id of the object.
     obj_id = Int
@@ -58,6 +72,15 @@ class _ScriptObject(HasTraits):
 
     # The type of the scriptable object.
     scripted_type = Any
+
+    ###########################################################################
+    # Private interface.
+    ###########################################################################
+
+    def _get_obj(self):
+        """The property getter."""
+
+        return self.obj_ref()
 
 
 class _ScriptCall(HasTraits):
@@ -230,6 +253,31 @@ class _ScriptMethod(_ScriptCall):
         return "%s%s%s(%s)" % (rstr, so, self.name, ", ".join(args))
 
 
+class _FactoryWrapper(_BoundObject):
+    """ The _FactoryWrapper class wraps a factory that lazily creates
+    scriptable objects.
+    """
+
+    #### '_BoundObject' interface ############################################
+
+    # The object being bound.
+    obj = Property
+
+    #### '_FactoryWrapper' interface ##########################################
+
+    # The wrapped factory.
+    factory = Callable
+
+    ###########################################################################
+    # Private interface.
+    ###########################################################################
+
+    def _get_obj(self):
+        """The property getter."""
+
+        return self.factory
+
+
 class ScriptManager(HasTraits):
     """ The ScriptManager class is the default implementation of
     IScriptManager.
@@ -266,6 +314,10 @@ class ScriptManager(HasTraits):
     # to use when the binding policy is 'auto'.
     _names = Dict
 
+    # The dictionary of _BoundObject instances keyed by the name the object is
+    # bound to.
+    _namespace = Dict
+
     # The next sequential result number.
     _next_result_nr = Int
 
@@ -277,10 +329,6 @@ class ScriptManager(HasTraits):
 
     # The dictionary of _ScriptObject instances keyed by the object's id().
     _so_by_id = Dict
-
-    # The dictionary of _ScriptObject instances keyed by the name the object is
-    # bound to.
-    _so_by_name = Dict
 
     # The dictionary of _ScriptObject instances keyed by the a weak reference
     # to the object.
@@ -309,12 +357,13 @@ class ScriptManager(HasTraits):
         Otherwise all the public attributes of scripted_type will be made
         scriptable except those in the excludes list.
 
-        bind_policy determines what happens if a name is already bound.  If the
-        policy is 'auto' then a numerical suffix will be added to the name, if
-        necessary, to make it unique.  If the policy is 'unique' then an
+        bind_policy determines what happens if the name is already bound.  If
+        the policy is 'auto' then a numerical suffix will be added to the name,
+        if necessary, to make it unique.  If the policy is 'unique' then an
         exception is raised.  If the policy is 'rebind' then the previous
         binding is discarded.  The default is 'unique'
         """
+
         scripted_type = type(obj)
 
         # Create the new scriptable type.
@@ -327,15 +376,28 @@ class ScriptManager(HasTraits):
         # Fix the object's type to make it scriptable.
         obj.__class__ = new_type
 
+    def bind_factory(self, factory, name, bind_policy='unique'):
+        """ Bind factory to name.  The first time that the name is referenced
+        when a script is run will cause the factory to be invoked.  Subsequent
+        references to the name will reference the object returned by the
+        factory.
+
+        bind_policy determibes what happens if the name is already bound.  See
+        bind() for a full description.
+        """
+
+        name = self._unique_name(name, bind_policy)
+        self._namespace[name] = _FactoryWrapper(name=name, factory=factory)
+
     def run(self, script):
         """ Run the given script, either a string or a file-like object.
         """
 
         # Initialise the namespace with all explicitly bound objects.
         nspace = {}
-        for name, so in self._so_by_name.iteritems():
-            if so.explicitly_bound:
-                nspace[name] = so.obj_ref()
+        for name, bo in self._namespace.iteritems():
+            if bo.explicitly_bound:
+                nspace[name] = bo.obj
 
         exec script in nspace
 
@@ -423,20 +485,7 @@ class ScriptManager(HasTraits):
             name = scripted_type.__name__
             name = name[0].lower() + name[1:]
 
-        # See if the name is already is use.
-        so = self._so_by_name.get(name)
-
-        if so is None:
-            self._names[name] = 1
-        elif bind_policy == 'auto':
-            suff = self._names[name]
-            self._names[name] = suff + 1
-
-            name = '%s%d' % (name, suff)
-        elif bind_policy == 'rebind':
-            self._unbind(so)
-        else:
-            raise NameError("\"%s\" is already bound to a scriptable object" % name)
+        name = self._unique_name(name, bind_policy)
 
         obj_id = id(obj)
         obj_ref = weakref.ref(obj, self._gc_script_obj)
@@ -458,8 +507,8 @@ class ScriptManager(HasTraits):
 
         # Remember the scriptable object via the different access methods.
         self._so_by_id[obj_id] = so
-        self._so_by_name[name] = so
         self._so_by_ref[obj_ref] = so
+        self._namespace[name] = so
 
         # Note that if anything listening to this event doesn't use weak
         # references then the object will be kept alive.
@@ -591,15 +640,37 @@ class ScriptManager(HasTraits):
 
         self._calls.append(_ScriptTraitSet(so=so, name=name, value=value))
 
-    def _unbind(self, so):
-        """Unbind the given scriptable object."""
+    def _unique_name(self, name, bind_policy):
+        """ Return a name that is guaranteed to be unique according to the bind
+        policy.
+        """
+
+        # See if the name is already is use.
+        bo = self._namespace.get(name)
+
+        if bo is None:
+            self._names[name] = 1
+        elif bind_policy == 'auto':
+            suff = self._names[name]
+            self._names[name] = suff + 1
+
+            name = '%s%d' % (name, suff)
+        elif bind_policy == 'rebind':
+            self._unbind(bo)
+        else:
+            raise NameError("\"%s\" is already bound to a scriptable object" % name)
+
+        return name
+
+    def _unbind(self, bo):
+        """Unbind the given bound object."""
 
         # Tell everybody it is no longer bound.
-        self.bind_event = BindEvent(name=so.name, obj=None)
+        self.bind_event = BindEvent(name=bo.name, obj=None)
 
         # Forget about it.
-        del self._so_by_name[so.name]
-        so.name = ''
+        del self._namespace[bo.name]
+        bo.name = ''
 
     @staticmethod
     def _gc_script_obj(obj_ref):
