@@ -25,32 +25,34 @@ from package_globals import get_script_manager
 from scriptable import scriptable, Scriptable
 
 
-def create_scriptable_type(scripted_type, api=None, includes=None,
-        excludes=None, script_init=True, name=None, bind_policy='auto'):
+def create_scriptable_type(scripted_type, name=None, api=None, includes=None,
+        excludes=None, bind_policy='auto', script_init=True):
     """Create and return a new type based on the given scripted_type that will
     (by default) have its public methods and traits (ie. those not beginning
     with an underscore) made scriptable.
-    
-    If api is given then it is a class, or a list of classes, that define the
-    attributes that will be made scriptable.
-    
-    Otherwise if includes is given it is a list of names of attributes that
-    will be made scriptable.
-    
-    Otherwise all the public attributes of scripted_type will be made
-    scriptable except those in the excludes list.
-    
-    Irrespective of any other arguments, if script_init is set then the
-    __init__() method will always be made scriptable.
-    
+
     name is the name that objects of this type will be bound to.  It defaults
     to the name of scripted_type with the first character forced to lower case.
+    It is ignored if script_init is False.
 
-    bind_policy determines what happens during the recording of a script if a
-    name is already bound.  If the policy is 'auto' then a numerical suffix
-    will be added to the name, if necessary, to make it unique.  If the policy
-    is 'unique' then an exception is raised.  If the policy is 'rebind' then
-    the previous binding is discarded."""
+    If api is given then it is a class, or a list of classes, that define the
+    attributes that will be made scriptable.
+
+    Otherwise if includes is given it is a list of names of attributes that
+    will be made scriptable.
+
+    Otherwise all the public attributes of scripted_type will be made
+    scriptable except those in the excludes list.
+
+    bind_policy determines what happens if a name is already bound.  If the
+    policy is 'auto' then a numerical suffix will be added to the name, if
+    necessary, to make it unique.  If the policy is 'unique' then an exception
+    is raised.  If the policy is 'rebind' then the previous binding is
+    discarded.  It is ignored if script_init is False.  The default is 'auto'.
+
+    Irrespective of any other arguments, if script_init is set then the
+    __init__() method will always be made scriptable.
+    """
 
     def __init__(self, *args, **kwargs):
         """Initialise the dynamic sub-class instance."""

@@ -19,11 +19,12 @@ import types
 import weakref
 
 # Enthought library imports.
-from enthought.traits.api import Any, Bool, Dict, Enum, Event, HasTraits, \
+from enthought.traits.api import Any, Bool, Dict, Event, HasTraits, \
         implements, Instance, Int, List, Property, Str, Unicode
 
 # Local imports.
 from bind_event import BindEvent
+from create_scriptable_type import create_scriptable_type
 from i_bind_event import IBindEvent
 from i_script_manager import IScriptManager
 
@@ -38,11 +39,8 @@ class _ScriptObject(HasTraits):
     # converted.
     args = List
 
-    # The policy to follow when a bound name already exists.  'auto'
-    # automatically appends a numeric suffix to the name, if necessary, in
-    # order to ensure that it is unique.  'unique' causes an exception to be
-    # raised.  'rebind' discards the previous binding.
-    bind_policy = Enum('auto', 'unique', 'rebind')
+    # Set if the object was explicitly bound.
+    explicitly_bound = Bool(True)
 
     # The keyword arguments passed to __init__ after being converted to
     # strings.  A particular argument may be an exception if it couldn't be
@@ -295,6 +293,60 @@ class ScriptManager(HasTraits):
     # 'IScriptManager' interface.
     ###########################################################################
 
+    def bind(self, obj, name=None, api=None, includes=None, excludes=None,
+            bind_policy='unique'):
+        """ Bind obj to name and make (by default) its public methods and
+        traits (ie. those not beginning with an underscore) scriptable.  The
+        default value of name is the type of obj with the first character
+        forced to lower case.
+
+        If api is given then it is a class, or a list of classes, that define
+        the attributes that will be made scriptable.
+
+        Otherwise if includes is given it is a list of names of attributes that
+        will be made scriptable.
+
+        Otherwise all the public attributes of scripted_type will be made
+        scriptable except those in the excludes list.
+
+        bind_policy determines what happens if a name is already bound.  If the
+        policy is 'auto' then a numerical suffix will be added to the name, if
+        necessary, to make it unique.  If the policy is 'unique' then an
+        exception is raised.  If the policy is 'rebind' then the previous
+        binding is discarded.  The default is 'unique'
+        """
+        scripted_type = type(obj)
+
+        # Create the new scriptable type.
+        new_type = create_scriptable_type(scripted_type, api=api,
+                includes=includes, excludes=excludes, script_init=False)
+
+        # Register the object.
+        self.new_object(obj, scripted_type, name=name, bind_policy=bind_policy)
+
+        # Fix the object's type to make it scriptable.
+        obj.__class__ = new_type
+
+    def run(self, script):
+        """ Run the given script, either a string or a file-like object.
+        """
+
+        # Initialise the namespace with all explicitly bound objects.
+        nspace = {}
+        for name, so in self._so_by_name.iteritems():
+            if so.explicitly_bound:
+                nspace[name] = so.obj_ref()
+
+        exec script in nspace
+
+    def run_file(self, file_name):
+        """ Run the given script file.
+        """
+
+        f = open(file_name)
+        self.run(f)
+        f.close()
+
     def start_recording(self):
         """ Start the recording of user actions.  The 'script' trait is cleared
         and all subsequent actions are added to 'script'.  The 'recording'
@@ -359,9 +411,11 @@ class ScriptManager(HasTraits):
 
             self.script_updated = self
 
-    def new_object(self, obj, scripted_type, args, kwargs, name=None,
+    def new_object(self, obj, scripted_type, args=None, kwargs=None, name=None,
             bind_policy='auto'):
         """ Register a scriptable object and the arguments used to create it.
+        If no arguments were provided then assume the object is being
+        explicitly bound.
         """
 
         # The name defaults to the type name.
@@ -384,21 +438,25 @@ class ScriptManager(HasTraits):
         else:
             raise NameError("\"%s\" is already bound to a scriptable object" % name)
 
-        # Convert each argument to its string representation if possible.
-        # Doing this now avoids problems with mutable arguments.
-        nargs = [self._scriptable_object_as_string(a) for a in args]
-
-        nkwargs = {}
-        for n, value in kwargs.iteritems():
-            nkwargs[n] = self._scriptable_object_as_string(value)
-
         obj_id = id(obj)
         obj_ref = weakref.ref(obj, self._gc_script_obj)
 
-        so = _ScriptObject(args=nargs, kwargs=nkwargs, bind_policy=bind_policy,
-                name=name, obj_id=obj_id, obj_ref=obj_ref,
+        so = _ScriptObject(name=name, obj_id=obj_id, obj_ref=obj_ref,
                 scripted_type=scripted_type)
 
+        # If we are told how to create the object then it must be implicitly
+        # bound.
+        if args is not None:
+            # Convert each argument to its string representation if possible.
+            # Doing this now avoids problems with mutable arguments.
+            so.args = [self._scriptable_object_as_string(a) for a in args]
+
+            for n, value in kwargs.iteritems():
+                so.kwargs[n] = self._scriptable_object_as_string(value)
+
+            so.explicitly_bound = False
+
+        # Remember the scriptable object via the different access methods.
         self._so_by_id[obj_id] = so
         self._so_by_name[name] = so
         self._so_by_ref[obj_ref] = so
@@ -653,6 +711,9 @@ class ScriptManager(HasTraits):
         ctors = []
 
         for so in so_needed:
+            if so.explicitly_bound:
+                continue
+
             so_type = so.scripted_type
             args = self.args_as_string_list(so.args, so.kwargs)
 

@@ -51,6 +51,37 @@ class IScriptManager(Interface):
     # 'IScriptManager' interface.
     ###########################################################################
 
+    def bind(self, obj, name=None, api=None, includes=None, excludes=None,
+            bind_policy='unique'):
+        """ Bind obj to name and make (by default) its public methods and
+        traits (ie. those not beginning with an underscore) scriptable.  The
+        default value of name is the type of obj with the first character
+        forced to lower case.
+
+        If api is given then it is a class, or a list of classes, that define
+        the attributes that will be made scriptable.
+
+        Otherwise if includes is given it is a list of names of attributes that
+        will be made scriptable.
+
+        Otherwise all the public attributes of scripted_type will be made
+        scriptable except those in the excludes list.
+
+        bind_policy determines what happens if a name is already bound.  If the
+        policy is 'auto' then a numerical suffix will be added to the name, if
+        necessary, to make it unique.  If the policy is 'unique' then an
+        exception is raised.  If the policy is 'rebind' then the previous
+        binding is discarded.  The default is 'unique'
+        """
+
+    def run(self, script):
+        """ Run the given script, either a string or a file-like object.
+        """
+
+    def run_file(self, file_name):
+        """ Run the given script file.
+        """
+
     def start_recording(self):
         """ Start the recording of user actions.  The 'script' trait is cleared
         and all subsequent actions are added to 'script'.  The 'recording'
