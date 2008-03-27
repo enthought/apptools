@@ -186,10 +186,13 @@ class VersionedUnpickler(Unpickler, HasTraits):
         # Retrieve the target class definition
         try:
             klass = super(VersionedUnpickler, self).find_class(module, name)
-        except:
+        except Exception, e:
             from enthought.sweet_pickle import UnpicklingError
-            raise UnpicklingError('Unable to load class [%s.%s]; map:%s' % (
-                module, name, self.updater.class_map))
+            logger.debug('Traceback when finding class [%s.%s]:' \
+                         % (module, name), exc_info=True)
+            raise UnpicklingError('Unable to load class [%s.%s]. '
+                                  'Original exception was, "%s".  map:%s' % (
+                module, name, str(e), self.updater.class_map))
 
         # Make sure we run the updater's state functions if any are declared
         # for the target class.
