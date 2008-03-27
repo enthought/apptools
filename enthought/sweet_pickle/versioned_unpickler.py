@@ -191,7 +191,7 @@ class VersionedUnpickler(Unpickler, HasTraits):
             logger.debug('Traceback when finding class [%s.%s]:' \
                          % (module, name), exc_info=True)
             raise UnpicklingError('Unable to load class [%s.%s]. '
-                                  'Original exception was, "%s".  map:%s' % (
+                'Original exception was, "%s".  map:%s' % (
                 module, name, str(e), self.updater.class_map))
 
         # Make sure we run the updater's state functions if any are declared
