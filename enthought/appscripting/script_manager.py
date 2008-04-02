@@ -27,12 +27,13 @@ from bind_event import BindEvent
 from create_scriptable_type import create_scriptable_type
 from i_bind_event import IBindEvent
 from i_script_manager import IScriptManager
+from lazy_namespace import add_to_namespace, FactoryWrapper, LazyNamespace
 
 
 class _BoundObject(HasTraits):
     """The base class for any object that can be bound to a name."""
 
-    #### '_BoundObject' interface ############################################
+    #### '_BoundObject' interface #############################################
 
     # Set if the object was explicitly bound.
     explicitly_bound = Bool(True)
@@ -47,7 +48,7 @@ class _BoundObject(HasTraits):
 class _ScriptObject(_BoundObject):
     """The _ScriptObject class encapsulates a scriptable object."""
 
-    #### '_BoundObject' interface ############################################
+    #### '_BoundObject' interface #############################################
 
     # The object being bound.
     obj = Property
@@ -253,19 +254,19 @@ class _ScriptMethod(_ScriptCall):
         return "%s%s%s(%s)" % (rstr, so, self.name, ", ".join(args))
 
 
-class _FactoryWrapper(_BoundObject):
-    """ The _FactoryWrapper class wraps a factory that lazily creates
+class _FactoryObject(_BoundObject):
+    """ The _FactoryObject class wraps a factory that lazily creates
     scriptable objects.
     """
 
-    #### '_BoundObject' interface ############################################
+    #### '_BoundObject' interface #############################################
 
     # The object being bound.
     obj = Property
 
-    #### '_FactoryWrapper' interface ##########################################
+    #### '_FactoryObject' interface ###########################################
 
-    # The wrapped factory.
+    # The scriptable object factory.
     factory = Callable
 
     ###########################################################################
@@ -275,7 +276,7 @@ class _FactoryWrapper(_BoundObject):
     def _get_obj(self):
         """The property getter."""
 
-        return self.factory
+        return FactoryWrapper(factory=self.factory)
 
 
 class ScriptManager(HasTraits):
@@ -346,7 +347,7 @@ class ScriptManager(HasTraits):
         """ Bind obj to name and make (by default) its public methods and
         traits (ie. those not beginning with an underscore) scriptable.  The
         default value of name is the type of obj with the first character
-        forced to lower case.
+        forced to lower case.  name may be a dotted name (eg. 'abc.def.xyz').
 
         If api is given then it is a class, or a list of classes, that define
         the attributes that will be made scriptable.
@@ -380,24 +381,24 @@ class ScriptManager(HasTraits):
         """ Bind factory to name.  The first time that the name is referenced
         when a script is run will cause the factory to be invoked.  Subsequent
         references to the name will reference the object returned by the
-        factory.
+        factory.  name may be a dotted name (eg. 'abc.def.xyz').
 
         bind_policy determibes what happens if the name is already bound.  See
         bind() for a full description.
         """
 
         name = self._unique_name(name, bind_policy)
-        self._namespace[name] = _FactoryWrapper(name=name, factory=factory)
+        self._namespace[name] = _FactoryObject(name=name, factory=factory)
 
     def run(self, script):
         """ Run the given script, either a string or a file-like object.
         """
 
         # Initialise the namespace with all explicitly bound objects.
-        nspace = {}
+        nspace = LazyNamespace()
         for name, bo in self._namespace.iteritems():
             if bo.explicitly_bound:
-                nspace[name] = bo.obj
+                add_to_namespace(bo.obj, name, nspace)
 
         exec script in nspace
 
@@ -666,6 +667,11 @@ class ScriptManager(HasTraits):
         """Unbind the given bound object."""
 
         # Tell everybody it is no longer bound.
+        # FIXME: _FactoryObjects might not have fired a previous BindEvent.
+        # Should the event be fired when the factory is bound or when the
+        # factory is invoked (which may never happen)?  Probably the latter
+        # otherwise the event receiver (eg. Python shell) will have to handle
+        # the object differently.
         self.bind_event = BindEvent(name=bo.name, obj=None)
 
         # Forget about it.
