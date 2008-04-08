@@ -38,7 +38,7 @@ class StopRecordingAction(Action):
     def __init__(self, **traits):
         """ Initialise the instance. """
 
-        super(EndRecordingAction, self).__init__(**traits)
+        super(StopRecordingAction, self).__init__(**traits)
 
         get_script_manager().on_trait_change(self._on_recording, 'recording')
 
