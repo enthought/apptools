@@ -1,20 +1,10 @@
 Application Scripting Framework
 ===============================
 
-FIXME: Don't read the rest of this, you'll only get confused.
-
-The Undo & Scripting Framework is a component of the Enthought Tool Suite that
-provides developers with an API that implements the standard pattern for
-do/undo/redo commands.
-
-The scripting element of the framework allows the creation and subsequent
-modification of data to be recorded as a Python script.  Typically these data
-changes are the result of commands being executed.  Even though it is not the
-execution of commands that is recorded, scripting is part of the undo
-framework because, for recordings to be correct, both elements must share the
-same concept of an ordered sequence of operations.  (Note that the scripting
-support requires further development before it is ready for production use.)
-**FIXME:** Review this - it doesn't follow the standard pattern.
+The Application Scripting Framework is a component of the Enthought Tool Suite
+that provides developers with an API that allows traits based objects to be
+made scriptable.  Operations on a scriptable object can be recorded in a
+script and subsequently replayed.
 
 The framework is completely configurable.  Alternate implementations of all
 major components can be provided if necessary.
@@ -25,74 +15,86 @@ Framework Concepts
 
 The following are the concepts supported by the framework.
 
-- Command
+- Scriptable Type
 
-  A command is an application defined operation that can be done and,
-  optionally, undone and redone.
+  A scriptable type is a sub-type of ``HasTraits`` that has scriptable methods
+  and scriptable traits.  If a scriptable method is called, or a scriptable
+  trait is set, then that action can be recorded in a script and subsequently
+  replayed.
 
-  A command operates on some data and maintains sufficient state to allow it to
-  revert or repeat a change to the data.
+  If the ``__init__()`` method is scriptable then the creation of an object
+  from the type can be recorded.
 
-  Commands may be merged so that potentially long sequences of similar
-  commands (e.g. to add a character to some text) can be collapsed into a
-  single command (e.g. to add a word to some text).
+  Scriptable types can be explicitly defined or created dynamically from any
+  sub-type of ``HasTraits``.
 
-- Macro
+- Scriptable API
 
-  A macro is a sequence of commands that is treated as a single command when
-  being undone or redone.
+  The set of a scriptable type's scriptable methods and traits constitutes the
+  type's scriptable API.
 
-- Command Stack
+  The API can be defined explicitly using the ``scriptable`` decorator (for
+  methods) or the ``Scriptable`` wrapper (for traits).
 
-  A command is done, i.e. executed, by pushing it onto a command stack.  The
-  last command can be undone and redone by calling appropriate command stack
-  methods.  It is also possible to move the *stack pointer* to any point and
-  the command stack will ensure that commands are undone or redone as
-  required.
+  For scriptable types that are created dynamically then the API can be
+  defined in terms of one or more types or interfaces or an explicit list of
+  method and trait names.  By default, all public methods and traits (ie.
+  those whose name does not begin with an underscore) are part of the API.  It
+  is also possible to then explicitly exclude a list of method and trait
+  names.
 
-  A command stack maintains a *clean* state which is updated as commands are
-  done and undone.  It may be explicitly set, for example when the data being
-  manipulated by the commands is saved to disk.
+- Scriptable Object
 
-  Canned PyFace actions are provided as wrappers around command stack methods
-  to implement common menu items.
+  A scriptable object is an instance of a scriptable type.
 
-- Scriptable Objects
+  Scriptable objects can be explicitly created by calling the scriptable type.
+  Alternatively a non-scriptable object can be made scriptable dynamically.
 
-  A scriptable object is a sub-class of ``HasTraits`` whose trait changes and
-  method invocations can be recorded in a script.
+- Script
 
-- Undo Manager
+  A script is a Python script and may be a recording or written from scratch.
 
-  An undo manager is responsible for one or more command stacks and maintains
-  a reference to the currently active stack.  It provides convenience undo and
-  redo methods that operate on the currently active stack.
+  If the creation of scriptable objects can be recorded, then it may be
+  possible for a recording to be run directly by the Python interpreter and
+  independently of the application that made the recording.  Otherwise the
+  application must run the script and first create any scriptable objects
+  refered to in the script.
 
-  An undo manager ensures that each command execution is allocated a unique
-  sequence number, irrespective of which command stack it is pushed to.  Using
-  this it is possible to synchronise multiple command stacks and restore them
-  to a particular point in time.
+- Binding
 
-  An undo manager will generate an event whenever the clean state of the active
-  stack changes.  This can be used to maintain some sort of GUI status
-  indicator to tell the user that their data has been modified since it was
-  last saved.
+  A script runs in a namespace which is, by default, empty.  If the scriptable
+  objects refered to in a script are not created by the script (because their
+  type's ``__init__()`` method isn't scriptable) then they must be created by
+  the application and added to the namespace.  Adding an object to the
+  namespace is called binding.
 
-  An undo manager is responsible for the recording of scripts.
+  Scriptable objects whose creation can be recorded will automatically bind
+  themselves when they are created.
 
-Typically an application will have one undo manager and one undo stack for
-each data type that can be edited.  However this is not a requirement, how the
-command stack's in particular are organised and linked (with the user
-manager's sequence number) can need careful thought so as not to confuse the
-user - particularly in a plugin based application that may have many editors.
+  It also possible to bind an object factory rather than the object itself.
+  The factory will be called, and the object created, only if the object is
+  needed by the script when it is run.  This is typically used by plugins.
 
-To support this typical usage the PyFace ``Workbench`` class has an
-``undo_manager`` trait and the PyFace ``Editor`` class has a ``command_stack``
-trait.  Both are lazy loaded so can be completely ignored if they are not used.
+  The name that an object is bound to need bear no relation to the object's
+  name within the application.  Names may be dotted names (eg. ``aaa.bbb.ccc``)
+  and appropriate objects representing the intermediate parts of such a name
+  will be created automatically.
+
+  An event is fired whenever an object is bound (or when a bound factory is
+  invoked).  This allows other objects (eg. an embedded Python shell) to
+  expose scriptable objects in other ways.
+
+- Script Manager
+
+  A script manager is responsible for the recording and subsequent playback of
+  scripts.  An application has a single script manager instance which can be
+  explicitly set or created automatically.
 
 
 API Overview
 ------------
+
+FIXME: The rest of this document should be ignored.
 
 This section gives a brief overview of the various classes implemented in the
 framework.  The complete API_ documentation is available as endo generated
