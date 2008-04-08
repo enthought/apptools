@@ -14,16 +14,46 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Callable, HasTraits
+from enthought.traits.api import Any, Callable, HasTraits
+
+# Local imports.
+from bind_event import BindEvent
+from package_globals import get_script_manager
+from scriptable_type import make_object_scriptable
 
 
 class FactoryWrapper(HasTraits):
-    """The FactoryWrapper class wraps a factory for a scriptable object."""
+    """The FactoryWrapper class wraps a factory for an object."""
 
     #### 'FactoryWrapper' interface ###########################################
 
-    # The factory.
+    # The optional object that defines the scripting API.
+    api = Any
+
+    # The object factory.
     factory = Callable
+
+    # The optional attribute include list.
+    includes = Any
+
+    # The optional attribute exclude list.
+    excludes = Any
+
+    ###########################################################################
+    # 'FactoryWrapper' interface.
+    ###########################################################################
+
+    def create_scriptable_object(self, name):
+        """Invoke the factory to create the object then make it scriptable."""
+
+        obj = self.factory()
+
+        sm = get_script_manager()
+        sm.bind_event = BindEvent(name=name, obj=obj)
+
+        make_object_scriptable(obj, self.api, self.includes, self.excludes)
+
+        return obj
 
 
 class _LazyNode(object):
@@ -35,7 +65,7 @@ class _LazyNode(object):
         value = super(_LazyNode, self).__getattribute__(name)
 
         if isinstance(value, FactoryWrapper):
-            value = value.factory()
+            value = value.create_scriptable_object(name)
             setattr(self, name, value)
 
         return value
@@ -50,7 +80,7 @@ class LazyNamespace(dict):
         value = super(LazyNamespace, self).__getitem__(name)
 
         if isinstance(value, FactoryWrapper):
-            value = value.factory()
+            value = value.create_scriptable_object(name)
             self[name] = value
 
         return value

@@ -127,3 +127,25 @@ def create_scriptable_type(scripted_type, name=None, api=None, includes=None,
     type_name = 'Scriptable(%s)' % scripted_type.__name__
 
     return type(type_name, (scripted_type, ), type_dict)
+
+
+def make_object_scriptable(obj, api=None, includes=None, excludes=None):
+    """Make (by default) an object's public methods and traits (ie. those not
+    beginning with an underscore) scriptable.
+
+    If api is given then it is a class, or a list of classes, that define the
+    attributes that will be made scriptable.
+
+    Otherwise if includes is given it is a list of names of attributes that
+    will be made scriptable.
+
+    Otherwise all the public attributes of scripted_type will be made
+    scriptable except those in the excludes list.
+    """
+
+    # Create the new scriptable type.
+    new_type = create_scriptable_type(obj.__class__, api=api,
+            includes=includes, excludes=excludes, script_init=False)
+
+    # Fix the object's type to make it scriptable.
+    obj.__class__ = new_type

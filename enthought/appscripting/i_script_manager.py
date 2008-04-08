@@ -31,7 +31,9 @@ class IScriptManager(Interface):
 
     # This event is fired whenever a scriptable object is bound or unbound.  It
     # is intended to be used by an interactive Python shell to give the
-    # advanced user access to the scriptable objects.
+    # advanced user access to the scriptable objects.  If an object is created
+    # via a factory then the event is fired when the factory is called, and not
+    # when the factory is bound.
     bind_event = Event(IBindEvent)
 
     # This is set if user actions are being recorded as a script.  It is

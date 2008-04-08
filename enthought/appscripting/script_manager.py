@@ -24,10 +24,10 @@ from enthought.traits.api import Any, Bool, Callable, Dict, Event, HasTraits, \
 
 # Local imports.
 from bind_event import BindEvent
-from create_scriptable_type import create_scriptable_type
 from i_bind_event import IBindEvent
 from i_script_manager import IScriptManager
 from lazy_namespace import add_to_namespace, FactoryWrapper, LazyNamespace
+from scriptable_type import make_object_scriptable
 
 
 class _BoundObject(HasTraits):
@@ -266,8 +266,17 @@ class _FactoryObject(_BoundObject):
 
     #### '_FactoryObject' interface ###########################################
 
+    # The optional object that defines the scripting API.
+    api = Any
+
     # The scriptable object factory.
     factory = Callable
+
+    # The optional attribute include list.
+    includes = Any
+
+    # The optional attribute exclude list.
+    excludes = Any
 
     ###########################################################################
     # Private interface.
@@ -276,7 +285,8 @@ class _FactoryObject(_BoundObject):
     def _get_obj(self):
         """The property getter."""
 
-        return FactoryWrapper(factory=self.factory)
+        return FactoryWrapper(factory=self.factory, api=self.api,
+                includes=self.includes, excludes=self.excludes)
 
 
 class ScriptManager(HasTraits):
@@ -290,7 +300,9 @@ class ScriptManager(HasTraits):
 
     # This event is fired whenever a scriptable object is bound or unbound.  It
     # is intended to be used by an interactive Python shell to give the
-    # advanced user access to the scriptable objects.
+    # advanced user access to the scriptable objects.  If an object is created
+    # via a factory then the event is fired when the factory is called, and not
+    # when the factory is bound.
     bind_event = Event(IBindEvent)
 
     # This is set if user actions are being recorded as a script.  It is
@@ -365,30 +377,26 @@ class ScriptManager(HasTraits):
         binding is discarded.  The default is 'unique'
         """
 
-        scripted_type = type(obj)
-
-        # Create the new scriptable type.
-        new_type = create_scriptable_type(scripted_type, api=api,
-                includes=includes, excludes=excludes, script_init=False)
-
         # Register the object.
-        self.new_object(obj, scripted_type, name=name, bind_policy=bind_policy)
+        self.new_object(obj, obj.__class__, name=name, bind_policy=bind_policy)
 
-        # Fix the object's type to make it scriptable.
-        obj.__class__ = new_type
+        # Make it scriptable.
+        make_object_scriptable(obj, api=api, includes=includes,
+                excludes=excludes)
 
-    def bind_factory(self, factory, name, bind_policy='unique'):
-        """ Bind factory to name.  The first time that the name is referenced
-        when a script is run will cause the factory to be invoked.  Subsequent
-        references to the name will reference the object returned by the
-        factory.  name may be a dotted name (eg. 'abc.def.xyz').
+    def bind_factory(self, factory, name, api=None, includes=None,
+            excludes=None, bind_policy='unique'):
+        """ Bind factory to name.  This does the same as the bind() method
+        except that it uses a factory that will be called later on to create
+        the object only if the object is needed.
 
-        bind_policy determibes what happens if the name is already bound.  See
-        bind() for a full description.
+        See the documentation for bind() for a description of the remaining
+        arguments.
         """
 
         name = self._unique_name(name, bind_policy)
-        self._namespace[name] = _FactoryObject(name=name, factory=factory)
+        self._namespace[name] = _FactoryObject(name=name, factory=factory,
+                api=api, includes=includes, excludes=excludes)
 
     def run(self, script):
         """ Run the given script, either a string or a file-like object.
@@ -666,13 +674,11 @@ class ScriptManager(HasTraits):
     def _unbind(self, bo):
         """Unbind the given bound object."""
 
-        # Tell everybody it is no longer bound.
-        # FIXME: _FactoryObjects might not have fired a previous BindEvent.
-        # Should the event be fired when the factory is bound or when the
-        # factory is invoked (which may never happen)?  Probably the latter
-        # otherwise the event receiver (eg. Python shell) will have to handle
-        # the object differently.
-        self.bind_event = BindEvent(name=bo.name, obj=None)
+        # Tell everybody it is no longer bound.  Don't bother if it is a
+        # factory because the corresponding bound event wouldn't have been
+        # fired.
+        if not isinstance(bo, _FactoryObject):
+            self.bind_event = BindEvent(name=bo.name, obj=None)
 
         # Forget about it.
         del self._namespace[bo.name]
