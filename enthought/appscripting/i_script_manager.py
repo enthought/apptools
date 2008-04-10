@@ -53,12 +53,18 @@ class IScriptManager(Interface):
     # 'IScriptManager' interface.
     ###########################################################################
 
-    def bind(self, obj, name=None, api=None, includes=None, excludes=None,
-            bind_policy='unique'):
+    def bind(self, obj, name=None, bind_policy='unique', api=None,
+            includes=None, excludes=None):
         """ Bind obj to name and make (by default) its public methods and
         traits (ie. those not beginning with an underscore) scriptable.  The
         default value of name is the type of obj with the first character
         forced to lower case.
+
+        bind_policy determines what happens if the name is already bound.  If
+        the policy is 'auto' then a numerical suffix will be added to the name,
+        if necessary, to make it unique.  If the policy is 'unique' then an
+        exception is raised.  If the policy is 'rebind' then the previous
+        binding is discarded.  The default is 'unique'
 
         If api is given then it is a class, or a list of classes, that define
         the attributes that will be made scriptable.
@@ -68,22 +74,16 @@ class IScriptManager(Interface):
 
         Otherwise all the public attributes of scripted_type will be made
         scriptable except those in the excludes list.
-
-        bind_policy determines what happens if the name is already bound.  If
-        the policy is 'auto' then a numerical suffix will be added to the name,
-        if necessary, to make it unique.  If the policy is 'unique' then an
-        exception is raised.  If the policy is 'rebind' then the previous
-        binding is discarded.  The default is 'unique'
         """
 
-    def bind_factory(self, factory, name, bind_policy='unique'):
-        """ Bind factory to name.  The first time that the name is referenced
-        when a script is run will cause the factory to be invoked.  Subsequent
-        references to the name will reference the object returned by the
-        factory.
+    def bind_factory(self, factory, name, bind_policy='unique', api=None,
+            includes=None, excludes=None):
+        """ Bind factory to name.  This does the same as the bind() method
+        except that it uses a factory that will be called later on to create
+        the object only if the object is needed.
 
-        bind_policy determibes what happens if the name is already bound.  See
-        bind() for a full description.
+        See the documentation for bind() for a description of the remaining
+        arguments.
         """
 
     def run(self, script):
