@@ -56,7 +56,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             """ A helper! """
 
             # The path to the preferences node that contains our preferences.
-            PREFERENCES_PATH = 'acme.ui'
+            preferences_path = 'acme.ui'
 
             # The traits that we want to initialize from preferences.
             bgcolor     = Str
@@ -166,7 +166,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             """ A helper! """
 
             # The path to the preferences node that contains our preferences.
-            PREFERENCES_PATH = 'acme.ui'
+            preferences_path = 'acme.ui'
 
             # The traits that we want to initialize from preferences.
             bgcolor     = Str('blue')
@@ -231,7 +231,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             """ A helper! """
 
             # The path to the preferences node that contains our preferences.
-            PREFERENCES_PATH = 'acme.ui'
+            preferences_path = 'acme.ui'
 
             # The traits that we want to initialize from preferences.
             bgcolor     = Str
@@ -296,7 +296,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             """ A helper! """
 
             # The path to the preferences node that contains our preferences.
-            PREFERENCES_PATH = 'acme.ui'
+            preferences_path = 'acme.ui'
 
             # The traits that we want to initialize from preferences.
             bgcolor = Str
@@ -321,7 +321,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             """ A helper! """
 
             # The path to the preferences node that contains our preferences.
-            PREFERENCES_PATH = 'acme.ui'
+            preferences_path = 'acme.ui'
 
             # A trait that has no corresponding value in the file.
             title = Str('Acme')
@@ -337,6 +337,68 @@ class PreferencesHelperTestCase(unittest.TestCase):
         # Make sure the trait is set!
         self.assertEqual('Acme Plus', helper.title)
         self.assertEqual('Acme Plus', self.preferences.get('acme.ui.title'))
+
+        return
+
+    def test_preferences_node_changed(self):
+        """ preferences node changed """
+ 
+        p = self.preferences
+        p.load('example.ini')
+
+        class AcmeUIPreferencesHelper(PreferencesHelper):
+            """ A helper! """
+            
+            # The path to the preferences node that contains our preferences.
+            preferences_path = 'acme.ui'
+            
+            # The traits that we want to initialize from preferences.
+            bgcolor     = Str
+            width       = Int
+            ratio       = Float
+            visible     = Bool
+            description = Unicode
+            offsets     = List(Int)
+            names       = List(Str)
+            
+        helper = AcmeUIPreferencesHelper()
+
+        # We only listen to some of the traits so the testing is easier.
+        helper.on_trait_change(listener, ['bgcolor', 'width'])
+
+        # Create a new preference node.
+        p1 = Preferences()
+        p1.load('example.ini')
+        p1.set('acme.ui.bgcolor', 'red')
+        p1.set('acme.ui.width', 40)
+
+        # Set the new preferences
+        helper.preferences = p1
+
+        # Test event handling.
+        self.assertEqual(helper, listener.obj)
+        self.assertEqual('width', listener.trait_name)
+        self.assertEqual(50, listener.old)
+        self.assertEqual(40, listener.new)
+
+        # Test re-initialization.
+        self.assertEqual(helper.bgcolor, 'red')
+        self.assertEqual(helper.width, 40)
+    
+        # Test event handling.
+        p1.set('acme.ui.bgcolor', 'black')
+        self.assertEqual(helper, listener.obj)
+        self.assertEqual('bgcolor', listener.trait_name)
+        self.assertEqual('red', listener.old)
+        self.assertEqual('black', listener.new)
+       
+        # This should not trigger any new changes since we are setting values
+        # on the old preferences node.
+        p.set('acme.ui.bgcolor', 'white')
+        self.assertEqual(helper, listener.obj)
+        self.assertEqual('bgcolor', listener.trait_name)
+        self.assertEqual('red', listener.old)
+        self.assertEqual('black', listener.new)
 
         return
 

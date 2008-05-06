@@ -70,6 +70,22 @@ class PreferencesHelper(HasTraits):
 
         return
 
+    def _preferences_changed(self, old, new):
+        """ Static trait change handler. """
+        
+        # Stop listening to the old preferences node.
+        if old is not None:
+            old.remove_preferences_listener(
+                self._preferences_changed_listener, self._get_path()
+            )
+
+        if new is not None:
+            # Initialize with the new preferences node (this also adds a
+            # listener for preferences being changed in the new node).
+            self._initialize(new, notify=True)
+
+        return
+
     #### Other observer pattern listeners #####################################
     
     def _preferences_changed_listener(self, node, key, old, new):
@@ -130,7 +146,7 @@ class PreferencesHelper(HasTraits):
 
         return handler.validate(self, trait_name, value)
 
-    def _initialize(self, preferences):
+    def _initialize(self, preferences, notify=False):
         """ Initialize the object's traits from the preferences node. """
 
         path = self._get_path()
@@ -143,7 +159,7 @@ class PreferencesHelper(HasTraits):
                 value = self._get_value(trait_name, preferences.get(key))
                 traits_to_set[trait_name] = value
                 
-        self.set(trait_change_notify=False, **traits_to_set)
+        self.set(trait_change_notify=notify, **traits_to_set)
 
         # Listen for changes to the node's preferences.
         preferences.add_preferences_listener(
