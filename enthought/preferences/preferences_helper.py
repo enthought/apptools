@@ -1,12 +1,19 @@
 """ An object that can be initialized from a preferences node. """
 
 
+# Standard library imports.
+import logging
+
 # Enthought library imports.
 from enthought.traits.api import HasTraits, Instance, Str, Unicode
 
 # Local imports.
 from i_preferences import IPreferences
 from package_globals import get_default_preferences
+
+
+# Logging.
+logger = logging.getLogger(__name__)
 
 
 class PreferencesHelper(HasTraits):
@@ -113,7 +120,10 @@ class PreferencesHelper(HasTraits):
             path = getattr(self, 'PREFERENCES_PATH', None)
             if path is None:
                 raise SystemError('no preferences path' % self)
-            
+
+            else:
+                logger.warn('DEPRECATED: use "preferences_path" %s' % self)
+
         return path
             
     def _get_value(self, trait_name, value):
