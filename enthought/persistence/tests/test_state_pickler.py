@@ -95,7 +95,7 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(data['s'], obj.s)
         self.assertEqual(data['u'], obj.u)
         if isinstance(obj, HasTraits):
-            self.assertEqual(data['inst']['type'], 'instance')
+            self.assertEqual(data['inst']['type'], 'reference')
         else:
             self.assertEqual(data['inst']['type'], 'reference')
         tup = data['tuple']['data']
@@ -105,7 +105,7 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(lst[:-1], obj.list[:-1])
         
         if isinstance(obj, HasTraits):
-            self.assertEqual(lst[-1]['type'], 'reference')
+            self.assertEqual(lst[-1]['type'], 'instance')
         else:
             self.assertEqual(lst[-1]['data']['data']['a'], 'b')
             

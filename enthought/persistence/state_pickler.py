@@ -313,13 +313,8 @@ class StatePickler:
         """Checks if the object has traits and ensures that the traits
         are set in the `__dict__` so we can pickle it.
         """
-        if hasattr(obj, 'trait_names'):
-            for name, value in obj.traits().items():
-                if value.type == 'trait':
-                    try:
-                        getattr(obj, name)
-                    except AttributeError:
-                        pass
+        # Not needed with Traits3.
+        return
 
     def _do(self, obj):
         obj_type = type(obj)
@@ -383,6 +378,8 @@ class StatePickler:
         else:
             state = value.__dict__
 
+        state.pop('__traits_version__', None)
+
         # Cache the args and state since they are likely to be gc'd.
         self._misc_cache.extend([args, state])
         # Register and process.
@@ -392,10 +389,12 @@ class StatePickler:
 
         # Get the version of the object.
         version = version_registry.get_version(value)
+        module = value.__class__.__module__
+        class_name = value.__class__.__name__
 
         return dict(type='instance',
-                    module=value.__class__.__module__,
-                    class_name=value.__class__.__name__,
+                    module=module,
+                    class_name=class_name,
                     version=version,
                     id=idx,
                     initargs=args_data,
