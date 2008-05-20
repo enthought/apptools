@@ -24,18 +24,15 @@ class PreferencesHelper(HasTraits):
     # The preferences node used by the helper. If this trait is not set then
     # the package-global default preferences node is used (and if that is not
     # set then the helper won't work ;^)
+    #
+    # fixme: This introduces a 'sneaky' global reference to the preferences
+    # node!
     preferences = Instance(IPreferences)
 
     # The path to the preference node that contains the preferences that we
     # use to initialize instances of this class.
     preferences_path = Str
 
-    #### Private interface ####################################################
-
-    # A flag that prevents us from setting a preference value twice (see the
-    # usage for more details).
-    _event_handled = False
-    
     ###########################################################################
     # 'object' interface.
     ###########################################################################
@@ -70,10 +67,8 @@ class PreferencesHelper(HasTraits):
 
         # If we were the one that set the trait (because the underlying
         # preferences node changed) then do nothing.
-        if not self._event_handled:
-            if self._is_preference_trait(trait_name):
-                path = self._get_path()
-                self.preferences.set('%s.%s' % (path, trait_name), new)
+        if self._is_preference_trait(trait_name):
+            self.preferences.set('%s.%s' % (self._get_path(), trait_name), new)
 
         return
 
@@ -99,12 +94,7 @@ class PreferencesHelper(HasTraits):
         """ Listener called when a preference value is changed. """
 
         if key in self.trait_names():
-            # We set this flag so that when we set the trait we don't try
-            # to set the value in the preferences node again in the
-            # '_anytrait_changed' method!
-            self._event_handled = True
             setattr(self, key, self._get_value(key, new))
-            self._event_handled = False
 
         return
 

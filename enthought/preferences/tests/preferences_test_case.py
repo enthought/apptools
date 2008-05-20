@@ -567,6 +567,40 @@ class PreferencesTestCase(unittest.TestCase):
         
         return
 
+    def test_set_with_same_value(self):
+        """ set with same value """
+
+        p = self.preferences
+
+        def listener(node, key, old, new):
+            """ Listener for changes to a preferences node. """
+
+            listener.node = node
+            listener.key  = key
+            listener.old  = old
+            listener.new  = new
+            
+            return
+
+        # Add a listener.
+        p.add_preferences_listener(listener, 'acme.ui')
+
+        # Set a value and make sure the listener was called.
+        p.set('acme.ui.bgcolor', 'blue')
+        self.assertEqual(p.node('acme.ui'), listener.node)
+        self.assertEqual('bgcolor', listener.key)
+        self.assertEqual(None, listener.old)
+        self.assertEqual('blue', listener.new)
+
+        # Clear out the listener.
+        listener.node = None
+        
+        # Set the same value and make sure the listener *doesn't* get called.
+        p.set('acme.ui.bgcolor', 'blue')
+        self.assertEqual(None, listener.node)
+        
+        return
+
 
 # Entry point for stand-alone testing.
 if __name__ == '__main__':

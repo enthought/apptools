@@ -548,7 +548,13 @@ class Preferences(HasTraits):
         self._lk.acquire()
         old = self._preferences.get(key)
         self._preferences[key] = value
-        listeners = self._preferences_listeners[:]
+
+        # If the value is unchanged then don't call the listeners!
+        if old == value:
+            listeners = []
+
+        else:
+            listeners = self._preferences_listeners[:]
         self._lk.release()
 
         for listener in listeners:

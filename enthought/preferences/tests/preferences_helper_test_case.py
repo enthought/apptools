@@ -402,6 +402,55 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         return
 
+    def test_nested_set_in_trait_change_handler(self):
+        """ nested set in trait change handler """
+
+        p = self.preferences
+        p.load('example.ini')
+
+        class AcmeUIPreferencesHelper(PreferencesHelper):
+            """ A helper! """
+
+            # The traits that we want to initialize from preferences.
+            bgcolor     = Str
+            width       = Int
+            ratio       = Float
+            visible     = Bool
+            description = Unicode
+            offsets     = List(Int)
+            names       = List(Str)
+
+            # When the width changes, change the ratio.
+            def _width_changed(self, trait_name, old, new):
+                """ Static trait change handler. """
+
+                self.ratio = 3.0
+
+                return
+            
+        helper = AcmeUIPreferencesHelper(preferences_path='acme.ui')
+
+        # Make sure the helper was initialized properly.
+        self.assertEqual('blue', helper.bgcolor)
+        self.assertEqual(50, helper.width)
+        self.assertEqual(1.0, helper.ratio)
+        self.assertEqual(True, helper.visible)
+        self.assertEqual(u'acme ui', helper.description)
+        self.assertEqual([1, 2, 3, 4], helper.offsets)
+        self.assertEqual(['joe', 'fred', 'jane'], helper.names)
+
+        # Change the width via the preferences node. This should cause the
+        # ratio to get set via the static trait change handler on the helper.
+        p.set('acme.ui.width', 42)
+        self.assertEqual(42, helper.width)
+        self.assertEqual('42', p.get('acme.ui.width'))
+
+        # Did the ratio get changed?
+        self.assertEqual(3.0, helper.ratio)
+        self.assertEqual('3.0', p.get('acme.ui.ratio'))
+
+        return
+
 
 # Entry point for stand-alone testing.
 if __name__ == '__main__':
