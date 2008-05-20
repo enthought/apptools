@@ -84,7 +84,7 @@ class PreferenceBinding(HasTraits):
 
     # fixme: This method is mostly duplicated in 'PreferencesHelper' (the only
     # difference is the line that gets the handler).
-    def _get_trait_value(self, trait_name, value):
+    def _get_value(self, trait_name, value):
         """ Get the actual value to set.
 
         This method makes sure that any required work is done to convert the
@@ -135,7 +135,7 @@ class PreferenceBinding(HasTraits):
 
         value = self.preferences.get(self.preference_path, Undefined)
         if value is not Undefined:
-            trait_value = self._get_trait_value(self.trait_name, value)
+            trait_value = self._get_value(self.trait_name, value)
             traits      = {self.trait_name : trait_value}
 
             self.obj.set(trait_change_notify=notify, **traits)
