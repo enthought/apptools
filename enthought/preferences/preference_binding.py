@@ -29,11 +29,6 @@ class PreferenceBinding(HasTraits):
     # The name of the trait that we are binding the preference to.
     trait_name = Str
     
-    #### Private interface ####################################################
-
-    # A flag that prevents us from setting a preference value twice.
-    _event_handled = False
-
     ###########################################################################
     # 'object' interface.
     ###########################################################################
@@ -71,8 +66,7 @@ class PreferenceBinding(HasTraits):
     def _on_trait_changed(self, obj, trait_name, old, new):
         """ Dynamic trait change handler. """
 
-        if not self._event_handled:
-            self.preferences.set(self.preference_path, new)
+        self.preferences.set(self.preference_path, new)
 
         return
 
@@ -82,9 +76,7 @@ class PreferenceBinding(HasTraits):
         """ Listener called when a preference value is changed. """
 
         if key == self.trait_name:
-            self._event_handled = True
             self._set_trait()
-            self._event_handled = False
 
         return
 

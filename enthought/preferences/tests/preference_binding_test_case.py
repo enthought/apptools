@@ -236,6 +236,55 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual(True, acme_ui.visible)
 
         return
+
+    def test_nested_set_in_trait_change_handler(self):
+        """ nested set in trait change handler """
+
+        p = self.preferences
+        p.load('example.ini')
+
+        class AcmeUI(HasTraits):
+            """ The Acme UI class! """
+
+            # The traits that we want to initialize from preferences.
+            bgcolor = Str
+            width   = Int
+            ratio   = Float
+            visible = Bool
+
+            def _width_changed(self, trait_name, old, new):
+                """ Static trait change handler. """
+
+                self.ratio = 3.0
+
+                return
+            
+        acme_ui = AcmeUI()
+        acme_ui.on_trait_change(listener)
+
+        # Make some bindings.
+        bind_preference(acme_ui, 'bgcolor', 'acme.ui.bgcolor')
+        bind_preference(acme_ui, 'width',   'acme.ui.width')
+        bind_preference(acme_ui, 'ratio',   'acme.ui.ratio')
+        bind_preference(acme_ui, 'visible', 'acme.ui.visible')
+
+        # Make sure the object was initialized properly.
+        self.assertEqual('blue', acme_ui.bgcolor)
+        self.assertEqual(50, acme_ui.width)
+        self.assertEqual(1.0, acme_ui.ratio)
+        self.assertEqual(True, acme_ui.visible)
+
+        # Change the width via the preferences node. This should cause the
+        # ratio to get set via the static trait change handler on the helper.
+        p.set('acme.ui.width', 42)
+        self.assertEqual(42, acme_ui.width)
+        self.assertEqual('42', p.get('acme.ui.width'))
+
+        # Did the ratio get changed?
+        self.assertEqual(3.0, acme_ui.ratio)
+        self.assertEqual('3.0', p.get('acme.ui.ratio'))
+
+        return
     
 
 # Entry point for stand-alone testing.
