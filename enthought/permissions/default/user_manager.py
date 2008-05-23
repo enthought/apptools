@@ -23,7 +23,6 @@ from enthought.permissions.i_user import IUser
 from enthought.permissions.i_user_manager import IUserManager
 from enthought.permissions.package_globals import get_permissions_manager
 from enthought.permissions.permission import ManageUsersPermission
-from enthought.permissions.secure_proxy import SecureProxy
 from i_user_database import IUserDatabase
 
 
@@ -90,6 +89,8 @@ class UserManager(HasTraits):
 
     def _management_actions_default(self):
         """Return the list of management actions."""
+
+        from enthought.permissions.secure_proxy import SecureProxy
 
         user_db = self.user_db
         actions = []
