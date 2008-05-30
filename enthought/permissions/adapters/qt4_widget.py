@@ -29,6 +29,8 @@ class QWidgetAdapter(AdapterBase):
         # Replace the real methods.
         self.proxied.setEnabled = self.update_enabled
         self.proxied.setVisible = self.update_visible
+        self.proxied.hide = self._hide
+        self.proxied.show = self._show
 
         return self.proxied
 
@@ -51,5 +53,15 @@ class QWidgetAdapter(AdapterBase):
         """Set the visible state of the proxied object."""
 
         QtGui.QWidget.setVisible(self.proxied, value)
+
+    def _hide(self):
+        """The replacement QWidget.hide() implementation."""
+
+        self.update_visible(False)
+
+    def _show(self):
+        """The replacement QWidget.show() implementation."""
+
+        self.update_visible(True)
 
 AdapterBase.register_adapter(QWidgetAdapter, QtGui.QWidget)

@@ -151,7 +151,7 @@ action and the application of the ``NewPersonPerm`` permission::
             return act
 
 A ``SecureProxy`` also accepts a ``show`` argument that, when set to
-``False``, hides the action when it becomes disabled.
+``False``, hides the object when it becomes disabled.
 
 
 Authenticating the User

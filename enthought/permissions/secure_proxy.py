@@ -50,7 +50,9 @@ class SecureProxy(object):
         adapter = object.__getattribute__(self, '_ets')
 
         # Correct the current values.
-        adapter.update_visible(adapter.get_visible())
+        if not show:
+            adapter.update_visible(adapter.get_visible())
+
         adapter.update_enabled(adapter.get_enabled())
 
     # Proxying (special cases).
@@ -141,7 +143,9 @@ class SecureProxy(object):
             object.__setattr__(adapted, '_ets', adapter)
         else:
             # Correct the current values.
-            adapter.update_visible(adapter.get_visible())
+            if not show:
+                adapter.update_visible(adapter.get_visible())
+
             adapter.update_enabled(adapter.get_enabled())
 
             # Save the adapter in the adapted object.

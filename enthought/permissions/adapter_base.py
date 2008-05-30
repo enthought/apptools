@@ -106,10 +106,14 @@ class AdapterBase(HasTraits):
 
         if get_permissions_manager().check_permissions(*self.permissions):
             self.set_enabled(value)
-            self.set_visible(self._desired_visible)
+
+            if not self.show:
+                self.set_visible(self._desired_visible)
         else:
             self.set_enabled(False)
-            self.set_visible(self.show and self._desired_visible)
+
+            if not self.show:
+                self.set_visible(False)
 
         # Save the desired value so that it can be checked if the user becomes
         # authenticated.
@@ -130,10 +134,12 @@ class AdapterBase(HasTraits):
         attribute.
         """
 
-        if get_permissions_manager().check_permissions(*self.permissions):
+        if self.show:
+            self.set_visible(value)
+        elif get_permissions_manager().check_permissions(*self.permissions):
             self.set_visible(value)
         else:
-            self.set_visible(self.show and value)
+            self.set_visible(False)
 
         # Save the desired value so that it can be checked if the user becomes
         # authenticated.
@@ -142,5 +148,7 @@ class AdapterBase(HasTraits):
     def _refresh(self, user):
         """Invoked whenever the current user's authorisation state changes."""
 
-        self.update_visible(self._desired_visible)
+        if not self.show:
+            self.update_visible(self._desired_visible)
+
         self.update_enabled(self._desired_enabled)

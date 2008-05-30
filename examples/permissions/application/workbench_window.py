@@ -63,13 +63,6 @@ class ExampleWorkbenchWindow(WorkbenchWindow):
         )
     ]
 
-    #### 'ExampleWorkbenchWindow' interface ###################################
-
-    # The view factories.
-    #
-    # fixme: This should be part of the standard 'WorkbenchWindow'!
-    view_factories = List(Callable)
-
     #### Private interface ####################################################
 
     # The Exit action.
@@ -112,22 +105,10 @@ class ExampleWorkbenchWindow(WorkbenchWindow):
     def _views_default(self):
         """Trait initializer."""
 
-        # Using an initializer makes sure that every window instance gets its
-        # own view instances (which is necessary since each view has a
-        # reference to its toolkit-specific control etc.).
-        return [factory(window=self) for factory in self.view_factories]
+        from secured_debug_view import SecuredDebugView
 
-    ###########################################################################
-    # 'ExampleWorkbenchWindow' interface.
-    ###########################################################################
+        return [SecuredDebugView(window=self)]
 
-    def _view_factories_default(self):
-        """Trait initializer."""
-
-        from enthought.pyface.workbench.debug.api import DebugView
-        
-        return [DebugView]
-    
     ###########################################################################
     # Private interface.
     ###########################################################################
