@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     # Create an initial context.
     context = InitialContext(environment)
-
+    context.path = os.getcwd()
     print 'Context', context, context.path
     print 'Names', context.list_names('')
 
