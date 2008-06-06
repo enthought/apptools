@@ -44,7 +44,7 @@ if __name__ == '__main__':
     # Add some interesting context adapters.
     #
     # Trait dictionaries.
-    type_manager.register_adapters(
+    type_manager.register_type_adapters(
         ContextAdapterFactory(
             adaptee_class=TraitDict, adapter_class=TraitDictContextAdapter,
         ),
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     )
 
     # Trait lists.
-    type_manager.register_adapters(
+    type_manager.register_type_adapters(
         ContextAdapterFactory(
             adaptee_class=TraitList, adapter_class=TraitListContextAdapter,
         ),
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     )
 
     # Python dictionaries.
-    type_manager.register_adapters(
+    type_manager.register_type_adapters(
         ContextAdapterFactory(
             adaptee_class=dict, adapter_class=DictContextAdapter,
         ),
@@ -71,7 +71,7 @@ if __name__ == '__main__':
     )
 
     # Python lists.
-    type_manager.register_adapters(
+    type_manager.register_type_adapters(
         ContextAdapterFactory(
             adaptee_class=list, adapter_class=ListContextAdapter,
         ),
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     )
 
     # Python objects.
-    type_manager.register_adapters(
+    type_manager.register_type_adapters(
         InstanceContextAdapterFactory(), object
     )
 
@@ -93,6 +93,6 @@ if __name__ == '__main__':
     window.open()
 
     # Start the GUI event loop.
-    gui.event_loop()
+    gui.start_event_loop()
 
 ##### EOF #####################################################################
