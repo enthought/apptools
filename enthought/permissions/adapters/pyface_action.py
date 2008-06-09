@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.permissions.api import AdapterBase
+from enthought.permissions.adapter_base import AdapterBase
 from enthought.pyface.action.api import Action
 
 
