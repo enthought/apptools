@@ -104,8 +104,9 @@ import cPickle
 import gzip
 from cStringIO import StringIO
 
+import numpy
 # Enthought library imports.
-from enthought.util import numerix
+#from enthought.util import numerix
 
 # Local imports.
 import version_registry
@@ -261,7 +262,7 @@ class StatePickler:
                     types.InstanceType: self._do_instance,
                     types.DictType: self._do_dict,
                     types.DictionaryType: self._do_dict,
-                    numerix.ArrayType: self._do_numeric,
+                    type(numpy.array([])): self._do_numeric,
                     State: self._do_state,
                     }
         self.type_map = type_map
@@ -438,7 +439,7 @@ class StatePickler:
 
     def _do_numeric(self, value):
         idx = self._register(value)
-        data = gzip_string(numerix.dumps(value)).encode('base64')
+        data = gzip_string(numpy.ndarray.dumps(value)).encode('base64')
         return dict(type='numeric', id=idx, data=data)
 
 
@@ -633,7 +634,7 @@ class StateUnpickler:
 
     def _do_numeric(self, value, path):
         junk = gunzip_string(value['data'].decode('base64'))
-        result = numerix.loads(junk)
+        result = numpy.loads(junk)
         self._numeric[value['id']] = (path, result)
         self._obj_cache[value['id']] = result
         return result
