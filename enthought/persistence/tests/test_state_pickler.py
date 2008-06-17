@@ -6,14 +6,16 @@
 # License: BSD Style.
 
 import unittest
-from enthought.util import numerix
+import math
 
+import numpy
 
 from enthought.traits.api import Bool, Int, Long, Array, Float, Complex, Any, \
      Str, Unicode, Instance, Tuple, List, Dict, HasTraits
 from enthought.tvtk.api import tvtk
 
 from enthought.persistence import state_pickler
+
 
 # A simple class to test instances.
 class A:
@@ -26,7 +28,7 @@ class TestClassic:
         self.b = False
         self.i = 7
         self.l = 1234567890123456789
-        self.f = numerix.pi
+        self.f = math.pi
         self.c = complex(1.01234, 2.3)
         self.n = None
         self.s = 'String'
@@ -36,7 +38,7 @@ class TestClassic:
         self.list = [1, 1.1, 'a', 1j, self.inst]
         self.pure_list = range(5)
         self.dict = {'a': 1, 'b': 2, 'ref': self.inst}
-        self.numeric = numerix.ones((2,2,2), 'f')
+        self.numeric = numpy.ones((2,2,2), 'f')
         self.ref = self.numeric
         self._tvtk = tvtk.Property()
 
@@ -46,7 +48,7 @@ class TestTraits(HasTraits):
     b = Bool(False)
     i = Int(7)
     l = Long(1234567890123456789L)
-    f = Float(numerix.pi)
+    f = Float(math.pi)
     c = Complex(complex(1.01234, 2.3))
     n = Any
     s = Str('String')
@@ -56,7 +58,7 @@ class TestTraits(HasTraits):
     list = List
     pure_list = List(range(5))
     dict = Dict
-    numeric = Array(value=numerix.ones((2,2,2), 'f'))
+    numeric = Array(value=numpy.ones((2,2,2), 'f'))
     ref = Array
     _tvtk = Instance(tvtk.Property, ())
     def __init__(self):
@@ -117,8 +119,8 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(dct['ref']['type'], 'reference')
 
         junk = state_pickler.gunzip_string(data['numeric']['data'].decode('base64'))
-        num = numerix.loads(junk)
-        self.assertEqual(numerix.alltrue(numerix.ravel(num == obj.numeric)), 1)
+        num = numpy.loads(junk)
+        self.assertEqual(numpy.alltrue(numpy.ravel(num == obj.numeric)), 1)
 
         self.assertEqual(data['ref']['type'], 'reference')
         self.assertEqual(data['ref']['id'], data['numeric']['id'])
@@ -159,7 +161,7 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(dct['ref'].__metadata__['type'], 'instance')
 
         num = state.numeric
-        self.assertEqual(numerix.alltrue(numerix.ravel(num == obj.numeric)), 1)
+        self.assertEqual(numpy.alltrue(numpy.ravel(num == obj.numeric)), 1)
         self.assertEqual(id(state.ref), id(num))
 
         _tvtk = state._tvtk
