@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 #  
-#  Defines an adapter from an enthought.block_canvas.context.api.IContext
+#  Defines an adapter from an enthought.contexts.api.IContext
 #  to an ITemplateDataContext.
 #  
 #  Written by: David C. Morrill
@@ -12,7 +12,7 @@
 #  
 #-------------------------------------------------------------------------------
 
-""" Defines an adapter from an enthought.block_canvas.context.api.IContext to an
+""" Defines an adapter from an enthought.contexts.api.IContext to an
     ITemplateDataContext.
 """
 
@@ -26,7 +26,7 @@ from enthought.traits.api \
 from enthought.traits.protocols.api \
     import AdaptationError, adapt
     
-from enthought.block_canvas.context.api \
+from enthought.contexts.api \
     import IContext
     
 from enthought.template.itemplate_data_context \
@@ -40,7 +40,7 @@ from helper \
 #-------------------------------------------------------------------------------
 
 class IContextAdapter ( Adapter ):
-    """ Defines an adapter from an enthought.block_canvas.context.api.IContext
+    """ Defines an adapter from an enthought.contexts.api.IContext
         to an ITemplateDataContext.
     """
     
