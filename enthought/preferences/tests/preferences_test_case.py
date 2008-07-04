@@ -2,7 +2,7 @@
 
 
 # Standard library imports.
-import os, unittest
+import os, tempfile, unittest
 
 # Enthought library imports.
 from enthought.preferences.api import Preferences
@@ -12,6 +12,13 @@ from enthought.traits.api import HasTraits, Int, Str
 class PreferencesTestCase(unittest.TestCase):
     """ Tests for preferences nodes. """
 
+    def filename_in_tempdir(self, filename):
+        return os.path.join(self.directory, filename)
+
+    def filename_in_localdir(self, filename):
+        return os.path.join(os.path.abspath(os.path.dirname(__file__)),
+            filename)
+
     ###########################################################################
     # 'TestCase' interface.
     ###########################################################################
@@ -20,12 +27,17 @@ class PreferencesTestCase(unittest.TestCase):
         """ Prepares the test fixture before each test method is called. """
 
         self.preferences = Preferences()
+        self.directory = tempfile.mkdtemp()
         
         return
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
         
+        try:
+            os.rmdir(self.directory)
+        except OSError:
+            pass
         return
     
     ###########################################################################
@@ -324,31 +336,33 @@ class PreferencesTestCase(unittest.TestCase):
 
         # This could be set in the constructor of course, its just here we
         # want to use the instance declared in 'setUp'.
-        p.filename = 'tmp.ini'
-        
-        # Load the preferences from an 'ini' file.
-        p.load('example.ini')
+        p.filename = self.filename_in_tempdir('tmp.ini')
 
-        # Flush it.
-        p.flush()
+        try:
+            # Load the preferences from an 'ini' file.
+            p.load(self.filename_in_localdir('example.ini'))
 
-        # Load it into a new node.
-        p = Preferences()
-        p.load('tmp.ini')
-        
-        # Make sure it was all loaded!
-        self.assertEqual('blue', p.get('acme.ui.bgcolor'))
-        self.assertEqual('50', p.get('acme.ui.width'))
-        self.assertEqual('1.0', p.get('acme.ui.ratio'))
-        self.assertEqual('True', p.get('acme.ui.visible'))
-        self.assertEqual('acme ui', p.get('acme.ui.description'))
-        self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
-        self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
-        self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
-        self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
+            # Flush it.
+            p.flush()
 
-        # Clean up!
-        os.remove('tmp.ini')
+            # Load it into a new node.
+            p = Preferences()
+            p.load(self.filename_in_tempdir('tmp.ini'))
+            
+            # Make sure it was all loaded!
+            self.assertEqual('blue', p.get('acme.ui.bgcolor'))
+            self.assertEqual('50', p.get('acme.ui.width'))
+            self.assertEqual('1.0', p.get('acme.ui.ratio'))
+            self.assertEqual('True', p.get('acme.ui.visible'))
+            self.assertEqual('acme ui', p.get('acme.ui.description'))
+            self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
+            self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
+            self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
+            self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
+
+        finally:
+            # Clean up!
+            os.remove(self.filename_in_tempdir('tmp.ini'))
 
         return
         
@@ -358,7 +372,7 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # Load the preferences from an 'ini' file.
-        p.load('example.ini')
+        p.load(self.filename_in_localdir('example.ini'))
         
         # Make sure it was all loaded!
         self.assertEqual('blue', p.get('acme.ui.bgcolor'))
@@ -377,7 +391,7 @@ class PreferencesTestCase(unittest.TestCase):
         """ load with filename trait set """
 
         p = self.preferences
-        p.filename = 'example.ini'
+        p.filename = self.filename_in_localdir('example.ini')
         
         # Load the preferences from an 'ini' file.
         p.load()
@@ -396,7 +410,7 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
         
         # Load the preferences from an 'ini' file.
-        p.load('example.ini')
+        p.load(self.filename_in_localdir('example.ini'))
 
         # Make sure it was all loaded!
         self.assertEqual('blue', p.get('acme.ui.bgcolor'))
@@ -417,7 +431,7 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # Load the preferences from an 'ini' file.
-        p.load('example.ini')
+        p.load(self.filename_in_localdir('example.ini'))
 
         # Make sure it was all loaded!
         self.assertEqual('blue', p.get('acme.ui.bgcolor'))
@@ -434,25 +448,27 @@ class PreferencesTestCase(unittest.TestCase):
         p.set('acme.ui.bgcolor', 'yellow')
         
         # Save it to another file.
-        p.save('tmp.ini')
+        p.save(self.filename_in_tempdir('tmp.ini'))
 
-        # Load it into a new node.
-        p = Preferences()
-        p.load('tmp.ini')
-        
-        # Make sure it was all loaded!
-        self.assertEqual('yellow', p.get('acme.ui.bgcolor'))
-        self.assertEqual('50', p.get('acme.ui.width'))
-        self.assertEqual('1.0', p.get('acme.ui.ratio'))
-        self.assertEqual('True', p.get('acme.ui.visible'))
-        self.assertEqual('acme ui', p.get('acme.ui.description'))
-        self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
-        self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
-        self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
-        self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
+        try:
+            # Load it into a new node.
+            p = Preferences()
+            p.load(self.filename_in_tempdir('tmp.ini'))
+            
+            # Make sure it was all loaded!
+            self.assertEqual('yellow', p.get('acme.ui.bgcolor'))
+            self.assertEqual('50', p.get('acme.ui.width'))
+            self.assertEqual('1.0', p.get('acme.ui.ratio'))
+            self.assertEqual('True', p.get('acme.ui.visible'))
+            self.assertEqual('acme ui', p.get('acme.ui.description'))
+            self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
+            self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
+            self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
+            self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
 
-        # Clean up!
-        os.remove('tmp.ini')
+        finally:
+            # Clean up!
+            os.remove(self.filename_in_tempdir('tmp.ini'))
 
         return
 
@@ -465,7 +481,7 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # Load the preferences from an 'ini' file.
-        p.load('example.ini')
+        p.load(self.filename_in_localdir('example.ini'))
         p.dump()
 
         return

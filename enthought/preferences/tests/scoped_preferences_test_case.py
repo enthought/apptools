@@ -2,7 +2,7 @@
 
 
 # Standard library imports.
-import os, unittest
+import os, tempfile, unittest
 
 # Enthought library imports.
 from enthought.preferences.api import Preferences, ScopedPreferences
@@ -22,12 +22,17 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         """ Prepares the test fixture before each test method is called. """
 
         self.preferences = ScopedPreferences()
+        self.directory = tempfile.mkdtemp()
         
         return
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
         
+        try:
+            os.rmdir(self.directory)
+        except OSError:
+            pass
         return
 
     ###########################################################################
@@ -75,7 +80,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         # Get the application scope.
         application = p.node('application/')
-        application.filename = 'test.ini'
+        application.filename = self.filename_in_tempdir('test.ini')
         
         # Set a value.
         p.set('acme.ui.bgcolor', 'red')
@@ -84,17 +89,17 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         p.save()
 
         # Make sure a file was written.
-        self.assertEqual(True, os.path.exists('test.ini'))
+        self.assertEqual(True, os.path.exists(self.filename_in_tempdir('test.ini')))
 
         # Load the 'ini' file into a new preferences node and make sure the
         # preference is in there.
         p = Preferences()
-        p.load('test.ini')
+        p.load(self.filename_in_tempdir('test.ini'))
 
         self.assertEqual('red', p.get('acme.ui.bgcolor'))
 
         # Cleanup.
-        os.remove('test.ini')
+        os.remove(self.filename_in_tempdir('test.ini'))
         
         return
 

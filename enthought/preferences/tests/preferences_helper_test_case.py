@@ -2,6 +2,7 @@
 
 
 # Standard library imports.
+import os
 import unittest
 
 # Enthought library imports.
@@ -25,6 +26,10 @@ def listener(obj, trait_name, old, new):
 
 class PreferencesHelperTestCase(unittest.TestCase):
     """ Tests for the preferences helper. """
+
+    def filename_in_localdir(self, filename):
+        return os.path.join(os.path.abspath(os.path.dirname(__file__)),
+            filename)
 
     ###########################################################################
     # 'TestCase' interface.
@@ -50,7 +55,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         """ class scope preferences path """
 
         p = self.preferences
-        p.load('example.ini')
+        p.load(self.filename_in_localdir('example.ini'))
 
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
@@ -107,7 +112,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         """ instance scope preferences path """
 
         p = self.preferences
-        p.load('example.ini')
+        p.load(self.filename_in_localdir('example.ini'))
 
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
@@ -194,7 +199,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         """ no preferences path """
 
         p = self.preferences
-        p.load('example.ini')
+        p.load(self.filename_in_localdir('example.ini'))
 
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
@@ -225,7 +230,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         w.on_trait_change(listener)
 
         p = self.preferences
-        p.load('example.ini')
+        p.load(self.filename_in_localdir('example.ini'))
 
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
@@ -344,7 +349,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         """ preferences node changed """
  
         p = self.preferences
-        p.load('example.ini')
+        p.load(self.filename_in_localdir('example.ini'))
 
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
@@ -368,7 +373,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         # Create a new preference node.
         p1 = Preferences()
-        p1.load('example.ini')
+        p1.load(self.filename_in_localdir('example.ini'))
         p1.set('acme.ui.bgcolor', 'red')
         p1.set('acme.ui.width', 40)
 
@@ -406,7 +411,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         """ nested set in trait change handler """
 
         p = self.preferences
-        p.load('example.ini')
+        p.load(self.filename_in_localdir('example.ini'))
 
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
