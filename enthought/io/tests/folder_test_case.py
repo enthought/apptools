@@ -98,7 +98,7 @@ class FolderTestCase(unittest.TestCase):
 
         # And then make it NOT readonly so that we can delete it at the end of
         # the test!
-        os.chmod(f.path, stat.S_IRUSR | stat.S_IWUSR)
+        os.chmod(f.path, stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
         self.assertEqual(f.is_readonly, False)
 
         # Properties of a Python package folder.
