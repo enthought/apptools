@@ -12,11 +12,10 @@
 """
 
 # Standard library imports
-from types import ListType
 import logging
 
 # Enthought library imports
-from enthought.traits.api import Any, Dict, HasPrivateTraits, Int, List, Tuple, Str
+from enthought.traits.api import Dict, HasPrivateTraits, Int, List, Tuple, Str
 
 
 logger = logging.getLogger(__name__)
@@ -138,7 +137,7 @@ class Updater(HasPrivateTraits):
         self.version_attribute_map[(module, name)] = attribute_name
 
 
-    def declare_version_attribute_for_class(klass, attribute_name):
+    def declare_version_attribute_for_class(self, klass, attribute_name):
         """ Covenience method to add the specified attribute name as the
             version attribute for the specified class.
         """
@@ -179,13 +178,13 @@ class Updater(HasPrivateTraits):
         # each value is a list and we don't just want to replace the existing
         # list with only the new content.
         for key, value in updater.state_functions.items():
-            if type(value) == ListType and len(value) > 0:
-                list = self.state_functions.setdefault(key, [])
-                list = list[:] # Copy necessary because traits only recognizes
-                               # list changes by list instance - not its
+            if isinstance(value, list) and len(value) > 0:
+                funcs = self.state_functions.setdefault(key, [])
+                funcs = funcs[:] # Copy necessary because traits only recognizes
+                               # funcs changes by funcs instance - not its
                                # contents.
-                list.extend(value)
-                self.state_functions[key] = list
+                funcs.extend(value)
+                self.state_functions[key] = funcs
 
 
     ### trait handlers #######################################################
