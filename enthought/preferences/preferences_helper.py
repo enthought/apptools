@@ -120,18 +120,20 @@ class PreferencesHelper(HasTraits):
         """ Get the actual value to set.
 
         This method makes sure that any required work is done to convert the
-        preference value from a string.
+        preference value from a string. Str traits or those with the metadata
+        'is_str=True' will just be passed the string itself.
 
         """
 
-        handler = self.trait(trait_name).handler
+        trait = self.trait(trait_name)
+        handler = trait.handler
 
         # If the trait type is 'Str' then we just take the raw value.
-        if type(handler) is Str:
+        if isinstance(handler, Str) or trait.is_str:
             pass
             
         # If the trait type is 'Unicode' then we convert the raw value.
-        elif type(handler) is Unicode:
+        elif isinstance(handler, Unicode):
             value = unicode(value)
 
         # Otherwise, we eval it!
@@ -144,7 +146,13 @@ class PreferencesHelper(HasTraits):
             except:
                 pass
 
-        return handler.validate(self, trait_name, value)
+        if handler.validate is not None:
+            # Any traits have a validator of None.
+            validated = handler.validate(self, trait_name, value)
+        else:
+            validated = value
+
+        return validated
 
     def _initialize(self, preferences, notify=False):
         """ Initialize the object's traits from the preferences node. """
