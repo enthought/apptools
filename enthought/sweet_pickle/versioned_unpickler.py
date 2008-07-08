@@ -1,23 +1,28 @@
 #-----------------------------------------------------------------------------
 #
-#  Copyright (c) 2005-2007 by Enthought, Inc.
+#  Copyright (c) 2005-2008 by Enthought, Inc.
 #  All rights reserved.
 #
 #  Author: Dave Peterson <dpeterson@enthought.com>
 #  Author: Duncan Child <duncan@enthought.com>
 #
 #-----------------------------------------------------------------------------
+# The code for two-stage unpickling support has been taken from a PEP draft
+# prepared by Dave Peterson and Prabhu Ramachandran.
 
-""" An unpickler that is tolerant of class refactorings.
+""" An unpickler that is tolerant of class refactorings, and implements a
+two-stage pickling process to make it possible to unpickle complicated Python
+object hierarchies where the unserialized state of an object depends on the
+state of other objects in the same pickle.
 """
 
 # Standard library imports.
 import logging
 import new
 from os import path
-from pickle import Unpickler, BUILD
+from pickle import Unpickler, UnpicklingError, BUILD
 import sys
-from types import DictionaryType
+from types import DictionaryType, GeneratorType
 
 # Enthought library imports
 from enthought.traits.api import HasTraits, Instance
@@ -88,13 +93,92 @@ def load_build_with_meta_data(self):
     # Call the standard load_build() method
     return self.load_build()
 
+    
+##############################################################################
+# class 'NewUnpickler'
+##############################################################################
+class NewUnpickler(Unpickler):
+    """ An unpickler that implements a two-stage pickling process to make it
+    possible to unpickle complicated Python object hierarchies where the
+    unserialized state of an object depends on the state of other objects in
+    the same pickle.
+    """
+
+    def load(self, max_pass=-1):
+        """Read a pickled object representation from the open file.
+
+        Return the reconstituted object hierarchy specified in the file.
+        """
+        # List of objects to be unpickled.
+        self.objects = []
+
+        # We overload the load_build method.
+        dispatch = self.dispatch
+        dispatch[BUILD] = NewUnpickler.load_build
+
+        # call the super class' method.
+        ret = Unpickler.load(self)
+        self.initialize(max_pass)
+        self.objects = []
+
+        # Reset the Unpickler's dispatch table.
+        dispatch[BUILD] = Unpickler.load_build
+        return ret
+
+    def initialize(self, max_pass):
+        # List of (object, generator) tuples that initialize objects.
+        generators = []
+
+        # Execute object's initialize to setup the generators.
+        for obj in self.objects:
+            if hasattr(obj, '__initialize__') and \
+                   callable(obj.__initialize__):
+                ret = obj.__initialize__()
+                if isinstance(ret, GeneratorType):
+                    generators.append((obj, ret))
+                elif ret is not None:
+                    raise UnpicklingError('Unexpected return value from '
+                        '__initialize__.  %s returned %s' % (obj, ret))
+
+        # Ensure a maximum number of passes
+        if max_pass < 0:
+            max_pass = len(generators)
+
+        # Now run the generators.
+        count = 0
+        while len(generators) > 0:
+            count += 1
+            if count > max_pass:
+                not_done = [x[0] for x in generators]
+                msg = """Reached maximum pass count %s.  You may have
+                         a deadlock!  The following objects are
+                         uninitialized: %s""" % (max_pass, not_done)
+                raise UnpicklingError(msg)
+            for o, g in generators[:]:
+                try:
+                    g.next()
+                except StopIteration:
+                    generators.remove((o, g))
+
+    # Make this a class method since dispatch is a class variable. 
+    # Otherwise, supposing the initial sweet_pickle.load call (which would 
+    # have overloaded the load_build method) makes a pickle.load call at some 
+    # point, we would have the dispatch still pointing to 
+    # NewPickler.load_build whereas the object being passed in will be an 
+    # Unpickler instance, causing a TypeError. 
+    def load_build(cls, obj):
+        # Just save the instance in the list of objects.
+        if isinstance(obj, NewUnpickler):
+            obj.objects.append(obj.stack[-2])
+        Unpickler.load_build(obj)
+    load_build = classmethod(load_build)
 
 
 ##############################################################################
 # class 'VersionedUnpickler'
 ##############################################################################
 
-class VersionedUnpickler(Unpickler, HasTraits):
+class VersionedUnpickler(NewUnpickler, HasTraits):
     """ An unpickler that is tolerant of class refactorings.
 
         This class reads in a pickled file and applies the transforms

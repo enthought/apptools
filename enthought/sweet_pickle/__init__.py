@@ -110,18 +110,18 @@
 from versioned_unpickler import VersionedUnpickler as Unpickler
 
 # Use our custom unpickler to load from files
-def load(file):
-    return Unpickler(file).load()
+def load(file, max_pass=-1):
+    return Unpickler(file).load(max_pass)
 
 # Use our custom unpickler to load from strings
-def loads(str):
+def loads(str, max_pass=-1):
     try:
         from cStringIO import StringIO
     except ImportError:
         from StringIO import StringIO
     file = StringIO(str)
 
-    return Unpickler(file).load()
+    return Unpickler(file).load(max_pass)
 
 # We don't customize the Python pickler, though we do use the cPickle module
 # for improved performance.
