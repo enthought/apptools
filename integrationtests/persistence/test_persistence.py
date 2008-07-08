@@ -71,8 +71,8 @@ if __name__ == '__main__':
     
     import sys 
     rev = 1
-    __import__('enthought.persistence.test.update%d' % rev)
-    mod = sys.modules['enthought.persistence.test.update%d' % rev]
+    __import__('integrationtests.persistence.update%d' % rev)
+    mod = sys.modules['integrationtests.persistence.update%d' % rev]
     klass = getattr(mod, 'Update%d' % rev)
     updater = klass()
     print '%s %s' % (rev, updater)           
