@@ -2,6 +2,7 @@
 from pickle import *
 import sys, new
 import logging
+from types import GeneratorType
 
 # Enthought library imports
 from enthought.persistence.updater import __replacement_setstate__
@@ -9,8 +10,87 @@ from enthought.persistence.updater import __replacement_setstate__
 
 logger = logging.getLogger(__name__)
 
+##############################################################################
+# class 'NewUnpickler'
+##############################################################################
+class NewUnpickler(Unpickler):
+    """ An unpickler that implements a two-stage pickling process to make it
+    possible to unpickle complicated Python object hierarchies where the
+    unserialized state of an object depends on the state of other objects in
+    the same pickle.
+    """
 
-class VersionedUnpickler(Unpickler):
+    def load(self, max_pass=-1):
+        """Read a pickled object representation from the open file.
+
+        Return the reconstituted object hierarchy specified in the file.
+        """
+        # List of objects to be unpickled.
+        self.objects = []
+
+        # We overload the load_build method.
+        dispatch = self.dispatch
+        dispatch[BUILD] = NewUnpickler.load_build
+
+        # call the super class' method.
+        ret = Unpickler.load(self)
+        self.initialize(max_pass)
+        self.objects = []
+
+        # Reset the Unpickler's dispatch table.
+        dispatch[BUILD] = Unpickler.load_build
+        return ret
+
+    def initialize(self, max_pass):
+        # List of (object, generator) tuples that initialize objects.
+        generators = []
+
+        # Execute object's initialize to setup the generators.
+        for obj in self.objects:
+            if hasattr(obj, '__initialize__') and \
+                   callable(obj.__initialize__):
+                ret = obj.__initialize__()
+                if isinstance(ret, GeneratorType):
+                    generators.append((obj, ret))
+                elif ret is not None:
+                    raise UnpicklingError('Unexpected return value from '
+                        '__initialize__.  %s returned %s' % (obj, ret))
+
+        # Ensure a maximum number of passes
+        if max_pass < 0:
+            max_pass = len(generators)
+
+        # Now run the generators.
+        count = 0
+        while len(generators) > 0:
+            count += 1
+            if count > max_pass:
+                not_done = [x[0] for x in generators]
+                msg = """Reached maximum pass count %s.  You may have
+                         a deadlock!  The following objects are
+                         uninitialized: %s""" % (max_pass, not_done)
+                raise UnpicklingError(msg)
+            for o, g in generators[:]:
+                try:
+                    g.next()
+                except StopIteration:
+                    generators.remove((o, g))
+
+    # Make this a class method since dispatch is a class variable. 
+    # Otherwise, supposing the initial sweet_pickle.load call (which would 
+    # have overloaded the load_build method) makes a pickle.load call at some 
+    # point, we would have the dispatch still pointing to 
+    # NewPickler.load_build whereas the object being passed in will be an 
+    # Unpickler instance, causing a TypeError. 
+    def load_build(cls, obj):
+        # Just save the instance in the list of objects.
+        if isinstance(obj, NewUnpickler):
+            obj.objects.append(obj.stack[-2])
+        Unpickler.load_build(obj)
+    load_build = classmethod(load_build)
+
+
+class VersionedUnpickler(NewUnpickler):
     """ This class reads in a pickled file created at revision version 'n'
     and then applies the transforms specified in the updater class to 
     generate a new set of objects which are at revision version 'n+1'.

@@ -11,7 +11,8 @@ from enthought.persistence.versioned_unpickler import VersionedUnpickler
 logger = logging.getLogger(__name__)
 
 
-def load_project(pickle_filename, updater_path, application_version, protocol):
+def load_project(pickle_filename, updater_path, application_version, protocol,
+                                                                  max_pass=-1):
     """ Reads a project from a pickle file and if necessary will update it to 
     the latest version of the application.
     """
@@ -20,7 +21,7 @@ def load_project(pickle_filename, updater_path, application_version, protocol):
     
     # Read the pickled project's metadata.
     f = file(latest_file, 'rb')
-    metadata = VersionedUnpickler(f).load()
+    metadata = VersionedUnpickler(f).load(max_pass)
     f.close()
     project_version = metadata.get('version', False)
     
@@ -33,19 +34,20 @@ def load_project(pickle_filename, updater_path, application_version, protocol):
     # here you can temporarily force an upgrade each time for testing ....
     # project_version = 0
     latest_file = upgrade_project(pickle_filename, updater_path, 
-                                project_version, application_version, protocol)
+                                project_version, application_version, protocol,
+                                max_pass)
 
     # Finally we can import the project ... 
     logger.info('loading %s' % latest_file)
     i_f = file(latest_file, 'rb')          
-    version = VersionedUnpickler(i_f).load() 
-    project = VersionedUnpickler(i_f).load()
+    version = VersionedUnpickler(i_f).load(max_pass) 
+    project = VersionedUnpickler(i_f).load(max_pass)
     i_f.close() 
             
     return project
     
     
-def upgrade_project(pickle_filename, updater_path, project_version, application_version, protocol):
+def upgrade_project(pickle_filename, updater_path, project_version, application_version, protocol, max_pass=-1):
     """ Repeatedly read and write the project to disk updating it one version 
     at a time. 
     
@@ -87,8 +89,8 @@ def upgrade_project(pickle_filename, updater_path, project_version, application_
         updater = klass()
         
         # load and update this version of the project 
-        version = VersionedUnpickler(i_f).load()
-        project = VersionedUnpickler(i_f, updater).load()
+        version = VersionedUnpickler(i_f).load(max_pass)
+        project = VersionedUnpickler(i_f, updater).load(max_pass)
         i_f.close()
         
         # set the project version to be the same as the updater we just 
