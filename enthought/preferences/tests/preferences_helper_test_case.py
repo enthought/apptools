@@ -9,7 +9,7 @@ import unittest
 from enthought.preferences.api import Preferences, PreferencesHelper
 from enthought.preferences.api import ScopedPreferences
 from enthought.preferences.api import set_default_preferences
-from enthought.traits.api import Bool, HasTraits, Int, Float, List, Str
+from enthought.traits.api import Any, Bool, HasTraits, Int, Float, List, Str
 from enthought.traits.api import Unicode
 
 
@@ -455,6 +455,17 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('3.0', p.get('acme.ui.ratio'))
 
         return
+
+    def test_unevaluated_strings(self):
+        p = self.preferences
+        p.load(self.filename_in_localdir('example.ini'))
+
+        class AcmeUIPreferencesHelper(PreferencesHelper):
+            width = Any(is_str=True)
+
+        helper = AcmeUIPreferencesHelper(preferences_path='acme.ui')
+
+        self.assertEqual('50', helper.width)
 
 
 # Entry point for stand-alone testing.
