@@ -3,21 +3,22 @@
 
 # Standard library imports.
 import os, tempfile, unittest
+from os.path import join
+
+# Major package imports.
+from pkg_resources import resource_filename
 
 # Enthought library imports.
 from enthought.preferences.api import Preferences
 from enthought.traits.api import HasTraits, Int, Str
 
 
+# This module's package.
+PKG = 'enthought.preferences.tests'
+
+
 class PreferencesTestCase(unittest.TestCase):
     """ Tests for preferences nodes. """
-
-    def filename_in_tempdir(self, filename):
-        return os.path.join(self.directory, filename)
-
-    def filename_in_localdir(self, filename):
-        return os.path.join(os.path.abspath(os.path.dirname(__file__)),
-            filename)
 
     ###########################################################################
     # 'TestCase' interface.
@@ -27,17 +28,15 @@ class PreferencesTestCase(unittest.TestCase):
         """ Prepares the test fixture before each test method is called. """
 
         self.preferences = Preferences()
-        self.directory = tempfile.mkdtemp()
-        
+
+        # The filename of the example preferences file.
+        self.example = resource_filename(PKG, 'example.ini')
+
         return
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
-        
-        try:
-            os.rmdir(self.directory)
-        except OSError:
-            pass
+
         return
     
     ###########################################################################
@@ -334,20 +333,23 @@ class PreferencesTestCase(unittest.TestCase):
 
         p = self.preferences
 
+        # A temporary .ini file for this test.
+        tmp = join(tempfile.mkdtemp(), 'tmp.ini')
+        
         # This could be set in the constructor of course, its just here we
         # want to use the instance declared in 'setUp'.
-        p.filename = self.filename_in_tempdir('tmp.ini')
+        p.filename = tmp
 
         try:
             # Load the preferences from an 'ini' file.
-            p.load(self.filename_in_localdir('example.ini'))
+            p.load(self.example)
 
             # Flush it.
             p.flush()
 
             # Load it into a new node.
             p = Preferences()
-            p.load(self.filename_in_tempdir('tmp.ini'))
+            p.load(tmp)
             
             # Make sure it was all loaded!
             self.assertEqual('blue', p.get('acme.ui.bgcolor'))
@@ -362,7 +364,7 @@ class PreferencesTestCase(unittest.TestCase):
 
         finally:
             # Clean up!
-            os.remove(self.filename_in_tempdir('tmp.ini'))
+            os.remove(tmp)
 
         return
         
@@ -372,7 +374,7 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # Load the preferences from an 'ini' file.
-        p.load(self.filename_in_localdir('example.ini'))
+        p.load(self.example)
         
         # Make sure it was all loaded!
         self.assertEqual('blue', p.get('acme.ui.bgcolor'))
@@ -391,7 +393,7 @@ class PreferencesTestCase(unittest.TestCase):
         """ load with filename trait set """
 
         p = self.preferences
-        p.filename = self.filename_in_localdir('example.ini')
+        p.filename = self.example
         
         # Load the preferences from an 'ini' file.
         p.load()
@@ -410,7 +412,7 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
         
         # Load the preferences from an 'ini' file.
-        p.load(self.filename_in_localdir('example.ini'))
+        p.load(self.example)
 
         # Make sure it was all loaded!
         self.assertEqual('blue', p.get('acme.ui.bgcolor'))
@@ -431,7 +433,7 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # Load the preferences from an 'ini' file.
-        p.load(self.filename_in_localdir('example.ini'))
+        p.load(self.example)
 
         # Make sure it was all loaded!
         self.assertEqual('blue', p.get('acme.ui.bgcolor'))
@@ -448,12 +450,13 @@ class PreferencesTestCase(unittest.TestCase):
         p.set('acme.ui.bgcolor', 'yellow')
         
         # Save it to another file.
-        p.save(self.filename_in_tempdir('tmp.ini'))
+        tmp = join(tempfile.mkdtemp(), 'tmp.ini')
+        p.save(tmp)
 
         try:
             # Load it into a new node.
             p = Preferences()
-            p.load(self.filename_in_tempdir('tmp.ini'))
+            p.load(tmp)
             
             # Make sure it was all loaded!
             self.assertEqual('yellow', p.get('acme.ui.bgcolor'))
@@ -468,7 +471,7 @@ class PreferencesTestCase(unittest.TestCase):
 
         finally:
             # Clean up!
-            os.remove(self.filename_in_tempdir('tmp.ini'))
+            os.remove(tmp)
 
         return
 
@@ -481,7 +484,7 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # Load the preferences from an 'ini' file.
-        p.load(self.filename_in_localdir('example.ini'))
+        p.load(self.example)
         p.dump()
 
         return

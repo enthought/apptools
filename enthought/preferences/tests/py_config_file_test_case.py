@@ -3,20 +3,21 @@
 
 # Standard library imports.
 import os, tempfile, unittest
+from os.path import join
+
+# Major package imports.
+from pkg_resources import resource_filename
 
 # Enthought library imports.
 from py_config_file import PyConfigFile
 
 
+# This module's package.
+PKG = 'enthought.preferences.tests'
+
+
 class PyConfigFileTestCase(unittest.TestCase):
     """ Tests for Python-esque '.ini' files. """
-
-    def filename_in_tempdir(self, filename):
-        return os.path.join(self.directory, filename)
-
-    def filename_in_localdir(self, filename):
-        return os.path.join(os.path.abspath(os.path.dirname(__file__)),
-            filename)
 
     ###########################################################################
     # 'TestCase' interface.
@@ -25,17 +26,15 @@ class PyConfigFileTestCase(unittest.TestCase):
     def setUp(self):
         """ Prepares the test fixture before each test method is called. """
 
-        self.directory = tempfile.mkdtemp()
+        # The filename of the example preferences file.
+        self.example = resource_filename(PKG, 'py_config_example.ini')
+        self.example_2 = resource_filename(PKG, 'py_config_example_2.ini')
         
         return
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
         
-        try:
-            os.rmdir(self.directory)
-        except OSError:
-            pass
         return
 
     ###########################################################################
@@ -45,7 +44,7 @@ class PyConfigFileTestCase(unittest.TestCase):
     def test_load_from_filename(self):
         """ load from filename """
 
-        config = PyConfigFile(self.filename_in_localdir('py_config_example.ini'))
+        config = PyConfigFile(self.example)
 
         self.assertEqual('blue', config['acme.ui']['bgcolor'])
         self.assertEqual(50, config['acme.ui']['width'])
@@ -59,7 +58,7 @@ class PyConfigFileTestCase(unittest.TestCase):
     def test_load_from_file(self):
         """ load from file """
 
-        config = PyConfigFile(file(self.filename_in_localdir('py_config_example.ini')))
+        config = PyConfigFile(file(self.example))
 
         self.assertEqual('blue', config['acme.ui']['bgcolor'])
         self.assertEqual(50, config['acme.ui']['width'])
@@ -73,7 +72,7 @@ class PyConfigFileTestCase(unittest.TestCase):
     def test_save(self):
         """ save """
 
-        config = PyConfigFile(file(self.filename_in_localdir('py_config_example.ini')))
+        config = PyConfigFile(file(self.example))
 
         self.assertEqual('blue', config['acme.ui']['bgcolor'])
         self.assertEqual(50, config['acme.ui']['width'])
@@ -83,13 +82,14 @@ class PyConfigFileTestCase(unittest.TestCase):
         self.assertEqual([1, 2, 3, 4], config['acme.ui']['bar'])
 
         # Save the config to another file.
-        config.save(self.filename_in_tempdir('tmp.ini'))
+        tmp = join(tempfile.mkdtemp(), 'tmp.ini')
+        config.save(tmp)
         try:
-            self.assert_(os.path.exists(self.filename_in_tempdir('tmp.ini')))
+            self.assert_(os.path.exists(tmp))
 
             # Make sure we can read the file back in and that we get the same
             # values!
-            config = PyConfigFile(file(self.filename_in_tempdir('tmp.ini')))
+            config = PyConfigFile(file(tmp))
 
             self.assertEqual('blue', config['acme.ui']['bgcolor'])
             self.assertEqual(50, config['acme.ui']['width'])
@@ -100,14 +100,14 @@ class PyConfigFileTestCase(unittest.TestCase):
 
         finally:
             # Clean up!
-            os.remove(self.filename_in_tempdir('tmp.ini'))
+            os.remove(tmp)
 
         return
 
     def test_load_multiple_files(self):
         """ load multiple files """
 
-        config = PyConfigFile(self.filename_in_localdir('py_config_example.ini'))
+        config = PyConfigFile(self.example)
 
         self.assertEqual('blue', config['acme.ui']['bgcolor'])
         self.assertEqual(50, config['acme.ui']['width'])
@@ -117,7 +117,7 @@ class PyConfigFileTestCase(unittest.TestCase):
         self.assertEqual([1, 2, 3, 4], config['acme.ui']['bar'])
 
         # Load another file.
-        config.load(self.filename_in_localdir('py_config_example_2.ini'))
+        config.load(self.example_2)
 
         # Make sure we still have the unchanged values...
         self.assertEqual('red', config['acme.ui']['bgcolor'])

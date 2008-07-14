@@ -3,12 +3,20 @@
 
 # Standard library imports.
 import os, tempfile, unittest
+from os.path import join
+
+# Major package imports.
+from pkg_resources import resource_filename
 
 # Enthought library imports.
 from enthought.preferences.api import Preferences, PreferenceBinding
 from enthought.preferences.api import ScopedPreferences, bind_preference
 from enthought.preferences.api import set_default_preferences
 from enthought.traits.api import Bool, HasTraits, Int, Float, Str
+
+
+# This module's package.
+PKG = 'enthought.preferences.tests'
 
 
 def listener(obj, trait_name, old, new):
@@ -25,13 +33,6 @@ def listener(obj, trait_name, old, new):
 class PreferenceBindingTestCase(unittest.TestCase):
     """ Tests for preference bindings. """
 
-    def filename_in_tempdir(self, filename):
-        return os.path.join(self.directory, filename)
-
-    def filename_in_localdir(self, filename):
-        return os.path.join(os.path.abspath(os.path.dirname(__file__)),
-            filename)
-
     ###########################################################################
     # 'TestCase' interface.
     ###########################################################################
@@ -40,17 +41,15 @@ class PreferenceBindingTestCase(unittest.TestCase):
         """ Prepares the test fixture before each test method is called. """
 
         self.preferences = set_default_preferences(Preferences())
-        self.directory = tempfile.mkdtemp()
+
+        # The filename of the example preferences file.
+        self.example = resource_filename(PKG, 'example.ini')
         
         return
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
-        
-        try:
-            os.rmdir(self.directory)
-        except OSError:
-            pass
+
         return
     
     ###########################################################################
@@ -61,7 +60,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
         """ preference binding """
 
         p = self.preferences
-        p.load(self.filename_in_localdir('example.ini'))
+        p.load(self.example)
 
         class AcmeUI(HasTraits):
             """ The Acme UI class! """
@@ -155,7 +154,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
         """ load and save """
         
         p = self.preferences
-        p.load(self.filename_in_localdir('example.ini'))
+        p.load(self.example)
         
         class AcmeUI(HasTraits):
             """ The Acme UI class! """
@@ -187,12 +186,13 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual('yellow', p.get('acme.ui.bgcolor'))
 
         # Save the preferences.
-        p.save(self.filename_in_tempdir('tmp.ini'))
+        tmp = join(tempfile.mkdtemp(), 'tmp.ini')
+        p.save(tmp)
 
         try:
             # Load the preferences again.
             p = set_default_preferences(Preferences())
-            p.load(self.filename_in_tempdir('tmp.ini'))
+            p.load(tmp)
 
             acme_ui = AcmeUI()
             
@@ -211,7 +211,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
 
         finally:
             # Clean up!
-            os.remove(self.filename_in_tempdir('tmp.ini'))
+            os.remove(tmp)
         
         return
 
@@ -219,7 +219,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
         """ explicit preferences """
 
         p = self.preferences
-        p.load(self.filename_in_localdir('example.ini'))
+        p.load(self.example)
 
         class AcmeUI(HasTraits):
             """ The Acme UI class! """
@@ -255,7 +255,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
         """ nested set in trait change handler """
 
         p = self.preferences
-        p.load(self.filename_in_localdir('example.ini'))
+        p.load(self.example)
 
         class AcmeUI(HasTraits):
             """ The Acme UI class! """

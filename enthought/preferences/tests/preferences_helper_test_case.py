@@ -2,8 +2,10 @@
 
 
 # Standard library imports.
-import os
 import unittest
+
+# Major package imports.
+from pkg_resources import resource_filename
 
 # Enthought library imports.
 from enthought.preferences.api import Preferences, PreferencesHelper
@@ -24,12 +26,12 @@ def listener(obj, trait_name, old, new):
     return
 
 
+# This module's package.
+PKG = 'enthought.preferences.tests'
+
+
 class PreferencesHelperTestCase(unittest.TestCase):
     """ Tests for the preferences helper. """
-
-    def filename_in_localdir(self, filename):
-        return os.path.join(os.path.abspath(os.path.dirname(__file__)),
-            filename)
 
     ###########################################################################
     # 'TestCase' interface.
@@ -39,6 +41,9 @@ class PreferencesHelperTestCase(unittest.TestCase):
         """ Prepares the test fixture before each test method is called. """
 
         self.preferences = set_default_preferences(Preferences())
+
+        # The filename of the example preferences file.
+        self.example = resource_filename(PKG, 'example.ini')
         
         return
 
@@ -55,7 +60,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         """ class scope preferences path """
 
         p = self.preferences
-        p.load(self.filename_in_localdir('example.ini'))
+        p.load(self.example)
 
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
@@ -112,7 +117,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         """ instance scope preferences path """
 
         p = self.preferences
-        p.load(self.filename_in_localdir('example.ini'))
+        p.load(self.example)
 
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
@@ -199,7 +204,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         """ no preferences path """
 
         p = self.preferences
-        p.load(self.filename_in_localdir('example.ini'))
+        p.load(self.example)
 
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
@@ -230,7 +235,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         w.on_trait_change(listener)
 
         p = self.preferences
-        p.load(self.filename_in_localdir('example.ini'))
+        p.load(self.example)
 
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
@@ -349,7 +354,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         """ preferences node changed """
  
         p = self.preferences
-        p.load(self.filename_in_localdir('example.ini'))
+        p.load(self.example)
 
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
@@ -373,7 +378,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         # Create a new preference node.
         p1 = Preferences()
-        p1.load(self.filename_in_localdir('example.ini'))
+        p1.load(self.example)
         p1.set('acme.ui.bgcolor', 'red')
         p1.set('acme.ui.width', 40)
 
@@ -411,7 +416,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         """ nested set in trait change handler """
 
         p = self.preferences
-        p.load(self.filename_in_localdir('example.ini'))
+        p.load(self.example)
 
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
@@ -456,9 +461,14 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         return
 
+    # fixme: No comments - nice work... I added the doc string and the 'return'
+    # to be compatible with the rest of the module. Interns please note correct
+    # procedure when modifying existing code. If in doubt, ask a developer.
     def test_unevaluated_strings(self):
+        """ unevaluated strings """
+        
         p = self.preferences
-        p.load(self.filename_in_localdir('example.ini'))
+        p.load(self.example)
 
         class AcmeUIPreferencesHelper(PreferencesHelper):
             width = Any(is_str=True)
@@ -466,6 +476,8 @@ class PreferencesHelperTestCase(unittest.TestCase):
         helper = AcmeUIPreferencesHelper(preferences_path='acme.ui')
 
         self.assertEqual('50', helper.width)
+
+        return
 
 
 # Entry point for stand-alone testing.
