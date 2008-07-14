@@ -185,33 +185,31 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual('yellow', acme_ui.bgcolor)
         self.assertEqual('yellow', p.get('acme.ui.bgcolor'))
 
-        # Save the preferences.
+        # Save the preferences to a different file.
         tmp = join(tempfile.mkdtemp(), 'tmp.ini')
         p.save(tmp)
 
-        try:
-            # Load the preferences again.
-            p = set_default_preferences(Preferences())
-            p.load(tmp)
+        # Load the preferences again from that file.
+        p = set_default_preferences(Preferences())
+        p.load(tmp)
+        
+        acme_ui = AcmeUI()
+        
+        # Make some bindings.
+        bind_preference(acme_ui, 'bgcolor', 'acme.ui.bgcolor')
+        bind_preference(acme_ui, 'width',   'acme.ui.width')
+        bind_preference(acme_ui, 'ratio',   'acme.ui.ratio')
+        bind_preference(acme_ui, 'visible', 'acme.ui.visible')
+        
+        # Make sure the helper was initialized properly (with the values in
+        # the .ini file *not* the trait defaults!).
+        self.assertEqual('yellow', acme_ui.bgcolor)
+        self.assertEqual(50, acme_ui.width)
+        self.assertEqual(1.0, acme_ui.ratio)
+        self.assertEqual(True, acme_ui.visible)
 
-            acme_ui = AcmeUI()
-            
-            # Make some bindings.
-            bind_preference(acme_ui, 'bgcolor', 'acme.ui.bgcolor')
-            bind_preference(acme_ui, 'width',   'acme.ui.width')
-            bind_preference(acme_ui, 'ratio',   'acme.ui.ratio')
-            bind_preference(acme_ui, 'visible', 'acme.ui.visible')
-                
-            # Make sure the helper was initialized properly (with the values in
-            # the .ini file *not* the trait defaults!).
-            self.assertEqual('yellow', acme_ui.bgcolor)
-            self.assertEqual(50, acme_ui.width)
-            self.assertEqual(1.0, acme_ui.ratio)
-            self.assertEqual(True, acme_ui.visible)
-
-        finally:
-            # Clean up!
-            os.remove(tmp)
+        # Clean up!
+        os.remove(tmp)
         
         return
 
