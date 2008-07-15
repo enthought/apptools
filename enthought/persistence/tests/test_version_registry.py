@@ -29,9 +29,12 @@ import unittest
 class RefreshTestCase(unittest.TestCase):
     
     def test_run(self):
+        cwd = os.path.dirname(__file__)
+        if not cwd:
+            cwd = '.'
         
         retcode = subprocess.call(['python', 'check_version_registry.py'],
-                                  cwd=os.path.dirname(__file__))
+                                  cwd=cwd)
         
         self.assertEqual(retcode, 0)
         
