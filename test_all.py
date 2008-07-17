@@ -30,8 +30,9 @@ class Tests(unittest.TestCase):
             be skipped.
         """
         skip_dirs = ['attic', 'deprecated', 'research']
-        
-        pat_test = re.compile(r'tests$', re.I)
+
+        # Note: \W matches any non-alphanumeric character
+        pat_test = re.compile(r'tests\W*$', re.I)
 
         # contruct regular expression for directories to be skipped
         # note that .svn is always excluded.
