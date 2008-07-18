@@ -30,6 +30,7 @@ from enthought.naming.ui.explorer import Explorer
 from enthought.pyface.api import GUI
 from enthought.traits.api import TraitDict, TraitList
 from enthought.type_manager import TypeManager
+from enthought.util.resource import find_resource
 
 
 # Application entry point.
@@ -84,8 +85,13 @@ if __name__ == '__main__':
         InstanceContextAdapterFactory(), object
     )
 
+    # Get the path to the data directory
+    data_path = os.path.join('examples','naming','data')
+    full_path = find_resource('AppTools', data_path, alt_path='data',
+        return_path=True)
+
     # Create the root context.
-    root = PyFSContext(path='data')
+    root = PyFSContext(path=full_path)
     root.environment[Context.TYPE_MANAGER] = type_manager
 
     # Create and open the main window.
