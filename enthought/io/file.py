@@ -15,7 +15,7 @@
 
 
 # Standard/built-in imports.
-import mimetypes, os, shutil, stat
+import mimetypes, os, sys, shutil, stat
 
 # Enthought library imports.
 from enthought.traits.api import Bool, HasPrivateTraits, Instance, List, Property
@@ -152,8 +152,20 @@ class File(HasPrivateTraits):
     def _get_is_readonly(self):
         """ Returns True if the file/folder is readonly, otherwise False. """
 
+        # If the File object is a folder, os.access cannot be used because it
+        # returns True for both read-only and writable folders on Windows
+        # systems.
         if self.is_folder:
-            readonly = not os.access(self.path, os.W_OK | os.X_OK)
+            
+            # Mask for the write-permission bits on the folder. If these bits
+            # are set to zero, the folder is read-only.
+            WRITE_MASK = 0x92
+            permissions = os.stat(self.path)[0]
+            
+            if permissions & WRITE_MASK == 0:
+                readonly = True
+            else:
+                readonly = False
             
         elif self.is_file:
             readonly = not os.access(self.path, os.W_OK)
