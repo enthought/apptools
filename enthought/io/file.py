@@ -15,7 +15,7 @@
 
 
 # Standard/built-in imports.
-import mimetypes, os, sys, shutil, stat
+import mimetypes, os, shutil, stat
 
 # Enthought library imports.
 from enthought.traits.api import Bool, HasPrivateTraits, Instance, List, Property
