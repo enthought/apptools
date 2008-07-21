@@ -94,6 +94,7 @@ def unzip_html_docs(src_path, dest_dir):
             if not os.path.exists(cur_name):
                 os.mkdir(cur_name)
     file.close()
+
 class my_develop(develop):
     def run(self):
         develop.run(self)
