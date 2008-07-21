@@ -1,5 +1,0 @@
-
-* Port enthought.help to envisage2,
-  currently it relies on the old envisage,
-  and is excluded from the tests.
-

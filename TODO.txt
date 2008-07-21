@@ -11,3 +11,6 @@
   enthought.resource into the TraitsGUI project to resolve issues with
   dependencies there.
 
+* Port enthought.help to envisage2, currently it relies on the old envisage,
+  and is excluded from the tests.
+
