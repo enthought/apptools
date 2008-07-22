@@ -63,8 +63,6 @@ def generate_docs():
                 'target': target,
                 'verbose': True,
                 'versioned': False,
-                'version': INFO['version'],
-                'release': INFO['version']
                 }, [])
             del build
         except:
