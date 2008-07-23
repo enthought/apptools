@@ -31,15 +31,18 @@ class PreferencesTestCase(unittest.TestCase):
 
         # The filename of the example preferences file.
         self.example = resource_filename(PKG, 'example.ini')
-        
+
+        # A temporary directory that can safely be written to.
         self.tmpdir = tempfile.mkdtemp()
         
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
-        
+
+        # Remove the temporary directory.
         os.removedirs(self.tmpdir)
-        
+
+        return
     
     ###########################################################################
     # Tests.

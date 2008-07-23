@@ -5,11 +5,18 @@
 import os, tempfile, unittest
 from os.path import join
 
+# Major package imports.
+from pkg_resources import resource_filename
+
 # Enthought library imports.
 from enthought.preferences.api import Preferences, ScopedPreferences
 
 # Local imports.
 from preferences_test_case import PreferencesTestCase
+
+
+# This module's package.
+PKG = 'enthought.preferences.tests'
 
 
 class ScopedPreferencesTestCase(PreferencesTestCase):
@@ -22,21 +29,24 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
     def setUp(self):
         """ Prepares the test fixture before each test method is called. """
 
-        super(ScopedPreferencesTestCase, self).setUp()
-        
         self.preferences = ScopedPreferences()
+
+        # The filename of the example preferences file.
+        self.example = resource_filename(PKG, 'example.ini')
         
+        # A temporary directory that can safely be written to.
         self.tmpdir = tempfile.mkdtemp()
         
-
+        return
+    
     def tearDown(self):
         """ Called immediately after each test method has been called. """
         
+        # Remove the temporary directory.
         os.removedirs(self.tmpdir)
-        # FIXME:
-        #   Still leaving empty test dirs behind.
-        #   I don't quite understand why.
 
+        return
+    
     ###########################################################################
     # Tests overridden from 'PreferencesTestCase'.
     ###########################################################################
@@ -103,7 +113,6 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         self.assertEqual('red', p.get('acme.ui.bgcolor'))
         
         # Cleanup.
-        # Note that the tmp directory itself is removed by tearDown.
         os.remove(tmp)
         
         return
