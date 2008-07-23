@@ -31,13 +31,15 @@ class PreferencesTestCase(unittest.TestCase):
 
         # The filename of the example preferences file.
         self.example = resource_filename(PKG, 'example.ini')
-
-        return
+        
+        self.tmpdir = tempfile.mkdtemp()
+        
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
-
-        return
+        
+        os.removedirs(self.tmpdir)
+        
     
     ###########################################################################
     # Tests.
@@ -334,7 +336,7 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # A temporary .ini file for this test.
-        tmp = join(tempfile.mkdtemp(), 'tmp.ini')
+        tmp = join(self.tmpdir, 'tmp.ini')
         
         # This could be set in the constructor of course, its just here we
         # want to use the instance declared in 'setUp'.
@@ -450,7 +452,7 @@ class PreferencesTestCase(unittest.TestCase):
         p.set('acme.ui.bgcolor', 'yellow')
         
         # Save it to another file.
-        tmp = join(tempfile.mkdtemp(), 'tmp.ini')
+        tmp = join(self.tmpdir, 'tmp.ini')
         p.save(tmp)
 
         try:
