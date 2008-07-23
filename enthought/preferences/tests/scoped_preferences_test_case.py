@@ -78,8 +78,10 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         # Get the application scope.
         application = p.node('application/')
-
-        tmp = join(tempfile.mkdtemp(), 'test.ini')
+        
+        tmpdir = tempfile.mkdtemp()
+        
+        tmp = join(tmpdir, 'test.ini')
         application.filename = tmp
         
         # Set a value.
@@ -95,11 +97,12 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         # preference is in there.
         p = Preferences()
         p.load(tmp)
-
+        
         self.assertEqual('red', p.get('acme.ui.bgcolor'))
-
+        
         # Cleanup.
         os.remove(tmp)
+        os.removedirs(tmpdir)
         
         return
 
