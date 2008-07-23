@@ -82,7 +82,9 @@ class PyConfigFileTestCase(unittest.TestCase):
         self.assertEqual([1, 2, 3, 4], config['acme.ui']['bar'])
 
         # Save the config to another file.
-        tmp = join(tempfile.mkdtemp(), 'tmp.ini')
+        tmpdir = tempfile.mkdtemp()
+        
+        tmp = join(tmpdir, 'tmp.ini')
         config.save(tmp)
         try:
             self.assert_(os.path.exists(tmp))
@@ -101,6 +103,7 @@ class PyConfigFileTestCase(unittest.TestCase):
         finally:
             # Clean up!
             os.remove(tmp)
+            os.removedirs(tmpdir)
 
         return
 
