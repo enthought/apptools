@@ -25,13 +25,17 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         super(ScopedPreferencesTestCase, self).setUp()
         
         self.preferences = ScopedPreferences()
-
-        return
+        
+        self.tmpdir = tempfile.mkdtemp()
+        
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
-
-        return
+        
+        os.removedirs(self.tmpdir)
+        # FIXME:
+        #   Still leaving empty test dirs behind.
+        #   I don't quite understand why.
 
     ###########################################################################
     # Tests overridden from 'PreferencesTestCase'.
@@ -79,9 +83,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         # Get the application scope.
         application = p.node('application/')
         
-        tmpdir = tempfile.mkdtemp()
-        
-        tmp = join(tmpdir, 'test.ini')
+        tmp = join(self.tmpdir, 'test.ini')
         application.filename = tmp
         
         # Set a value.
@@ -101,8 +103,8 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         self.assertEqual('red', p.get('acme.ui.bgcolor'))
         
         # Cleanup.
+        # Note that the tmp directory itself is removed by tearDown.
         os.remove(tmp)
-        os.removedirs(tmpdir)
         
         return
 

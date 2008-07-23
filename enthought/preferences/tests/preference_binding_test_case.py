@@ -186,7 +186,8 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual('yellow', p.get('acme.ui.bgcolor'))
 
         # Save the preferences to a different file.
-        tmp = join(tempfile.mkdtemp(), 'tmp.ini')
+        tmpdir = tempfile.mkdtemp()
+        tmp = join(tmpdir, 'tmp.ini')
         p.save(tmp)
 
         # Load the preferences again from that file.
@@ -210,6 +211,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
 
         # Clean up!
         os.remove(tmp)
+        os.removedirs(tmpdir)
         
         return
 
