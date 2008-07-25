@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 #  
-#  Traits UI editor for displaying Enable2 Components.
+#  Traits UI editor for displaying Enable Components.
 #  
 #  Written by: David Morrill
 #  
@@ -10,7 +10,7 @@
 #  
 #-------------------------------------------------------------------------------
 
-""" Traits UI editor for displaying Enable2 Components.
+""" Traits UI editor for displaying Enable Components.
 """
 
 #-------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ from enthought.traits.ui.wx.editor \
 from enthought.traits.ui.wx.basic_editor_factory \
     import BasicEditorFactory
 
-from enthought.enable2.wx_backend.api \
+from enthought.enable.wx_backend.api \
     import Window
 
 #-------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ from enthought.enable2.wx_backend.api \
 #-------------------------------------------------------------------------------
                                
 class _EnableEditor ( Editor ):
-    """ Traits UI editor for displaying Enable2 Components.
+    """ Traits UI editor for displaying Enable Components.
     """
     
     # Override the default value to allow the control to be resizable:

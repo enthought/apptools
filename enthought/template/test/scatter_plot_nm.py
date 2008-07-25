@@ -32,7 +32,7 @@ from enthought.traits.ui.wx.themed_slider_editor \
 from enthought.traits.ui.wx.themed_text_editor \
     import ThemedTextEditor
     
-from enthought.enable2.api \
+from enthought.enable.api \
     import ColorTrait
 
 from enthought.chaco2.api \

@@ -36,7 +36,7 @@ from enthought.chaco2.api \
 from enthought.chaco2.tools.api \
     import PanTool, SimpleZoom
     
-from enthought.enable2.api \
+from enthought.enable.api \
     import ColorTrait
 
 from enthought.chaco2.scatter_markers \
