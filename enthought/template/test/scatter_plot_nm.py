@@ -35,10 +35,10 @@ from enthought.traits.ui.wx.themed_text_editor \
 from enthought.enable.api \
     import ColorTrait
 
-from enthought.chaco2.api \
+from enthought.chaco.api \
     import GridPlotContainer, PlotComponent
     
-from enthought.chaco2.scatter_markers \
+from enthought.chaco.scatter_markers \
     import marker_trait
     
 from enthought.template.api \

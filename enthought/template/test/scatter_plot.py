@@ -30,16 +30,16 @@ from enthought.traits.ui.wx.themed_slider_editor \
 from enthought.traits.ui.wx.themed_text_editor \
     import ThemedTextEditor
     
-from enthought.chaco2.api \
+from enthought.chaco.api \
     import ScatterPlot, ArrayPlotData, Plot
     
-from enthought.chaco2.tools.api \
+from enthought.chaco.tools.api \
     import PanTool, SimpleZoom
     
 from enthought.enable.api \
     import ColorTrait
 
-from enthought.chaco2.scatter_markers \
+from enthought.chaco.scatter_markers \
     import marker_trait
     
 from enthought.template.api \
