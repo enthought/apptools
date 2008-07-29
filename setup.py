@@ -5,11 +5,35 @@
 #
 
 """
-ETS Application tools
+ETS Application Tools
 
-<description text needed>
+The AppTools project includes a set of packages that Enthought has found useful
+in creating a number of applications. They implement functionality that is 
+commonly needed by many applications
+
+- **enthought.help** — Implements the Adobe RoboHelp API in Python, for 
+  compiled HTML Help (.chm) and RoboHelp WebHelp formats. Includes an Envisage
+  plug-in to provide context-sensitive help for applications. Can also be used
+  in Traits-based, non-Envisage applications.
+- **enthought.io** — Provides an abstraction for files and folders in a file 
+  system.
+- **enthought.logging** — Manages event logging.
+- **enthought.naming** — Manages naming contexts, supporting non-string data 
+  types and scoped preferences.
+- **enthought.persistence** — Supports pickling the state of a Python object 
+  to a dictionary, which can then be flexibly applied in restoring the state of
+  the object.
+- **enthought.preferences** — Manages application preferences.
+- **enthought.resource** — Manages application resources such as images and 
+  sounds.
+- **enthought.sweet_pickle** — Handles class-level versioning, to support
+  loading of saved data that exist over several generations of internal class
+  structures.
+- **enthought.template** — Supports creating templatizable object hierarchies.
+- **enthought.type_manager** — Manages type extensions, including factories 
+  to generate adapters, and hooks for methods and functions.
+- **enthought.undo** — Supports undoing and scripting application commands.
 """
-
 
 from distutils import log
 from distutils.command.build import build as distbuild
