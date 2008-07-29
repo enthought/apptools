@@ -143,8 +143,8 @@ class my_build(distbuild):
 
 # The actual setup call.
 setup(
-    author = 'Peter Wang, et. al.',
-    author_email = 'pwang@enthought.com',
+    author = 'Enthought, Inc.',
+    author_email = 'info@enthought.com',
     classifiers = """\
         Development Status :: 4 - Beta
         Intended Audience :: Developers
