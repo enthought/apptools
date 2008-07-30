@@ -1,0 +1,63 @@
+The icons are mostly derived work from other icons. As such they are
+licensed accordingly to the original license:
+
+    GV: Gael Varoquaux: BSD-like 
+    Enthought: BSD-like
+    Nuvola: LGPL
+    OOo: LGPL
+
+Unless stated in this file, icons are work of enthought, and are released
+under BSD-like license.
+Files and orginal authors:
+----------------------------------------------------------------
+            bottom_icon.png | Enthought
+          collapse_icon.png | Enthought
+            delete_icon.png | Nuvola
+              edit_icon.png | GV
+            expand_icon.png | Enthought
+                  fnadd.png | GV
+		       fndelete.png | GV
+              fndisable.png | Nuvola
+	           fnenable.png | Nuvola
+             fnmovedown.png | GV
+		       fnmoveup.png | GV
+           hcenter_icon.png | Enthought
+              horz_icon.png | Enthought
+                 import.png | Eclipse
+              left_icon.png | Enthought
+               max_icon.png | Enthought
+               min_icon.png | Enthought
+       model_win_inputs.png | Enthought
+ model_win_optimization.png | Enthought
+      model_win_outputs.png | Enthought
+     model_win_workflow.png | Enthought
+            new_project.png | Nuvola
+            normal_icon.png | Enthought
+  open_function_browser.png | Nuvola
+           open_project.png | Nuvola
+        output_critical.png | GV
+	       output_debug.png | GV
+	       output_error.png | GV
+            output_info.png | Nuvola
+         output_warning.png | GV
+              redo_icon.png | GV
+          repo_add_root.png | Nuvola
+       repo_delete_item.png | Nuvola
+        repo_new_folder.png | Nuvola
+             right_icon.png | Enthought
+               run_icon.png | Nuvola
+           save_project.png | Nuvola
+        save_project_as.png | Nuvola
+		   search_table.png | Nuvola
+      table_delete_item.png | OOo
+      table_do_not_sort.png | OOo
+      table_insert_item.png | OOo
+		    table_prefs.png | OOo
+       table_row_delete.png | OOo
+       table_row_insert.png | OOo
+    	       top_icon.png | Enthought
+		      undo_icon.png | GV
+		    unsort_icon.png | OOo
+		   vcenter_icon.png | Enthought
+              vert_icon.png | Enthought
+view_componant_librairy_icon.png | Nuvola

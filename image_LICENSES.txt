@@ -70,3 +70,9 @@ help_src/EnLibHelp:
 		   vcenter_icon.png | Enthought
               vert_icon.png | Enthought
 view_componant_librairy_icon.png | Nuvola
+
+help_src/EnLibHelp/images/:
+		     export2rep.png | Nuvola
+          repo_add_root.png | Nuvola
+       repo_delete_item.png | Nuvola
+        repo_new_folder.png | Nuvola
