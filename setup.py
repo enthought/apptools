@@ -8,29 +8,29 @@
 ETS Application Tools
 
 The AppTools project includes a set of packages that Enthought has found useful
-in creating a number of applications. They implement functionality that is 
+in creating a number of applications. They implement functionality that is
 commonly needed by many applications
 
-- **enthought.help**: Implements the Adobe RoboHelp API in Python, for 
+- **enthought.help**: Implements the Adobe RoboHelp API in Python, for
   compiled HTML Help (.chm) and RoboHelp WebHelp formats. Includes an Envisage
   plug-in to provide context-sensitive help for applications. Can also be used
   in Traits-based, non-Envisage applications.
-- **enthought.io**: Provides an abstraction for files and folders in a file 
+- **enthought.io**: Provides an abstraction for files and folders in a file
   system.
 - **enthought.logging**: Manages event logging.
-- **enthought.naming**: Manages naming contexts, supporting non-string data 
+- **enthought.naming**: Manages naming contexts, supporting non-string data
   types and scoped preferences.
-- **enthought.persistence**: Supports pickling the state of a Python object 
+- **enthought.persistence**: Supports pickling the state of a Python object
   to a dictionary, which can then be flexibly applied in restoring the state of
   the object.
 - **enthought.preferences**: Manages application preferences.
-- **enthought.resource**: Manages application resources such as images and 
+- **enthought.resource**: Manages application resources such as images and
   sounds.
 - **enthought.sweet_pickle**: Handles class-level versioning, to support
   loading of saved data that exist over several generations of internal class
   structures.
 - **enthought.template**: Supports creating templatizable object hierarchies.
-- **enthought.type_manager**: Manages type extensions, including factories 
+- **enthought.type_manager**: Manages type extensions, including factories
   to generate adapters, and hooks for methods and functions.
 - **enthought.undo**: Supports undoing and scripting application commands.
 """
@@ -49,36 +49,6 @@ import zipfile
 
 # Pull the description values for the setup keywords from our file docstring.
 DOCLINES = __doc__.split("\n")
-
-
-# Function to convert simple ETS project names and versions to a requirements
-# spec that works for both development builds and stable builds.  Allows
-# a caller to specify a max version, which is intended to work along with
-# Enthought's standard versioning scheme -- see the following write up:
-#    https://svn.enthought.com/enthought/wiki/EnthoughtVersionNumbers
-def etsdep(p, min, max=None, literal=False):
-    require = '%s >=%s.dev' % (p, min)
-    if max is not None:
-        if literal is False:
-            require = '%s, <%s.a' % (require, max)
-        else:
-            require = '%s, <%s' % (require, max)
-    return require
-
-
-# Declare our ETS project dependencies.
-BLOCKCANVAS = etsdep('BlockCanvas', '3.0.0b1') # -- only used by enthought.template
-CHACO = etsdep('Chaco', '3.0.0b1')  # -- only used by enthought.template
-DEVTOOLS_DEVELOPER = etsdep('DevTools[developer]', '3.0.0b1')  # -- only used by enthought.template
-ENABLE = etsdep('Enable', '3.0.0b1')  # -- only used by enthought.template
-ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.0b1')
-ENVISAGECORE = etsdep('EnvisageCore', '3.0.0b1')  # -- mostly in enthought.help, enthought.naming use is in a try..except
-ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.0.0b1')  # -- only used by enthought.help
-#MAYAVI -- not required due to the way state_pickler.py uses the import
-TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.0b1')  # -- directly used only by enthought.template
-TRAITSGUI = etsdep('TraitsGUI', '3.0.0b1')
-TRAITSGUI_DOCK = etsdep('TraitsGUI[dock]', '3.0.0b1')  # -- only used by enthought.template
-TRAITS_UI = etsdep('Traits[ui]', '3.0.0b1')
 
 
 # Functions to generate docs during builds
@@ -192,36 +162,10 @@ setup(
         'http://code.enthought.com/enstaller/eggs/source',
         ],
     description = DOCLINES[1],
-    extras_require = {
-        "help": [
-            ENVISAGECORE,
-            ENVISAGEPLUGINS,
-            ],
-        'template': [
-            BLOCKCANVAS,
-            CHACO,
-            DEVTOOLS_DEVELOPER,
-            ENABLE,
-            TRAITSBACKENDWX,
-            TRAITSGUI_DOCK,
-            ],
-
-        # All non-ets dependencies should be in this extra to ensure users can
-        # decide whether to require them or not.
-        'nonets': [
-            'configobj',
-            'numpy',
-            #'PyQt4', -- not everyone uses Qt.
-            #'wxPython', -- not everyone uses WX.
-            ],
-        },
+    extras_require = INFO['extras_require'],
     ext_modules = [],
     include_package_data = True,
-    install_requires = [
-        ENTHOUGHTBASE,
-        TRAITSGUI,
-        TRAITS_UI,
-        ],
+    install_requires = INFO['install_requires'],
     license = 'BSD',
     long_description = '\n'.join(DOCLINES[3:]),
     maintainer = 'ETS Developers',
