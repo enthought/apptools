@@ -11,12 +11,12 @@
 
     This capability is particularly useful when the object acting as a context
     is part of a plug-in application -- such as Envisage.  In general, this
-    capability allows:
-        (a) the context to be extendable by contributions from somewhere other
-            than the original code writer, and
-        (b) the context to be dynamic in that the elements it is composed of
-            can change each time someone interacts with the contents of the
-            context.
+    capability allows the context to be:
+        
+    - Extendable by contributions from somewhere other than the original 
+      code writer
+    - Dynamic in that the elements it is composed of can change each time 
+      someone interacts with the contents of the context.
 
     It should be noted that this capability is explicitly different from
     contexts that look at another container to determine their contents, such
@@ -27,16 +27,17 @@
     statically through the use of a Traits Category.)  The trait value is the
     context item's value and the trait definition's metadata determines how the
     item is treated within the context.  The support metadata is:
-        context_name: A non-empty string
-            Represents the name of the item within this context.  This must be
-            present for the trait to show up as a context item though the value
-            may change over time as the item gets bound to different names.
-        context_order: A float value
-            Indicates the position for the item within this context.  All
-            dynamically contributed context items are sorted by ascending order
-            of this value using the standard list sort function.
-        is_context: A boolean value
-            True if the item is itself a context.
+        
+    context_name: A non-empty string
+        Represents the name of the item within this context.  This must be
+        present for the trait to show up as a context item though the value
+        may change over time as the item gets bound to different names.
+    context_order: A float value
+        Indicates the position for the item within this context.  All
+        dynamically contributed context items are sorted by ascending order
+        of this value using the standard list sort function.
+    is_context: A boolean value
+        True if the item is itself a context.
 """
 
 # Standardlibrary imports

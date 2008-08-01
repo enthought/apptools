@@ -239,10 +239,11 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
             specified module.
 
             Overridden here to:
-            (a) allow updaters to redirect to a different class, possibly
-                within a different module, and
-            (b) ensure that any setstate hooks for the class are called
-                when the instance of this class is unpickled.
+                
+            - Allow updaters to redirect to a different class, possibly
+              within a different module.
+            - Ensure that any setstate hooks for the class are called
+              when the instance of this class is unpickled.
         """
         # Remove any extraneous characters that an Unpickler might handle
         # but a user wouldn't have included in their mapping definitions.
