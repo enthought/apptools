@@ -34,7 +34,7 @@ from enthought.traits.ui.api \
 from enthought.traits.ui.wx.themed_text_editor \
     import ThemedTextEditor
     
-from enthought.pyface.dock.features.api \
+from enthought.developer.features.api \
     import DropFile
     
 from enthought.pyface.api \

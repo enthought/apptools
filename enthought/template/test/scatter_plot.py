@@ -191,8 +191,7 @@ class ScatterPlot ( Template ):
                    outline_color  = self.outline_color,
                    marker_size    = self.marker_size,
                    line_width     = self.line_width,
-                   bgcolor        = 'white', 
-                   line_width     = 0.5 )
+                   bgcolor        = 'white' ) 
         plot.set(  padding_left   = 50,
                    padding_right  = 0, 
                    padding_top    = 0, 
