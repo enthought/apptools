@@ -11,15 +11,18 @@ The AppTools project includes a set of packages that Enthought has found useful
 in creating a number of applications. They implement functionality that is
 commonly needed by many applications
 
+- **enthought.appscripting**: Framework for scripting applications.
 - **enthought.help**: Implements the Adobe RoboHelp API in Python, for
   compiled HTML Help (.chm) and RoboHelp WebHelp formats. Includes an Envisage
   plug-in to provide context-sensitive help for applications. Can also be used
   in Traits-based, non-Envisage applications.
 - **enthought.io**: Provides an abstraction for files and folders in a file
   system.
-- **enthought.logging**: Manages event logging.
 - **enthought.naming**: Manages naming contexts, supporting non-string data
-  types and scoped preferences.
+  types and scoped preferences
+- **enthought.permissions**: Supports limiting access to parts of an 
+  application unless the user is appropriately authorised (not full-blown
+  security).
 - **enthought.persistence**: Supports pickling the state of a Python object
   to a dictionary, which can then be flexibly applied in restoring the state of
   the object.
