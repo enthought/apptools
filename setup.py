@@ -36,6 +36,11 @@ commonly needed by many applications
 - **enthought.type_manager**: Manages type extensions, including factories
   to generate adapters, and hooks for methods and functions.
 - **enthought.undo**: Supports undoing and scripting application commands.
+
+Prerequisites
+-------------
+If you want to build AppTools from source, you must first install 
+`setuptools <http://pypi.python.org/pypi/setuptools/0.6c8>`_.
 """
 
 from distutils import log
