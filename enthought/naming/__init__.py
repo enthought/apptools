@@ -11,4 +11,8 @@
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
 #------------------------------------------------------------------------------
+""" Manages naming contexts. Supports non-string data types and scoped 
+    preferences. Part of the AppTools project of the Enthought Tool Suite. 
+    
+"""
 from api import *

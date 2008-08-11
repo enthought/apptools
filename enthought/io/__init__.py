@@ -11,4 +11,7 @@
 # Author: Enthought, Inc.
 # Description: <Enthought IO package component>
 #------------------------------------------------------------------------------
+""" Provides an abstraction for files and folders in a file system.  
+    Part of the AppTools project of the Enthought Tool Suite.
+"""
 from api import *

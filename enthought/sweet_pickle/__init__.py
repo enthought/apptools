@@ -8,7 +8,7 @@
 #-----------------------------------------------------------------------------
 
 """ A pickle framework that supports unpickling of refactored versions of
-    old classes.
+    old classes. Part of the AppTools project of the Enthought Tool Suite.
 
     Beyond refactoring support, there are additional useful capabilities of
     this package:
