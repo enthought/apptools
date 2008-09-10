@@ -16,7 +16,7 @@ def etsdep(p, min, max=None, literal=False):
 # Declare our ETS project dependencies.
 BLOCKCANVAS = etsdep('BlockCanvas', '3.0.1') # -- only used by enthought.template
 CHACO = etsdep('Chaco', '3.0.1')  # -- only used by enthought.template
-ENABLE = etsdep('Enable', '3.0.1')  # -- only used by enthought.template
+ENABLE = etsdep('Enable', '3.0.2')  # -- only used by enthought.template
 ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.1')
 ENVISAGECORE = etsdep('EnvisageCore', '3.0.1')  # -- mostly in enthought.help, enthought.naming use is in a try..except
 ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.0.1')  # -- only used by enthought.help
