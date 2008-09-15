@@ -22,10 +22,10 @@ ENVISAGECORE = etsdep('EnvisageCore', '3.0.1')  # -- mostly in enthought.help, e
 ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.0.1')  # -- only used by enthought.help
 ETSDEVTOOLS_DEVELOPER = etsdep('ETSDevTools[developer]', '3.0.1')  # -- only used by enthought.template
 #MAYAVI -- not required due to the way state_pickler.py uses the import
-TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.2')  # -- directly used only by enthought.template
-TRAITSGUI = etsdep('TraitsGUI', '3.0.2')
-TRAITSGUI_DOCK = etsdep('TraitsGUI[dock]', '3.0.2')  # -- only used by enthought.template
-TRAITS_UI = etsdep('Traits[ui]', '3.0.2')
+TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.3')  # -- directly used only by enthought.template
+TRAITSGUI = etsdep('TraitsGUI', '3.0.3')
+TRAITSGUI_DOCK = etsdep('TraitsGUI[dock]', '3.0.3')  # -- only used by enthought.template
+TRAITS_UI = etsdep('Traits[ui]', '3.0.3')
 
 
 # A dictionary of the setup data information.
