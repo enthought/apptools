@@ -20,7 +20,7 @@ It also registers itself as the default preferences node used by the
 PreferencesHelper_ class. Hence you don't need to provide a preferences node
 explicitly to your helper::
 
-  >>> helper = SplashScreePreferences()
+  >>> helper = SplashScreenPreferences()
   >>> helper.bgcolor
   'blue'
   >>> helper.width
@@ -39,7 +39,7 @@ e.g. To contribute a preference file for my plugin I might use::
   class MyPlugin(Plugin):
       ...
 
-      @extension_point('enthought.envisage.preferences')
+      @contributes_to('enthought.envisage.preferences')
       def get_preferences(self, application):
           return ['pkgfile://mypackage:preferences.ini']
 
