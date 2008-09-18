@@ -45,8 +45,6 @@ If you want to build AppTools from source, you must first install
 
 from distutils import log
 from distutils.command.build import build as distbuild
-from pkg_resources import DistributionNotFound, parse_version, require, \
-    VersionConflict
 from setuptools import setup, find_packages
 from setuptools.command.develop import develop
 import os
