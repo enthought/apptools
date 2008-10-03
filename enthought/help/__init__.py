@@ -5,4 +5,3 @@
 """ Support for online help in Traits and Envisage. 
     Part of the AppTools project of the Enthought Tool Suite.
 """
-from api import *
