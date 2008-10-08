@@ -12,10 +12,8 @@ in creating a number of applications. They implement functionality that is
 commonly needed by many applications
 
 - **enthought.appscripting**: Framework for scripting applications.
-- **enthought.help**: Implements the Adobe RoboHelp API in Python, for
-  compiled HTML Help (.chm) and RoboHelp WebHelp formats. Includes an Envisage
-  plug-in to provide context-sensitive help for applications. Can also be used
-  in Traits-based, non-Envisage applications.
+- **enthought.help**: Provides a plugin for displaying documents and examples
+  and running demos in Envisage Workbench applications.
 - **enthought.io**: Provides an abstraction for files and folders in a file
   system.
 - **enthought.naming**: Manages naming contexts, supporting non-string data
