@@ -27,6 +27,8 @@ commonly needed by many applications
 - **enthought.preferences**: Manages application preferences.
 - **enthought.resource**: Manages application resources such as images and
   sounds.
+- **enthought.scripting**: A framework for automatic recording of Python
+  scripts.
 - **enthought.sweet_pickle**: Handles class-level versioning, to support
   loading of saved data that exist over several generations of internal class
   structures.
