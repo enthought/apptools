@@ -11,6 +11,7 @@ AppTools Documentation
     permissions/DefaultPolicyManagerDataAPI
     permissions/DefaultUserManagerDataAPI
     preferences/*
+    scripting/*
     undo/*
       
 * :ref:`search`
