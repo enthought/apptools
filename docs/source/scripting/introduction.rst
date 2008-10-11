@@ -174,6 +174,10 @@ Advanced use cases
 
 Here are a few advanced use cases.
 
+ - The API also provides a ``RecorderWithUI`` class that provides a
+   simple user interface that prints the recorded script and allows the
+   user to save the script.
+
  - Sometimes it is not enough to just record trait changes, one may want
    to pass an arbitrary string or command when recording is occuring.
    To allow for this, if one defines a ``recorder`` trait on the object,
