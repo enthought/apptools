@@ -6,7 +6,7 @@ A Recorder subclass that presents a simple user interface.
 # License: BSD Style.
 
 from enthought.traits.api import Code, Button, Int, on_trait_change
-from enthought.traits.ui.api import View, Item, CodeEditor
+from enthought.traits.ui.api import View, Item, Group, CodeEditor
 
 from recorder import Recorder
 
@@ -28,10 +28,15 @@ class RecorderWithUI(Recorder):
     # The current line to show, used by the editor.
     current_line = Int
 
-    view = View(Item('code', show_label=False), 
-                Item('save_script', show_label=False),
-                width=600, height=400,
-                buttons=['OK'], resizable=True)
+    view = View(
+             Group(
+                Group(Item('recording', show_label=True)),
+                Group(Item('code', show_label=False)),
+                Group(Item('save_script', show_label=False)),
+                ),
+             width=600, height=400,
+             buttons=['OK'], resizable=True
+             )
 
     @on_trait_change('lines[]')
     def _update_code(self):

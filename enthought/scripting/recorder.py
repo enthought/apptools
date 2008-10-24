@@ -96,7 +96,7 @@ class Recorder(HasTraits):
     lines = List(Str)
 
     # Are we recording or not?
-    recording = Bool(False)
+    recording = Bool(False, desc='if script recording is enabled or not')
 
     # The Python script we have recorded so far.  This is just a
     # convenience trait for the `get_code()` method.
