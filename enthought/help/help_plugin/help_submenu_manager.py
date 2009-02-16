@@ -23,6 +23,7 @@ from enthought.traits.api import Any, implements, Instance, List, Property
 from action.doc_action import DocAction
 from action.demo_action import DemoAction
 from action.example_action import ExampleAction
+from action.load_url_action import LoadURLAction
 from examples_preferences import ExamplesPreferences
 from i_help_doc import IHelpDoc
 from i_help_code import IHelpCode
@@ -95,7 +96,7 @@ class HelpSubmenuManager(MenuManager):
         """ Initializes a group containing the items. """
         raise NotImplementedError
         
-class DocsMenuManager(HelpSubmenuManager):
+class DocumentsMenuManager(HelpSubmenuManager):
     """ Controls the 'Help/Documents' menu.
     """
 
@@ -221,4 +222,43 @@ class ExamplesMenuManager(HelpSubmenuManager):
         return
 
 
+class DownloadsMenuManager(HelpSubmenuManager):
+    """ Controls the 'Help/Downloads' or 'Downloads'menu.
+    """
+
+    #### 'ActionManager' interface ############################################
+
+    # The manager's unique identifier (if it has one).
+    id = 'Downloads'
+
+    #### 'MenuManager' interface ##############################################
+
+    # The menu manager's name (if the manager is a sub-menu, this is what its
+    # label will be).
+    name = u'&Downloads'
+
+    #### 'DocMenuManager' interface ##########################################
+    
+    # The URLs for which this manager displays menu items.
+    help_download_list = List(IHelpDoc, allow_none=True)
+    
+    def _help_download_list_default(self):
+        return self.extension_registry.get_extensions(PKG + '.help_downloads')
+    
+    ###########################################################################
+    # Private interface.
+    ###########################################################################
+
+    def _initialize_item_group(self, window, group):
+        """ Initializes a group containing the items. """
+
+        urls = self.help_download_list
+        #docs.sort(None, lambda doc: doc.label)
+
+        for url in urls:
+            group.append(
+                LoadURLAction(name=url.label, window=window)
+                )
+
+        return
 #### EOF ######################################################################

@@ -11,7 +11,7 @@
 # Thanks for using Enthought open source!
 
 from enthought.preferences.api import PreferencesHelper
-from enthought.traits.api import Either, File, Str, implements
+from enthought.traits.api import Either, File, Str, implements, Bool
 
 from i_help_doc import IHelpDoc
 
@@ -32,6 +32,9 @@ class HelpDoc(PreferencesHelper):
     # The path to the document, which can be full, or relative to the Python 
     # installation directory (sys.prefix).
     filename = File
+    
+    # Is this a url?
+    url = Bool(False)
     
     # The program to use to view the document. 'browser' means the platform 
     # default web browser. Otherwise, it is a command to run, which may be

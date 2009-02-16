@@ -19,7 +19,7 @@ import new
 # Enthought libary imports
 from enthought.envisage.api import Plugin, ExtensionPoint
 from enthought.envisage.ui.action.api import ActionSet, Group, Menu
-from enthought.traits.api import Instance, List
+from enthought.traits.api import Instance, List, Str
 
 # Local imports
 from help_code import HelpCode
@@ -30,7 +30,6 @@ from i_help_doc import IHelpDoc
 # Logging.
 logger = logging.getLogger(__name__)
 
-
 HELP_MENU = 'MenuBar/Help'
 DOCS_MENU = 'Documents'
 DOCS_GROUP = 'DocsGroup'
@@ -38,6 +37,7 @@ DEMOS_MENU = 'Demos'
 DEMOS_GROUP = 'DemosGroup'
 EXAMPLES_MENU = 'Examples'
 EXAMPLES_GROUP = 'ExamplesGroup'
+DOWNLOADS_MENU = 'Downloads'
 
 # This module's package.
 PKG = '.'.join(__name__.split('.')[:-1])
@@ -56,6 +56,7 @@ class HelpPlugin(Plugin):
     HELP_DOCS = PKG + '.help_docs'
     HELP_DEMOS = PKG + '.help_demos'
     HELP_EXAMPLES = PKG + '.help_examples'
+    HELP_DOWNLOADS = PKG + '.help_downloads'
 
     # IDs of extension points this plugin contributes to.
     WORKBENCH_ACTION_SETS='enthought.envisage.ui.workbench.action_sets'
@@ -70,6 +71,12 @@ class HelpPlugin(Plugin):
     # The plugin's name (suitable for displaying to the user).
     name = 'Help Plugin'
 
+    #### public 'HelpPlugin' interface ########################################
+    
+    # List of menu names added to the main toolbar by this plugin 
+    # (These are placed before the 'Help' Menu).
+    menus = List(Str)
+    
     #### Extension points offered by this plugin ##############################
 
     help_docs = ExtensionPoint(
@@ -157,6 +164,34 @@ class HelpPlugin(Plugin):
         """
     )
     
+    help_downloads = ExtensionPoint(
+        List(IHelpDoc), id=HELP_DOWNLOADS, desc="""
+        
+        A help download is a url that is opened in a browser for viewing when it
+        is selected from the Help>Downloads submenu. It is defined by a 
+        preference node that specifies a UI label and a url for the download.
+        
+        Each contribution to this extension point must be an instance of a 
+        class that implements IHelpDoc, and has the url trait set to True. The 
+        easiest way to do this is to create an instance of 
+        `enthought.help.help_plugin.api.HelpDoc`.
+        
+        So, to contribute a help doc:
+        
+        1. Create a preferences file for your plugin if it doesn't already
+           have one. (Be sure to contribute your preferences file to the
+           `enthought.envisage.preferences` extension point.)
+
+        2. Define a unique "node" (section heading) in your preferences file
+           for each url, and specify values for the 'label' and 'filename' 
+           settings. Also set 'url' to True.
+           
+        3. For each document, contribute a HelpDoc to this extension point,
+           and specify its *preferences_path* as the corresponding node
+           name from your preferences file.
+        """
+    )
+    
     # FIXME: Ideally, there should be an extension point to allow plugins to
     #        offer editors to display examples (e.g., TextEditorPlugin or
     #        RemoteEditorPlugin). For now, examples open in an external editor
@@ -165,32 +200,41 @@ class HelpPlugin(Plugin):
 
 
     ###### Contributions to extension points made by this plugin ######
-
-    help_action_sets = List(contributes_to=WORKBENCH_ACTION_SETS)
     
+    help_action_sets = List(contributes_to=WORKBENCH_ACTION_SETS)
     def _help_action_sets_default(self):
         """ Returns a list containing an action set class whose **actions** 
             correspond to the help docs in the help_docs extension point.
         """
-        docs_menu = Menu( name=DOCS_MENU, path=HELP_MENU, group=DOCS_GROUP,
-                               class_name=PKG + \
-                                    '.help_submenu_manager:DocsMenuManager' ) \
-                             if len(self.help_docs) > 0 else None
-        demos_menu = Menu( name=EXAMPLES_MENU, path=HELP_MENU, 
-                               group=DOCS_GROUP, class_name=PKG + \
-                                   '.help_submenu_manager:ExamplesMenuManager') \
-                             if len(self.help_examples) > 0 else None
-        examples_menu = Menu( name=DEMOS_MENU, path=HELP_MENU, 
-                               group=DOCS_GROUP, class_name=PKG + \
-                                   '.help_submenu_manager:DemosMenuManager') \
-                             if len(self.help_demos) > 0 else None
+        extension_point_mapping = {
+                                DOCS_MENU: self.help_docs,
+                                EXAMPLES_MENU: self.help_examples,
+                                DEMOS_MENU: self.help_demos,
+                                DOWNLOADS_MENU: self.help_downloads}
+        
+        # Construct traits for the action set
         ns = {'id': 'enthought.help.help_plugin.help_action_set',
               'name': 'Help Plugin ActionSet',
-              'menus': [ menu for menu in [docs_menu, demos_menu, examples_menu]\
-                            if menu is not None ],
               'groups': [ Group( id=DOCS_GROUP, before='AboutGroup', 
-                                 path=HELP_MENU ) ],
-                }
+                                 path=HELP_MENU ) ] 
+              }
+        
+        for (menu_name, items) in extension_point_mapping.items():
+            if len(items) > 0:
+                menu = Menu( name = menu_name,
+                             class_name = 
+                             PKG + '.help_submenu_manager:%sMenuManager' % 
+                             menu_name )
+                if menu_name in self.menus:
+                    menu.path = 'MenuBar'
+                    menu.before = 'Help'
+                else:
+                    menu.path = HELP_MENU
+                    menu.group = DOCS_GROUP
+                
+                # Append the menu.
+                ns.setdefault('menus', []).append(menu)
+            
         return [new.classobj('SPLHelpActionSet', (ActionSet,), ns)]
 
     preferences = List(contributes_to=PREFERENCES)
@@ -230,10 +274,10 @@ class HelpPlugin(Plugin):
                 ])
         return pages
                
-    my_help_demos = List(contributes_to=HELP_DEMOS)
-    def _my_help_demos_default(self):
-        return [HelpCode( preferences_path=PKG + '.TraitsDemo'),
-               ]
+    #my_help_demos = List(contributes_to=HELP_DEMOS)
+    #def _my_help_demos_default(self):
+    #    return [HelpCode( preferences_path=PKG + '.TraitsDemo'),
+    #           ]
                
     #my_help_examples = List(contributes_to=HELP_EXAMPLES)
     #def _my_help_examples_default(self):

@@ -10,7 +10,7 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 
-from enthought.traits.api import Interface, Either, File, Str
+from enthought.traits.api import Interface, Either, File, Str, Bool
 
 class IHelpDoc(Interface):
     """ The interface for help docs.
@@ -24,6 +24,9 @@ class IHelpDoc(Interface):
     # The path to the document, which can be full, or relative to the Python 
     # installation directory (sys.prefix).
     filename = File
+    
+    # Is this a url?
+    url = Bool(False)
     
     # The program to use to view the document. 'browser' means the platform 
     # default web browser. Otherwise, it is a command to run, which may be

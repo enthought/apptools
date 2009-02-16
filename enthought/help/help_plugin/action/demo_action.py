@@ -20,7 +20,7 @@ import sys
 from enthought.envisage.api import IExtensionPointUser, IExtensionRegistry
 from enthought.pyface.workbench.action.workbench_action import WorkbenchAction
 from enthought.traits.api import Instance, implements, Property
-
+from enthought.pyface.api import ImageResource
 from enthought.help.help_plugin.api import HelpCode
 
 # Logging.
@@ -31,16 +31,39 @@ PARENT = '.'.join(__name__.split('.')[:-2])
 
 from util import get_sys_prefix_relative_filename
 
+# Implementation of the ImageResource class to be used for the DocAction class.
+class DemoImageResource(ImageResource):
+    """ Implementation of the ImageResource class to be used for the DemoAction 
+    class.
+    Overrides the '_image_not_found' trait in the base ImageResource class.
+    """
+    
+    # Image to display when the specified image file cannot be located.
+    _image_not_found = ImageResource('python_run')
+    
 class DemoAction(WorkbenchAction):
     """
     """
     implements(IExtensionPointUser)
+
+    ### Action interface ##############################################
+    
+    # Image associated with this action instance.
+    image = Property
     
     ### IExtensionPointUser interface
     extension_registry = Property(Instance(IExtensionRegistry))
     
     def _get_extension_registry(self):
         return self.window.application.extension_registry
+    
+    def _get_image(self):
+        """ Returns the image to be used for this DemoAction instance. 
+        """
+        # The current implementation searches for an image file matching 
+        # 'name' in all of the image paths. If such a file is not to be found,
+        # the '_image_not_found' file for the DemoImageResourceClass is used.
+        return DemoImageResource(self.name)
     
     ### HelpDemoAction interface
     
