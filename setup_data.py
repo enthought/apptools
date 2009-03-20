@@ -15,17 +15,17 @@ def etsdep(p, min, max=None, literal=False):
 
 # Declare our ETS project dependencies.
 BLOCKCANVAS = etsdep('BlockCanvas', '3.0.2') # -- only used by enthought.template
-CHACO = etsdep('Chaco', '3.0.2')  # -- only used by enthought.template
-ENABLE = etsdep('Enable', '3.0.3')  # -- only used by enthought.template
+CHACO = etsdep('Chaco', '3.1.0')  # -- only used by enthought.template
+ENABLE = etsdep('Enable', '3.1.0')  # -- only used by enthought.template
 ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.2')
-ENVISAGECORE = etsdep('EnvisageCore', '3.0.2')  # -- mostly in enthought.help, enthought.naming use is in a try..except
-ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.0.2')  # -- only used by enthought.help
+ENVISAGECORE = etsdep('EnvisageCore', '3.1.0')  # -- mostly in enthought.help, enthought.naming use is in a try..except
+ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.1.0')  # -- only used by enthought.help
 ETSDEVTOOLS_DEVELOPER = etsdep('ETSDevTools[developer]', '3.0.2')  # -- only used by enthought.template
 #MAYAVI -- not required due to the way state_pickler.py uses the import
-TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.0.4')  # -- directly used only by enthought.template
+TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.1.0')  # -- directly used only by enthought.template
 TRAITSGUI = etsdep('TraitsGUI', '3.0.4')
 TRAITSGUI_DOCK = etsdep('TraitsGUI[dock]', '3.0.4')  # -- only used by enthought.template
-TRAITS_UI = etsdep('Traits[ui]', '3.0.4')
+TRAITS_UI = etsdep('Traits[ui]', '3.1.0')
 
 
 # A dictionary of the setup data information.
