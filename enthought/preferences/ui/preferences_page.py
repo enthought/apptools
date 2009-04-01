@@ -16,15 +16,17 @@ class PreferencesPage(PreferencesHelper):
      
     #### 'IPreferencesPage' interface #########################################
     
-    # The page's category (e.g. 'General/Appearence'). The empty string means
+    # The page's category (e.g. 'General/Appearance'). The empty string means
     # that this is a top-level page.
     category = Str
 
-    # The page's help identifier (optional). If a help Id *is* provided then
-    # there will be a 'Help' button shown on the preference page.
+    # DEPRECATED: The help_id was never fully implemented, and it's been 
+    # over two years (now 4/2009).  The original goal was for the the Help
+    # button to automatically appear and connect to a help page with a
+    # help_id.  Not removing the trait right now to avoid breaking code 
+    # that may be checking for this.  
     #
-    # FIXME: The 'Help' button is not fully implemented yet.  The button 
-    # shows but no help views are created or shown.
+    # Use PreferencesManager.show_help and trait show_help metadata instead.
     help_id = Str
 
     # The page name (this is what is shown in the preferences dialog.
