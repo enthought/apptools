@@ -2,9 +2,11 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import HasTraits, Instance, List, Property
+from enthought.traits.api import HasTraits, Instance, List, Property, \
+    Any, Bool, Dict
 from enthought.traits.ui.api import Handler, HSplit, Item, TreeEditor
-from enthought.traits.ui.api import TreeNode, View
+from enthought.traits.ui.api import TreeNode, View, HTMLEditor
+from enthought.traits.ui.menu import Action
 
 # Local imports.
 from preferences_node import PreferencesNode
@@ -38,8 +40,35 @@ tree_editor = TreeEditor(
 )
 
 
+class PreferencesHelpWindow(HasTraits):
+    """ Container class to present a view with string info. """
+    
+    def traits_view(self):
+        """ Default view to show for this class. """
+        args = []
+        kw_args = {'title' : 'Preferences Page Help',
+                   'buttons' : ['OK'],
+                   'width' : 650,
+                   'resizable' : True}
+        to_show = {}
+
+        for name, trait_obj in self.traits().items():
+            if name != 'trait_added' and name != 'trait_modified':
+                to_show[name] = trait_obj.help
+        for name in to_show:
+                args.append(Item(name, 
+                                 style='readonly',
+                                 editor=HTMLEditor()
+                                 ))
+                
+        view = View(*args, **kw_args)
+        return view
+    
+
 class PreferencesManagerHandler(Handler):
     """ The traits UI handler for the preferences manager. """
+    
+    model = Instance(HasTraits)
     
     ###########################################################################
     # 'Handler' interface.
@@ -52,6 +81,7 @@ class PreferencesManagerHandler(Handler):
         
         return
 
+
     def init(self, info):
         """ Initialize the controls of a user interface. """
 
@@ -60,6 +90,7 @@ class PreferencesManagerHandler(Handler):
 
         return super(PreferencesManagerHandler, self).init(info)
 
+
     def close(self, info, is_ok):
         """ Close a dialog-based user interface. """
 
@@ -67,6 +98,20 @@ class PreferencesManagerHandler(Handler):
             info.object.apply()
             
         return super(PreferencesManagerHandler, self).close(info, is_ok)
+    
+    
+    def preferences_help(self, info):
+        """ Custom preferences help panel. The Traits help doesn't work."""
+        current_page = self.model.selected_page
+        to_show = {}
+        for trait_name, trait_obj in current_page.traits().items():
+            if hasattr(trait_obj, 'show_help') and trait_obj.show_help:
+                to_show[trait_name] = trait_obj.help
+        
+        help_obj = PreferencesHelpWindow(**to_show)
+        help_obj.edit_traits(kind='livemodal')
+        return
+
     
     ###########################################################################
     # Private interface.
@@ -98,35 +143,75 @@ class PreferencesManager(HasTraits):
     
     # The preferences associated with the currently selected preferences node.
     selected_page = Instance(PreferencesPage)
+    
+    # Should the custom Info button be shown?  If this is True, then an
+    # Info button is shown that pops up a trait view with an HTML entry
+    # for each trait of the *selected_page* with the metadata 'show_help' 
+    # set to True. 
+    show_help = Bool(False)
 
     #### Traits UI views ######################################################
+
+    def traits_view(self):
+        """ Default traits view for this class. """
+        
+        help_action = Action(name = 'Info', action = 'preferences_help')
+        
+        if self.show_help:
+            buttons = [help_action, 'OK', 'Cancel']
+        else:
+            buttons = ['OK', 'Cancel']
+        
+        # A tree editor for preferences nodes.
+        tree_editor = TreeEditor(
+            nodes = [
+                TreeNode(
+                    node_for  = [PreferencesNode],
+                    auto_open = False,
+                    children  = 'children',
+                    label     = 'name',
+                    rename    = False,
+                    copy      = False,
+                    delete    = False,
+                    insert    = False,
+                    menu      = None,
+                ),
+            ],
+            on_select  = self._selection_changed,
+            editable   = False,
+            hide_root  = True,
+            selected   = 'selected_node',
+            show_icons = False
+        )
+        
+        view = View(
+            HSplit(
+                Item(
+                    name       = 'root',
+                    editor     = tree_editor,
+                    show_label = False,
+                    width      = 250,
+                ),
     
-    view = View(
-        HSplit(
-            Item(
-                name       = 'root',
-                editor     = tree_editor,
-                show_label = False,
-                width      = 250,
+                Item(
+                    name       = 'selected_page',
+                    #editor     = WidgetEditor(),
+                    show_label = False,
+                    width      = 450
+                ),
             ),
-
-            Item(
-                name       = 'selected_page',
-                #editor     = WidgetEditor(),
-                show_label = False,
-                width      = 450
-            ),
-        ),
-
-        buttons   = ['OK', 'Cancel'],
-        handler   = PreferencesManagerHandler(),
-        resizable = True,
-        style     = 'custom',
-        title     = 'Preferences',
-
-        width     = .3,
-        height    = .3
-    )
+    
+            buttons   = buttons,
+            handler   = PreferencesManagerHandler(model=self),
+            resizable = True,
+            style     = 'custom',
+            title     = 'Preferences',
+    
+            width     = .3,
+            height    = .3
+        )
+        self.selected_page = self.pages[0]
+        return view
 
     ###########################################################################
     # 'PreferencesManager' interface.
@@ -179,10 +264,14 @@ class PreferencesManager(HasTraits):
 
     #### Trait change handlers ################################################
     
+    def _selection_changed(self, new_selection):
+        self.selected_node = new_selection
+    
+    
     def _selected_node_changed(self, new):
         """ Static trait change handler. """
-        
-        self.selected_page = self.selected_node.page
+        if self.selected_node:
+            self.selected_page = self.selected_node.page
         
         return
 
