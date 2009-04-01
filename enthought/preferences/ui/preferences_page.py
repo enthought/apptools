@@ -23,7 +23,8 @@ class PreferencesPage(PreferencesHelper):
     # The page's help identifier (optional). If a help Id *is* provided then
     # there will be a 'Help' button shown on the preference page.
     #
-    # fixme: The 'Help' button is not implemented yet - but you can still
+    # FIXME: The 'Help' button is not fully implemented yet.  The button 
+    # shows but no help views are created or shown.
     help_id = Str
 
     # The page name (this is what is shown in the preferences dialog.
