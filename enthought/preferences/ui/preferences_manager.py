@@ -48,7 +48,8 @@ class PreferencesHelpWindow(HasTraits):
         args = []
         kw_args = {'title' : 'Preferences Page Help',
                    'buttons' : ['OK'],
-                   'width' : 650,
+                   'width' : 800,
+                   'height' : 800,
                    'resizable' : True}
         to_show = {}
 
