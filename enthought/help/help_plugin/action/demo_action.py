@@ -81,12 +81,16 @@ class DemoAction(WorkbenchAction):
         """ Perform the action by running the demo. 
         """
         if self.my_help_code is not None:
-            filename = get_sys_prefix_relative_filename(self.my_help_code.filename)
-            if filename is not None:
-                try:
-                    Popen([sys.executable, filename])
-                except OSError, err:
-                    logger.error(
-                        'Could not execute Python file for Demo "%s".\n\n' \
-                        % self.my_help_code.label + str(err) + \
-                        '\n\nTry changing Demo Preferences.' )
+            if self.my_help_code.filename:
+                filename = get_sys_prefix_relative_filename(self.my_help_code.filename)
+                if filename is not None:
+                    try:
+                        Popen([sys.executable, filename])
+                    except OSError, err:
+                        logger.error(
+                                'Could not execute Python file for Demo "%s".\n\n' \
+                                 % self.my_help_code.label + str(err) + \
+                                 '\n\nTry changing Demo Preferences.' )
+            elif self.my_help_code.code:
+                exec("%s" % self.my_help_code.code)
+        return

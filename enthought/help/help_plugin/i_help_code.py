@@ -32,3 +32,7 @@ class IHelpCode(Interface):
     # this object
     preferences_path = Str
     
+    # The code to execute. This is executed when filename is None or an empty 
+    # string.
+    code = Str
+    

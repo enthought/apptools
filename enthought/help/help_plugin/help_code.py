@@ -34,4 +34,8 @@ class HelpCode(PreferencesHelper):
     # The path to the entry point, which can be full, or relative to the Python 
     # installation directory (sys.prefix).
     filename = File
+    
+    # The code to execute. This is executed when filename is None or an empty 
+    # string.
+    code = Str
 
