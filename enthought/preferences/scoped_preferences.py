@@ -5,7 +5,6 @@
 from os.path import join
 
 # Enthought library imports.
-from enthought.util.api import Set
 from enthought.etsconfig.api import ETSConfig
 from enthought.traits.api import List, Str, Undefined
 
@@ -170,7 +169,7 @@ class ScopedPreferences(Preferences):
         else:
             nodes = self.scopes
 
-        keys = Set()
+        keys = set()
         for node in nodes:
             keys.update(node.node(path).keys())
 
@@ -227,7 +226,7 @@ class ScopedPreferences(Preferences):
         else:
             nodes = self.scopes
 
-        names = Set()
+        names = set()
         for node in nodes:
             names.update(node.node(path).node_names())
 
