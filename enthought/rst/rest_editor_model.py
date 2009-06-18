@@ -19,6 +19,7 @@
 import codecs
 import os.path
 from multiprocessing import Pool
+import re
 from shutil import rmtree
 from tempfile import mkdtemp
 
@@ -69,7 +70,12 @@ def docutils_rest_to_html(rest):
     return pub.writer.write(pub.document, pub.destination), warning_nodes
 
 
-def sphinx_rest_to_html(rest):
+DEFAULT_STATIC_PATH = os.path.join(os.path.dirname(__file__), 'sphinx_default')
+
+STATIC_REGEX = re.compile(r'(src|href)=["\']_static([\s\w/\.]+?)["\']',
+                          re.IGNORECASE)
+
+def sphinx_rest_to_html(rest, static_path=DEFAULT_STATIC_PATH):
     """ Uses sphinx ro convert a ReST string to HTML. Requires the use of 
         temporary files. Returns the same things as docutils_rest_to_html.
     """
@@ -83,6 +89,11 @@ def sphinx_rest_to_html(rest):
             node.parent.remove(node)
     import sphinx.environment
     sphinx.environment.BuildEnvironment.filter_messages = my_filter_messages
+
+    # Effectively remove the 'finish' function of the Sphinx HTML Builder. This
+    # saves a lot of file copying that we don't care about.
+    import sphinx.builders.html
+    sphinx.builders.html.StandaloneHTMLBuilder.finish = lambda self: None
 
     from sphinx.application import Sphinx
 
@@ -111,6 +122,12 @@ def sphinx_rest_to_html(rest):
         fh.close()
     finally:
         rmtree(temp_dir)
+
+    # Replace the "_static/..." references inserted by Sphinx with absolute
+    # links to the specified static_path replacement.
+    replacement = lambda m: '%s="file://%s%s"' % (m.group(1), static_path, 
+                                                  m.group(2))
+    html = re.sub(STATIC_REGEX, replacement, html)
 
     return html, warning_nodes
 
