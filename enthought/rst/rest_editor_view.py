@@ -440,7 +440,6 @@ class ReSTHTMLEditorView(HasTraits):
     def _use_sphinx_changed(self):
         self.config['use_sphinx'] = self.use_sphinx
         for view in self.open_views:
-            print view
             view.model.use_sphinx = self.use_sphinx
 
 

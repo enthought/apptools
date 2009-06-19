@@ -26,6 +26,7 @@ from tempfile import mkdtemp
 # System library imports
 import docutils.io, docutils.nodes
 from docutils.core import Publisher
+from docutils.parsers.rst.roles import _roles as docutils_roles
 
 # ETS imports
 from enthought.traits.api import HasTraits, Int, Str, List, Bool, Any, \
@@ -45,6 +46,11 @@ def docutils_rest_to_html(rest):
         containg the HTML string and the list of warning nodes that were
         removed from the HTML.
     """
+    # Make sure any Sphinx polution of docutils has been removed. 
+    for key, value in docutils_roles.items():
+        if value.__module__.startswith('sphinx'):
+            docutils_roles.pop(key)
+
     pub = Publisher(source_class=docutils.io.StringInput,
                     destination_class=docutils.io.StringOutput)
     pub.set_reader('standalone', None, 'restructuredtext')
@@ -187,8 +193,7 @@ class ReSTHTMLPair(CanSaveMixin):
             
     def _gen_html(self):
         func = sphinx_rest_to_html if self.use_sphinx else docutils_rest_to_html
-        self._set_html(func(self.rest))
-        #self._pool.apply_async(func, [self.rest], callback=self._set_html)
+        self._pool.apply_async(func, [self.rest], callback=self._set_html)
 
     def _set_html(self, result):
         if self._queued:
