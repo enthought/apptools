@@ -179,7 +179,9 @@ class ReSTHTMLPair(CanSaveMixin):
     def __init__(self, **kw):
         self._pool = Pool(processes=1)
         super(ReSTHTMLPair, self).__init__(**kw)
-        self._queue_html()
+        if self.html == '' and not self._processing:
+            self._processing = True
+            self._gen_html()
 
     def _rest_changed(self):
         self.dirty = True
