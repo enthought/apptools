@@ -27,7 +27,8 @@ from validate import Validator
 # ETS imports
 from enthought.block_canvas.ui.source_editor import MarkableSourceEditor
 from enthought.etsconfig.api import ETSConfig
-from enthought.pyface.api import AboutDialog, FileDialog, OK, ImageResource
+from enthought.pyface.api import AboutDialog, DirectoryDialog, FileDialog, \
+    ImageResource, OK
 from enthought.pyface.action.api import Group as ActionGroup
 from enthought.pyface.dock.dock_sizer import DockSection, SCROLL_LEFT, \
     SCROLL_RIGHT
@@ -261,11 +262,11 @@ class ReSTHTMLEditorHandler(SaveHandler):
         self._add_pair(info, ReSTHTMLPair())
 
     def open(self, info):
-        fileDialog = FileDialog(action='open', title='Open ReST File',
-                                wildcard='Text files (*.rst)|*.rst')
-        result = fileDialog.open()
-        if result == OK and os.path.exists(fileDialog.path):
-            self._open(info, fileDialog.path)
+        dialog = FileDialog(action='open', title='Open ReST File',
+                            wildcard='Text files (*.rst)|*.rst')
+        result = dialog.open()
+        if result == OK and os.path.exists(dialog.path):
+            self._open(info, dialog.path)
 
     def close_tab(self, info):
         view = info.object.selected_view
@@ -275,7 +276,12 @@ class ReSTHTMLEditorHandler(SaveHandler):
             info.object.open_views.remove(view)
 
     def _add_pair(self, info, model):
+        """ Update the model preferences to those in the editor, then add it
+            to the views, possibly replacing an existing view.
+        """
         model.use_sphinx = info.object.use_sphinx
+        model.sphinx_static_path = info.object.sphinx_static_path
+
         open_views = info.object.open_views
         if (len(open_views) and not open_views[-1].model.rest and
             not open_views[-1].model.filepath):
@@ -342,6 +348,12 @@ class ReSTHTMLEditorHandler(SaveHandler):
     def toggle_sphinx(self, info):
         info.object.use_sphinx = not info.object.use_sphinx
 
+    def change_sphinx_static_path(self, info):
+        dialog = DirectoryDialog(action='open', title='Select directory')
+        result = dialog.open()
+        if result == OK and os.path.exists(dialog.path):
+            info.object.sphinx_static_path = dialog.path
+
     # Help menu
 
     def about(self, info):
@@ -359,6 +371,7 @@ class ReSTHTMLEditorView(HasTraits):
 
     config = Any
     use_sphinx = Bool(False)
+    sphinx_static_path = Str
 
     def __init__(self, **kw):
         super(ReSTHTMLEditorView, self).__init__(**kw)
@@ -390,6 +403,8 @@ class ReSTHTMLEditorView(HasTraits):
                          name='View')
         prefs_menu = Menu(Action(name='Use Sphinx', action='toggle_sphinx',
                                  checked=self.use_sphinx, style='toggle'),
+                          Action(name='Set Sphinx resources path...',
+                                 action='change_sphinx_static_path'),
                           name='Preferences')
         help_menu = Menu(Action(name='About', action='about'),
                          name='Help')
@@ -442,7 +457,6 @@ class ReSTHTMLEditorView(HasTraits):
         for view in self.open_views:
             view.model.use_sphinx = self.use_sphinx
 
-
-if __name__ == '__main__':
-    #ReSTHTMLPairView(model=ReSTHTMLPair()).configure_traits()
-    ReSTHTMLEditorView().configure_traits()
+    def _sphinx_static_path_changed(self):
+        for view in self.open_views:
+            view.model.sphinx_static_path = self.sphinx_static_path

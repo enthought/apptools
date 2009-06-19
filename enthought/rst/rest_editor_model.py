@@ -161,6 +161,7 @@ class ReSTHTMLPair(CanSaveMixin):
     warnings = List(DocUtilsWarning)
 
     use_sphinx = Bool(False)
+    sphinx_static_path = Str
 
     save_html = Bool(False)
     # The 'filepath' attribute of CanSaveMixin is for the ReST file
@@ -183,7 +184,7 @@ class ReSTHTMLPair(CanSaveMixin):
     def _rest_changed(self):
         self.dirty = True
 
-    @on_trait_change('rest, use_sphinx')
+    @on_trait_change('rest, use_sphinx, sphinx_static_path')
     def _queue_html(self):
         if self._processing:
             self._queued = True
@@ -192,8 +193,16 @@ class ReSTHTMLPair(CanSaveMixin):
             self._gen_html()
             
     def _gen_html(self):
-        func = sphinx_rest_to_html if self.use_sphinx else docutils_rest_to_html
-        self._pool.apply_async(func, [self.rest], callback=self._set_html)
+        if self.use_sphinx:
+            if self.sphinx_static_path == '':
+                args = [ self.rest ]
+            else:
+                args = [ self.rest, self.sphinx_static_path ]
+            self._pool.apply_async(sphinx_rest_to_html, args, 
+                                   callback=self._set_html)
+        else:
+            self._pool.apply_async(docutils_rest_to_html, [ self.rest ],
+                                   callback=self._set_html)
 
     def _set_html(self, result):
         if self._queued:
