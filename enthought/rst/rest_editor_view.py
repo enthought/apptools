@@ -263,7 +263,8 @@ class ReSTHTMLEditorHandler(SaveHandler):
 
     def open(self, info):
         dialog = FileDialog(action='open', title='Open ReST File',
-                            wildcard='Text files (*.rst)|*.rst')
+                            wildcard='Text files (*.rst)|*.rst',
+                            default_directory=USER_HOME_DIRECTORY)
         result = dialog.open()
         if result == OK and os.path.exists(dialog.path):
             self._open(info, dialog.path)
