@@ -57,9 +57,9 @@ class DocUtilsWarningAdapter(TabularAdapter):
     columns = [('Line', 'line'), ('Description', 'description')]
     image = Property
 
-    icon_mapping = Dict({ 1:ImageResource('lightbulb'),
+    icon_mapping = Dict({ 1:ImageResource('info'),
                           2:ImageResource('warning'),
-                          3:ImageResource('forbidden') })
+                          3:ImageResource('error') })
 
     def _get_image(self):
         if self.item is None or self.column != 1:
@@ -440,6 +440,7 @@ class ReSTHTMLEditorView(HasTraits):
     def _use_sphinx_changed(self):
         self.config['use_sphinx'] = self.use_sphinx
         for view in self.open_views:
+            print view
             view.model.use_sphinx = self.use_sphinx
 
 

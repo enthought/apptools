@@ -90,9 +90,19 @@ def sphinx_rest_to_html(rest, static_path=DEFAULT_STATIC_PATH):
     import sphinx.environment
     sphinx.environment.BuildEnvironment.filter_messages = my_filter_messages
 
+    # Ugly hack. The Sphinx source code suggests that None should be a valid
+    # value for confdir. On Windows, however, os.path falls over if it gets a
+    # None value. This hack ensures that sphinx.config.Config.__init__ gets
+    # passed a valid string for the config directory.
+    import sphinx.builders.html
+    def my_init(self, app, env=None, freshenv=None):
+        app.confdir = ''
+        sphinx.builders.Builder.__init__(self, app, env, freshenv)
+        app.confdir = None
+    sphinx.builders.html.StandaloneHTMLBuilder.__init__ = my_init
+
     # Effectively remove the 'finish' function of the Sphinx HTML Builder. This
     # saves a lot of file copying that we don't care about.
-    import sphinx.builders.html
     sphinx.builders.html.StandaloneHTMLBuilder.finish = lambda self: None
 
     from sphinx.application import Sphinx
@@ -177,7 +187,8 @@ class ReSTHTMLPair(CanSaveMixin):
             
     def _gen_html(self):
         func = sphinx_rest_to_html if self.use_sphinx else docutils_rest_to_html
-        self._pool.apply_async(func, [self.rest], callback=self._set_html)
+        self._set_html(func(self.rest))
+        #self._pool.apply_async(func, [self.rest], callback=self._set_html)
 
     def _set_html(self, result):
         if self._queued:
