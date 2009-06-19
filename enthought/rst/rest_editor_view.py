@@ -25,7 +25,6 @@ from configobj import ConfigObj
 from validate import Validator
 
 # ETS imports
-from enthought.block_canvas.ui.source_editor import MarkableSourceEditor
 from enthought.etsconfig.api import ETSConfig
 from enthought.pyface.api import AboutDialog, DirectoryDialog, FileDialog, \
     ImageResource, OK
@@ -35,7 +34,7 @@ from enthought.pyface.dock.dock_sizer import DockSection, SCROLL_LEFT, \
 from enthought.traits.api import HasTraits, Str, Property, Bool, List, \
     Instance, Dict, Int, Any, Event, Enum, File
 from enthought.traits.ui.api import View, Group, Item, Handler, \
-    TabularEditor, ListEditor, FileEditor, TableEditor, TextEditor
+    TabularEditor, ListEditor, FileEditor, TableEditor, TextEditor, CodeEditor
 from enthought.traits.ui.extras.saving import SaveHandler
 from enthought.traits.ui.key_bindings import KeyBinding, KeyBindings
 from enthought.traits.ui.menu import Action, Menu, MenuBar
@@ -125,16 +124,14 @@ class ReSTHTMLPairView(HasTraits):
 
     def trait_view(self, name='default'):
         if ETSConfig.toolkit == 'wx':
-            rest_style = 'simple'
-            rest_editor = MarkableSourceEditor(lexer='null',
-                                               selected_line='selected_line',
-                                               auto_scroll=True,
-                                               squiggle_lines='warning_lines')
+            rest_editor = CodeEditor(lexer='null',
+                                     selected_line='selected_line',
+                                     auto_scroll=True,
+                                     squiggle_lines='warning_lines')
             warning_editor = TabularEditor(editable=False,
                                            adapter=DocUtilsWarningAdapter(),
                                            dclicked='dclicked_tabular')
         else:
-            rest_style = 'custom'
             rest_editor = TextEditor(multi_line=True)
             columns = [ ObjectColumn(name='line', label='Line'),
                         ObjectColumn(name='description', label='Description') ]
@@ -145,7 +142,7 @@ class ReSTHTMLPairView(HasTraits):
                                  base_url_name='base_url')
 
         return View(Group(Group(Item('object.model.rest',
-                                     style=rest_style,
+                                     style='custom',
                                      editor=rest_editor),
                                 Item('object.model.html',
                                      width=200,
