@@ -220,11 +220,11 @@ class ReSTHTMLEditorHandler(SaveHandler):
 
             Prompt for saving, if necessary, and write out config file.
         """
-        # fixme: A prompt for every unsaved tab is obnoxious. Make a single
-        #        prompt.
         if self.promptOnExit:
             for view in info.object.open_views:
                 self.saveObject = view.model
+                self.savePromptMessage = "%s has unsaved changes. Would you " \
+                    "like to save them now?" % view.title
                 if not self.promptForSave(info):
                     return False
 
