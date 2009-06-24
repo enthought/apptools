@@ -82,7 +82,7 @@ STATIC_REGEX = re.compile(r'(src|href)=["\']_static([\s\w/\.]+?)["\']',
                           re.IGNORECASE)
 
 def sphinx_rest_to_html(rest, static_path=DEFAULT_STATIC_PATH):
-    """ Uses sphinx ro convert a ReST string to HTML. Requires the use of 
+    """ Uses sphinx to convert a ReST string to HTML. Requires the use of 
         temporary files. Returns the same things as docutils_rest_to_html.
     """
 

@@ -34,7 +34,7 @@ from enthought.pyface.dock.dock_sizer import DockSection, SCROLL_LEFT, \
 from enthought.traits.api import HasTraits, Str, Property, Bool, List, \
     Instance, Dict, Int, Any, Event, Enum, File
 from enthought.traits.ui.api import View, Group, Item, Handler, \
-    TabularEditor, ListEditor, FileEditor, TableEditor, TextEditor, CodeEditor
+    TabularEditor, ListEditor, FileEditor, TextEditor, CodeEditor
 from enthought.traits.ui.extras.saving import SaveHandler
 from enthought.traits.ui.key_bindings import KeyBinding, KeyBindings
 from enthought.traits.ui.menu import Action, Menu, MenuBar
@@ -112,8 +112,7 @@ class ReSTHTMLPairView(HasTraits):
     base_url = Property(Str, depends_on='model.filepath')
 
     # Warning related traits
-    dclicked_tabular = Event
-    dclicked_table = Event
+    dclicked_warning = Event
     show_warning_lines = Bool(True)
     warning_lines = Property(List(Int),
                              depends_on='model.warnings, show_warning_lines')
@@ -128,16 +127,11 @@ class ReSTHTMLPairView(HasTraits):
                                      selected_line='selected_line',
                                      auto_scroll=True,
                                      squiggle_lines='warning_lines')
-            warning_editor = TabularEditor(editable=False,
-                                           adapter=DocUtilsWarningAdapter(),
-                                           dclicked='dclicked_tabular')
         else:
             rest_editor = TextEditor(multi_line=True)
-            columns = [ ObjectColumn(name='line', label='Line'),
-                        ObjectColumn(name='description', label='Description') ]
-            warning_editor = TableEditor(editable=False,
-                                         columns=columns,
-                                         dclick='dclicked_table')
+        warning_editor = TabularEditor(editable=False,
+                                       adapter=DocUtilsWarningAdapter(),
+                                       dclicked='dclicked_warning')
         html_editor = HTMLEditor(open_externally=True,
                                  base_url_name='base_url')
 
@@ -159,14 +153,9 @@ class ReSTHTMLPairView(HasTraits):
                     handler=ReSTHTMLPairHandler(),
                     width=800, height=600, resizable=True)
 
-    def _dclicked_tabular_changed(self, event):
+    def _dclicked_warning_changed(self, event):
         if event:
             warning = event.item
-            self.selected_line = warning.line
-
-    def _dclicked_table_changed(self, event):
-        if event:
-            warning, column = event
             self.selected_line = warning.line
 
     def _get_base_url(self):
