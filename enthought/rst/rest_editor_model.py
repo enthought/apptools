@@ -211,6 +211,7 @@ class ReSTHTMLPair(CanSaveMixin):
             self._gen_html()
             self._queued = False
         else:
+            self._processing = False
             self.html, warning_nodes = result
             warnings = []
             for node in warning_nodes:
@@ -219,7 +220,6 @@ class ReSTHTMLPair(CanSaveMixin):
                                                 line=node.attributes['line'],
                                                 description=description))
             self.warnings = warnings
-            self._processing = False
 
     def _get_html_filepath(self):
         filepath = self.filepath
