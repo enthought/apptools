@@ -109,6 +109,7 @@ class ReSTHTMLPairView(HasTraits):
                                'selectAll')
 
     # HTML view related traits
+    html = Property(Str, depends_on='model.html')
     base_url = Property(Str, depends_on='model.filepath')
 
     # Warning related traits
@@ -138,7 +139,7 @@ class ReSTHTMLPairView(HasTraits):
         return View(Group(Group(Item('object.model.rest',
                                      style='custom',
                                      editor=rest_editor),
-                                Item('object.model.html',
+                                Item('html',
                                      width=200,
                                      editor=html_editor),
                                 id='rest_editor_view.PairView.HorzGroup',
@@ -163,6 +164,13 @@ class ReSTHTMLPairView(HasTraits):
             return os.path.dirname(self.model.filepath) + os.path.sep
         else:
             return ""
+
+    def _get_html(self):
+        if self.model.html:
+            return self.model.html
+        else:
+            message = "Generating HTML..."
+            return "<html><body><p>%s</p></body></html>" % message
 
     def _get_title(self):
         if self.model.filepath:
