@@ -50,22 +50,22 @@ class FilePath(object):
         """
 
         # Get normalized paths.
-        f_name = self.abs_pth
-        base_f_name = normpath(abspath(base_f_name))
-        base_dir = dirname(base_f_name)
-        if base_dir != os.sep:
-            base_dir += os.sep
-        # Get the common part of the base directory and our filename.
-        common = dirname(commonprefix([base_dir, f_name]))
-        if common and common != os.sep:
-            common += os.sep
-        n_base = base_dir.count(os.sep)
-        n_common  = common.count(os.sep)
-        diff = (n_base - n_common) * (os.pardir + os.sep)
-        # Create a relative path using os.pardir and os.sep.
-        ret = diff + f_name[len(common):]
-        # Normalize it again.
-        ret = normpath(ret)
+        _src = abspath(base_f_name)
+        _dst = self.abs_pth
+
+        # Now strip out any common prefix between the two paths.
+        for part in _src.split(os.sep):
+            if _dst.startswith(part+os.sep):
+                length = len(part) + 1
+                _src = _src[length:]
+                _dst = _dst[length:]
+            else:
+                break
+
+        # For each directory in the source, we need to add a reference to
+        # the parent directory to the destination.
+        ret = (_src.count(os.sep) * ('..' + os.sep)) + _dst
+
         # Make it posix style.
         if os.sep is not '/':
             ret.replace(os.sep, '/')

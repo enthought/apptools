@@ -8,6 +8,7 @@
 # Standard library imports.
 import unittest
 import os
+import sys
 from os.path import abspath, dirname, basename, join
 import StringIO
 
@@ -40,7 +41,10 @@ class TestFilePath(unittest.TestCase):
         # Test where the path is relative to the root.
         f.set(abspath(join('data', fname)))
         f.set_relative('/tmp/test.mv2')
-        expect = os.pardir + abspath(join('data', fname))
+        if sys.platform.startswith('win'):
+            expect = os.pardir + abspath(join('data', fname))[2:]
+        else:
+            expect = os.pardir + abspath(join('data', fname))
         self.assertEqual(f.rel_pth, expect)
 
     def test_absolute(self):
