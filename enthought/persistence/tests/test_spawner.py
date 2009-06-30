@@ -27,6 +27,7 @@ class Tests(unittest.TestCase):
 
     def setUp(self):
         OS_handle, fname = tempfile.mkstemp()
+        os.close(OS_handle)
         self.tmpname = fname
 
     
@@ -66,8 +67,7 @@ class Tests(unittest.TestCase):
 
 
     def tearDown(self):
-        os.unlink(self.tmpname)  
-        
+        os.unlink(self.tmpname)
 
 if __name__ == "__main__":
     unittest.main()
