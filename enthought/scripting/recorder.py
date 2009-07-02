@@ -669,8 +669,10 @@ class Recorder(HasTraits):
             orepr = repr(object)
             # As done in appscripting, we assume that if the hexid of
             # the object is in its string representation then it is an
-            # arbitrary object.
-            if hex(ob_id) not in orepr:
+            # arbitrary object. We remove the leading '0x' so that leading
+            # zeros after the 'x' in the orepr string will not lead to a
+            # mismatch. (ie. 0xA3E will not match 0x0A3E)
+            if hex(ob_id)[2:].upper() not in orepr:
                 return orepr
 
         # If we get here, we just register the object and call ourselves
