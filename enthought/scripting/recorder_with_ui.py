@@ -35,6 +35,7 @@ class RecorderWithUI(Recorder):
                 Group(Item('save_script', show_label=False)),
                 ),
              width=600, height=400,
+             id='enthought.scripting.recorder_with_ui',
              buttons=['OK'], resizable=True
              )
 
