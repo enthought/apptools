@@ -320,7 +320,8 @@ class ScopedPreferences(Preferences):
         # The application scope is a persistent scope.
         application_scope = Preferences(
             name     = 'application',
-            filename = join(ETSConfig.application_home, 'preferences.ini')
+            filename = join(ETSConfig.get_application_home(create=False), 
+                            'preferences.ini')
         )
 
         # The default scope is a transient scope.
