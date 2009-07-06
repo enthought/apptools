@@ -26,7 +26,7 @@ def start_recording(object, ui=True, **kw):
     recorder.
     """
     if ui:
-        r = RecorderWithUI()
+        r = RecorderWithUI(root=object)
         r.edit_traits(kind='live')
     else:
         r = Recorder()
@@ -36,9 +36,9 @@ def start_recording(object, ui=True, **kw):
     r.register(object, **kw)
     return r
 
-def stop_recording(object):
-    """Stop recording the object.  This will pop up a
-    UI to ask where to save the script.
+def stop_recording(object, save=True):
+    """Stop recording the object.  If `save` is `True`, this will pop up
+    a UI to ask where to save the script.
     """
     recorder = get_recorder()
     recorder.unregister(object)
@@ -46,5 +46,6 @@ def stop_recording(object):
     # Set the global recorder back to None
     set_recorder(None)
     # Save the script.
-    recorder.ui_save()
+    if save:
+        recorder.ui_save()
 
