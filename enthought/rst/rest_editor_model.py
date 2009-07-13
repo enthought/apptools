@@ -196,11 +196,10 @@ class ReSTHTMLPair(CanSaveMixin):
             
     def _gen_html(self):
         if self.use_sphinx:
-            if self.sphinx_static_path == '':
-                args = [ self.rest ]
-            else:
-                args = [ self.rest, self.sphinx_static_path ]
-            self._pool.apply_async(sphinx_rest_to_html, args, 
+            args = [ self.rest ]
+            if self.sphinx_static_path:
+                args.append(self.sphinx_static_path)
+            self._pool.apply_async(sphinx_rest_to_html, args,
                                    callback=self._set_html)
         else:
             self._pool.apply_async(docutils_rest_to_html, [ self.rest ],

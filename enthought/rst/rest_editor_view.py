@@ -29,8 +29,6 @@ from enthought.etsconfig.api import ETSConfig
 from enthought.pyface.api import AboutDialog, DirectoryDialog, FileDialog, \
     ImageResource, OK
 from enthought.pyface.action.api import Group as ActionGroup
-from enthought.pyface.dock.dock_sizer import DockSection, SCROLL_LEFT, \
-    SCROLL_RIGHT
 from enthought.traits.api import HasTraits, Str, Property, Bool, List, \
     Instance, Dict, Int, Any, Event, Enum, File
 from enthought.traits.ui.api import View, Group, Item, Handler, \
@@ -256,9 +254,14 @@ class ReSTHTMLEditorHandler(SaveHandler):
         self._add_pair(info, ReSTHTMLPair())
 
     def open(self, info):
+        selected = info.object.selected_view
+        if selected and selected.model.filepath:
+            default_directory = os.path.dirname(selected.model.filepath)
+        else:
+            default_directory = USER_HOME_DIRECTORY
         dialog = FileDialog(action='open', title='Open ReST File',
                             wildcard='Text files (*.rst)|*.rst',
-                            default_directory=USER_HOME_DIRECTORY)
+                            default_directory=default_directory)
         result = dialog.open()
         if result == OK and os.path.exists(dialog.path):
             self._open(info, dialog.path)
