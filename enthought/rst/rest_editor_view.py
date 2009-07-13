@@ -258,7 +258,11 @@ class ReSTHTMLEditorHandler(SaveHandler):
         if selected and selected.model.filepath:
             default_directory = os.path.dirname(selected.model.filepath)
         else:
-            default_directory = os.path.dirname(info.object.selected_file)
+            if os.path.isdir(info.object.selected_file):
+                default_directory = info.object.selected_file
+            else:
+                default_directory = os.path.dirname(info.object.selected_file)
+
         dialog = FileDialog(action='open', title='Open ReST File',
                             wildcard='Text files (*.rst)|*.rst',
                             default_directory=default_directory)
