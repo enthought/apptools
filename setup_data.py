@@ -14,18 +14,18 @@ def etsdep(p, min, max=None, literal=False):
 
 
 # Declare our ETS project dependencies.
-BLOCKCANVAS = etsdep('BlockCanvas', '3.1.0') # -- only used by enthought.template
-CHACO = etsdep('Chaco', '3.2.0')  # -- only used by enthought.template
-ENABLE = etsdep('Enable', '3.2.0')  # -- only used by enthought.template
-ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.3')
-ENVISAGECORE = etsdep('EnvisageCore', '3.1.1')  # -- mostly in enthought.help, enthought.naming use is in a try..except
-ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.1.1')  # -- only used by enthought.help
-ETSDEVTOOLS_DEVELOPER = etsdep('ETSDevTools[developer]', '3.0.3')  # -- only used by enthought.template
+BLOCKCANVAS = etsdep('BlockCanvas', '3.1.1') # -- only used by enthought.template
+CHACO = etsdep('Chaco', '3.2.1')  # -- only used by enthought.template
+ENABLE = etsdep('Enable', '3.2.1')  # -- only used by enthought.template
+ENTHOUGHTBASE = etsdep('EnthoughtBase', '3.0.4')
+ENVISAGECORE = etsdep('EnvisageCore', '3.1.2')  # -- mostly in enthought.help, enthought.naming use is in a try..except
+ENVISAGEPLUGINS = etsdep('EnvisagePlugins', '3.1.2')  # -- only used by enthought.help
+ETSDEVTOOLS_DEVELOPER = etsdep('ETSDevTools[developer]', '3.0.4')  # -- only used by enthought.template
 #MAYAVI -- not required due to the way state_pickler.py uses the import
-TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.2.0')  # -- directly used only by enthought.template
-TRAITSGUI = etsdep('TraitsGUI', '3.1.0')
-TRAITSGUI_DOCK = etsdep('TraitsGUI[dock]', '3.1.0')  # -- only used by enthought.template
-TRAITS_UI = etsdep('Traits[ui]', '3.2.0')
+TRAITSBACKENDWX = etsdep('TraitsBackendWX', '3.2.1')  # -- directly used only by enthought.template
+TRAITSGUI = etsdep('TraitsGUI', '3.1.1')
+TRAITSGUI_DOCK = etsdep('TraitsGUI[dock]', '3.1.1')  # -- only used by enthought.template
+TRAITS_UI = etsdep('Traits[ui]', '3.2.1')
 
 
 # A dictionary of the setup data information.
@@ -59,6 +59,6 @@ INFO = {
         TRAITS_UI,
         ],
     'name': 'AppTools',
-    'version': '3.3.0',
+    'version': '3.3.1',
     }
 
