@@ -76,7 +76,8 @@ def docutils_rest_to_html(rest):
     return pub.writer.write(pub.document, pub.destination), warning_nodes
 
 
-DEFAULT_STATIC_PATH = os.path.join(os.path.dirname(__file__), 'sphinx_default')
+DEFAULT_STATIC_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                                   'sphinx_default')
 
 STATIC_REGEX = re.compile(r'(src|href)=["\']_static([\s\w/\.]+?)["\']',
                           re.IGNORECASE)
