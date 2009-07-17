@@ -23,6 +23,7 @@ import codecs
 import os.path
 import re
 from shutil import rmtree
+from StringIO import StringIO
 from tempfile import mkdtemp
 
 # System library imports
@@ -33,13 +34,6 @@ try:
     from sphinx.application import Sphinx
 except ImportError:
     Sphinx = None
-
-
-class NullIO: 
-    """ A dummy stream-like object which swallows all its messages.
-    """
-    def write(self, message):
-        pass
 
 
 #------------------------------------------------------------------------------
@@ -63,7 +57,7 @@ def docutils_rest_to_html(rest):
     pub.set_writer('html')
     pub.get_settings() # Get the default settings
     pub.settings.halt_level = 6 # Don't halt on errors
-    pub.settings.warning_stream = NullIO()
+    pub.settings.warning_stream = StringIO()
 
     pub.set_source(rest)
     pub.set_destination()
@@ -142,7 +136,7 @@ def sphinx_rest_to_html(rest, static_path=DEFAULT_STATIC_PATH):
                       'master_doc' : filename }
         app = Sphinx(srcdir=temp_dir, confdir=None, outdir=temp_dir, 
                      doctreedir=temp_dir, buildername='html', 
-                     confoverrides=overrides, status=None, warning=NullIO())
+                     confoverrides=overrides, status=None, warning=StringIO())
         app.build(all_files=True, filenames=None)
 
         fh = codecs.open(base_path+'.html', 'r', 'utf-8')
