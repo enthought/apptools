@@ -42,13 +42,20 @@ from enthought.traits.ui.tabular_adapter import TabularAdapter
 # Local imports
 from rest_editor_model import DocUtilsWarning, ReSTHTMLPair
 
-# Platform dependent imports
+# Platform and toolkit dependent imports
 import platform
 if platform.system() == 'Windows' and ETSConfig.toolkit == 'wx':
     from enthought.traits.ui.wx.extra.windows.ie_html_editor import \
         IEHTMLEditor as HTMLEditor
 else:
     from enthought.traits.ui.api import HTMLEditor
+if ETSConfig.toolkit == 'qt4':
+    # Qsci is not actually included in PyQt4, despite what its root package name
+    # might suggest, so we check see if it is available
+    try:
+        from PyQt4 import Qsci
+    except ImportError:
+        Qsci = None
 
 
 class DocUtilsWarningAdapter(TabularAdapter):
@@ -121,7 +128,7 @@ class ReSTHTMLPairView(HasTraits):
         self._editor_action = True
 
     def trait_view(self, name='default'):
-        if ETSConfig.toolkit == 'wx':
+        if ETSConfig.toolkit == 'wx' or (ETSConfig.toolkit == 'qt4' and Qsci):
             rest_editor = CodeEditor(lexer='null',
                                      selected_line='selected_line',
                                      auto_scroll=True,
