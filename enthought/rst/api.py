@@ -15,7 +15,6 @@
 #
 #------------------------------------------------------------------------------
 
-from rest_editor_model import docutils_rest_to_html, sphinx_rest_to_html, \
-    DocUtilsWarning, ReSTHTMLPair
-
+from rest_editor_model import DocUtilsWarning, ReSTHTMLPair
 from rest_editor_view import ReSTHTMLPairView, ReSTHTMLEditorView
+from util import docutils_rest_to_html, sphinx_rest_to_html
