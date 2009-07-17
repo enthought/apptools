@@ -31,7 +31,7 @@ TRAITS_UI = etsdep('Traits[ui]', '3.2.1')
 # A dictionary of the setup data information.
 INFO = {
     'extras_require' : {
-        "help": [
+        'help': [
             ENVISAGECORE,
             ENVISAGEPLUGINS,
             ],
@@ -62,3 +62,8 @@ INFO = {
     'version': '3.3.1',
     }
 
+# Add multiprocessing (only used by enthought.rst) as an extra if Python
+# version is less than 2.6.
+import sys
+if sys.hexversion < 0x020600F0:
+    INFO['extras_require']['nonets'].append('multiprocessing')
