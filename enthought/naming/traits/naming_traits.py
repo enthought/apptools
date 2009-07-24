@@ -74,6 +74,7 @@ class NamingTraitHandler ( TraitHandler ):
 
         if isinstance(self.aClass, basestring):
             self.resolve_class( object, name, value )
+
         if (isinstance( value, Binding ) and
             ((self.aClass is None) or isinstance( value.obj, self.aClass ))):
             return value.namespace_name
@@ -102,9 +103,6 @@ class NamingTraitHandler ( TraitHandler ):
         if self.editor is None:
             from enthought.traits.ui.api import DropEditor
 
-            if isinstance(self.aClass, basestring):
-                # fixme: This'll never work. name and value are not in scope.
-                self.resolve_class( object, name, value )
             self.editor = DropEditor( klass    = self.aClass,
                                       binding  = True,
                                       readonly = False )
