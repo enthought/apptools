@@ -672,7 +672,7 @@ class Recorder(HasTraits):
             # arbitrary object. We remove the leading '0x' so that leading
             # zeros after the 'x' in the orepr string will not lead to a
             # mismatch. (ie. 0xA3E will not match 0x0A3E)
-            if hex(ob_id)[2:].upper() not in orepr:
+            if hex(ob_id)[2:].upper() not in orepr.upper():
                 return orepr
 
         # If we get here, we just register the object and call ourselves
