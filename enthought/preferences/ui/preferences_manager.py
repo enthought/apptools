@@ -199,16 +199,15 @@ class PreferencesManager(HasTraits):
                     name       = 'selected_page',
                     #editor     = WidgetEditor(),
                     show_label = False,
-                    width      = 450
+                    width      = 450,
+                    style      = 'custom',
                 ),
             ),
     
             buttons   = buttons,
             handler   = PreferencesManagerHandler(model=self),
             resizable = True,
-            style     = 'custom',
             title     = 'Preferences',
-    
             width     = .3,
             height    = .3
         )
