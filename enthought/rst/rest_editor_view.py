@@ -77,7 +77,7 @@ class DocUtilsWarningAdapter(TabularAdapter):
 class ReSTHTMLPairHandler(SaveHandler):
 
     # SaveHandler traits
-    wildcard = 'ReST files (*.rst)|*.rst'
+    wildcard = 'ReST files (*.txt;*.rst)|*.txt;*.rst'
     extension = 'rst'
     allowValidationBypass = True
     autosave = True
@@ -197,7 +197,7 @@ class ReSTHTMLPairView(HasTraits):
 class ReSTHTMLEditorHandler(SaveHandler):
 
     # SaveHandler traits
-    wildcard = 'Text files (*.rst)|*.rst'
+    wildcard = 'ReST files (*.txt;*.rst)|*.txt;*.rst'
     extension = 'rst'
     allowValidationBypass = True
 
@@ -275,7 +275,7 @@ class ReSTHTMLEditorHandler(SaveHandler):
                 default_directory = os.path.dirname(info.object.selected_file)
 
         dialog = FileDialog(action='open', title='Open ReST File',
-                            wildcard='Text files (*.rst)|*.rst',
+                            wildcard=self.wildcard,
                             default_directory=default_directory)
         result = dialog.open()
         if result == OK and os.path.exists(dialog.path):
