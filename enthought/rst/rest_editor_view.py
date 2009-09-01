@@ -30,9 +30,9 @@ from enthought.pyface.api import AboutDialog, DirectoryDialog, FileDialog, \
     ImageResource, OK
 from enthought.pyface.action.api import Group as ActionGroup
 from enthought.traits.api import HasTraits, Str, Property, Bool, List, \
-    Instance, Dict, Int, Any, Event, Enum, File
+    Instance, Dict, Int, Any, Event, Enum, on_trait_change
 from enthought.traits.ui.api import View, Group, Item, Handler, \
-    TabularEditor, ListEditor, FileEditor, TextEditor, CodeEditor
+    TabularEditor, ListEditor, TextEditor, CodeEditor, InstanceEditor
 from enthought.traits.ui.extras.saving import SaveHandler
 from enthought.traits.ui.key_bindings import KeyBinding, KeyBindings
 from enthought.traits.ui.menu import Action, Menu, MenuBar
@@ -41,6 +41,7 @@ from enthought.traits.ui.tabular_adapter import TabularAdapter
 
 # Local imports
 from rest_editor_model import DocUtilsWarning, ReSTHTMLPair
+from file_tree import FileTree
 
 # Platform and toolkit dependent imports
 import platform
@@ -251,7 +252,10 @@ class ReSTHTMLEditorHandler(SaveHandler):
     #  ReSTHTMLEditorHandler interface
     #-----------------------------------------------------------------
 
-    def object_selected_file_dclick_changed(self, info):
+    def object_selected_file_changed(self, info):
+        if info.object.selected_file == '':
+            return
+        
         if os.path.isfile(info.object.selected_file):
             self._open(info, info.object.selected_file)
 
@@ -371,9 +375,11 @@ class ReSTHTMLEditorHandler(SaveHandler):
 
 
 class ReSTHTMLEditorView(HasTraits):
+    
+    root_path = Str(USER_HOME_DIRECTORY)
+    filters = List(['*.rst', '*.txt'])
 
-    selected_file = File(USER_HOME_DIRECTORY)
-    selected_file_dclick = Event
+    selected_file = Str()
 
     open_views = List(ReSTHTMLPairView)
     selected_view = Instance(ReSTHTMLPairView)
@@ -381,6 +387,8 @@ class ReSTHTMLEditorView(HasTraits):
     config = Any
     use_sphinx = Bool(False)
     sphinx_static_path = Str
+
+    _tree = Instance(FileTree)
 
     def __init__(self, **kw):
         super(ReSTHTMLEditorView, self).__init__(**kw)
@@ -436,12 +444,10 @@ class ReSTHTMLEditorView(HasTraits):
             KeyBinding(binding1='Ctrl-v', method_name='paste'),
             KeyBinding(binding1='Ctrl-a', method_name='select_all'))
 
-        file_editor = FileEditor(filter=['*.rst'],
-                                 dclick_name='selected_file_dclick')
-        return View(Group(Item('selected_file',
+        return View(Group(Item('_tree',
                                style='custom',
                                width=0.25,
-                               editor=file_editor),
+                               editor=InstanceEditor()),
                           Item('open_views',
                                style='custom',
                                editor=ListEditor(use_notebook=True,
@@ -459,6 +465,13 @@ class ReSTHTMLEditorView(HasTraits):
                     menubar=menu_bar,
                     key_bindings=key_bindings,
                     title="reStructured Text Editor")
+        
+    def __tree_default(self):
+        return FileTree(root_path=self.root_path, filters=self.filters)
+        
+    @on_trait_change('_tree.selected')
+    def _tree_selection_changed(self):
+        self.selected_file = self._tree.selected        
 
     def _use_sphinx_changed(self):
         self.config['use_sphinx'] = self.use_sphinx
