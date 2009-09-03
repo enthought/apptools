@@ -15,12 +15,31 @@
 #
 #------------------------------------------------------------------------------
 
+# Standard library imports
+from optparse import OptionParser
+import os
+import sys
+
 # Local imports
 from rest_editor_view import ReSTHTMLEditorView
 
 
 def main():
     app = ReSTHTMLEditorView()
+
+    usage = 'usage: rsted [options] file ...'
+    parser = OptionParser(usage=usage)
+    options, args = parser.parse_args()
+    for path in args:
+        if os.path.isdir(path):
+            app.selected_file = path
+        elif os.path.isfile(path):
+            app.open(path)
+        else:
+            if not os.path.splitext(path)[1]:
+                path += '.rst'
+            app.new(path)
+
     app.configure_traits()
 
 

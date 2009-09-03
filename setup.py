@@ -113,7 +113,7 @@ setup(
     description = DOCLINES[1],
     entry_points = {
         'gui_scripts': [
-            'rsteditor = enthought.rst.app:main',
+            'rsted = enthought.rst.app:main',
             ],
         },
     extras_require = INFO['extras_require'],

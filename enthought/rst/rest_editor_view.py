@@ -50,6 +50,7 @@ if platform.system() == 'Windows' and ETSConfig.toolkit == 'wx':
         IEHTMLEditor as HTMLEditor
 else:
     from enthought.traits.ui.api import HTMLEditor
+
 if ETSConfig.toolkit == 'qt4':
     # Qsci is not actually included in PyQt4, despite what its root package name
     # might suggest, so we check see if it is available
@@ -209,10 +210,16 @@ class ReSTHTMLEditorHandler(SaveHandler):
     #-----------------------------------------------------------------
 
     def init(self, info):
-        """ Open an empty document when the editor starts.
+        """ Open an empty document if there are no empty views and set
+            selected_file to a sensible default if it is not initialized.
         """
         super(ReSTHTMLEditorHandler, self).init(info)
-        self.new(info)
+
+        if not len(info.object.open_views):
+            self.new(info)
+
+        if not info.object.selected_file:
+            info.object.selected_file = info.object.root_path
 
     def close(self, info, is_ok):
         """ Called when the user requests to close the interface. Returns a
@@ -252,34 +259,26 @@ class ReSTHTMLEditorHandler(SaveHandler):
     #  ReSTHTMLEditorHandler interface
     #-----------------------------------------------------------------
 
-    def object_selected_file_changed(self, info):
-        if info.object.selected_file == '':
-            return
-        
-        if os.path.isfile(info.object.selected_file):
-            self._open(info, info.object.selected_file)
-
     # File menu
 
     def new(self, info):
-        self._add_pair(info, ReSTHTMLPair())
+        info.object.new()
 
     def open(self, info):
         selected = info.object.selected_view
         if selected and selected.model.filepath:
             default_directory = os.path.dirname(selected.model.filepath)
+        elif os.path.isdir(info.object.selected_file):
+            default_directory = info.object.selected_file
         else:
-            if os.path.isdir(info.object.selected_file):
-                default_directory = info.object.selected_file
-            else:
-                default_directory = os.path.dirname(info.object.selected_file)
+            default_directory = os.path.dirname(info.object.selected_file)
 
         dialog = FileDialog(action='open', title='Open ReST File',
                             wildcard=self.wildcard,
                             default_directory=default_directory)
         result = dialog.open()
         if result == OK and os.path.exists(dialog.path):
-            self._open(info, dialog.path)
+            info.object.open(dialog.path)
 
     def close_tab(self, info):
         view = info.object.selected_view
@@ -287,38 +286,6 @@ class ReSTHTMLEditorHandler(SaveHandler):
         if self.promptForSave(info):
             self.saveObject.dirty = False
             info.object.open_views.remove(view)
-
-    def _add_pair(self, info, model):
-        """ Update the model preferences to those in the editor, then add it
-            to the views, possibly replacing an existing view.
-        """
-        model.use_sphinx = info.object.use_sphinx
-        model.sphinx_static_path = info.object.sphinx_static_path
-
-        open_views = info.object.open_views
-        if (len(open_views) and not open_views[-1].model.rest and
-            not open_views[-1].model.filepath):
-            # An empty, untitled window can be safely be replaced
-            view = open_views[-1]
-            view.model = model
-        else:
-            view = ReSTHTMLPairView(model=model)
-            open_views.append(view)
-        info.object.selected_view = view
-
-    def _open(self, info, filepath):
-        for view in info.object.open_views:
-            # If this file is already open, don't open it again
-            if filepath == view.model.filepath:
-                info.object.selected_view = view
-                return
-        fh = codecs.open(filepath, 'r', 'utf-8')
-        try:
-            pair = ReSTHTMLPair(rest=fh.read(), filepath=filepath)
-            pair.dirty = False
-            self._add_pair(info, pair)
-        finally:
-            fh.close()
 
     # Edit menu
 
@@ -379,7 +346,7 @@ class ReSTHTMLEditorView(HasTraits):
     root_path = Str(USER_HOME_DIRECTORY)
     filters = List(['*.rst', '*.txt'])
 
-    selected_file = Str()
+    selected_file = Str
 
     open_views = List(ReSTHTMLPairView)
     selected_view = Instance(ReSTHTMLPairView)
@@ -398,6 +365,10 @@ class ReSTHTMLEditorView(HasTraits):
         self.config = ConfigObj(path, configspec=spec, create_empty=True)
         self.config.validate(Validator(), copy=True)
         self.use_sphinx = self.config['use_sphinx']
+
+    #-----------------------------------------------------------------
+    #  HasTraits interface
+    #-----------------------------------------------------------------
 
     def trait_view(self, name='default'):
         file_menu = Menu(ActionGroup(Action(name='New', action='new'),
@@ -465,13 +436,65 @@ class ReSTHTMLEditorView(HasTraits):
                     menubar=menu_bar,
                     key_bindings=key_bindings,
                     title="reStructured Text Editor")
+
+    #-----------------------------------------------------------------
+    #  ReSTHTMLEditorView interface
+    #-----------------------------------------------------------------
+
+    def new(self, filepath=''):
+        """ Create a new document.
+        """
+        self.add_pair(ReSTHTMLPair(filepath=filepath))
+
+    def open(self, filepath):
+        """ Open the file at 'filepath'. 'filepath' is expected to a valid path.
+        """
+        # If this file is already open, don't open it again
+        for view in self.open_views:
+            if filepath == view.model.filepath:
+                self.selected_view = view
+                return
+        
+        fh = codecs.open(filepath, 'r', 'utf-8')
+        try:
+            pair = ReSTHTMLPair(rest=fh.read(), filepath=filepath)
+            pair.dirty = False
+            self.add_pair(pair)
+        finally:
+            fh.close()
+
+    def add_pair(self, model):
+        """ Update the model preferences to those in the editor, then add it
+            to the views, possibly replacing an existing view.
+        """
+        model.use_sphinx = self.use_sphinx
+        model.sphinx_static_path = self.sphinx_static_path
+
+        open_views = self.open_views
+        if (len(open_views) and not open_views[-1].model.rest and
+            not open_views[-1].model.filepath):
+            # An empty, untitled window can be safely be replaced
+            view = open_views[-1]
+            view.model = model
+        else:
+            view = ReSTHTMLPairView(model=model)
+            open_views.append(view)
+        self.selected_view = view
+
+    #-----------------------------------------------------------------
+    #  Protected interface
+    #-----------------------------------------------------------------
         
     def __tree_default(self):
         return FileTree(root_path=self.root_path, filters=self.filters)
         
     @on_trait_change('_tree.selected')
     def _tree_selection_changed(self):
-        self.selected_file = self._tree.selected        
+        self.selected_file = self._tree.selected
+
+    def _selected_file_changed(self):
+        if os.path.isfile(self.selected_file):
+            self.open(self.selected_file)
 
     def _use_sphinx_changed(self):
         self.config['use_sphinx'] = self.use_sphinx

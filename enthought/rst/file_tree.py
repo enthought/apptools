@@ -43,9 +43,12 @@ class DirectoryNode(HasTraits):
             file_paths += os.path.join(glob.glob(filter_path))
         
         files = [FileNode(path) for path in file_paths]
+        files.sort(key=lambda node: node.name.lower())
         
         dirs = []
-        for fn in os.listdir(self.path):
+        names = os.listdir(self.path)
+        names.sort(key=str.lower)
+        for fn in names:
             path = os.path.join(self.path, fn)
             if os.path.isdir(path) and not fn.startswith('.'):
                 dirs.append(DirectoryNode(path, filters=self.filters))
