@@ -100,14 +100,14 @@ class DocAction(WorkbenchAction):
                 try:
                     webbrowser.open(filename)
                 except (OSError, webbrowser.Error), msg:
-                    logger.error('Could not open page in browser for '+\
-                        'Document "%s":\n\n' % self.my_help_doc.label +\
-                        msg + '\n\nTry changing Dcoument Preferences.')
+                    logger.error('Could not open page in browser for '+ \
+                        'Document "%s":\n\n' % self.my_help_doc.label + \
+                        str(msg) + '\n\nTry changing Dcoument Preferences.')
             elif self.my_help_doc.viewer is not None:
                 # Run the viewer, passing it the filename
                 try:
                     Popen([self.my_help_doc.viewer, filename])
                 except OSError, msg:
-                    logger.error('Could not execute program for Document' +\
-                        ' "%s":\n\n ' % self.my_help_doc.label + msg +\
+                    logger.error('Could not execute program for Document' + \
+                        ' "%s":\n\n ' % self.my_help_doc.label + str(msg) + \
                         '\n\nTry changing Document Preferences.')
