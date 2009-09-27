@@ -26,7 +26,7 @@ class PyConfigFileTestCase(unittest.TestCase):
     def setUp(self):
         """ Prepares the test fixture before each test method is called. """
 
-        # The filename of the example preferences file.
+        # The filenames of the example preferences files.
         self.example = resource_filename(PKG, 'py_config_example.ini')
         self.example_2 = resource_filename(PKG, 'py_config_example_2.ini')
         
@@ -52,7 +52,12 @@ class PyConfigFileTestCase(unittest.TestCase):
         self.assertEqual(True, config['acme.ui']['visible'])
         self.assertEqual({'a' : 1, 'b' : 2}, config['acme.ui']['foo'])
         self.assertEqual([1, 2, 3, 4], config['acme.ui']['bar'])
-        
+        self.assertEqual((1, 'a', 6, 4), config['acme.ui']['baz'])
+        self.assertEqual('red', config['acme.ui.other']['fred'])
+        self.assertEqual(100, config['acme.ui.other']['wilma'])
+        self.assertEqual(90, config['tds.foogle']['joe'])
+        self.assertEqual("meerkat", config['simples']['animal'])
+
         return
 
     def test_load_from_file(self):
@@ -66,6 +71,11 @@ class PyConfigFileTestCase(unittest.TestCase):
         self.assertEqual(True, config['acme.ui']['visible'])
         self.assertEqual({'a' : 1, 'b' : 2}, config['acme.ui']['foo'])
         self.assertEqual([1, 2, 3, 4], config['acme.ui']['bar'])
+        self.assertEqual((1, 'a', 6, 4), config['acme.ui']['baz'])
+        self.assertEqual('red', config['acme.ui.other']['fred'])
+        self.assertEqual(100, config['acme.ui.other']['wilma'])
+        self.assertEqual(90, config['tds.foogle']['joe'])
+        self.assertEqual("meerkat", config['simples']['animal'])
 
         return
 
@@ -80,11 +90,15 @@ class PyConfigFileTestCase(unittest.TestCase):
         self.assertEqual(True, config['acme.ui']['visible'])
         self.assertEqual({'a' : 1, 'b' : 2}, config['acme.ui']['foo'])
         self.assertEqual([1, 2, 3, 4], config['acme.ui']['bar'])
+        self.assertEqual('red', config['acme.ui.other']['fred'])
+        self.assertEqual(100, config['acme.ui.other']['wilma'])
+        self.assertEqual(90, config['tds.foogle']['joe'])
+        self.assertEqual("meerkat", config['simples']['animal'])
 
         # Save the config to another file.
         tmpdir = tempfile.mkdtemp()
-        
-        tmp = join(tmpdir, 'tmp.ini')
+        tmp    = join(tmpdir, 'tmp.ini')
+
         config.save(tmp)
         try:
             self.assert_(os.path.exists(tmp))
@@ -99,12 +113,18 @@ class PyConfigFileTestCase(unittest.TestCase):
             self.assertEqual(True, config['acme.ui']['visible'])
             self.assertEqual({'a' : 1, 'b' : 2}, config['acme.ui']['foo'])
             self.assertEqual([1, 2, 3, 4], config['acme.ui']['bar'])
+            self.assertEqual((1, 'a', 6, 4), config['acme.ui']['baz'])
+            self.assertEqual('red', config['acme.ui.other']['fred'])
+            self.assertEqual(100, config['acme.ui.other']['wilma'])
+            self.assertEqual(90, config['tds.foogle']['joe'])
+            self.assertEqual("meerkat", config['simples']['animal'])
 
         finally:
             # Clean up!
-            os.remove(tmp)
-            os.removedirs(tmpdir)
-
+            #os.remove(tmp)
+            #os.removedirs(tmpdir)
+            pass
+        
         return
 
     def test_load_multiple_files(self):
@@ -118,6 +138,11 @@ class PyConfigFileTestCase(unittest.TestCase):
         self.assertEqual(True, config['acme.ui']['visible'])
         self.assertEqual({'a' : 1, 'b' : 2}, config['acme.ui']['foo'])
         self.assertEqual([1, 2, 3, 4], config['acme.ui']['bar'])
+        self.assertEqual((1, 'a', 6, 4), config['acme.ui']['baz'])
+        self.assertEqual('red', config['acme.ui.other']['fred'])
+        self.assertEqual(100, config['acme.ui.other']['wilma'])
+        self.assertEqual(90, config['tds.foogle']['joe'])
+        self.assertEqual("meerkat", config['simples']['animal'])
 
         # Load another file.
         config.load(self.example_2)
@@ -129,6 +154,11 @@ class PyConfigFileTestCase(unittest.TestCase):
         self.assertEqual(True, config['acme.ui']['visible'])
         self.assertEqual({'a' : 1, 'b' : 2}, config['acme.ui']['foo'])
         self.assertEqual([1, 2, 3, 4], config['acme.ui']['bar'])
+        self.assertEqual((1, 'a', 6, 4), config['acme.ui']['baz'])
+        self.assertEqual('red', config['acme.ui.other']['fred'])
+        self.assertEqual(100, config['acme.ui.other']['wilma'])
+        self.assertEqual(90, config['tds.foogle']['joe'])
+        self.assertEqual("meerkat", config['simples']['animal'])
 
         # ... and the values that were overwritten...
         self.assertEqual('red', config['acme.ui']['bgcolor'])
@@ -137,6 +167,7 @@ class PyConfigFileTestCase(unittest.TestCase):
         self.assertEqual(42, config['acme.ui']['bazzle'])
         
         return
+
 
 # Entry point for stand-alone testing.
 if __name__ == '__main__':
