@@ -1,37 +1,47 @@
-""" A simple(istic?) Python-esque configuration file. """
+""" A Python based configuration file with hierarchical sections. """
 
 
 class PyConfigFile(dict):
-    """ A simple(istic?) Python-esque configuration file. """
+    """ A Python based configuration file with hierarchical sections. """
 
     ###########################################################################
     # 'object' interface.
     ###########################################################################
 
     def __init__(self, file_or_filename=None):
-        """ Constructor. """
+        """ Constructor.
 
-        # A dictionary containing a namespace object for the root of each
-        # config hierarchy.
+        If 'file_or_filename' is specified it will be loaded immediately. It
+        can be either:-
+
+        a) a filename
+        b) a file-like object that must be open for reading
+        
+        """
+
+        # A dictionary containing one namespace instance for each root of the
+        # config hierarchy (see the '_Namespace' class for more details).
         #
-        #. e.g. If the config file is:-
+        # e.g. If the following sections have been loaded:-
         #
         # [acme.foo]
         # ...
         # [acme.bar]
+        # ...
+        # [tds]
         # ...
         # [tds.baz]
         # ...
         #
         # Then the dictionary will contain:-
         #
-        # {'acme' : <A Namespace>, 'tds' : <A Namespace>}
+        # {'acme' : <A _Namespace instance>, 'tds' : <A _Namespace instance>}
         #
         self._namespaces = {}
 
         if file_or_filename is not None:
             self.load(file_or_filename)
-        
+
         return
 
     ###########################################################################
@@ -44,7 +54,7 @@ class PyConfigFile(dict):
         'file_or_filename' can be either:-
 
         a) a filename
-        b) a file-like object open for reading
+        b) a file-like object that must be open for reading
 
         """
 
@@ -84,8 +94,10 @@ class PyConfigFile(dict):
     def save(self, file_or_filename):
         """ Save the configuration to a file.
 
-        'file_or_filename' can be a filename or a file-like object in write
-        mode.
+        'file_or_filename' can be either:-
+
+        a) a filename
+        b) a file-like object that must be open for writing
 
         """
 
@@ -103,7 +115,11 @@ class PyConfigFile(dict):
     ###########################################################################
 
     def _get_file(self, file_or_filename, mode='r'):
-        """ Return an open file object from a file or a filename. """
+        """ Return an open file object from a file or a filename.
+
+        The mode is only used if a filename is specified.
+
+        """
 
         if isinstance(file_or_filename, basestring):
             f = file(file_or_filename, mode)
@@ -114,15 +130,12 @@ class PyConfigFile(dict):
         return f
 
     def _get_namespace(self, section_name):
-        """ Get the namespace that represents the section. """
+        """ Return the namespace that represents the section. """
 
         components = section_name.split('.')
-        namespace = self._namespaces.setdefault(components[0], Namespace())
+        namespace = self._namespaces.setdefault(components[0], _Namespace())
 
         for component in components[1:]:
-            if not hasattr(namespace, component):
-                setattr(namespace, component, Namespace())
-
             namespace = getattr(namespace, component)
 
         return namespace
@@ -135,35 +148,35 @@ class PyConfigFile(dict):
 
         """
 
-        # If this is the first time that we have come across this section then
+        # If this is the first time that we have come across the section then
         # start with an empty dictionary for its contents. Otherwise, we will
-        # update the existing contents.
+        # update its existing contents.
         section = self.setdefault(section_name, {})
 
         # Execute the Python code in the section dictionary.
         #
         # We use 'self._namespaces' as the globals for the code execution so
-        # that config values can refer to other config values.
+        # that config values can refer to other config values using familiar
+        # Python syntax (see the '_Namespace' class for more details).
         #
         # e.g.
         #
         # [acme.foo]
         # bar = 1
+        # baz = 99
         #
-        # [acme.baz]
-        # blitzel = acme.foo.bar * 2
+        # [acme.blargle]
+        # blitzel = acme.foo.bar + acme.foo.baz
         exec section_body in self._namespaces, section
 
-        # The '__builtins__' dictionary gets added to the global namespace used
-        # in the call to 'exec'. However, we want 'self._namespaces' to only
-        # contain 'Namespace' instances, so we do the cleanup here.
+        # The '__builtins__' dictionary gets added to 'self._namespaces' as
+        # by the call to 'exec'. However, we want 'self._namespaces' to only
+        # contain '_Namespace' instances, so we do the cleanup here.
         del self._namespaces['__builtins__']
 
-        # Get the section's corresponding node in the 'dotted' namespace.
+        # Get the section's corresponding node in the 'dotted' namespace and
+        # update it with the config values.
         namespace = self._get_namespace(section_name)
-
-        # Connect the internals of the node in the 'dotted' namespace to the
-        # section!
         namespace.__dict__.update(section)
 
         return
@@ -198,26 +211,36 @@ class PyConfigFile(dict):
 # Internal use only.
 ###############################################################################
 
-class Namespace(object):
-    """ An object that represents a section in a dotted namespace.
+class _Namespace(object):
+    """ An object that represents a node in a dotted namespace.
 
-    In config files, it is useful for a value to be able to refer to other
-    values:-
+    We build up a dotted namespace so that config values can refer to other
+    config values using familiar Python syntax.
     
     e.g.
 
     [acme.foo]
     bar = 1
-
-    [acme.baz]
-    blitzel = acme.foo.bar * 2
-
-    These namespace objects are used to build up the 'dotted' namespace so that
-    when the body of the section is evaluated, the name 'acme.foo.bar' resolves
-    to the appropriate value.
+    baz = 99
+    
+    [acme.blargle]
+    blitzel = acme.foo.bar + acme.foo.baz
 
     """
 
+    ###########################################################################
+    # 'object' interface.
+    ###########################################################################
+
+    def __getattr__(self, name):
+        """ Return the attribute with the specified name. """
+
+        # This looks a little weird, but we are simply creating the next level
+        # in the namespace hierarchy 'on-demand'.
+        namespace = self.__dict__[name] = _Namespace()
+        
+        return namespace
+    
     ###########################################################################
     # Debugging interface.
     ###########################################################################
@@ -226,7 +249,7 @@ class Namespace(object):
         """ Pretty print the namespace. """
 
         for name, value in self.__dict__.items():
-            if isinstance(value, Namespace):
+            if isinstance(value, _Namespace):
                 print indent, 'Namespace:', name
                 value.pretty_print(indent + '  ')
 

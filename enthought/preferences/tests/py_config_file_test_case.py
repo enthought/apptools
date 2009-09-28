@@ -121,9 +121,8 @@ class PyConfigFileTestCase(unittest.TestCase):
 
         finally:
             # Clean up!
-            #os.remove(tmp)
-            #os.removedirs(tmpdir)
-            pass
+            os.remove(tmp)
+            os.removedirs(tmpdir)
         
         return
 
@@ -165,6 +164,9 @@ class PyConfigFileTestCase(unittest.TestCase):
 
         # ... and that we have the new ones.
         self.assertEqual(42, config['acme.ui']['bazzle'])
+
+        # ... and that the new ones can refer to the old ones!
+        self.assertEqual(180, config['acme.ui']['blimey'])
         
         return
 
