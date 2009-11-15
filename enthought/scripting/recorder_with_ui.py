@@ -6,8 +6,8 @@ A Recorder subclass that presents a simple user interface.
 # License: BSD Style.
 
 from enthought.traits.api import Code, Button, Int, on_trait_change, Any
-from enthought.traits.ui.api import (View, Item, Group, CodeEditor,
-                                     Handler)
+from enthought.traits.ui.api import (View, Item, Group, HGroup, CodeEditor,
+                                     spring, Handler)
 
 from recorder import Recorder
 
@@ -48,12 +48,14 @@ class RecorderWithUI(Recorder):
     # Traits View.
     view = View(
              Group(
-                Group(Item('recording', show_label=True)),
+                HGroup(Item('recording', show_label=True),
+                       spring,
+                       Item('save_script', show_label=False),
+                ),
                 Group(Item('code', show_label=False)),
-                Group(Item('save_script', show_label=False)),
                 ),
              width=600, 
-             height=400,
+             height=360,
              id='enthought.scripting.recorder_with_ui',
              buttons=['Cancel'], 
              resizable=True,
