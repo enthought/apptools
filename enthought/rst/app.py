@@ -18,7 +18,6 @@
 # Standard library imports
 from optparse import OptionParser
 import os
-import sys
 
 # Local imports
 from rest_editor_view import ReSTHTMLEditorView

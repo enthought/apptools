@@ -31,16 +31,15 @@ from enthought.pyface.api import AboutDialog, DirectoryDialog, FileDialog, \
 from enthought.pyface.action.api import Group as ActionGroup
 from enthought.traits.api import HasTraits, Str, Property, Bool, List, \
     Instance, Dict, Int, Any, Event, Enum, on_trait_change
-from enthought.traits.ui.api import View, Group, Item, Handler, \
+from enthought.traits.ui.api import View, Group, Item, \
     TabularEditor, ListEditor, TextEditor, CodeEditor, InstanceEditor
 from enthought.traits.ui.extras.saving import SaveHandler
 from enthought.traits.ui.key_bindings import KeyBinding, KeyBindings
 from enthought.traits.ui.menu import Action, Menu, MenuBar
-from enthought.traits.ui.table_column import ObjectColumn
 from enthought.traits.ui.tabular_adapter import TabularAdapter
 
 # Local imports
-from rest_editor_model import DocUtilsWarning, ReSTHTMLPair
+from rest_editor_model import ReSTHTMLPair
 from file_tree import FileTree
 
 # Platform and toolkit dependent imports
