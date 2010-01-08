@@ -46,6 +46,8 @@ class DirectoryNode(HasTraits):
         files.sort(key=lambda node: node.name.lower())
         
         dirs = []
+        # Pass filenames through str() to convert from unicode.
+        ##names = [str(f) for f in os.listdir(self.path)]
         names = os.listdir(self.path)
         names.sort(key=str.lower)
         for fn in names:
