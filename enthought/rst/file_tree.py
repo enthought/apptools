@@ -2,7 +2,7 @@ import os
 import glob
 
 from enthought.traits.api import HasTraits, Str, Property, List, \
-        Directory, cached_property, Instance, Any
+        Directory, cached_property, Instance
 from enthought.traits.ui.api import TreeEditor, TreeNode, View, Item
 
 class FileNode(HasTraits):
