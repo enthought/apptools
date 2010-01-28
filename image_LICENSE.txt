@@ -8,9 +8,9 @@ Enthought               BSD-like                  LICENSE.txt
 Nuvola                  LGPL                      image_LICENSE_Nuvola.txt
 OOo                     LGPL                      image_LICENSE_OOo.txt
 
-Unless stated in this file, icons are work of enthought, and are released
+Unless stated in this file, icons are work of Enthought, and are released
 under BSD-like license.
-Files and orginal authors:
+Files and original authors:
 ----------------------------------------------------------------
 enthought/help:
                    help_action.png | GV
