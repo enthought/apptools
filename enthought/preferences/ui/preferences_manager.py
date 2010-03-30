@@ -79,10 +79,8 @@ class PreferencesManagerHandler(Handler):
     def apply(self, info):
         """ Handle the **Apply** button being clicked. """
 
-        info.object.apply()
-        
+        info.object.apply()        
         return
-
 
     def init(self, info):
         """ Initialize the controls of a user interface. """
@@ -151,7 +149,10 @@ class PreferencesManager(HasTraits):
     # for each trait of the *selected_page* with the metadata 'show_help' 
     # set to True. 
     show_help = Bool(False)
-
+    
+    # Should the Apply button be shown?
+    show_apply = Bool(False)
+    
     #### Traits UI views ######################################################
 
     def traits_view(self):
@@ -159,10 +160,13 @@ class PreferencesManager(HasTraits):
         
         help_action = Action(name = 'Info', action = 'preferences_help')
         
+        buttons = ['OK', 'Cancel']
+        
+        if self.show_apply:
+            buttons = ['Apply'] + buttons
         if self.show_help:
-            buttons = [help_action, 'OK', 'Cancel']
-        else:
-            buttons = ['OK', 'Cancel']
+            buttons = [help_action] + buttons
+        
         
         # A tree editor for preferences nodes.
         tree_editor = TreeEditor(
@@ -209,7 +213,8 @@ class PreferencesManager(HasTraits):
             resizable = True,
             title     = 'Preferences',
             width     = .3,
-            height    = .3
+            height    = .3,
+            kind      = 'modal'
         )
         self.selected_page = self.pages[0]
         return view
