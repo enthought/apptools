@@ -100,7 +100,7 @@ class ReSTHTMLPair(CanSaveMixin):
             self.html, warning_nodes = result
             warnings = []
             for node in warning_nodes:
-                description = node.children[0].children[0].data
+                description = node.children[0].children[0]
                 warnings.append(DocUtilsWarning(level=node.attributes['level'],
                                                 line=node.attributes['line'],
                                                 description=description))
