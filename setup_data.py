@@ -59,7 +59,7 @@ INFO = {
         TRAITS_UI,
         ],
     'name': 'AppTools',
-    'version': '3.3.2',
+    'version': '3.3.3',
     }
 
 # Add multiprocessing (only used by enthought.rst) as an extra if Python
