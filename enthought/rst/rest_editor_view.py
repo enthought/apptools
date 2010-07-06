@@ -32,7 +32,8 @@ from enthought.pyface.action.api import Group as ActionGroup
 from enthought.traits.api import HasTraits, Str, Property, Bool, List, \
     Instance, Dict, Int, Any, Event, Enum, on_trait_change
 from enthought.traits.ui.api import View, Group, Item, \
-    TabularEditor, ListEditor, TextEditor, CodeEditor, InstanceEditor
+    TabularEditor, ListEditor, TextEditor, CodeEditor, InstanceEditor, \
+    HTMLEditor
 from enthought.traits.ui.extras.saving import SaveHandler
 from enthought.traits.ui.key_bindings import KeyBinding, KeyBindings
 from enthought.traits.ui.menu import Action, Menu, MenuBar, ToolBar
@@ -45,20 +46,15 @@ from util import docutils_rest_to_html, docutils_rest_to_latex, \
     sphinx_rest_to_html
 
 # Platform and toolkit dependent imports
-import platform
-if platform.system() == 'Windows' and ETSConfig.toolkit == 'wx':
-    from enthought.traits.ui.wx.extra.windows.ie_html_editor import \
-        IEHTMLEditor as HTMLEditor
-else:
-    from enthought.traits.ui.api import HTMLEditor
-
-if ETSConfig.toolkit == 'qt4':
-    # Qsci is not actually included in PyQt4, despite what its root package name
-    # might suggest, so we check see if it is available
-    try:
-        from PyQt4 import Qsci
-    except ImportError:
-        Qsci = None
+if ETSConfig.toolkit != 'qt4':
+    raise Exception('The rest editor only supports qt4 as toolkit.')
+    
+# Qsci is not actually included in PyQt4, despite what its root package name
+# might suggest, so we check see if it is available
+try:
+    from PyQt4 import Qsci
+except ImportError:
+    Qsci = None
 
 
 class DocUtilsWarningAdapter(TabularAdapter):
@@ -100,8 +96,6 @@ class ReSTHTMLPairHandler(SaveHandler):
 
     def object__editor_action_changed(self, info):
         action = info.object._editor_action_type
-        if ETSConfig.toolkit == 'wx':
-            action = action[0].upper() + action[1:]
         getattr(self.rest_control, action)()
 
 
@@ -132,7 +126,7 @@ class ReSTHTMLPairView(HasTraits):
         self._editor_action = True
 
     def trait_view(self, name='default'):
-        if ETSConfig.toolkit == 'wx' or (ETSConfig.toolkit == 'qt4' and Qsci):
+        if Qsci:
             rest_editor = CodeEditor(lexer='null',
                                      selected_line='selected_line',
                                      auto_scroll=True,
@@ -307,24 +301,17 @@ class ReSTHTMLEditorHandler(SaveHandler):
 
     def toggle_file_browser(self, info):
         root = info.ui.control
-        if ETSConfig.toolkit == 'wx':
-            window = root.GetChildren()[0].GetChildren()[0].GetChildren()[0]
-            dock_section = window.GetSizer().GetContents()
-            splitter = dock_section.splitters[0]
-            splitter.collapse(False)
-            dock_section.update_splitter(splitter, dock_section.control)
-        else:
-            main_window = root.layout().itemAt(0).widget()
-            splitter = main_window.layout().itemAt(0).widget()
-            sizes = splitter.sizes()
-            if sizes[0] == 0:
-                if len(self.qt_splitter_state):
-                    splitter.setSizes(self.qt_splitter_state)
-                else:
-                    splitter.setSizes([sizes[1]/2, sizes[1]/2])
+        main_window = root.layout().itemAt(0).widget()
+        splitter = main_window.layout().itemAt(0).widget()
+        sizes = splitter.sizes()
+        if sizes[0] == 0:
+            if len(self.qt_splitter_state):
+                splitter.setSizes(self.qt_splitter_state)
             else:
-                self.qt_splitter_state = sizes
-                splitter.setSizes([0, sum(sizes)])
+                splitter.setSizes([sizes[1]/2, sizes[1]/2])
+        else:
+            self.qt_splitter_state = sizes
+            splitter.setSizes([0, sum(sizes)])
 
     # Preferences menu
 
