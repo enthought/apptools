@@ -35,12 +35,14 @@ from enthought.traits.ui.api import View, Group, Item, \
     TabularEditor, ListEditor, TextEditor, CodeEditor, InstanceEditor
 from enthought.traits.ui.extras.saving import SaveHandler
 from enthought.traits.ui.key_bindings import KeyBinding, KeyBindings
-from enthought.traits.ui.menu import Action, Menu, MenuBar
+from enthought.traits.ui.menu import Action, Menu, MenuBar, ToolBar
 from enthought.traits.ui.tabular_adapter import TabularAdapter
 
 # Local imports
 from rest_editor_model import ReSTHTMLPair
 from file_tree import FileTree
+from util import docutils_rest_to_html, docutils_rest_to_latex, \
+    sphinx_rest_to_html
 
 # Platform and toolkit dependent imports
 import platform
@@ -103,6 +105,7 @@ class ReSTHTMLPairHandler(SaveHandler):
         getattr(self.rest_control, action)()
 
 
+
 class ReSTHTMLPairView(HasTraits):
 
     model = Instance(ReSTHTMLPair)
@@ -136,6 +139,7 @@ class ReSTHTMLPairView(HasTraits):
                                      squiggle_lines='warning_lines')
         else:
             rest_editor = TextEditor(multi_line=True)
+            
         warning_editor = TabularEditor(editable=False,
                                        adapter=DocUtilsWarningAdapter(),
                                        dclicked='dclicked_warning')
@@ -332,6 +336,36 @@ class ReSTHTMLEditorHandler(SaveHandler):
         result = dialog.open()
         if result == OK and os.path.exists(dialog.path):
             info.object.sphinx_static_path = dialog.path
+            
+    # Convert menu
+    
+    def docutils_rst2html(self, info):
+        rest = info.object.selected_view.model.rest
+        html_filepath = info.object.selected_view.model.html_filepath
+        f = open(html_filepath, 'w')
+        f.write(docutils_rest_to_html(rest)[0])
+        f.close()
+        
+    def docutils_rst2latex(self, info):
+        rest = info.object.selected_view.model.rest
+        filepath = info.object.selected_view.model.filepath
+        
+        index = filepath.rfind('.')
+        if index != -1:
+            filepath = filepath[:index]
+        latex_filepath = filepath + '.tex'
+        
+        f = open(latex_filepath, 'w')
+        f.write(docutils_rest_to_latex(rest)[0])
+        f.close()
+        
+    def sphinx_rst2html(self, info):
+        rest = info.object.selected_view.model.rest
+        html_filepath = info.object.selected_view.model.html_filepath
+        f = open(html_filepath, 'w')
+        f.write(sphinx_rest_to_html(rest)[0])
+        f.close()
+        
 
     # Help menu
 
@@ -395,8 +429,45 @@ class ReSTHTMLEditorView(HasTraits):
                           name='Preferences')
         help_menu = Menu(Action(name='About', action='about'),
                          name='Help')
+        convert_menu = Menu(Action(name='Docutils - HTML', 
+                                   action='docutils_rst2html'),
+                            Action(name='Docutils - LaTeX', 
+                                   action='docutils_rst2latex'),
+                            Action(name='Sphinx - HTML', 
+                                   action='sphinx_rst2html'),
+                            name='Convert')
         menu_bar = MenuBar(file_menu, edit_menu, view_menu, prefs_menu, 
-                           help_menu)
+                           convert_menu, help_menu)
+                           
+        ##################################
+        
+        tool_bar = ToolBar(ActionGroup(
+                                       Action(name='New', action='new', 
+                                              tooltip = '', 
+                                              image = ImageResource('new')),
+                                       Action(name='Open', action='open', 
+                                              tooltip = '', 
+                                              image = ImageResource('open')),
+                                       Action(name='Save', action='save',
+                                              tooltip = '', 
+                                              image = ImageResource('save')),
+                                       Action(name='Save As', action='saveAs',
+                                              tooltip = '', 
+                                              image = ImageResource('save-as')),
+                                       Action(name='Close', action='close_tab', 
+                                              tooltip = '', 
+                                              image = ImageResource('close'))
+                                      ),
+                           ActionGroup(Action(name='Undo', action='undo',
+                                              tooltip = '', 
+                                              image = ImageResource('undo')),
+                                       Action(name='Redo', action='redo',
+                                              tooltip = '', 
+                                              image = ImageResource('redo'))
+                                      )
+                          )
+        
+        ##################################
 
         key_bindings = KeyBindings(
             KeyBinding(binding1='Ctrl-n', method_name='new'),
@@ -433,6 +504,7 @@ class ReSTHTMLEditorView(HasTraits):
                     handler=ReSTHTMLEditorHandler(),
                     width=1024, height=786, resizable=True,
                     menubar=menu_bar,
+                    toolbar = tool_bar,
                     key_bindings=key_bindings,
                     title="reStructured Text Editor")
 
@@ -455,6 +527,7 @@ class ReSTHTMLEditorView(HasTraits):
                 return
         
         fh = codecs.open(filepath, 'r', 'utf-8')
+        
         try:
             pair = ReSTHTMLPair(rest=fh.read(), filepath=filepath)
             pair.dirty = False

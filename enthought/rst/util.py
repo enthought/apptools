@@ -37,10 +37,23 @@ except ImportError:
 
 
 #------------------------------------------------------------------------------
-# Convert reStructured Text to HTML using docutils
+# Convert reStructured Text to various formats using docutils
 #------------------------------------------------------------------------------
 
 def docutils_rest_to_html(rest):
+    """ Uses docutils to convert a ReST string to HTML. Returns a tuple
+        containg the HTML string and the list of warning nodes that were
+        removed from the HTML.
+    """
+    return _docutils_rest_to(rest, 'html')
+    
+def docutils_rest_to_latex(rest):
+    """ Uses docutils to convert a ReST string to LaTeX. Returns a tuple
+        containg the LaTeX string and the list of warning nodes.
+    """
+    return _docutils_rest_to(rest, 'latex')
+
+def _docutils_rest_to(rest, writer):
     """ Uses docutils to convert a ReST string to HTML. Returns a tuple
         containg the HTML string and the list of warning nodes that were
         removed from the HTML.
@@ -54,7 +67,7 @@ def docutils_rest_to_html(rest):
     pub = Publisher(source_class=docutils.io.StringInput,
                     destination_class=docutils.io.StringOutput)
     pub.set_reader('standalone', None, 'restructuredtext')
-    pub.set_writer('html')
+    pub.set_writer(writer)
     pub.get_settings() # Get the default settings
     pub.settings.halt_level = 6 # Don't halt on errors
     pub.settings.warning_stream = StringIO()
