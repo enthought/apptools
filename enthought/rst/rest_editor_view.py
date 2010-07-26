@@ -29,6 +29,7 @@ from enthought.etsconfig.api import ETSConfig
 from enthought.pyface.api import AboutDialog, DirectoryDialog, FileDialog, \
     ImageResource, OK
 from enthought.pyface.action.api import Group as ActionGroup
+from enthought.pyface.ui.qt4.code_editor.code_widget import AdvancedCodeWidget
 from enthought.traits.api import HasTraits, Str, Property, Bool, List, \
     Instance, Dict, Int, Any, Event, Enum, on_trait_change
 from enthought.traits.ui.api import View, Group, Item, \
@@ -82,6 +83,9 @@ class ReSTHTMLPairHandler(SaveHandler):
 
     # A reference to the toolkit control that is being used to edit the ReST
     rest_control = Any
+    
+    # A reference to the toolkit control which is the text editor
+    code_widget = Any
 
     def init(self, info):
         super(ReSTHTMLPairHandler, self).init(info)
@@ -90,6 +94,13 @@ class ReSTHTMLPairHandler(SaveHandler):
             if editor.name == 'rest':
                 self.rest_control = editor.control
                 break
+        
+        self.code_widget = None
+        for child in self.rest_control.children():
+            if isinstance(child, AdvancedCodeWidget):
+                self.code_widget = child
+                
+        print "code widget", self.code_widget
 
     def object_model_changed(self, info):
         self.saveObject = info.object.model
