@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2009, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: Evan Patterson
 #  Date:   07/17/2009
 #
@@ -34,6 +34,10 @@ try:
     from sphinx.application import Sphinx
 except ImportError:
     Sphinx = None
+try:
+    from rst2pdf.createpdf import main as rst2pdf
+except ImportError:
+    rst2pdf = None
 
 
 #------------------------------------------------------------------------------
@@ -46,7 +50,7 @@ def docutils_rest_to_html(rest):
         removed from the HTML.
     """
     return _docutils_rest_to(rest, 'html')
-    
+
 def docutils_rest_to_latex(rest):
     """ Uses docutils to convert a ReST string to LaTeX. Returns a tuple
         containg the LaTeX string and the list of warning nodes.
@@ -68,6 +72,7 @@ def _docutils_rest_to(rest, writer):
                     destination_class=docutils.io.StringOutput)
     pub.set_reader('standalone', None, 'restructuredtext')
     pub.set_writer(writer)
+    pub.writer.default_stylesheet_path=''
     pub.get_settings() # Get the default settings
     pub.settings.halt_level = 6 # Don't halt on errors
     pub.settings.warning_stream = StringIO()
@@ -118,7 +123,7 @@ if Sphinx is not None:
     sphinx.builders.html.StandaloneHTMLBuilder.finish = my_finish
 
 def sphinx_rest_to_html(rest, static_path=DEFAULT_STATIC_PATH):
-    """ Uses sphinx to convert a ReST string to HTML. Requires the use of 
+    """ Uses sphinx to convert a ReST string to HTML. Requires the use of
         temporary files. Returns the same things as docutils_rest_to_html.
     """
 
@@ -141,14 +146,14 @@ def sphinx_rest_to_html(rest, static_path=DEFAULT_STATIC_PATH):
         fh.close()
 
         overrides = { 'html_add_permalinks' : False,
-                      'html_copy_source' : False, 
+                      'html_copy_source' : False,
                       'html_title' : 'Sphinx preview',
-                      'html_use_index' : False, 
+                      'html_use_index' : False,
                       'html_use_modindex' : False,
-                      'html_use_smartypants' : True, 
+                      'html_use_smartypants' : True,
                       'master_doc' : filename }
-        app = Sphinx(srcdir=temp_dir, confdir=None, outdir=temp_dir, 
-                     doctreedir=temp_dir, buildername='html', 
+        app = Sphinx(srcdir=temp_dir, confdir=None, outdir=temp_dir,
+                     doctreedir=temp_dir, buildername='html',
                      confoverrides=overrides, status=None, warning=StringIO())
         app.build(all_files=True, filenames=None)
 
@@ -165,3 +170,18 @@ def sphinx_rest_to_html(rest, static_path=DEFAULT_STATIC_PATH):
     html = re.sub(STATIC_REGEX, replace, html)
 
     return html, warning_nodes
+
+#------------------------------------------------------------------------------
+# Convert reStructured Text to PDF using rst2pdf
+#------------------------------------------------------------------------------
+
+def rest_to_pdf(input_file, output_file):
+    if rst2pdf is None:
+        print 'rst2pdf package not installed.'
+        return
+
+    # rst2pdf doesn't seem to have an easy API so instead we call the main
+    # function as if we were using it from the CLI
+
+    args=['',input_file, '-o', output_file]
+    rst2pdf(args[1:])

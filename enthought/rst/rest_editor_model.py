@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2009, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: Evan Patterson
 #  Date:   06/18/2009
 #
@@ -35,7 +35,6 @@ def sphinx_rest_to_html(rest, static_path=util.DEFAULT_STATIC_PATH):
 
 
 class DocUtilsWarning(HasTraits):
-
     level = Int
     line = Int
     description = Str
@@ -79,7 +78,7 @@ class ReSTHTMLPair(CanSaveMixin):
         else:
             self._processing = True
             self._gen_html()
-            
+
     def _gen_html(self):
         args = [ self.rest ]
         if self.use_sphinx:

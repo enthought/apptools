@@ -2,14 +2,14 @@
 #
 #  Copyright (c) 2009, Enthought, Inc.
 #  All rights reserved.
-# 
+#
 #  This software is provided without warranty under the terms of the BSD
 #  license included in enthought/LICENSE.txt and may be redistributed only
 #  under the conditions described in the aforementioned license.  The license
 #  is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 #  Thanks for using Enthought open source!
-#  
+#
 #  Author: Evan Patterson
 #  Date:   06/18/2009
 #
@@ -27,7 +27,7 @@ from validate import Validator
 # ETS imports
 from enthought.etsconfig.api import ETSConfig
 from enthought.pyface.api import AboutDialog, DirectoryDialog, FileDialog, \
-    ImageResource, OK
+    ImageResource, OK, error
 from enthought.pyface.action.api import Group as ActionGroup
 from enthought.pyface.ui.qt4.code_editor.code_widget import AdvancedCodeWidget
 from enthought.traits.api import HasTraits, Str, Property, Bool, List, \
@@ -44,18 +44,11 @@ from enthought.traits.ui.tabular_adapter import TabularAdapter
 from rest_editor_model import ReSTHTMLPair
 from file_tree import FileTree
 from util import docutils_rest_to_html, docutils_rest_to_latex, \
-    sphinx_rest_to_html
+    sphinx_rest_to_html, rest_to_pdf
 
 # Platform and toolkit dependent imports
 if ETSConfig.toolkit != 'qt4':
     raise Exception('The rest editor only supports qt4 as toolkit.')
-    
-# Qsci is not actually included in PyQt4, despite what its root package name
-# might suggest, so we check see if it is available
-try:
-    from PyQt4 import Qsci
-except ImportError:
-    Qsci = None
 
 
 class DocUtilsWarningAdapter(TabularAdapter):
@@ -83,7 +76,7 @@ class ReSTHTMLPairHandler(SaveHandler):
 
     # A reference to the toolkit control that is being used to edit the ReST
     rest_control = Any
-    
+
     # A reference to the toolkit control which is the text editor
     code_widget = Any
 
@@ -94,12 +87,12 @@ class ReSTHTMLPairHandler(SaveHandler):
             if editor.name == 'rest':
                 self.rest_control = editor.control
                 break
-        
+
         self.code_widget = None
         for child in self.rest_control.children():
             if isinstance(child, AdvancedCodeWidget):
                 self.code_widget = child
-                
+
         print "code widget", self.code_widget
 
     def object_model_changed(self, info):
@@ -137,17 +130,15 @@ class ReSTHTMLPairView(HasTraits):
         self._editor_action = True
 
     def trait_view(self, name='default'):
-        if Qsci:
-            rest_editor = CodeEditor(lexer='null',
-                                     selected_line='selected_line',
-                                     auto_scroll=True,
-                                     squiggle_lines='warning_lines')
-        else:
-            rest_editor = TextEditor(multi_line=True)
-            
+        rest_editor = CodeEditor(lexer='null',
+                                 selected_line='selected_line',
+                                 auto_scroll=True,
+                                 squiggle_lines='warning_lines')
+
         warning_editor = TabularEditor(editable=False,
                                        adapter=DocUtilsWarningAdapter(),
                                        dclicked='dclicked_warning')
+
         html_editor = HTMLEditor(open_externally=True,
                                  base_url_name='base_url')
 
@@ -334,36 +325,51 @@ class ReSTHTMLEditorHandler(SaveHandler):
         result = dialog.open()
         if result == OK and os.path.exists(dialog.path):
             info.object.sphinx_static_path = dialog.path
-            
+
     # Convert menu
-    
+
     def docutils_rst2html(self, info):
         rest = info.object.selected_view.model.rest
         html_filepath = info.object.selected_view.model.html_filepath
         f = open(html_filepath, 'w')
         f.write(docutils_rest_to_html(rest)[0])
         f.close()
-        
+
     def docutils_rst2latex(self, info):
         rest = info.object.selected_view.model.rest
         filepath = info.object.selected_view.model.filepath
-        
+
         index = filepath.rfind('.')
         if index != -1:
             filepath = filepath[:index]
         latex_filepath = filepath + '.tex'
-        
+
         f = open(latex_filepath, 'w')
         f.write(docutils_rest_to_latex(rest)[0])
         f.close()
-        
+
     def sphinx_rst2html(self, info):
         rest = info.object.selected_view.model.rest
         html_filepath = info.object.selected_view.model.html_filepath
         f = open(html_filepath, 'w')
         f.write(sphinx_rest_to_html(rest)[0])
         f.close()
-        
+
+    def rst2pdf(self, info):
+        rest_filepath = info.object.selected_view.model.filepath
+
+        if rest_filepath == '':
+            error(info.ui.control,
+                  'File must be saved before converting it to pdf.')
+            return
+
+        pdf_filepath = None
+
+        index = rest_filepath.rfind('.')
+        if index != -1:
+            pdf_filepath = rest_filepath[:index] + '.pdf'
+
+        rest_to_pdf(rest_filepath, pdf_filepath)
 
     # Help menu
 
@@ -373,7 +379,7 @@ class ReSTHTMLEditorHandler(SaveHandler):
 
 
 class ReSTHTMLEditorView(HasTraits):
-    
+
     root_path = Str(USER_HOME_DIRECTORY)
     filters = List(['*.rst', '*.txt'])
 
@@ -427,44 +433,46 @@ class ReSTHTMLEditorView(HasTraits):
                           name='Preferences')
         help_menu = Menu(Action(name='About', action='about'),
                          name='Help')
-        convert_menu = Menu(Action(name='Docutils - HTML', 
+        convert_menu = Menu(Action(name='Docutils - HTML',
                                    action='docutils_rst2html'),
-                            Action(name='Docutils - LaTeX', 
+                            Action(name='Docutils - LaTeX',
                                    action='docutils_rst2latex'),
-                            Action(name='Sphinx - HTML', 
+                            Action(name='Sphinx - HTML',
                                    action='sphinx_rst2html'),
+                            Action(name='rst2pdf',
+                                   action='rst2pdf'),
                             name='Convert')
-        menu_bar = MenuBar(file_menu, edit_menu, view_menu, prefs_menu, 
+        menu_bar = MenuBar(file_menu, edit_menu, view_menu, prefs_menu,
                            convert_menu, help_menu)
-                           
+
         ##################################
-        
+
         tool_bar = ToolBar(ActionGroup(
-                                       Action(name='New', action='new', 
-                                              tooltip = '', 
+                                       Action(name='New', action='new',
+                                              tooltip = '',
                                               image = ImageResource('new')),
-                                       Action(name='Open', action='open', 
-                                              tooltip = '', 
+                                       Action(name='Open', action='open',
+                                              tooltip = '',
                                               image = ImageResource('open')),
                                        Action(name='Save', action='save',
-                                              tooltip = '', 
+                                              tooltip = '',
                                               image = ImageResource('save')),
                                        Action(name='Save As', action='saveAs',
-                                              tooltip = '', 
+                                              tooltip = '',
                                               image = ImageResource('save-as')),
-                                       Action(name='Close', action='close_tab', 
-                                              tooltip = '', 
+                                       Action(name='Close', action='close_tab',
+                                              tooltip = '',
                                               image = ImageResource('close'))
                                       ),
                            ActionGroup(Action(name='Undo', action='undo',
-                                              tooltip = '', 
+                                              tooltip = '',
                                               image = ImageResource('undo')),
                                        Action(name='Redo', action='redo',
-                                              tooltip = '', 
+                                              tooltip = '',
                                               image = ImageResource('redo'))
                                       )
                           )
-        
+
         ##################################
 
         key_bindings = KeyBindings(
@@ -523,9 +531,9 @@ class ReSTHTMLEditorView(HasTraits):
             if filepath == view.model.filepath:
                 self.selected_view = view
                 return
-        
+
         fh = codecs.open(filepath, 'r', 'utf-8')
-        
+
         try:
             pair = ReSTHTMLPair(rest=fh.read(), filepath=filepath)
             pair.dirty = False
@@ -554,10 +562,10 @@ class ReSTHTMLEditorView(HasTraits):
     #-----------------------------------------------------------------
     #  Protected interface
     #-----------------------------------------------------------------
-        
+
     def __tree_default(self):
         return FileTree(root_path=self.root_path, filters=self.filters)
-        
+
     @on_trait_change('_tree.selected')
     def _tree_selection_changed(self):
         self.selected_file = self._tree.selected
