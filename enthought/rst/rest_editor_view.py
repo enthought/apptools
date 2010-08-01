@@ -100,7 +100,7 @@ class ReSTHTMLPairHandler(SaveHandler):
 
     def object__editor_action_changed(self, info):
         action = info.object._editor_action_type
-        getattr(self.rest_control, action)()
+        getattr(self.code_widget.code, action)()
 
 
 
