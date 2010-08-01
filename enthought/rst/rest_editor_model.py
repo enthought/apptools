@@ -120,7 +120,7 @@ class ReSTHTMLPair(CanSaveMixin):
         """ Prompt the user if there are warnings/errors with reST file.
         """
         if len(self.warnings):
-            return (False, "The reStructured Text is improperly composed." \
+            return (False, "The reStructured Text is improperly composed. " \
                            "Are you sure you want to save it?")
         else:
             return (True, '')

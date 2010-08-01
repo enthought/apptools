@@ -93,7 +93,7 @@ class ReSTHTMLPairHandler(SaveHandler):
             if isinstance(child, AdvancedCodeWidget):
                 self.code_widget = child
 
-        print "code widget", self.code_widget
+        # print "code widget", self.code_widget
 
     def object_model_changed(self, info):
         self.saveObject = info.object.model
@@ -408,19 +408,30 @@ class ReSTHTMLEditorView(HasTraits):
     #-----------------------------------------------------------------
 
     def trait_view(self, name='default'):
-        file_menu = Menu(ActionGroup(Action(name='New', action='new'),
-                                     Action(name='Open', action='open'),
-                                     Action(name='Close', action='close_tab')),
-                         ActionGroup(Action(name='Save', action='save'),
-                                     Action(name='Save As', action='saveAs')),
-                         ActionGroup(Action(name='Exit', action='exit')),
+        file_menu = Menu(ActionGroup(Action(name='New \t Ctrl+N', 
+                                            action='new'),
+                                     Action(name='Open \t Ctrl+O', 
+                                            action='open'),
+                                     Action(name='Close \t Ctrl+W', 
+                                            action='close_tab')),
+                         ActionGroup(Action(name='Save \t Ctrl+S', 
+                                            action='save'),
+                                     Action(name='Save As', 
+                                            action='saveAs')),
+                         ActionGroup(Action(name='Exit \t Ctrl+Q', 
+                                            action='exit')),
                          name='File')
-        edit_menu = Menu(ActionGroup(Action(name='Undo', action='undo'),
-                                     Action(name='Redo', action='redo')),
-                         ActionGroup(Action(name='Cut', action='cut'),
-                                     Action(name='Copy', action='copy'),
-                                     Action(name='Paste', action='paste')),
-                         ActionGroup(Action(name='Select All',
+        edit_menu = Menu(ActionGroup(Action(name='Undo \t Ctrl+Z', 
+                                            action='undo'),
+                                     Action(name='Redo \t Ctrl+Y', 
+                                            action='redo')),
+                         ActionGroup(Action(name='Cut \t Ctrl+X', 
+                                            action='cut'),
+                                     Action(name='Copy \t Ctrl+C', 
+                                            action='copy'),
+                                     Action(name='Paste \t Ctrl+V', 
+                                            action='paste')),
+                         ActionGroup(Action(name='Select All \t Ctrl+A',
                                             action='select_all')),
                          name='Edit')
         view_menu = Menu(ActionGroup(Action(name='Toggle File Browser',
