@@ -101,8 +101,20 @@ class ReSTHTMLPairHandler(SaveHandler):
     def object__editor_action_changed(self, info):
         action = info.object._editor_action_type
         getattr(self.code_widget.code, action)()
-
-
+        
+    def object__new_selection_action_changed(self, info):
+        cursor = self.code_widget.code.textCursor()
+        if cursor.hasSelection():
+            cursor.insertText(info.object._new_selection)
+        self.code_widget.code.setTextCursor(cursor)
+        
+    def object__increase_selection_action_changed(self, info):
+        inc = info.object._increase_selection
+        cursor = self.code_widget.code.textCursor()
+        selection_length = cursor.selectionEnd() - cursor.selectionStart()
+        cursor.setPosition(cursor.selectionStart() - inc, 0)
+        cursor.movePosition(19, 1, selection_length + 2*inc)
+        self.code_widget.code.setTextCursor(cursor)
 
 class ReSTHTMLPairView(HasTraits):
 
@@ -111,9 +123,19 @@ class ReSTHTMLPairView(HasTraits):
     # ReST editor related traits
     title = Property(Str, depends_on='model.filepath, model.dirty')
     selected_line = Int
+    selected_text = Str
+    selected_start_pos = Int
+    selected_end_pos = Int
     _editor_action = Event
     _editor_action_type = Enum('undo', 'redo', 'cut', 'copy', 'paste',
                                'selectAll')
+                               
+    _new_selection = Str
+    _new_selection_action = Event
+    _increase_selection = Int
+    _increase_selection_action=Event
+    
+    _test_event = Event
 
     # HTML view related traits
     html = Property(Str, depends_on='model.html')
@@ -133,7 +155,10 @@ class ReSTHTMLPairView(HasTraits):
         rest_editor = CodeEditor(lexer='null',
                                  selected_line='selected_line',
                                  auto_scroll=True,
-                                 squiggle_lines='warning_lines')
+                                 squiggle_lines='warning_lines',
+                                 selected_text='selected_text',
+                                 selected_start_pos='selected_start_pos',
+                                 selected_end_pos='selected_end_pos')
 
         warning_editor = TabularEditor(editable=False,
                                        adapter=DocUtilsWarningAdapter(),
@@ -377,7 +402,46 @@ class ReSTHTMLEditorHandler(SaveHandler):
         text = 'An editor for reStructured Text documentation.'
         AboutDialog(additions=[text]).open()
 
+    # Markup functions
 
+    def italic(self, info):
+        self._set_inline_markup(info, '*')
+    
+    def bold(self, info):
+        self._set_inline_markup(info, '**')
+
+    def _set_inline_markup(self, info, markup):
+        start_pos = info.object.selected_view.selected_start_pos
+        end_pos = info.object.selected_view.selected_end_pos
+        selected = info.object.selected_view.selected_text
+        rest = info.object.selected_view.model.rest
+        length = len(markup)
+
+        # 1. The user selected the text with the markup: remove markup.
+        if selected[:length] == markup and selected[-length:] == markup:
+            self._modify_selection(info, selected[length:-length])
+        # 2. The user selected the text between the markup: remove markup.
+        elif rest[start_pos-length:start_pos] == markup and rest[end_pos:end_pos+length] == markup:
+            self._increase_selection(info, length)
+            self._modify_selection(info, selected)
+        # 3. There is no markup: add markup.
+        else:
+            self._modify_selection(info, markup + selected + markup)
+           
+    def title(self, info):
+        pass
+
+    def subtitle(self, info):
+        pass
+        
+    def _modify_selection(self, info, new_selection):
+        info.object.selected_view._new_selection = new_selection
+        info.object.selected_view._new_selection_action = True
+        
+    def _increase_selection(self, info, size):
+        info.object.selected_view._increase_selection = size
+        info.object.selected_view._increase_selection_action = True
+        
 class ReSTHTMLEditorView(HasTraits):
 
     root_path = Str(USER_HOME_DIRECTORY)
@@ -408,28 +472,28 @@ class ReSTHTMLEditorView(HasTraits):
     #-----------------------------------------------------------------
 
     def trait_view(self, name='default'):
-        file_menu = Menu(ActionGroup(Action(name='New \t Ctrl+N', 
+        file_menu = Menu(ActionGroup(Action(name='New \t Ctrl+N',
                                             action='new'),
-                                     Action(name='Open \t Ctrl+O', 
+                                     Action(name='Open \t Ctrl+O',
                                             action='open'),
-                                     Action(name='Close \t Ctrl+W', 
+                                     Action(name='Close \t Ctrl+W',
                                             action='close_tab')),
-                         ActionGroup(Action(name='Save \t Ctrl+S', 
+                         ActionGroup(Action(name='Save \t Ctrl+S',
                                             action='save'),
-                                     Action(name='Save As', 
+                                     Action(name='Save As',
                                             action='saveAs')),
-                         ActionGroup(Action(name='Exit \t Ctrl+Q', 
+                         ActionGroup(Action(name='Exit \t Ctrl+Q',
                                             action='exit')),
                          name='File')
-        edit_menu = Menu(ActionGroup(Action(name='Undo \t Ctrl+Z', 
+        edit_menu = Menu(ActionGroup(Action(name='Undo \t Ctrl+Z',
                                             action='undo'),
-                                     Action(name='Redo \t Ctrl+Y', 
+                                     Action(name='Redo \t Ctrl+Y',
                                             action='redo')),
-                         ActionGroup(Action(name='Cut \t Ctrl+X', 
+                         ActionGroup(Action(name='Cut \t Ctrl+X',
                                             action='cut'),
-                                     Action(name='Copy \t Ctrl+C', 
+                                     Action(name='Copy \t Ctrl+C',
                                             action='copy'),
-                                     Action(name='Paste \t Ctrl+V', 
+                                     Action(name='Paste \t Ctrl+V',
                                             action='paste')),
                          ActionGroup(Action(name='Select All \t Ctrl+A',
                                             action='select_all')),
@@ -458,31 +522,43 @@ class ReSTHTMLEditorView(HasTraits):
 
         ##################################
 
-        tool_bar = ToolBar(ActionGroup(
-                                       Action(name='New', action='new',
-                                              tooltip = '',
-                                              image = ImageResource('new')),
-                                       Action(name='Open', action='open',
-                                              tooltip = '',
-                                              image = ImageResource('open')),
-                                       Action(name='Save', action='save',
-                                              tooltip = '',
-                                              image = ImageResource('save')),
-                                       Action(name='Save As', action='saveAs',
-                                              tooltip = '',
-                                              image = ImageResource('save-as')),
-                                       Action(name='Close', action='close_tab',
-                                              tooltip = '',
-                                              image = ImageResource('close'))
-                                      ),
-                           ActionGroup(Action(name='Undo', action='undo',
-                                              tooltip = '',
-                                              image = ImageResource('undo')),
-                                       Action(name='Redo', action='redo',
-                                              tooltip = '',
-                                              image = ImageResource('redo'))
-                                      )
-                          )
+        file_group = ActionGroup(Action(tooltip='New', action='new',
+                                        image = ImageResource('new')),
+                                 Action(tooltip='Open', action='open',
+                                        image = ImageResource('open')),
+                                 Action(tooltip='Save', action='save',
+                                        image = ImageResource('save')),
+                                 Action(tooltip='Save As', action='saveAs',
+                                        image = ImageResource('save-as')),
+                                 Action(tooltip='Close', action='close_tab',
+                                        image = ImageResource('close'))
+                                )
+
+        edit_group = ActionGroup(Action(tooltip='Cut', action='cut',
+                                        image = ImageResource('cut')),
+                                 Action(tooltip='Copy', action='copy',
+                                        image = ImageResource('copy')),
+                                 Action(tooltip='Paste', action='paste',
+                                        image = ImageResource('paste'))
+                                )
+
+        undo_group = ActionGroup(Action(tooltip='Undo', action='undo',
+                                        image = ImageResource('undo')),
+                                 Action(tooltip='Redo', action='redo',
+                                        image = ImageResource('redo'))
+                                )
+
+        markup_group = ActionGroup(Action(tooltip='Bold', action='bold',
+                                          image = ImageResource('bold')),
+                                   Action(tooltip='Italic', action='italic',
+                                          image = ImageResource('italic')),
+                                   Action(tooltip='Title', action='title',
+                                          image = ImageResource('title')),
+                                   Action(tooltip='Subtitle', action='subtitle',
+                                          image = ImageResource('subtitle'))
+                                  )
+                                  
+        tool_bar = ToolBar(file_group, edit_group, undo_group, markup_group)
 
         ##################################
 
