@@ -27,12 +27,23 @@ from PyQt4 import QtCore, QtGui, Qt
 
 # ETS imports
 from enthought.etsconfig.api import ETSConfig
+
+if ETSConfig.toolkit != 'qt4':
+    try:
+        ETSConfig.toolkit = 'qt4'
+    except:
+        raise Exception('The rest editor only supports qt4 as toolkit. ' + \
+         'Toolkit cannot be set to qt4 because it has already been set to wx.')
+    else:
+        print 'The rest editor only supports qt4 as toolkit. ' + \
+              'Toolkit changed to qt4.'
+
 from enthought.pyface.api import AboutDialog, DirectoryDialog, FileDialog, \
     ImageResource, OK, error
 from enthought.pyface.action.api import Group as ActionGroup
 from enthought.pyface.ui.qt4.code_editor.code_widget import AdvancedCodeWidget
 from enthought.traits.api import HasTraits, Str, Property, Bool, List, \
-    Instance, Dict, Int, Any, Event, Enum, on_trait_change
+    Instance, Dict, Int, Any, Event, Enum, on_trait_change, Font
 from enthought.traits.ui.api import View, Group, Item, \
     TabularEditor, ListEditor, TextEditor, CodeEditor, InstanceEditor, \
     HTMLEditor
@@ -46,11 +57,6 @@ from rest_editor_model import ReSTHTMLPair
 from file_tree import FileTree
 from util import docutils_rest_to_html, docutils_rest_to_latex, \
     sphinx_rest_to_html, rest_to_pdf
-
-# Platform and toolkit dependent imports
-if ETSConfig.toolkit != 'qt4':
-    raise Exception('The rest editor only supports qt4 as toolkit.')
-
 
 class DocUtilsWarningAdapter(TabularAdapter):
     columns = [('Line', 'line'), ('Description', 'description')]
@@ -80,7 +86,7 @@ class ReSTHTMLPairHandler(SaveHandler):
 
     # A reference to the toolkit control which is the text editor
     code_widget = Any
-    
+
     # A reference to the toolkit control which is the html editor
     html_control = Any
 
@@ -104,55 +110,65 @@ class ReSTHTMLPairHandler(SaveHandler):
     def object__editor_action_changed(self, info):
         action = info.object._editor_action_type
         getattr(self.code_widget.code, action)()
-        
+
     def object__new_selection_action_changed(self, info):
         cursor = self.code_widget.code.textCursor()
         if cursor.hasSelection():
             cursor.insertText(info.object._new_selection)
         self.code_widget.code.setTextCursor(cursor)
-        
+
     def object__increase_selection_action_changed(self, info):
         inc = info.object._increase_selection
         cursor = self.code_widget.code.textCursor()
         selection_length = cursor.selectionEnd() - cursor.selectionStart()
-        
+
         cursor.setPosition(cursor.selectionStart() - inc, 0)
         cursor.movePosition(19, 1, selection_length + 2 * inc)
-        
+
         self.code_widget.code.setTextCursor(cursor)
-        
+
     def object__sync_scrollbar_rst2html_action_changed(self, info):
         rst_scrollbar = self.code_widget.code.verticalScrollBar()
         html_frame = self.html_control.page().mainFrame()
-        
+
         if rst_scrollbar.maximum() == 0:
             return
-            
+
         rel_pos = float(rst_scrollbar.value()) / float(rst_scrollbar.maximum())
         new_html_pos = rel_pos * html_frame.scrollBarMaximum(2)
-        
+
         html_frame.setScrollBarValue(2, new_html_pos)
-        
+
     def object__sync_scrollbar_html2rst_action_changed(self, info):
         rst_scrollbar = self.code_widget.code.verticalScrollBar()
         html_frame = self.html_control.page().mainFrame()
-        
+
         if html_frame.scrollBarMaximum(2) == 0:
             return
-            
+
         rel_pos = float(html_frame.scrollPosition().y()) \
                 / float(html_frame.scrollBarMaximum(2))
         new_rst_pos = rel_pos * rst_scrollbar.maximum()
-        
+
         rst_scrollbar.setSliderPosition(new_rst_pos)
-        
+
+    def object__change_font_action_changed(self, info):
+        default_font = self.code_widget.code.document().defaultFont()
+        font, ok = QtGui.QFontDialog.getFont(default_font)
+
+        if ok:
+            font.setStyleHint(QtGui.QFont.TypeWriter)
+            self.code_widget.code.set_font(font)
+
+    def object__find_action_changed(self, info):
+        self.code_widget.enable_find()
+
+    def object__replace_action_changed(self, info):
+        self.code_widget.enable_replace()
+
     def object__test_event_changed(self, info):
-        pass
-        # point_size = 12
-        # font = QtGui.QFont('Consolas', point_size)
-        # font.setStyleHint(QtGui.QFont.TypeWriter)
-        # self.code_widget.code.set_font(font)
-        
+        print 'test event'
+
 
 class ReSTHTMLPairView(HasTraits):
 
@@ -167,14 +183,17 @@ class ReSTHTMLPairView(HasTraits):
     _editor_action = Event
     _editor_action_type = Enum('undo', 'redo', 'cut', 'copy', 'paste',
                                'selectAll')
-                               
+
     _new_selection = Str
     _new_selection_action = Event
     _increase_selection = Int
     _increase_selection_action = Event
     _sync_scrollbar_rst2html_action = Event
     _sync_scrollbar_html2rst_action = Event
-    
+    _find_action = Event
+    _replace_action = Event
+    _change_font_action = Event
+
     _test_event = Event
 
     # HTML view related traits
@@ -364,6 +383,14 @@ class ReSTHTMLEditorHandler(SaveHandler):
         if info.object.selected_view:
             info.object.selected_view.source_editor_action(action)
 
+    # Search menu
+
+    def enable_find(self, info):
+        info.object.selected_view._find_action = True
+
+    def enable_replace(self, info):
+        info.object.selected_view._replace_action = True
+
     # View menu
 
     def toggle_file_browser(self, info):
@@ -390,6 +417,9 @@ class ReSTHTMLEditorHandler(SaveHandler):
         result = dialog.open()
         if result == OK and os.path.exists(dialog.path):
             info.object.sphinx_static_path = dialog.path
+
+    def change_font(self, info):
+        info.object.selected_view._change_font_action = True
 
     # Convert menu
 
@@ -446,9 +476,12 @@ class ReSTHTMLEditorHandler(SaveHandler):
 
     def italic(self, info):
         self._set_inline_markup(info, '*')
-    
+
     def bold(self, info):
         self._set_inline_markup(info, '**')
+
+    def inline_literal(self, info):
+        self._set_inline_markup(info, '``')
 
     def _set_inline_markup(self, info, markup):
         start_pos = info.object.selected_view.selected_start_pos
@@ -468,30 +501,29 @@ class ReSTHTMLEditorHandler(SaveHandler):
         # 3. There is no markup: add markup.
         else:
             self._modify_selection(info, markup + selected + markup)
-           
+
     def title(self, info):
         info.object.selected_view._test_event = True
 
     def subtitle(self, info):
         pass
-        
+
     def _modify_selection(self, info, new_selection):
         info.object.selected_view._new_selection = new_selection
         info.object.selected_view._new_selection_action = True
-        
+
     def _increase_selection(self, info, size):
         info.object.selected_view._increase_selection = size
         info.object.selected_view._increase_selection_action = True
-        
+
     # Scrollbar synchronization functions
-    
+
     def sync_scrollbar_rst2html(self, info):
         info.object.selected_view._sync_scrollbar_rst2html_action = True
-        
+
     def sync_scrollbar_html2rst(self, info):
         info.object.selected_view._sync_scrollbar_html2rst_action = True
-    
-        
+
 class ReSTHTMLEditorView(HasTraits):
 
     root_path = Str(USER_HOME_DIRECTORY)
@@ -548,6 +580,13 @@ class ReSTHTMLEditorView(HasTraits):
                          ActionGroup(Action(name='Select All \t Ctrl+A',
                                             action='select_all')),
                          name='Edit')
+
+        search_menu = Menu(ActionGroup(Action(name='Find \t Ctrl+F',
+                                              action='enable_find'),
+                                       Action(name='Replace \t Ctrl+R',
+                                              action='enable_replace')),
+                           name='Search')
+
         view_menu = Menu(ActionGroup(Action(name='Toggle File Browser',
                                             action='toggle_file_browser')),
                          name='View')
@@ -555,6 +594,7 @@ class ReSTHTMLEditorView(HasTraits):
                                  checked=self.use_sphinx, style='toggle'),
                           Action(name='Set Sphinx resources path...',
                                  action='change_sphinx_static_path'),
+                          Action(name='Change font', action='change_font'),
                           name='Preferences')
         help_menu = Menu(Action(name='About', action='about'),
                          name='Help')
@@ -567,10 +607,10 @@ class ReSTHTMLEditorView(HasTraits):
                             Action(name='rst2pdf',
                                    action='rst2pdf'),
                             name='Convert')
-        menu_bar = MenuBar(file_menu, edit_menu, view_menu, prefs_menu,
-                           convert_menu, help_menu)
+        menu_bar = MenuBar(file_menu, edit_menu, search_menu, view_menu,
+                           prefs_menu, convert_menu, help_menu)
 
-        ##################################
+        ########################################################################
 
         file_group = ActionGroup(Action(tooltip='New', action='new',
                                         image = ImageResource('new')),
@@ -598,25 +638,36 @@ class ReSTHTMLEditorView(HasTraits):
                                         image = ImageResource('redo'))
                                 )
 
+        search_group = ActionGroup(Action(tooltip='Find',
+                                          action='enable_find',
+                                          image = ImageResource('find')),
+                                   Action(tooltip='Replace',
+                                          action='enable_replace',
+                                          image = ImageResource('replace')))
+
         markup_group = ActionGroup(Action(tooltip='Bold', action='bold',
                                           image = ImageResource('bold')),
                                    Action(tooltip='Italic', action='italic',
                                           image = ImageResource('italic')),
+                                   Action(tooltip='Inline Literal',
+                                          action='inline_literal',
+                                          image = ImageResource('literal')),
                                    Action(tooltip='Title', action='title',
                                           image = ImageResource('title')),
                                    Action(tooltip='Subtitle', action='subtitle',
                                           image = ImageResource('subtitle'))
                                   )
-                                  
-        sync_group = ActionGroup(Action(tooltip='Sync rst2html', 
-                                        action='sync_scrollbar_rst2html', 
+
+        sync_group = ActionGroup(Action(tooltip='Sync rst2html',
+                                        action='sync_scrollbar_rst2html',
                                         image = ImageResource('sync_rst2html')),
-                                 Action(tooltip='Sync html2rst', 
-                                        action='sync_scrollbar_html2rst', 
+                                 Action(tooltip='Sync html2rst',
+                                        action='sync_scrollbar_html2rst',
                                         image = ImageResource('sync_html2rst'))
                                 )
-                                  
-        tool_bar = ToolBar(file_group, edit_group, undo_group, markup_group, sync_group)
+
+        tool_bar = ToolBar(file_group, edit_group, undo_group, search_group,
+                           markup_group, sync_group)
 
         ##################################
 
@@ -634,7 +685,9 @@ class ReSTHTMLEditorView(HasTraits):
             KeyBinding(binding1='Ctrl-x', method_name='cut'),
             KeyBinding(binding1='Ctrl-c', method_name='copy'),
             KeyBinding(binding1='Ctrl-v', method_name='paste'),
-            KeyBinding(binding1='Ctrl-a', method_name='select_all'))
+            KeyBinding(binding1='Ctrl-a', method_name='select_all'),
+            KeyBinding(binding1='Ctrl-f', method_name='enable_find'),
+            KeyBinding(binding1='Ctrl-r', method_name='enable_replace'))
 
         return View(Group(Item('_tree',
                                style='custom',
