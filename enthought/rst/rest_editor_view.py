@@ -23,6 +23,7 @@ from user import home as USER_HOME_DIRECTORY
 # System library imports
 from configobj import ConfigObj
 from validate import Validator
+from PyQt4 import QtCore, QtGui, Qt
 
 # ETS imports
 from enthought.etsconfig.api import ETSConfig
@@ -79,6 +80,9 @@ class ReSTHTMLPairHandler(SaveHandler):
 
     # A reference to the toolkit control which is the text editor
     code_widget = Any
+    
+    # A reference to the toolkit control which is the html editor
+    html_control = Any
 
     def init(self, info):
         super(ReSTHTMLPairHandler, self).init(info)
@@ -86,14 +90,13 @@ class ReSTHTMLPairHandler(SaveHandler):
         for editor in info.ui._editors:
             if editor.name == 'rest':
                 self.rest_control = editor.control
-                break
+            if editor.name == 'html':
+                self.html_control = editor.control
 
         self.code_widget = None
         for child in self.rest_control.children():
             if isinstance(child, AdvancedCodeWidget):
                 self.code_widget = child
-
-        # print "code widget", self.code_widget
 
     def object_model_changed(self, info):
         self.saveObject = info.object.model
@@ -112,9 +115,44 @@ class ReSTHTMLPairHandler(SaveHandler):
         inc = info.object._increase_selection
         cursor = self.code_widget.code.textCursor()
         selection_length = cursor.selectionEnd() - cursor.selectionStart()
+        
         cursor.setPosition(cursor.selectionStart() - inc, 0)
-        cursor.movePosition(19, 1, selection_length + 2*inc)
+        cursor.movePosition(19, 1, selection_length + 2 * inc)
+        
         self.code_widget.code.setTextCursor(cursor)
+        
+    def object__sync_scrollbar_rst2html_action_changed(self, info):
+        rst_scrollbar = self.code_widget.code.verticalScrollBar()
+        html_frame = self.html_control.page().mainFrame()
+        
+        if rst_scrollbar.maximum() == 0:
+            return
+            
+        rel_pos = float(rst_scrollbar.value()) / float(rst_scrollbar.maximum())
+        new_html_pos = rel_pos * html_frame.scrollBarMaximum(2)
+        
+        html_frame.setScrollBarValue(2, new_html_pos)
+        
+    def object__sync_scrollbar_html2rst_action_changed(self, info):
+        rst_scrollbar = self.code_widget.code.verticalScrollBar()
+        html_frame = self.html_control.page().mainFrame()
+        
+        if html_frame.scrollBarMaximum(2) == 0:
+            return
+            
+        rel_pos = float(html_frame.scrollPosition().y()) \
+                / float(html_frame.scrollBarMaximum(2))
+        new_rst_pos = rel_pos * rst_scrollbar.maximum()
+        
+        rst_scrollbar.setSliderPosition(new_rst_pos)
+        
+    def object__test_event_changed(self, info):
+        pass
+        # point_size = 12
+        # font = QtGui.QFont('Consolas', point_size)
+        # font.setStyleHint(QtGui.QFont.TypeWriter)
+        # self.code_widget.code.set_font(font)
+        
 
 class ReSTHTMLPairView(HasTraits):
 
@@ -133,7 +171,9 @@ class ReSTHTMLPairView(HasTraits):
     _new_selection = Str
     _new_selection_action = Event
     _increase_selection = Int
-    _increase_selection_action=Event
+    _increase_selection_action = Event
+    _sync_scrollbar_rst2html_action = Event
+    _sync_scrollbar_html2rst_action = Event
     
     _test_event = Event
 
@@ -152,7 +192,7 @@ class ReSTHTMLPairView(HasTraits):
         self._editor_action = True
 
     def trait_view(self, name='default'):
-        rest_editor = CodeEditor(lexer='null',
+        rest_editor = CodeEditor(lexer='rest',
                                  selected_line='selected_line',
                                  auto_scroll=True,
                                  squiggle_lines='warning_lines',
@@ -421,7 +461,8 @@ class ReSTHTMLEditorHandler(SaveHandler):
         if selected[:length] == markup and selected[-length:] == markup:
             self._modify_selection(info, selected[length:-length])
         # 2. The user selected the text between the markup: remove markup.
-        elif rest[start_pos-length:start_pos] == markup and rest[end_pos:end_pos+length] == markup:
+        elif rest[start_pos-length:start_pos] == markup and \
+             rest[end_pos:end_pos+length] == markup:
             self._increase_selection(info, length)
             self._modify_selection(info, selected)
         # 3. There is no markup: add markup.
@@ -429,7 +470,7 @@ class ReSTHTMLEditorHandler(SaveHandler):
             self._modify_selection(info, markup + selected + markup)
            
     def title(self, info):
-        pass
+        info.object.selected_view._test_event = True
 
     def subtitle(self, info):
         pass
@@ -441,6 +482,15 @@ class ReSTHTMLEditorHandler(SaveHandler):
     def _increase_selection(self, info, size):
         info.object.selected_view._increase_selection = size
         info.object.selected_view._increase_selection_action = True
+        
+    # Scrollbar synchronization functions
+    
+    def sync_scrollbar_rst2html(self, info):
+        info.object.selected_view._sync_scrollbar_rst2html_action = True
+        
+    def sync_scrollbar_html2rst(self, info):
+        info.object.selected_view._sync_scrollbar_html2rst_action = True
+    
         
 class ReSTHTMLEditorView(HasTraits):
 
@@ -558,7 +608,15 @@ class ReSTHTMLEditorView(HasTraits):
                                           image = ImageResource('subtitle'))
                                   )
                                   
-        tool_bar = ToolBar(file_group, edit_group, undo_group, markup_group)
+        sync_group = ActionGroup(Action(tooltip='Sync rst2html', 
+                                        action='sync_scrollbar_rst2html', 
+                                        image = ImageResource('sync_rst2html')),
+                                 Action(tooltip='Sync html2rst', 
+                                        action='sync_scrollbar_html2rst', 
+                                        image = ImageResource('sync_html2rst'))
+                                )
+                                  
+        tool_bar = ToolBar(file_group, edit_group, undo_group, markup_group, sync_group)
 
         ##################################
 
