@@ -161,7 +161,15 @@ class ReSTHTMLPairHandler(SaveHandler):
 
     def object__replace_action_changed(self, info):
         self.code_widget.enable_replace()
-
+        
+    def object__get_html_pos_action_changed(self, info):
+        html_frame = self.html_control.page().mainFrame()
+        info.object._html_pos = html_frame.scrollPosition().y()
+        
+    def object__set_html_pos_action_changed(self, info):
+        html_frame = self.html_control.page().mainFrame()
+        html_frame.setScrollBarValue(2, info.object._html_pos)
+        
     def object__test_event_changed(self, info):
         print 'test event'
 
@@ -192,7 +200,10 @@ class ReSTHTMLPairView(HasTraits):
     _font = QtGui.QFont()
     sync_on_change = Bool(True)
     
-
+    _html_pos = Int
+    _get_html_pos_action = Event
+    _set_html_pos_action = Event
+    
     _test_event = Event
 
     # HTML view related traits
@@ -276,10 +287,18 @@ class ReSTHTMLPairView(HasTraits):
         else:
             return []
             
+    
+            
+    @on_trait_change('model.rest')
+    def _save_pos(self):
+        self._get_html_pos_action = True
+            
     @on_trait_change('model.html')
     def _auto_sync(self):
         if self.sync_on_change:
             self._sync_scrollbar_rst2html_action = True
+        else:
+            self._set_html_pos_action = True
 
 class ReSTHTMLEditorHandler(SaveHandler):
 
