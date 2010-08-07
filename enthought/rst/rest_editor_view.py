@@ -23,7 +23,7 @@ from user import home as USER_HOME_DIRECTORY
 # System library imports
 from configobj import ConfigObj
 from validate import Validator
-from PyQt4 import QtCore, QtGui, Qt
+from PyQt4 import QtGui
 
 # ETS imports
 from enthought.etsconfig.api import ETSConfig
@@ -111,7 +111,7 @@ class ReSTHTMLPairHandler(SaveHandler):
         action = info.object._editor_action_type
         getattr(self.code_widget.code, action)()
 
-    def object__new_selection_action_changed(self, info):
+    def object__replace_selection_action_changed(self, info):
         cursor = self.code_widget.code.textCursor()
         if cursor.hasSelection():
             cursor.insertText(info.object._new_selection)
@@ -153,12 +153,8 @@ class ReSTHTMLPairHandler(SaveHandler):
         rst_scrollbar.setSliderPosition(new_rst_pos)
 
     def object__change_font_action_changed(self, info):
-        default_font = self.code_widget.code.document().defaultFont()
-        font, ok = QtGui.QFontDialog.getFont(default_font)
-
-        if ok:
-            font.setStyleHint(QtGui.QFont.TypeWriter)
-            self.code_widget.code.set_font(font)
+        font = info.object._font
+        self.code_widget.code.set_font(font)
 
     def object__find_action_changed(self, info):
         self.code_widget.enable_find()
@@ -185,7 +181,7 @@ class ReSTHTMLPairView(HasTraits):
                                'selectAll')
 
     _new_selection = Str
-    _new_selection_action = Event
+    _replace_selection_action = Event
     _increase_selection = Int
     _increase_selection_action = Event
     _sync_scrollbar_rst2html_action = Event
@@ -193,6 +189,7 @@ class ReSTHTMLPairView(HasTraits):
     _find_action = Event
     _replace_action = Event
     _change_font_action = Event
+    _font = QtGui.QFont()
 
     _test_event = Event
 
@@ -419,7 +416,14 @@ class ReSTHTMLEditorHandler(SaveHandler):
             info.object.sphinx_static_path = dialog.path
 
     def change_font(self, info):
-        info.object.selected_view._change_font_action = True
+        font, ok = QtGui.QFontDialog().getFont(info.object.default_font)
+
+        if ok:
+            info.object.default_font = font
+            info.object._save_default_font()
+            for view in info.object.open_views:
+                view._font = font
+                view._change_font_action = True
 
     # Convert menu
 
@@ -510,7 +514,7 @@ class ReSTHTMLEditorHandler(SaveHandler):
 
     def _modify_selection(self, info, new_selection):
         info.object.selected_view._new_selection = new_selection
-        info.object.selected_view._new_selection_action = True
+        info.object.selected_view._replace_selection_action = True
 
     def _increase_selection(self, info, size):
         info.object.selected_view._increase_selection = size
@@ -534,6 +538,8 @@ class ReSTHTMLEditorView(HasTraits):
     open_views = List(ReSTHTMLPairView)
     selected_view = Instance(ReSTHTMLPairView)
 
+    default_font = QtGui.QFont()
+
     config = Any
     use_sphinx = Bool(False)
     sphinx_static_path = Str
@@ -544,10 +550,19 @@ class ReSTHTMLEditorView(HasTraits):
         super(ReSTHTMLEditorView, self).__init__(**kw)
         spec = ConfigObj()
         spec['use_sphinx'] = 'boolean(default=False)'
+        spec['font_family'] = 'string(default=Monospace)'
+        spec['font_point_size'] = 'integer(default=10)'
+        spec['font_weight'] = 'integer(default = 50)'
+        spec['font_italic'] = 'boolean(default=False)'
         path = os.path.join(ETSConfig.application_data, 'rest_editor.conf')
         self.config = ConfigObj(path, configspec=spec, create_empty=True)
         self.config.validate(Validator(), copy=True)
         self.use_sphinx = self.config['use_sphinx']
+        self.default_font.setFamily(self.config['font_family'])
+        self.default_font.setPointSize(self.config['font_point_size'])
+        self.default_font.setWeight(self.config['font_weight'])
+        self.default_font.setItalic(self.config['font_italic'])
+        self.default_font.setStyleHint(QtGui.QFont.TypeWriter)
 
     #-----------------------------------------------------------------
     #  HasTraits interface
@@ -755,6 +770,11 @@ class ReSTHTMLEditorView(HasTraits):
         else:
             view = ReSTHTMLPairView(model=model)
             open_views.append(view)
+            
+        # Change the font of the rest editor in the new view to the default font
+        view._font = self.default_font
+        view._change_font_action = True
+        
         self.selected_view = view
 
     #-----------------------------------------------------------------
@@ -780,3 +800,9 @@ class ReSTHTMLEditorView(HasTraits):
     def _sphinx_static_path_changed(self):
         for view in self.open_views:
             view.model.sphinx_static_path = self.sphinx_static_path
+
+    def _save_default_font(self):
+        self.config['font_family'] = self.default_font.family()
+        self.config['font_point_size'] = self.default_font.pointSize()
+        self.config['font_weight'] = self.default_font.weight()
+        self.config['font_italic'] = self.default_font.italic()
