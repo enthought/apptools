@@ -45,7 +45,7 @@ from enthought.pyface.ui.qt4.code_editor.code_widget import AdvancedCodeWidget
 from enthought.traits.api import HasTraits, Str, Property, Bool, List, \
     Instance, Dict, Int, Any, Event, Enum, on_trait_change, Font
 from enthought.traits.ui.api import View, Group, Item, \
-    TabularEditor, ListEditor, TextEditor, CodeEditor, InstanceEditor, \
+    TabularEditor, ListEditor, CodeEditor, InstanceEditor, \
     HTMLEditor
 from enthought.traits.ui.extras.saving import SaveHandler
 from enthought.traits.ui.key_bindings import KeyBinding, KeyBindings
@@ -190,6 +190,8 @@ class ReSTHTMLPairView(HasTraits):
     _replace_action = Event
     _change_font_action = Event
     _font = QtGui.QFont()
+    sync_on_change = Bool(True)
+    
 
     _test_event = Event
 
@@ -273,7 +275,11 @@ class ReSTHTMLPairView(HasTraits):
             return [ warning.line for warning in self.model.warnings ]
         else:
             return []
-
+            
+    @on_trait_change('model.html')
+    def _auto_sync(self):
+        if self.sync_on_change:
+            self._sync_scrollbar_rst2html_action = True
 
 class ReSTHTMLEditorHandler(SaveHandler):
 
@@ -405,6 +411,8 @@ class ReSTHTMLEditorHandler(SaveHandler):
             splitter.setSizes([0, sum(sizes)])
 
     # Preferences menu
+    def toggle_sync_on_change(self, info):
+        info.object.sync_on_change = not info.object.sync_on_change
 
     def toggle_sphinx(self, info):
         info.object.use_sphinx = not info.object.use_sphinx
@@ -542,6 +550,7 @@ class ReSTHTMLEditorView(HasTraits):
 
     config = Any
     use_sphinx = Bool(False)
+    sync_on_change = Bool(True)
     sphinx_static_path = Str
 
     _tree = Instance(FileTree)
@@ -550,6 +559,7 @@ class ReSTHTMLEditorView(HasTraits):
         super(ReSTHTMLEditorView, self).__init__(**kw)
         spec = ConfigObj()
         spec['use_sphinx'] = 'boolean(default=False)'
+        spec['sync_on_change'] = 'boolean(default=True)'
         spec['font_family'] = 'string(default=Monospace)'
         spec['font_point_size'] = 'integer(default=10)'
         spec['font_weight'] = 'integer(default = 50)'
@@ -558,6 +568,7 @@ class ReSTHTMLEditorView(HasTraits):
         self.config = ConfigObj(path, configspec=spec, create_empty=True)
         self.config.validate(Validator(), copy=True)
         self.use_sphinx = self.config['use_sphinx']
+        self.sync_on_change = self.config['sync_on_change']
         self.default_font.setFamily(self.config['font_family'])
         self.default_font.setPointSize(self.config['font_point_size'])
         self.default_font.setWeight(self.config['font_weight'])
@@ -605,7 +616,10 @@ class ReSTHTMLEditorView(HasTraits):
         view_menu = Menu(ActionGroup(Action(name='Toggle File Browser',
                                             action='toggle_file_browser')),
                          name='View')
-        prefs_menu = Menu(Action(name='Use Sphinx', action='toggle_sphinx',
+        prefs_menu = Menu(Action(name='Sync view on change', 
+                                 action='toggle_sync_on_change',
+                                 checked=self.sync_on_change, style='toggle'),
+                          Action(name='Use Sphinx', action='toggle_sphinx',
                                  checked=self.use_sphinx, style='toggle'),
                           Action(name='Set Sphinx resources path...',
                                  action='change_sphinx_static_path'),
@@ -771,6 +785,7 @@ class ReSTHTMLEditorView(HasTraits):
             view = ReSTHTMLPairView(model=model)
             open_views.append(view)
             
+        view.sync_on_change = self.sync_on_change
         # Change the font of the rest editor in the new view to the default font
         view._font = self.default_font
         view._change_font_action = True
@@ -791,6 +806,11 @@ class ReSTHTMLEditorView(HasTraits):
     def _selected_file_changed(self):
         if os.path.isfile(self.selected_file):
             self.open(self.selected_file)
+            
+    def _sync_on_change_changed(self):
+        self.config['sync_on_change'] = self.sync_on_change
+        for view in self.open_views:
+            view.sync_on_change = self.sync_on_change
 
     def _use_sphinx_changed(self):
         self.config['use_sphinx'] = self.use_sphinx
