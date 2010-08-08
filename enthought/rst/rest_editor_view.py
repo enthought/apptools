@@ -161,15 +161,75 @@ class ReSTHTMLPairHandler(SaveHandler):
 
     def object__replace_action_changed(self, info):
         self.code_widget.enable_replace()
-        
+
     def object__get_html_pos_action_changed(self, info):
         html_frame = self.html_control.page().mainFrame()
         info.object._html_pos = html_frame.scrollPosition().y()
-        
+
     def object__set_html_pos_action_changed(self, info):
         html_frame = self.html_control.page().mainFrame()
         html_frame.setScrollBarValue(2, info.object._html_pos)
-        
+
+    def object__fix_underline_action_changed(self, info):
+        line_length = self._get_current_line_length(info)
+        underline_char = self._get_underline_char(info)
+
+        if underline_char is not None and line_length > 0:
+            self._fix_underline(info, underline_char, line_length)
+
+    def object__fix_overline_action_changed(self, info):
+        line_length = self._get_current_line_length(info)
+        overline_char = self._get_underline_char(info)
+
+        if overline_char is not None and line_length > 0:
+            self._fix_overline(info, overline_char, line_length)
+
+    def _fix_underline(self, info, underline_char, line_length):
+        cursor = self.code_widget.code.textCursor()
+        old_pos = cursor.position()
+
+        cursor.movePosition(3, 0) # Move to the start of the current line.
+        cursor.movePosition(12, 0) # Move down one line.
+        cursor.movePosition(13, 1) # Move to the end of the current line.
+
+        cursor.insertText(line_length * underline_char)
+        self.code_widget.code.setTextCursor(cursor)
+
+        cursor.setPosition(old_pos)
+        self.code_widget.code.setTextCursor(cursor)
+
+    def _fix_overline(self, info, overline_char, line_length):
+        cursor = self.code_widget.code.textCursor()
+        old_pos = cursor.position()
+
+        cursor.movePosition(3, 0) # Move to the start of the current line.
+        cursor.movePosition(2, 0) # Move up one line.
+        cursor.movePosition(13, 1) # Move to the end of the current line.
+
+        old_length = len(cursor.selectedText())
+
+        cursor.insertText(line_length * overline_char)
+        self.code_widget.code.setTextCursor(cursor)
+
+        cursor.setPosition(old_pos + line_length - old_length)
+        self.code_widget.code.setTextCursor(cursor)
+
+    def _get_current_line_length(self, info):
+        cursor = self.code_widget.code.textCursor()
+        cursor.movePosition(3, 0) # Move to the start of the current line.
+        cursor.movePosition(13, 1) # Move to the end of the current line.
+        return len(cursor.selectedText())
+
+    def _get_underline_char(self, info):
+        allowed_chars = ['=', '-', '`', ':', '.', '\'', '"', '~', '^', '_',
+                         '*', '+', '#']
+        cursor = self.code_widget.code.textCursor()
+        cursor.movePosition(3, 0) # Move to the start of the current line.
+        cursor.movePosition(12, 0) # Move down one line.
+        cursor.movePosition(19, 1) # Move right one character.
+        return cursor.selectedText() if cursor.selectedText() in allowed_chars else None
+
+
     def object__test_event_changed(self, info):
         print 'test event'
 
@@ -199,11 +259,14 @@ class ReSTHTMLPairView(HasTraits):
     _change_font_action = Event
     _font = QtGui.QFont()
     sync_on_change = Bool(True)
-    
+
+    _fix_underline_action = Event
+    _fix_overline_action = Event
+
     _html_pos = Int
     _get_html_pos_action = Event
     _set_html_pos_action = Event
-    
+
     _test_event = Event
 
     # HTML view related traits
@@ -286,13 +349,11 @@ class ReSTHTMLPairView(HasTraits):
             return [ warning.line for warning in self.model.warnings ]
         else:
             return []
-            
-    
-            
+
     @on_trait_change('model.rest')
     def _save_pos(self):
         self._get_html_pos_action = True
-            
+
     @on_trait_change('model.html')
     def _auto_sync(self):
         if self.sync_on_change:
@@ -533,11 +594,12 @@ class ReSTHTMLEditorHandler(SaveHandler):
         else:
             self._modify_selection(info, markup + selected + markup)
 
-    def title(self, info):
-        info.object.selected_view._test_event = True
+    def fix_underline(self, info):
+        info.object.selected_view._fix_underline_action = True
 
-    def subtitle(self, info):
-        pass
+    def fix_under_overline(self, info):
+        info.object.selected_view._fix_overline_action = True
+        info.object.selected_view._fix_underline_action = True
 
     def _modify_selection(self, info, new_selection):
         info.object.selected_view._new_selection = new_selection
@@ -576,16 +638,22 @@ class ReSTHTMLEditorView(HasTraits):
 
     def __init__(self, **kw):
         super(ReSTHTMLEditorView, self).__init__(**kw)
+        self._load_config()
+
+    def _load_config(self):
         spec = ConfigObj()
+
         spec['use_sphinx'] = 'boolean(default=False)'
         spec['sync_on_change'] = 'boolean(default=True)'
         spec['font_family'] = 'string(default=Monospace)'
         spec['font_point_size'] = 'integer(default=10)'
         spec['font_weight'] = 'integer(default = 50)'
         spec['font_italic'] = 'boolean(default=False)'
+
         path = os.path.join(ETSConfig.application_data, 'rest_editor.conf')
         self.config = ConfigObj(path, configspec=spec, create_empty=True)
         self.config.validate(Validator(), copy=True)
+
         self.use_sphinx = self.config['use_sphinx']
         self.sync_on_change = self.config['sync_on_change']
         self.default_font.setFamily(self.config['font_family'])
@@ -635,7 +703,7 @@ class ReSTHTMLEditorView(HasTraits):
         view_menu = Menu(ActionGroup(Action(name='Toggle File Browser',
                                             action='toggle_file_browser')),
                          name='View')
-        prefs_menu = Menu(Action(name='Sync view on change', 
+        prefs_menu = Menu(Action(name='Sync view on change',
                                  action='toggle_sync_on_change',
                                  checked=self.sync_on_change, style='toggle'),
                           Action(name='Use Sphinx', action='toggle_sphinx',
@@ -700,10 +768,12 @@ class ReSTHTMLEditorView(HasTraits):
                                    Action(tooltip='Inline Literal',
                                           action='inline_literal',
                                           image = ImageResource('literal')),
-                                   Action(tooltip='Title', action='title',
-                                          image = ImageResource('title')),
-                                   Action(tooltip='Subtitle', action='subtitle',
-                                          image = ImageResource('subtitle'))
+                                   Action(tooltip='Fix underline (Ctrl+D)',
+                                          action='fix_underline',
+                                          image = ImageResource('underline')),
+                                   Action(tooltip='Fix underline and overline (Ctrl+Shift+D)',
+                                          action='fix_under_overline',
+                                          image = ImageResource('under-over'))
                                   )
 
         sync_group = ActionGroup(Action(tooltip='Sync rst2html',
@@ -725,6 +795,8 @@ class ReSTHTMLEditorView(HasTraits):
             KeyBinding(binding1='Ctrl-s', method_name='save'),
             KeyBinding(binding1='Ctrl-w', method_name='close_tab'),
             KeyBinding(binding1='Ctrl-q', method_name='exit'),
+            KeyBinding(binding1='Ctrl-d', method_name='fix_underline'),
+            KeyBinding(binding1='Ctrl-Shift-d', method_name='fix_under_overline'),
             # The following are identical to the already set hotkeys in
             # the source editor. We just want them to work regardless of
             # whether the editor has focus.
@@ -803,12 +875,12 @@ class ReSTHTMLEditorView(HasTraits):
         else:
             view = ReSTHTMLPairView(model=model)
             open_views.append(view)
-            
+
         view.sync_on_change = self.sync_on_change
         # Change the font of the rest editor in the new view to the default font
         view._font = self.default_font
         view._change_font_action = True
-        
+
         self.selected_view = view
 
     #-----------------------------------------------------------------
@@ -825,7 +897,7 @@ class ReSTHTMLEditorView(HasTraits):
     def _selected_file_changed(self):
         if os.path.isfile(self.selected_file):
             self.open(self.selected_file)
-            
+
     def _sync_on_change_changed(self):
         self.config['sync_on_change'] = self.sync_on_change
         for view in self.open_views:
