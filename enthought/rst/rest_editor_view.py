@@ -23,7 +23,7 @@ from user import home as USER_HOME_DIRECTORY
 # System library imports
 from configobj import ConfigObj
 from validate import Validator
-from PyQt4 import QtGui
+from PyQt4 import QtGui, Qt
 
 # ETS imports
 from enthought.etsconfig.api import ETSConfig
@@ -80,6 +80,7 @@ class ReSTHTMLPairHandler(SaveHandler):
     extension = 'rst'
     allowValidationBypass = True
     autosave = True
+    auto_table_fix = Bool(False)
 
     # A reference to the toolkit control that is being used to edit the ReST
     rest_control = Any
@@ -103,6 +104,15 @@ class ReSTHTMLPairHandler(SaveHandler):
         for child in self.rest_control.children():
             if isinstance(child, AdvancedCodeWidget):
                 self.code_widget = child
+                
+        self.code_widget.code.keyPressEvent_action = self.keyPressEvent_action
+                
+    def keyPressEvent_action(self, event):
+        if self.auto_table_fix and event.modifiers() != Qt.Qt.ControlModifier:
+            self._fix_table(event.key())
+            
+    def object_auto_table_fix_changed(self, info):
+        self.auto_table_fix = info.object.auto_table_fix
 
     def object_model_changed(self, info):
         self.saveObject = info.object.model
@@ -188,9 +198,8 @@ class ReSTHTMLPairHandler(SaveHandler):
         cursor = self.code_widget.code.textCursor()
         old_pos = cursor.position()
 
-        cursor.movePosition(3, 0) # Move to the start of the current line.
         cursor.movePosition(12, 0) # Move down one line.
-        cursor.movePosition(13, 1) # Move to the end of the current line.
+        cursor.select(1) # Selects the line of text under the cursor.
 
         cursor.insertText(line_length * underline_char)
         self.code_widget.code.setTextCursor(cursor)
@@ -202,9 +211,8 @@ class ReSTHTMLPairHandler(SaveHandler):
         cursor = self.code_widget.code.textCursor()
         old_pos = cursor.position()
 
-        cursor.movePosition(3, 0) # Move to the start of the current line.
         cursor.movePosition(2, 0) # Move up one line.
-        cursor.movePosition(13, 1) # Move to the end of the current line.
+        cursor.select(1) # Selects the line of text under the cursor.
 
         old_length = len(cursor.selectedText())
 
@@ -216,8 +224,7 @@ class ReSTHTMLPairHandler(SaveHandler):
 
     def _get_current_line_length(self, info):
         cursor = self.code_widget.code.textCursor()
-        cursor.movePosition(3, 0) # Move to the start of the current line.
-        cursor.movePosition(13, 1) # Move to the end of the current line.
+        cursor.select(1) # Selects the line of text under the cursor.
         return len(cursor.selectedText())
 
     def _get_underline_char(self, info):
@@ -227,11 +234,131 @@ class ReSTHTMLPairHandler(SaveHandler):
         cursor.movePosition(3, 0) # Move to the start of the current line.
         cursor.movePosition(12, 0) # Move down one line.
         cursor.movePosition(19, 1) # Move right one character.
-        return cursor.selectedText() if cursor.selectedText() in allowed_chars else None
+        return cursor.selectedText() if cursor.selectedText() in allowed_chars \
+               else None
+               
+    def _fix_table(self, key):
+        cursor = self.code_widget.code.textCursor()
+        if not self._cursor_in_table(cursor):
+            return
+            
+        if Qt.Qt.Key_ydiaeresis >= key >= Qt.Qt.Key_Space:
+            old_pos = self._move_end_of_cell(cursor)
+            if self._chars_before_cursor(cursor, 2) == '  ':
+                cursor.deletePreviousChar()
+            else:
+                
+                pass
+            cursor.setPosition(old_pos)
+            
+        elif key == Qt.Qt.Key_Backspace:
+            chars_before = self._chars_before_cursor(cursor, 2)
+            if chars_before == '| ' or chars_before == '+ ':
+                cursor.insertText(' ')
+            elif chars_before[1] == '|' or chars_before[1] == '+':
+                cursor.insertText(' ')
+            elif self._chars_at_cursor(cursor, 1) == '|':
+                cursor.movePosition(Qt.QTextCursor.Left, Qt.QTextCursor.MoveAnchor)
+                self.code_widget.code.setTextCursor(cursor)
+                cursor.insertText(' ')
+                
+            else:
+                old_pos = self._move_end_of_cell(cursor)
+                cursor.insertText(' ')
+                cursor.setPosition(old_pos)
+                
+        elif key == Qt.Qt.Key_Delete:
+            if self._chars_at_cursor(cursor, 1) == '|':
+                cursor.movePosition(Qt.QTextCursor.Right, Qt.QTextCursor.MoveAnchor)
+                cursor.insertText('|')
+                cursor.movePosition(Qt.QTextCursor.Left, Qt.QTextCursor.MoveAnchor)
+            elif self._chars_at_cursor(cursor, 1) == '+':
+                cursor.movePosition(Qt.QTextCursor.Right, Qt.QTextCursor.MoveAnchor)
+                cursor.insertText('+')
+                cursor.movePosition(Qt.QTextCursor.Left, Qt.QTextCursor.MoveAnchor)
+            elif self._chars_at_cursor(cursor, 1) == ' ' and self._chars_before_cursor(cursor, 1) == '|':
+                cursor.insertText(' ')
+            else:
+                old_pos = self._move_end_of_cell(cursor)
+                cursor.insertText(' ')
+                cursor.setPosition(old_pos)
+                
+        elif key == Qt.Qt.Key_Return:
+            old_pos = cursor.position()
+            
+            cursor.movePosition(Qt.QTextCursor.StartOfLine, 0)
+        
+            if self._chars_at_cursor(cursor, 1) == ' ':
+                cursor.movePosition(Qt.QTextCursor.NextWord, 0)
+                
+            cursor.movePosition(Qt.QTextCursor.EndOfLine, 1)
+            
+            eof_pos = cursor.position()
+            
+            line = cursor.selectedText()
+            
+            cursor.clearSelection()
+            
+            for c in line:
+                if c == '|' or c == '+':
+                    cursor.insertText('|')
+                else:
+                    cursor.insertText(' ')
+            
+            cursor.setPosition(eof_pos)
+            self.code_widget.code.setTextCursor(cursor)
+                
+    
 
 
+    def _move_end_of_cell(self, cursor):
+        old_pos = cursor.position()
+        while self._chars_at_cursor(cursor, 1) != '|': 
+            cursor.movePosition(Qt.QTextCursor.Right, Qt.QTextCursor.MoveAnchor)
+            if self._chars_at_cursor(cursor, 1) == '+':
+                cursor.movePosition(Qt.QTextCursor.Up, Qt.QTextCursor.MoveAnchor)
+                if self._chars_at_cursor(cursor, 1) == '|':
+                    cursor.movePosition(Qt.QTextCursor.Down, Qt.QTextCursor.MoveAnchor)
+                    break
+                cursor.movePosition(Qt.QTextCursor.Down, Qt.QTextCursor.MoveAnchor)
+        return old_pos
+        
+    def _chars_at_cursor(self, cursor, number_chars):
+        cursor.movePosition(19, 1, number_chars)
+        chars = cursor.selectedText()
+        cursor.movePosition(9, 0, number_chars)
+        return chars
+        
+    def _chars_before_cursor(self, cursor, number_chars):
+        cursor.movePosition(Qt.QTextCursor.Left, 1, number_chars)
+        chars = cursor.selectedText()
+        cursor.movePosition(Qt.QTextCursor.Right, 0, number_chars)
+        return chars
+        
+    def _cursor_in_table(self, cursor):
+        old_pos = cursor.position()
+        cursor.movePosition(Qt.QTextCursor.StartOfLine, 0)
+        
+        if self._chars_at_cursor(cursor, 1) == ' ':
+            cursor.movePosition(Qt.QTextCursor.NextWord, 0)
+            
+        in_table = self._chars_at_cursor(cursor, 1) == '|' or \
+                   self._chars_at_cursor(cursor, 1) == '+'
+        cursor.setPosition(old_pos)
+        return in_table
+        
+    def _cursor_on_border(self, cursor):
+        old_pos = cursor.position()
+        cursor.movePosition(Qt.QTextCursor.StartOfLine, 0)
+        if self._chars_at_cursor(cursor, 1) == ' ':
+            cursor.movePosition(Qt.QTextCursor.NextWord, 0)
+        on_border = self._chars_at_cursor(cursor, 1) == '+'
+        cursor.setPosition(old_pos)
+        return on_border
+        
     def object__test_event_changed(self, info):
-        print 'test event'
+        cursor = self.code_widget.code.textCursor()
+        cursor.insertText('K')
 
 
 class ReSTHTMLPairView(HasTraits):
@@ -262,10 +389,14 @@ class ReSTHTMLPairView(HasTraits):
 
     _fix_underline_action = Event
     _fix_overline_action = Event
+    
+    _fix_table_action = Event
 
     _html_pos = Int
     _get_html_pos_action = Event
     _set_html_pos_action = Event
+    
+    auto_table_fix = Bool(False)
 
     _test_event = Event
 
@@ -353,6 +484,10 @@ class ReSTHTMLPairView(HasTraits):
     @on_trait_change('model.rest')
     def _save_pos(self):
         self._get_html_pos_action = True
+        
+    @on_trait_change('model.rest')
+    def _fix_table(self):
+        self._fix_table_action = True
 
     @on_trait_change('model.html')
     def _auto_sync(self):
@@ -493,6 +628,9 @@ class ReSTHTMLEditorHandler(SaveHandler):
     # Preferences menu
     def toggle_sync_on_change(self, info):
         info.object.sync_on_change = not info.object.sync_on_change
+        
+    def toggle_auto_table_fix(self, info):
+        info.object.auto_table_fix = not info.object.auto_table_fix
 
     def toggle_sphinx(self, info):
         info.object.use_sphinx = not info.object.use_sphinx
@@ -632,6 +770,7 @@ class ReSTHTMLEditorView(HasTraits):
     config = Any
     use_sphinx = Bool(False)
     sync_on_change = Bool(True)
+    auto_table_fix = Bool(False)
     sphinx_static_path = Str
 
     _tree = Instance(FileTree)
@@ -706,6 +845,9 @@ class ReSTHTMLEditorView(HasTraits):
         prefs_menu = Menu(Action(name='Sync view on change',
                                  action='toggle_sync_on_change',
                                  checked=self.sync_on_change, style='toggle'),
+                          Action(name='Auto fix table',
+                                 action='toggle_auto_table_fix',
+                                 checked=self.auto_table_fix, style='toggle'),
                           Action(name='Use Sphinx', action='toggle_sphinx',
                                  checked=self.use_sphinx, style='toggle'),
                           Action(name='Set Sphinx resources path...',
@@ -877,6 +1019,7 @@ class ReSTHTMLEditorView(HasTraits):
             open_views.append(view)
 
         view.sync_on_change = self.sync_on_change
+        view.auto_table_fix = self.auto_table_fix
         # Change the font of the rest editor in the new view to the default font
         view._font = self.default_font
         view._change_font_action = True
@@ -902,6 +1045,10 @@ class ReSTHTMLEditorView(HasTraits):
         self.config['sync_on_change'] = self.sync_on_change
         for view in self.open_views:
             view.sync_on_change = self.sync_on_change
+            
+    def _auto_table_fix_changed(self):
+        for view in self.open_views:
+            view.auto_table_fix = self.auto_table_fix
 
     def _use_sphinx_changed(self):
         self.config['use_sphinx'] = self.use_sphinx
