@@ -110,9 +110,9 @@ if Sphinx is not None:
     # None value. This hack ensures that sphinx.config.Config.__init__ gets
     # passed a valid string for the config directory.
     import sphinx.builders.html
-    def my_init(self, app, env=None, freshenv=None):
+    def my_init(self, app):
         app.confdir = ''
-        sphinx.builders.Builder.__init__(self, app, env, freshenv)
+        sphinx.builders.Builder.__init__(self, app)
         app.confdir = None
     sphinx.builders.html.StandaloneHTMLBuilder.__init__ = my_init
 
@@ -155,7 +155,7 @@ def sphinx_rest_to_html(rest, static_path=DEFAULT_STATIC_PATH):
         app = Sphinx(srcdir=temp_dir, confdir=None, outdir=temp_dir,
                      doctreedir=temp_dir, buildername='html',
                      confoverrides=overrides, status=None, warning=StringIO())
-        app.build(all_files=True, filenames=None)
+        app.build(force_all=True, filenames=None)
 
         fh = codecs.open(base_path+'.html', 'r', 'utf-8')
         html = fh.read()
