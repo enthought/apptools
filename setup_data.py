@@ -61,9 +61,3 @@ INFO = {
     'name': 'AppTools',
     'version': '3.3.3',
     }
-
-# Add multiprocessing (only used by enthought.rst) as an extra if Python
-# version is less than 2.6.
-import sys
-if sys.hexversion < 0x020600F0:
-    INFO['extras_require']['nonets'].append('multiprocessing')

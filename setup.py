@@ -26,7 +26,6 @@ commonly needed by many applications
 - **enthought.preferences**: Manages application preferences.
 - **enthought.resource**: Manages application resources such as images and
   sounds.
-- **enthought.rst**: Tools and editors for working with reStructured Text
 - **enthought.scripting**: A framework for automatic recording of Python
   scripts.
 - **enthought.sweet_pickle**: Handles class-level versioning, to support
@@ -111,9 +110,6 @@ setup(
         },
     description = DOCLINES[1],
     entry_points = {
-        'gui_scripts': [
-            'rsted = enthought.rst.app:main',
-            ],
         },
     extras_require = INFO['extras_require'],
     ext_modules = [],
