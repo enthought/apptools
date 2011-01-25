@@ -17,7 +17,7 @@ commonly needed by many applications
   system.
 - **enthought.naming**: Manages naming contexts, supporting non-string data
   types and scoped preferences
-- **enthought.permissions**: Supports limiting access to parts of an 
+- **enthought.permissions**: Supports limiting access to parts of an
   application unless the user is appropriately authorised (not full-blown
   security).
 - **enthought.persistence**: Supports pickling the state of a Python object
@@ -38,18 +38,11 @@ commonly needed by many applications
 
 Prerequisites
 -------------
-If you want to build AppTools from source, you must first install 
+If you want to build AppTools from source, you must first install
 `setuptools <http://pypi.python.org/pypi/setuptools/0.6c8>`_ and
 """
 
-
-import traceback
-import sys
-
-from distutils import log
-from distutils.command.build import build as distbuild
 from setuptools import setup, find_packages
-from setuptools.command.develop import develop
 
 
 # FIXME: This works around a setuptools bug which gets setup_data.py metadata
@@ -57,7 +50,7 @@ from setuptools.command.develop import develop
 #from setup_data import INFO
 setup_data = dict(__name__='', __file__='setup_data.py')
 execfile('setup_data.py', setup_data)
-INFO = setup_data['INFO'] 
+INFO = setup_data['INFO']
 
 
 # Pull the description values for the setup keywords from our file docstring.
@@ -91,7 +84,10 @@ setup(
     ext_modules = [],
     include_package_data = True,
     package_data = {'enthought': [
-            'help/help_plugin/*.ini']},
+            'help/help_plugin/*.ini',
+            'naming/ui/images/*.png',
+            'help/help_plugin/action/images/*.png',
+            ]},
     install_requires = INFO['install_requires'],
     license = 'BSD',
     long_description = '\n'.join(DOCLINES[3:]),
@@ -110,4 +106,4 @@ setup(
     url = 'http://code.enthought.com/projects/app_tools.php',
     version = INFO['version'],
     zip_safe = False,
-    )
+)
