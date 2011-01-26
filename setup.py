@@ -78,9 +78,6 @@ setup(
         Topic :: Software Development :: Libraries
         """.splitlines() if len(c.strip()) > 0],
     description = DOCLINES[1],
-    entry_points = {
-        },
-    extras_require = INFO['extras_require'],
     ext_modules = [],
     include_package_data = True,
     package_data = {'enthought': [
