@@ -14,7 +14,7 @@
 
 
 # Major library imports.
-from PyQt4 import QtGui
+from enthought.qt.api import QtGui
 
 # Enthought library imports.
 from enthought.permissions.adapter_base import AdapterBase
