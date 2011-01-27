@@ -1,0 +1,170 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Default User Manager Data API &mdash; AppTools v3.0.0b1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.0.0b1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="AppTools v3.0.0b1 documentation" href="../index.html" />
+    <link rel="next" title="Preferences" href="../preferences/Preferences.html" />
+    <link rel="prev" title="Default Policy Manager Data API" href="DefaultPolicyManagerDataAPI.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../preferences/Preferences.html" title="Preferences"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="DefaultPolicyManagerDataAPI.html" title="Default Policy Manager Data API"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">AppTools v3.0.0b1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="default-user-manager-data-api">
+<h1>Default User Manager Data API<a class="headerlink" href="#default-user-manager-data-api" title="Permalink to this headline">¶</a></h1>
+<p>This section provides an overview of the part of the ETS Permissions Framework
+API used by developers who want to store a user database in a more secure
+location (eg. a remote server) than that provided by the default
+implementation.</p>
+<p>The API is defined by the default user manager which uses password based
+authorisation.  If this API isn&#8217;t sufficiently flexible, or if another method
+of authorisation is used (biometrics for example) then an alternative user
+manager should be implemented.</p>
+<p>The API is fully defined by the <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/i_user_database.py">IUserDatabase interface</a>.  This allows user
+databases to be implemented that extend the <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/i_user.py">IUser interface</a> and store
+additional user related data.  If the user database is being persisted in
+secure storage (eg. a remote RDBMS) then this could be used to store sensitive
+data (eg. passwords for external systems) that shouldn&#8217;t be stored as ordinary
+preferences.</p>
+<p>In most cases there will be no requirement to store additional user related
+data than that defined by <tt class="docutils literal"><span class="pre">IUser</span></tt> so the supplied <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/user_database.py">UserDatabase
+implementation</a> (which provides all the GUI code required to implement the
+<a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/i_user_database.py">IUserDatabase interface</a>) can be used.  The <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/user_database.py">UserDatabase implementation</a>
+delegates the access to the user database to an object implementing the
+<a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/i_user_storage.py">IUserStorage interface</a>.  The default implementation of this interface
+stores the user database as a pickle in a local file.</p>
+<div class="section" id="overview-of-iuserstorage">
+<h2>Overview of IUserStorage<a class="headerlink" href="#overview-of-iuserstorage" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/i_user_storage.py">IUserStorage interface</a> defines a number of methods that must be
+implemented to read and write to the user database.  The methods are designed
+to be implemented using simple SQL statements.</p>
+<p>In the event of an error a method must raise the <tt class="docutils literal"><span class="pre">UserStorageError</span></tt>
+exception.  The string representation of the exception is used as an error
+message that is displayed to the user.</p>
+</div>
+<div class="section" id="overview-of-iuserdatabase">
+<h2>Overview of IUserDatabase<a class="headerlink" href="#overview-of-iuserdatabase" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/i_user_database.py">IUserDatabase interface</a> defines a set of <tt class="docutils literal"><span class="pre">Bool</span></tt> traits, all beginning
+with <tt class="docutils literal"><span class="pre">can_</span></tt>, that describe the capabilities of a particular implementation.
+For example, the <tt class="docutils literal"><span class="pre">can_add_user</span></tt> trait is set by an implementation if it
+supports the ability to add a new user to the database.</p>
+<p>Each of these capability traits has a corresponding method which has the same
+name except for the <tt class="docutils literal"><span class="pre">can_</span></tt> prefix.  The method only needs to be implemented
+if the corresponding traits is <tt class="xref docutils literal"><span class="pre">True</span></tt>.  The method, for example
+<tt class="docutils literal"><span class="pre">add_user()</span></tt> is called by the user manager to implement the capability.</p>
+<p>The interface has two other methods.</p>
+<p>The <tt class="docutils literal"><span class="pre">bootstrapping()</span></tt> method is called by the user manager to determine if
+the database is bootstrapping.  Typically this is when the database is empty
+and no users have yet been defined.  The permissions framework treats this
+situation as a special case and is able to relax the enforcement of permissions
+to allow users and permissions to be initially defined.</p>
+<p>The <tt class="docutils literal"><span class="pre">user_factory()</span></tt> method is called by the user manager to create a new
+user object, ie. an object that implements the <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/i_user.py">IUser interface</a>.  This allows
+an implementation to extend the <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/i_user.py">IUser interface</a> and store additional user
+related data in the object if the <tt class="docutils literal"><span class="pre">blob</span></tt> trait proves insufficient.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Default User Manager Data API</a><ul>
+<li><a class="reference internal" href="#overview-of-iuserstorage">Overview of IUserStorage</a></li>
+<li><a class="reference internal" href="#overview-of-iuserdatabase">Overview of IUserDatabase</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="DefaultPolicyManagerDataAPI.html"
+                        title="previous chapter">Default Policy Manager Data API</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../preferences/Preferences.html"
+                        title="next chapter">Preferences</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/permissions/DefaultUserManagerDataAPI.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../preferences/Preferences.html" title="Preferences"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="DefaultPolicyManagerDataAPI.html" title="Default Policy Manager Data API"
+             >previous</a> |</li>
+        <li><a href="../index.html">AppTools v3.0.0b1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, Enthought.
+      Last updated on Jan 28, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+    </div>
+  </body>
+</html>

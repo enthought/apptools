@@ -1,0 +1,138 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Default Policy Manager Data API &mdash; AppTools v3.0.0b1 documentation</title>
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '3.0.0b1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="AppTools v3.0.0b1 documentation" href="../index.html" />
+    <link rel="next" title="Default User Manager Data API" href="DefaultUserManagerDataAPI.html" />
+    <link rel="prev" title="Application API" href="ApplicationAPI.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="DefaultUserManagerDataAPI.html" title="Default User Manager Data API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="ApplicationAPI.html" title="Application API"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">AppTools v3.0.0b1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="default-policy-manager-data-api">
+<h1>Default Policy Manager Data API<a class="headerlink" href="#default-policy-manager-data-api" title="Permalink to this headline">¶</a></h1>
+<p>This section provides an overview of the part of the ETS Permissions Framework
+API used by developers who want to store a policy manager&#8217;s persistent data in
+a more secure location (eg. a remote server) than that provided by the
+default implementation.</p>
+<p>The API is defined by the default policy manager which uses roles to make it
+easier to assign permissions to users.  If this API isn&#8217;t sufficiently
+flexible, or if roles are inappropriate, then an alternative policy manager
+should be implemented.</p>
+<p>The API is fully defined by the <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/i_policy_storage.py">IPolicyStorage interface</a>.  The default
+implementation of this interface stores the policy database as a pickle in a
+local file.</p>
+<div class="section" id="overview-of-ipolicystorage">
+<h2>Overview of IPolicyStorage<a class="headerlink" href="#overview-of-ipolicystorage" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/i_policy_storage.py">IPolicyStorage interface</a> defines a number of methods that must be
+implemented to read and write to the policy database.  The methods are designed
+to be implemented using simple SQL statements.</p>
+<p>In the event of an error a method must raise the <tt class="docutils literal"><span class="pre">PolicyStorageError</span></tt>
+exception.  The string representation of the exception is used as an error
+message that is displayed to the user.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Default Policy Manager Data API</a><ul>
+<li><a class="reference internal" href="#overview-of-ipolicystorage">Overview of IPolicyStorage</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ApplicationAPI.html"
+                        title="previous chapter">Application API</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="DefaultUserManagerDataAPI.html"
+                        title="next chapter">Default User Manager Data API</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/permissions/DefaultPolicyManagerDataAPI.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="DefaultUserManagerDataAPI.html" title="Default User Manager Data API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="ApplicationAPI.html" title="Application API"
+             >previous</a> |</li>
+        <li><a href="../index.html">AppTools v3.0.0b1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2008, Enthought.
+      Last updated on Jan 28, 2011.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+    </div>
+  </body>
+</html>
