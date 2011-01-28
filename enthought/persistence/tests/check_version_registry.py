@@ -22,7 +22,7 @@ class New(object):
 
 class TraitClass(HasTraits):
     __version__ = 0
-    
+
 
 class Test(New):
     __version__ = 1
@@ -36,7 +36,7 @@ class Handler:
         self.calls.append(('upgrade', state, version))
     def upgrade1(self, state, version):
         self.calls.append(('upgrade1', state, version))
-        
+
 
 class TestVersionRegistry(unittest.TestCase):
     def test_get_version(self):
@@ -79,7 +79,7 @@ class TestVersionRegistry(unittest.TestCase):
         self.assertEqual(registry.handlers.has_key(('A', '__main__')), False)
 
     def test_update(self):
-        """Test if update method calls the handlers in order."""        
+        """Test if update method calls the handlers in order."""
         registry = version_registry.registry
 
         # First an elementary test.
@@ -107,8 +107,8 @@ class TestVersionRegistry(unittest.TestCase):
         self.assertEqual(h.calls, [('upgrade', state, 0),
                                    ('upgrade1', state, 1),
                                    ('upgrade', state.a, 0)])
-        
-    
+
+
 
 if __name__ == "__main__":
     unittest.main()

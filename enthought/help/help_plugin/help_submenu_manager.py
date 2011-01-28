@@ -1,8 +1,8 @@
 """ Managers for submenus of the Help menu.
-    
+
     :Copyright: 2008, Enthought Inc.
     :License: BSD
-    :Author: Janet Swisher    
+    :Author: Janet Swisher
 """
 # This software is provided without warranty under the terms of the BSD
 # license included in AppTools/trunk/LICENSE.txt and may be redistributed only
@@ -37,17 +37,17 @@ PKG = '.'.join(__name__.split('.')[:-1])
 class HelpSubmenuManager(MenuManager):
     """ Base class for managers of submenus of the Help menu.
 
-        This class is adapted from 
+        This class is adapted from
         enthought.pyface.ui.workbench.action.view_menu_manager.ViewMenuManager.
     """
     implements(IExtensionPointUser)
-    
+
     ### IExtensionPointUser interface
     extension_registry = Property(Instance(IExtensionRegistry))
-    
+
     def _get_extension_registry(self):
         return self.window.application.extension_registry
-    
+
     #### 'ActionManager' interface ############################################
 
     # All of the groups in the manager.
@@ -57,7 +57,7 @@ class HelpSubmenuManager(MenuManager):
 
     # The group containing the actual actions.
     _item_group = Any
-    
+
     ###########################################################################
     # 'ActionManager' interface.
     ###########################################################################
@@ -66,13 +66,13 @@ class HelpSubmenuManager(MenuManager):
         """ Trait initializer. """
 
         groups = []
-                    
+
         # Add a group containing items for all contributed documents.
         self._item_group = self._create_item_group(self.window)
         groups.append(self._item_group)
 
         return groups
-    
+
     ###########################################################################
     # Private interface.
     ###########################################################################
@@ -83,7 +83,7 @@ class HelpSubmenuManager(MenuManager):
         group.clear()
 
         return
-            
+
     def _create_item_group(self, window):
         """ Creates a group containing the items. """
 
@@ -95,7 +95,7 @@ class HelpSubmenuManager(MenuManager):
     def _initialize_item_group(self, window, group):
         """ Initializes a group containing the items. """
         raise NotImplementedError
-        
+
 class DocumentsMenuManager(HelpSubmenuManager):
     """ Controls the 'Help/Documents' menu.
     """
@@ -112,13 +112,13 @@ class DocumentsMenuManager(HelpSubmenuManager):
     name = u'&Documents'
 
     #### 'DocMenuManager' interface ##########################################
-    
+
     # The HelpDocs for which this manager displays menu items.
     help_doc_list = List(IHelpDoc, allow_none=True)
-    
+
     def _help_doc_list_default(self):
         return self.extension_registry.get_extensions(PKG + '.help_docs')
-    
+
     ###########################################################################
     # Private interface.
     ###########################################################################
@@ -153,13 +153,13 @@ class DemosMenuManager(HelpSubmenuManager):
     name = u'D&emos'
 
     #### 'DemoMenuManager' interface ##########################################
-    
+
     # The HelpCode for which this manager displays menu items.
     help_demo_list = List(IHelpCode, allow_none=True)
-    
+
     def _help_demo_list_default(self):
         return self.extension_registry.get_extensions(PKG + '.help_demos')
-    
+
     ###########################################################################
     # Private interface.
     ###########################################################################
@@ -193,16 +193,16 @@ class ExamplesMenuManager(HelpSubmenuManager):
     name = u'&Examples'
 
     #### 'ExampleMenuManager' interface ##########################################
-    
+
     # The HelpCode for which this manager displays menu items.
     help_example_list = List(IHelpCode, allow_none=True)
-    
+
     def _help_example_list_default(self):
         return self.extension_registry.get_extensions(PKG + '.help_examples')
-        
+
     # Preferences for examples
     preferences = Instance(ExamplesPreferences, ())
-    
+
     ###########################################################################
     # Private interface.
     ###########################################################################
@@ -215,7 +215,7 @@ class ExamplesMenuManager(HelpSubmenuManager):
 
         for ex in examples:
             group.append(
-                ExampleAction(name=ex.label, window=window, 
+                ExampleAction(name=ex.label, window=window,
                                   preferences=self.preferences)
                 )
 
@@ -238,13 +238,13 @@ class DownloadsMenuManager(HelpSubmenuManager):
     name = u'&Downloads'
 
     #### 'DocMenuManager' interface ##########################################
-    
+
     # The URLs for which this manager displays menu items.
     help_download_list = List(IHelpDoc, allow_none=True)
-    
+
     def _help_download_list_default(self):
         return self.extension_registry.get_extensions(PKG + '.help_downloads')
-    
+
     ###########################################################################
     # Private interface.
     ###########################################################################

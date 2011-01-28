@@ -1,8 +1,8 @@
 # Update class names from the immediately prior version only
-# to ensure that cycles are not possible 
+# to ensure that cycles are not possible
 
 from enthought.persistence.updater import Updater
-        
+
 
 def update_project(self, state):
     print 'updating to v3'
@@ -14,12 +14,11 @@ def update_project(self, state):
 class Update3(Updater):
 
     def __init__(self):
-    
+
         self.refactorings = {
             ("__main__", "Foo1"): ("__main__", "Foo2"),
         }
-        
+
         self.setstates = {
             ("cplab.project", "Project"):  update_project
         }
-            

@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought IO package component>
 #------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ class FileTestCase(unittest.TestCase):
             pass
 
         os.mkdir('data')
-        
+
         return
 
     def tearDown(self):
@@ -106,7 +106,7 @@ class FileTestCase(unittest.TestCase):
         """ file copy """
 
         content = 'print "Hello World!"\n'
-        
+
         f = File('data/foo.py')
         self.assertEqual(f.exists, False)
 
@@ -114,7 +114,7 @@ class FileTestCase(unittest.TestCase):
         f.create_file(content)
         self.assertEqual(f.exists, True)
         self.failUnlessRaises(ValueError, f.create_file, content)
-        
+
         self.assertEqual(f.children, None)
         self.assertEqual(f.ext, '.py')
         self.assertEqual(f.is_file, True)
@@ -129,7 +129,7 @@ class FileTestCase(unittest.TestCase):
 
         f.copy(g)
         self.assertEqual(g.exists, True)
-        
+
         self.assertEqual(g.children, None)
         self.assertEqual(g.ext, '.py')
         self.assertEqual(g.is_file, True)
@@ -144,12 +144,12 @@ class FileTestCase(unittest.TestCase):
 
         g = File('data/bogus_copy.py')
         self.assertEqual(g.exists, False)
-        
+
         f.copy(g)
         self.assertEqual(g.exists, False)
 
         return
-    
+
     def test_create_file(self):
         """ file creation """
 
@@ -172,7 +172,7 @@ class FileTestCase(unittest.TestCase):
         """ file deletion """
 
         content = 'print "Hello World!"\n'
-        
+
         f = File('data/foo.py')
         self.assertEqual(f.exists, False)
 
@@ -180,7 +180,7 @@ class FileTestCase(unittest.TestCase):
         f.create_file(content)
         self.assertEqual(f.exists, True)
         self.failUnlessRaises(ValueError, f.create_file, content)
-        
+
         self.assertEqual(f.children, None)
         self.assertEqual(f.ext, '.py')
         self.assertEqual(f.is_file, True)

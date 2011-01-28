@@ -30,7 +30,7 @@ class UserMenuManager(MenuManager):
     #### 'MenuManager' interface ##############################################
 
     id = 'User'
-    
+
     name = Unicode("&User")
 
     ###########################################################################

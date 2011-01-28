@@ -12,10 +12,10 @@
     This capability is particularly useful when the object acting as a context
     is part of a plug-in application -- such as Envisage.  In general, this
     capability allows the context to be:
-        
-    - Extendable by contributions from somewhere other than the original 
+
+    - Extendable by contributions from somewhere other than the original
       code writer
-    - Dynamic in that the elements it is composed of can change each time 
+    - Dynamic in that the elements it is composed of can change each time
       someone interacts with the contents of the context.
 
     It should be noted that this capability is explicitly different from
@@ -27,7 +27,7 @@
     statically through the use of a Traits Category.)  The trait value is the
     context item's value and the trait definition's metadata determines how the
     item is treated within the context.  The support metadata is:
-        
+
     context_name: A non-empty string
         Represents the name of the item within this context.  This must be
         present for the trait to show up as a context item though the value

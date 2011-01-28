@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
 #------------------------------------------------------------------------------
@@ -33,14 +33,14 @@ class ContextTestCase(unittest.TestCase):
 
         self.context = self.create_context()
         self.context.create_subcontext('sub')
-                       
+
         return
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
 
         self.context = None
-        
+
         return
 
     ###########################################################################
@@ -51,7 +51,7 @@ class ContextTestCase(unittest.TestCase):
         """ Creates the context that we are testing. """
 
         return Context()
-    
+
     ###########################################################################
     # Tests.
     ###########################################################################
@@ -66,7 +66,7 @@ class ContextTestCase(unittest.TestCase):
 
         # Make sure that the sub-context is empty.
         self.assertEqual(len(sub.list_bindings('')), 0)
-        
+
         # Empty name.
         self.failUnlessRaises(InvalidNameError, context.bind, '', 1)
 
@@ -97,7 +97,7 @@ class ContextTestCase(unittest.TestCase):
 
         # Make sure that the sub-context is empty.
         self.assertEqual(len(sub.list_bindings('')), 0)
-        
+
         # Empty name.
         self.failUnlessRaises(InvalidNameError, context.bind, '', 1, True)
 
@@ -106,7 +106,7 @@ class ContextTestCase(unittest.TestCase):
         context.bind('xx/a', 1, True)
         self.assertEqual(len(context.list_bindings('xx')), 1)
         self.assertEqual(1, context.lookup('xx/a'))
-                         
+
         # Bind an even more 'nested' name.
         context.bind('xx/foo/bar/baz', 42, True)
         self.assertEqual(len(context.list_bindings('xx/foo/bar')), 1)
@@ -130,7 +130,7 @@ class ContextTestCase(unittest.TestCase):
         # Attempt to resolve via a non-existent context.
         self.failUnlessRaises(NameNotFoundError, context.rebind, 'xx/a', 1)
         self.assertEqual(len(sub.list_bindings('')), 0)
-        
+
         # Bind a name.
         context.bind('sub/a', 1)
         self.assertEqual(len(sub.list_bindings('')), 1)
@@ -155,7 +155,7 @@ class ContextTestCase(unittest.TestCase):
 
         # Make sure that the sub-context is empty.
         self.assertEqual(len(sub.list_bindings('')), 0)
-        
+
         # Empty name.
         self.failUnlessRaises(InvalidNameError, context.rebind, '', 1, True)
 
@@ -164,7 +164,7 @@ class ContextTestCase(unittest.TestCase):
         context.rebind('xx/a', 1, True)
         self.assertEqual(len(context.list_bindings('xx')), 1)
         self.assertEqual(1, context.lookup('xx/a'))
-                         
+
         # Rebind an even more 'nested' name.
         context.rebind('xx/foo/bar/baz', 42, True)
         self.assertEqual(len(context.list_bindings('xx/foo/bar')), 1)
@@ -228,7 +228,7 @@ class ContextTestCase(unittest.TestCase):
         # Attempt to resolve via a non-existent context.
         self.failUnlessRaises(NameNotFoundError, context.rename, 'x/a', 'x/b')
         self.assertEqual(len(sub.list_bindings('')), 0)
-        
+
         # Bind a name.
         context.bind('sub/a', 1)
         self.assertEqual(len(sub.list_bindings('')), 1)
@@ -243,7 +243,7 @@ class ContextTestCase(unittest.TestCase):
 
         # Lookup using the new name.
         self.assertEqual(context.lookup('sub/b'), 1)
-        
+
         # Lookup using the old name.
         self.failUnlessRaises(NameNotFoundError, context.lookup, 'sub/a')
 
@@ -266,7 +266,7 @@ class ContextTestCase(unittest.TestCase):
         # Attempt to resolve via a non-existent context.
         self.failUnlessRaises(NameNotFoundError, context.rename, 'x/a', 'x/b')
         self.assertEqual(len(sub.list_bindings('')), 0)
-        
+
         # Create a context.
         context.create_subcontext('sub/a')
         self.assertEqual(len(sub.list_bindings('')), 1)
@@ -277,7 +277,7 @@ class ContextTestCase(unittest.TestCase):
 
         # Lookup using the new name.
         context.lookup('sub/b')
-        
+
         # Lookup using the old name.
         self.failUnlessRaises(NameNotFoundError, context.lookup, 'sub/a')
 
@@ -334,7 +334,7 @@ class ContextTestCase(unittest.TestCase):
             NameNotFoundError, context.create_subcontext, 'xx/a'
         )
         self.assertEqual(len(sub.list_bindings('')), 0)
-        
+
         # Create a sub-context.
         context.create_subcontext('sub/a')
         self.assertEqual(len(sub.list_bindings('')), 1)
@@ -402,12 +402,12 @@ class ContextTestCase(unittest.TestCase):
             NotContextError, context.destroy_subcontext, 'sub/a/xx'
         )
         self.assertEqual(len(sub.list_bindings('')), 1)
-        
+
         return
 
     def test_list_bindings(self):
         """ list bindings """
-        
+
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
@@ -438,7 +438,7 @@ class ContextTestCase(unittest.TestCase):
 
     def test_list_names(self):
         """ list names """
-        
+
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
@@ -481,16 +481,16 @@ class ContextTestCase(unittest.TestCase):
         )
 
         return
-    
+
     def test_search(self):
         """ test retrieving the names of bound objects """
-        
+
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
         sub_sibling = context.create_subcontext('sub sibling')
         sub_sub = sub.create_subcontext('sub sub')
-        
+
         context.bind('one',1)
         names = context.search( 1 )
         self.assertEqual( len(names), 1)
@@ -498,7 +498,7 @@ class ContextTestCase(unittest.TestCase):
 
         names = sub.search(1)
         self.assertEqual( len(names), 0)
-        
+
         context.bind('sub/two',2)
         names = context.search( 2 )
         self.assertEqual( len(names), 1)
@@ -512,7 +512,7 @@ class ContextTestCase(unittest.TestCase):
         names = context.search( 1 )
         self.assertEqual( len(names), 2)
         self.assertEqual( names, ['one', 'sub/sub sub/one'] )
-        
+
         names = sub.search(None)
         self.assertEqual( len(names), 0)
 
@@ -521,5 +521,5 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual( names[0], 'sub/sub sub' )
 
         return
-        
+
 #### EOF ######################################################################

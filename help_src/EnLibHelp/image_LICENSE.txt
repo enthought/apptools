@@ -1,7 +1,7 @@
 The icons are mostly derived work from other icons. As such they are
 licensed accordingly to the original license:
 
-    GV: Gael Varoquaux: BSD-like 
+    GV: Gael Varoquaux: BSD-like
     Enthought: BSD-like
     Nuvola: LGPL
     OOo: LGPL
@@ -16,11 +16,11 @@ Files and orginal authors:
               edit_icon.png | GV
             expand_icon.png | Enthought
                   fnadd.png | GV
-		       fndelete.png | GV
+                       fndelete.png | GV
               fndisable.png | Nuvola
-	           fnenable.png | Nuvola
+                   fnenable.png | Nuvola
              fnmovedown.png | GV
-		       fnmoveup.png | GV
+                       fnmoveup.png | GV
            hcenter_icon.png | Enthought
               horz_icon.png | Enthought
                  import.png | Eclipse
@@ -36,8 +36,8 @@ Files and orginal authors:
   open_function_browser.png | Nuvola
            open_project.png | Nuvola
         output_critical.png | GV
-	       output_debug.png | GV
-	       output_error.png | GV
+               output_debug.png | GV
+               output_error.png | GV
             output_info.png | Nuvola
          output_warning.png | GV
               redo_icon.png | GV
@@ -48,16 +48,16 @@ Files and orginal authors:
                run_icon.png | Nuvola
            save_project.png | Nuvola
         save_project_as.png | Nuvola
-		   search_table.png | Nuvola
+                   search_table.png | Nuvola
       table_delete_item.png | OOo
       table_do_not_sort.png | OOo
       table_insert_item.png | OOo
-		    table_prefs.png | OOo
+                    table_prefs.png | OOo
        table_row_delete.png | OOo
        table_row_insert.png | OOo
-    	       top_icon.png | Enthought
-		      undo_icon.png | GV
-		    unsort_icon.png | OOo
-		   vcenter_icon.png | Enthought
+               top_icon.png | Enthought
+                      undo_icon.png | GV
+                    unsort_icon.png | OOo
+                   vcenter_icon.png | Enthought
               vert_icon.png | Enthought
 view_componant_librairy_icon.png | Nuvola

@@ -14,7 +14,7 @@ class InstanceContextAdapter(ContextAdapter):
     """ Context adapter for Python instances. """
 
     #### 'Context' interface ##################################################
-    
+
     # The name of the context within its own namespace.
     namespace_name = Property(Str)
 
@@ -30,7 +30,7 @@ class InstanceContextAdapter(ContextAdapter):
     # default we exclude 'protected' and 'private' attributes and any
     # attributes that are artifacts of the traits mechanism.
     exclude = List(Str, ['_', 'trait_'])
-    
+
     ###########################################################################
     # 'Context' interface.
     ###########################################################################
@@ -61,9 +61,9 @@ class InstanceContextAdapter(ContextAdapter):
         """ Looks up a name in this context. """
 
         obj = getattr(self.adaptee, name)
-        
+
         return naming_manager.get_object_instance(obj, name, self)
-    
+
     def _lookup_binding(self, name):
         """ Looks up the binding for a name in this context. """
 
@@ -86,7 +86,7 @@ class InstanceContextAdapter(ContextAdapter):
 
     def _unbind(self, name):
         """ Unbinds a name from this context. """
-        
+
         delattr(self.adaptee, name)
 
         return
@@ -101,7 +101,7 @@ class InstanceContextAdapter(ContextAdapter):
         delattr(self.adaptee, old_name)
 
         return
-    
+
     def _create_subcontext(self, name):
         """ Creates a sub-context of this context. """
 
@@ -120,7 +120,7 @@ class InstanceContextAdapter(ContextAdapter):
             try:
                 obj = self._lookup(name)
                 bindings.append(Binding(name=name, obj=obj, context=self))
-                
+
             # We get attribute errors when we try to look up Event traits (they
             # are write-only).
             except AttributeError:
@@ -153,7 +153,7 @@ class InstanceContextAdapter(ContextAdapter):
 
     def _is_exposed(self, name):
         """ Returns True iff a name should be exposed. """
-        
+
         if len(self.include) > 0:
             is_exposed = self._matches(self.include, name)
 
@@ -162,9 +162,9 @@ class InstanceContextAdapter(ContextAdapter):
 
         else:
             is_exposed = True
-            
+
         return is_exposed
-    
+
     def _matches(self, expressions, name):
         """ Returns True iff a name matches any of a list of expressions. """
 
@@ -175,7 +175,7 @@ class InstanceContextAdapter(ContextAdapter):
 
         else:
             matches = False
-            
+
         return matches
-    
+
 #### EOF ######################################################################

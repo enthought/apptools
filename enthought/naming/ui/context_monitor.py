@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
 #------------------------------------------------------------------------------
@@ -24,12 +24,12 @@ class ContextMonitor(NodeMonitor):
     ###########################################################################
     # 'NodeMonitor' interface.
     ###########################################################################
-    
+
     def start(self):
         """ Start listening to changes to the object. """
-        
+
         context = self.node.obj
-        
+
         context.on_trait_change(self._on_object_added, 'object_added')
         context.on_trait_change(self._on_object_changed, 'object_changed')
         context.on_trait_change(self._on_object_removed, 'object_removed')
@@ -42,7 +42,7 @@ class ContextMonitor(NodeMonitor):
         """ Stop listening to changes to the object. """
 
         context = self.node.obj
-        
+
         context.on_trait_change(
             self._on_object_added, 'object_added', remove=True
         )
@@ -64,13 +64,13 @@ class ContextMonitor(NodeMonitor):
         )
 
         return
-    
+
     ###########################################################################
     # Private interface.
     ###########################################################################
 
     #### Trait event handlers #################################################
-    
+
     def _on_object_added(self, event):
         """ Called when an object has been added to the context. """
 
@@ -106,5 +106,5 @@ class ContextMonitor(NodeMonitor):
         self.fire_structure_changed()
 
         return
-    
+
 ##### EOF #####################################################################

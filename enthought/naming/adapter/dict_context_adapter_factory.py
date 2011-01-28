@@ -30,5 +30,5 @@ class DictContextAdapterFactory(ContextAdapterFactory):
         )
 
         return adapter
-    
+
 #### EOF ######################################################################

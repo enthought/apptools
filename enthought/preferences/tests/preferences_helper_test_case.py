@@ -17,7 +17,7 @@ from enthought.traits.api import Unicode
 
 def listener(obj, trait_name, old, new):
     """ A useful trait change handler for testing! """
-    
+
     listener.obj = obj
     listener.trait_name = trait_name
     listener.old = old
@@ -44,14 +44,14 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         # The filename of the example preferences file.
         self.example = resource_filename(PKG, 'example.ini')
-        
+
         return
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
-        
+
         return
-    
+
     ###########################################################################
     # Tests.
     ###########################################################################
@@ -76,7 +76,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             description = Unicode
             offsets     = List(Int)
             names       = List(Str)
-            
+
         helper = AcmeUIPreferencesHelper()
         helper.on_trait_change(listener)
 
@@ -88,7 +88,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(u'acme ui', helper.description)
         self.assertEqual([1, 2, 3, 4], helper.offsets)
         self.assertEqual(['joe', 'fred', 'jane'], helper.names)
-        
+
         # Make sure we can set the preference via the helper...
         helper.bgcolor = 'yellow'
         self.assertEqual('yellow', p.get('acme.ui.bgcolor'))
@@ -99,9 +99,9 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('bgcolor', listener.trait_name)
         self.assertEqual('blue', listener.old)
         self.assertEqual('yellow', listener.new)
-        
+
         # Make sure we can set the preference via the preferences node...
-        p.set('acme.ui.bgcolor', 'red') 
+        p.set('acme.ui.bgcolor', 'red')
         self.assertEqual('red', p.get('acme.ui.bgcolor'))
         self.assertEqual('red', helper.bgcolor)
 
@@ -110,7 +110,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('bgcolor', listener.trait_name)
         self.assertEqual('yellow', listener.old)
         self.assertEqual('red', listener.new)
-       
+
         return
 
     def test_instance_scope_preferences_path(self):
@@ -130,7 +130,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             description = Unicode
             offsets     = List(Int)
             names       = List(Str)
-            
+
         helper = AcmeUIPreferencesHelper(preferences_path='acme.ui')
         helper.on_trait_change(listener)
 
@@ -153,9 +153,9 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('bgcolor', listener.trait_name)
         self.assertEqual('blue', listener.old)
         self.assertEqual('yellow', listener.new)
-        
+
         # Make sure we can set the preference via the preferences node...
-        p.set('acme.ui.bgcolor', 'red') 
+        p.set('acme.ui.bgcolor', 'red')
         self.assertEqual('red', p.get('acme.ui.bgcolor'))
         self.assertEqual('red', helper.bgcolor)
 
@@ -186,7 +186,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             description = Unicode(u'description')
             offsets     = List(Int, [1, 2, 3, 4])
             names       = List(Str, ['joe', 'fred', 'jane'])
-            
+
         helper = AcmeUIPreferencesHelper()
 
         # Make sure the helper was initialized properly.
@@ -197,7 +197,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(u'description', helper.description)
         self.assertEqual([1, 2, 3, 4], helper.offsets)
         self.assertEqual(['joe', 'fred', 'jane'], helper.names)
-        
+
         return
 
     def test_no_preferences_path(self):
@@ -278,9 +278,9 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('background_color', listener.trait_name)
         self.assertEqual('blue', listener.old)
         self.assertEqual('yellow', listener.new)
-        
+
         # Make sure we can set the preference via the preferences node...
-        p.set('acme.ui.bgcolor', 'red') 
+        p.set('acme.ui.bgcolor', 'red')
         self.assertEqual('red', p.get('acme.ui.bgcolor'))
         self.assertEqual('red', helper.bgcolor)
 
@@ -313,15 +313,15 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
             # A trait for a preference that does not exist yet.
             name = Str
-            
+
         helper = AcmeUIPreferencesHelper()
-        
+
         # Make sure the trait is set!
         self.assertEqual('blue', helper.bgcolor)
 
         # And that the non-existent trait gets the default value.
         self.assertEqual('', helper.name)
-        
+
         return
 
     def test_preference_not_in_file(self):
@@ -337,7 +337,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             title = Str('Acme')
 
         helper = AcmeUIPreferencesHelper()
-        
+
         # Make sure the trait is set!
         self.assertEqual('Acme', helper.title)
 
@@ -352,16 +352,16 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
     def test_preferences_node_changed(self):
         """ preferences node changed """
- 
+
         p = self.preferences
         p.load(self.example)
 
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
-            
+
             # The path to the preferences node that contains our preferences.
             preferences_path = 'acme.ui'
-            
+
             # The traits that we want to initialize from preferences.
             bgcolor     = Str
             width       = Int
@@ -370,7 +370,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             description = Unicode
             offsets     = List(Int)
             names       = List(Str)
-            
+
         helper = AcmeUIPreferencesHelper()
 
         # We only listen to some of the traits so the testing is easier.
@@ -394,14 +394,14 @@ class PreferencesHelperTestCase(unittest.TestCase):
         # Test re-initialization.
         self.assertEqual(helper.bgcolor, 'red')
         self.assertEqual(helper.width, 40)
-    
+
         # Test event handling.
         p1.set('acme.ui.bgcolor', 'black')
         self.assertEqual(helper, listener.obj)
         self.assertEqual('bgcolor', listener.trait_name)
         self.assertEqual('red', listener.old)
         self.assertEqual('black', listener.new)
-       
+
         # This should not trigger any new changes since we are setting values
         # on the old preferences node.
         p.set('acme.ui.bgcolor', 'white')
@@ -437,7 +437,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
                 self.ratio = 3.0
 
                 return
-            
+
         helper = AcmeUIPreferencesHelper(preferences_path='acme.ui')
 
         # Make sure the helper was initialized properly.
@@ -466,7 +466,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
     # procedure when modifying existing code. If in doubt, ask a developer.
     def test_unevaluated_strings(self):
         """ unevaluated strings """
-        
+
         p = self.preferences
         p.load(self.example)
 

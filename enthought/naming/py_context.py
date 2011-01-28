@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
 #------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ class PyContext(Context, Referenceable):
 
     # The naming environment in effect for this context.
     environment = Dict(ENVIRONMENT)
-    
+
     #### 'PyContext' interface ################################################
 
     # The Python namespace that we represent.
@@ -53,22 +53,22 @@ class PyContext(Context, Referenceable):
     # attribute, then this will be that object (the namespace will be the
     # object's '__dict__'.
     obj = Any
-    
+
     #### 'Referenceable' interface ############################################
 
     # The object's reference suitable for binding in a naming context.
     reference = Property(Instance(Reference))
-    
+
     ###########################################################################
     # 'object' interface.
     ###########################################################################
-    
+
     def __init__(self, **traits):
         """ Creates a new context. """
 
         # Base class constructor.
         super(PyContext, self).__init__(**traits)
-        
+
         if type(self.namespace) is not dict:
             if hasattr(self.namespace, '__dict__'):
                 self.obj = self.namespace
@@ -76,7 +76,7 @@ class PyContext(Context, Referenceable):
 
             else:
                 raise ValueError('Need a dictionary or a __dict__ attribute')
-            
+
         return
 
     ###########################################################################
@@ -84,7 +84,7 @@ class PyContext(Context, Referenceable):
     ###########################################################################
 
     #### Properties ###########################################################
-        
+
     def _get_reference(self):
         """ Returns a reference to this object suitable for binding. """
 
@@ -106,7 +106,7 @@ class PyContext(Context, Referenceable):
 
     def _lookup(self, name):
         """ Looks up a name in this context. """
-        
+
         obj = self.namespace[name]
 
         return naming_manager.get_object_instance(obj, name, self)
@@ -119,11 +119,11 @@ class PyContext(Context, Referenceable):
 
         # Trait event notification.
         # An "added" event is fired by the bind method of the base calss (which calls
-        # this one), so we don't need to do the changed here (which would be the wrong 
+        # this one), so we don't need to do the changed here (which would be the wrong
         # thing anyway) -- LGV
         #
         # self.trait_property_changed('context_changed', None, None)
-        
+
         return
 
     def _rebind(self, name, obj):
@@ -132,7 +132,7 @@ class PyContext(Context, Referenceable):
         self._bind(name, obj)
 
         return
-    
+
     def _unbind(self, name):
         """ Unbinds a name from this context. """
 
@@ -167,7 +167,7 @@ class PyContext(Context, Referenceable):
 
         # Trait event notification.
         self.trait_property_changed('context_changed', None, None)
-        
+
         return sub
 
     def _destroy_subcontext(self, name):

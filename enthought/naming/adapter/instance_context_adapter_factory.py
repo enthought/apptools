@@ -47,5 +47,5 @@ class InstanceContextAdapterFactory(ContextAdapterFactory):
         )
 
         return adapter
-    
+
 #### EOF ######################################################################

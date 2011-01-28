@@ -35,7 +35,7 @@ class _WidgetEditor(Editor):
 
         # Listen for the page being changed.
         self.object.on_trait_change(self._on_page_changed, 'selected_page')
-        
+
         return
 
     def dispose(self):
@@ -43,7 +43,7 @@ class _WidgetEditor(Editor):
 
         page = self.object.selected_page
         page.destroy_control()
-        
+
         return
 
     def update_editor(self):
@@ -57,7 +57,7 @@ class _WidgetEditor(Editor):
 
     def _on_page_changed(self, obj, trait_name, old, new):
         """ Dynamic trait change handler. """
-        
+
         if old is not None:
             old.destroy_control()
 
@@ -73,25 +73,25 @@ class WidgetEditor(EditorFactory):
     ###########################################################################
     # 'object' interface.
     ###########################################################################
-                                      
+
     def __call__ (self, *args, **traits):
         """ Call the object. """
-        
+
         return self.set(**traits)
 
     ###########################################################################
     # 'EditorFactory' interface.
     ###########################################################################
-    
+
     def simple_editor(self, ui, object, name, description, parent):
         """ Create a simple editor. """
-        
+
         editor = _WidgetEditor(
             parent,
-            factory     = self, 
-            ui          = ui, 
-            object      = object, 
-            name        = name, 
+            factory     = self,
+            ui          = ui,
+            object      = object,
+            name        = name,
             description = description
         )
 

@@ -33,20 +33,20 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         # The filename of the example preferences file.
         self.example = resource_filename(PKG, 'example.ini')
-        
+
         # A temporary directory that can safely be written to.
         self.tmpdir = tempfile.mkdtemp()
-        
+
         return
-    
+
     def tearDown(self):
         """ Called immediately after each test method has been called. """
-        
+
         # Remove the temporary directory.
         os.removedirs(self.tmpdir)
 
         return
-    
+
     ###########################################################################
     # Tests overridden from 'PreferencesTestCase'.
     ###########################################################################
@@ -65,10 +65,10 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         self.assertEqual('acme', node.name)
         self.assertEqual('acme', node.path)
         self.assertEqual(p.node('application/'), node.parent)
-        
+
         # Make sure we get the same node each time we ask for it!
         self.assertEqual(node, p.node('acme'))
-        
+
         # Try a nested path.
         node = p.node('acme.ui')
         self.assertNotEqual(None, node)
@@ -92,10 +92,10 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         # Get the application scope.
         application = p.node('application/')
-        
+
         tmp = join(self.tmpdir, 'test.ini')
         application.filename = tmp
-        
+
         # Set a value.
         p.set('acme.ui.bgcolor', 'red')
 
@@ -109,12 +109,12 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         # preference is in there.
         p = Preferences()
         p.load(tmp)
-        
+
         self.assertEqual('red', p.get('acme.ui.bgcolor'))
-        
+
         # Cleanup.
         os.remove(tmp)
-        
+
         return
 
     ###########################################################################
@@ -140,7 +140,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         # Set a preference and make sure we can get it again!
         p.set('default/acme.ui.bgcolor', 'red')
         self.assertEqual('red', p.get('default/acme.ui.bgcolor'))
-        
+
         return
 
     def test_clear_in_specific_scope(self):
@@ -211,7 +211,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         keys = p.keys('default/acme')
         keys.sort()
-        
+
         self.assertEqual(['a', 'b', 'c'], keys)
 
         # And, just to be sure, in a child of the child node ;^)
@@ -221,7 +221,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         keys = p.keys('default/acme.ui')
         keys.sort()
-        
+
         self.assertEqual(['a', 'b', 'c'], keys)
 
         return
@@ -240,10 +240,10 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         self.assertEqual('acme', node.name)
         self.assertEqual('acme', node.path)
         self.assertEqual(p.node('default/'), node.parent)
-        
+
         # Make sure we get the same node each time we ask for it!
         self.assertEqual(node, p.node('default/acme'))
-        
+
         # Try a nested path.
         node = p.node('default/acme.ui')
         self.assertNotEqual(None, node)
@@ -298,7 +298,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         names = p.node_names('default/acme')
         names.sort()
-        
+
         self.assertEqual(['a', 'b', 'c'], names)
 
         # And, just to be sure, in a child of the child node ;^)
@@ -308,11 +308,11 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         names = p.node_names('default/acme.ui')
         names.sort()
-        
+
         self.assertEqual(['a', 'b', 'c'], names)
 
         return
-        
+
     def test_default_lookup_order(self):
         """ default lookup order """
 
@@ -337,7 +337,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         p = self.preferences
         p.lookup_order = ['default', 'application']
-        
+
         # Set a value in both the application and default scopes.
         p.set('application/acme.ui.bgcolor', 'red')
         p.set('default/acme.ui.bgcolor', 'yellow')
@@ -364,7 +364,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
             listener.key  = key
             listener.old  = old
             listener.new  = new
-            
+
             return
 
         # Add a listener.
@@ -399,7 +399,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
             listener.key  = key
             listener.old  = old
             listener.new  = new
-            
+
             return
 
         # Add a listener.
@@ -417,10 +417,10 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         # Set a value and make sure the listener was *not* called.
         listener.node = None
-        
+
         p.set('default/acme.ui.bgcolor', 'blue')
         self.assertEqual(None, listener.node)
-        
+
         return
 
     def test_non_existent_scope(self):
@@ -429,12 +429,12 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         p = self.preferences
 
         self.failUnlessRaises(ValueError, p.get, 'bogus/acme.ui.bgcolor')
-        
+
         return
 
 
 # Entry point for stand-alone testing.
 if __name__ == '__main__':
     unittest.main()
-    
+
 #### EOF ######################################################################

@@ -1,7 +1,7 @@
 """ Help Plugin API
     :Copyright: 2008, Enthought Inc.
     :License: BSD
-    :Author: Janet Swisher    
+    :Author: Janet Swisher
 """
 # This software is provided without warranty under the terms of the BSD
 # license included in AppTools/trunk/LICENSE.txt and may be redistributed only

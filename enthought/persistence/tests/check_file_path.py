@@ -30,7 +30,7 @@ class TestFilePath(unittest.TestCase):
         cwd = os.getcwd()
         # Trivial case of both in same dir.
         f.set_relative(abspath(join(cwd, 't.mv2')))
-        self.assertEqual(f.rel_pth, fname)        
+        self.assertEqual(f.rel_pth, fname)
         # Move one directory deeper.
         f.set_relative(abspath(join(cwd, 'tests', 't.mv2')))
         self.assertEqual(f.rel_pth, join(os.pardir, fname))
@@ -89,7 +89,7 @@ class TestFilePath(unittest.TestCase):
         self.assertEqual(state.f.abs_pth,
                          join(cwd, 'foo', 'test', 'tests', 't.vtk'))
 
-        
+
         # Create a dummy file in a subdir.
         s = StringIO.StringIO()
         # Spoof its location.
@@ -105,7 +105,7 @@ class TestFilePath(unittest.TestCase):
         self.assertEqual(state.f.abs_pth,
                          join(cwd, 'foo', 't.vtk'))
 
-        
+
 
 def test_suite():
     """Collects all the tests to be run."""

@@ -27,14 +27,14 @@ class AdapterFactory(AbstractAdapterFactory):
     #
     # The type of object that the factory can adapt.
     adaptee_class = Any
-    
+
     # The adapter class (the class that adapts the adaptee to the target
     # class).
     adapter_class = Any
 
     # The target class (the class that the factory can adapt objects to).
     target_class = Any
-    
+
     ###########################################################################
     # Protected 'AbstractAdapterFactory' interface.
     ###########################################################################
@@ -52,9 +52,9 @@ class AdapterFactory(AbstractAdapterFactory):
 
         This requires the adapter class to have an 'adaptee' trait. The default
         'Adapter' class provides exactly that.
-        
+
         """
 
         return self.adapter_class(adaptee=adaptee, *args, **kw)
-    
+
 #### EOF ######################################################################

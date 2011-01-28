@@ -73,14 +73,14 @@ class SecureProxy(object):
 
     def __repr__(self):
         return repr(object.__getattribute__(self, '_ets').proxied)
-    
+
     # Factories.
     _special_names = [
-        '__abs__', '__add__', '__and__', '__call__', '__cmp__', '__coerce__', 
-        '__contains__', '__delitem__', '__delslice__', '__div__', '__divmod__', 
-        '__eq__', '__float__', '__floordiv__', '__ge__', '__getitem__', 
+        '__abs__', '__add__', '__and__', '__call__', '__cmp__', '__coerce__',
+        '__contains__', '__delitem__', '__delslice__', '__div__', '__divmod__',
+        '__eq__', '__float__', '__floordiv__', '__ge__', '__getitem__',
         '__getslice__', '__gt__', '__hash__', '__hex__', '__iadd__', '__iand__',
-        '__idiv__', '__idivmod__', '__ifloordiv__', '__ilshift__', '__imod__', 
+        '__idiv__', '__idivmod__', '__ifloordiv__', '__ilshift__', '__imod__',
         '__imul__', '__int__', '__invert__', '__ior__', '__ipow__',
         '__irshift__', '__isub__', '__iter__', '__itruediv__', '__ixor__',
         '__le__', '__len__', '__long__', '__lshift__', '__lt__', '__mod__',
@@ -96,7 +96,7 @@ class SecureProxy(object):
     @classmethod
     def _ets_class_proxy(cls, theclass):
         """Creates a proxy for the given class."""
-        
+
         def make_method(name):
             def method(self, *args, **kw):
                 return getattr(object.__getattribute__(self, '_ets').proxied, name)(*args, **kw)
@@ -109,7 +109,7 @@ class SecureProxy(object):
 
         return type("%s(%s)" % (cls.__name__, theclass.__name__), (cls,),
                 namespace)
-    
+
     def __new__(cls, proxied, permissions, show=True):
         """Apply a set of permissions to an object.  This may be done by
         creating a proxy or by modifying the object in situ depending on its

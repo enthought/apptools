@@ -28,7 +28,7 @@ class _wxLabelEditor(Editor):
         style = w.GetDefaultStyle()
         style.SetAlignment(wx.TEXT_ALIGNMENT_CENTER)
         w.SetDefaultStyle(style)
-        
+
         self._set_text(w)
         self._set_size_and_style(w)
 
@@ -47,7 +47,7 @@ class _wxLabelEditor(Editor):
     def _set_text(self, w):
         w.SetValue("")
         w.WriteText("%s(%d points, %s)" % (self.obj.text, self.obj.size, self.obj.style))
-        
+
     def _update_size(self):
         self._set_size_and_style(self.control)
 
@@ -57,14 +57,14 @@ class _wxLabelEditor(Editor):
     def _set_size_and_style(self, w):
         import wx
         if self.obj.style == 'normal':
-            style, weight = wx.NORMAL, wx.NORMAL            
+            style, weight = wx.NORMAL, wx.NORMAL
         elif self.obj.style == 'italic':
             style, weight = wx.ITALIC, wx.NORMAL
         elif self.obj.style == 'bold':
             style, weight = wx.NORMAL, wx.BOLD
         else:
             raise NotImplementedError, 'style "%s" not supported' % self.obj.style
-        
+
         f = wx.Font(self.obj.size, wx.ROMAN, style, weight, False)
         style = wx.TextAttr("BLACK",wx.NullColour,f)
         w.SetDefaultStyle(style)

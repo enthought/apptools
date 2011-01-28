@@ -2,7 +2,7 @@
 
     :Copyright: 2008, Enthought Inc.
     :License: BSD
-    :Author: Janet Swisher    
+    :Author: Janet Swisher
 """
 # This software is provided without warranty under the terms of the BSD
 # license included in AppTools/trunk/LICENSE.txt and may be redistributed only
@@ -35,34 +35,34 @@ class HelpPreferencesPage(PreferencesPage):
 
     # The path to the preferences node that contains the preferences.
     preferences_path = PKG
-    
+
     traits_view = View()
 
 class DocumentsPreferencesPage(HelpPreferencesPage):
     """ (Blank) page for the "Documents" preferences tree node.
     """
     name = 'Documents'
-    
+
 class DemosPreferencesPage(HelpPreferencesPage):
     """ (Blank) page for the "Demos" preferences tree node.
     """
     name = 'Demos'
-    
+
 class ExamplesPreferencesPage(HelpPreferencesPage):
     """ Page for the "Examples" preferences tree node.
     """
     name = 'Examples'
     preferences_path = PKG + '.Examples'
-    
+
     #### Preferences ###########################################################
-    
+
     editor = Str
-        
+
     traits_view = View(
-        Item( name='editor', 
+        Item( name='editor',
               label='Command for external editor'),
     )
-        
+
 class HelpDocPreferencesPage(PreferencesPage):
     """ Base class for preferences pages for help documents.
     """
@@ -71,7 +71,7 @@ class HelpDocPreferencesPage(PreferencesPage):
     # The page's category.
     category = 'Documents'
 
-    # The page's help identifier (optional). 
+    # The page's help identifier (optional).
     help_id = ''
 
     # The page name (this is what is shown in the preferences dialog.
@@ -79,7 +79,7 @@ class HelpDocPreferencesPage(PreferencesPage):
 
     def _name_default(self):
         return self.label
-        
+
     # The path to the preferences node that contains the preferences.
     preferences_path = Str
 
@@ -87,11 +87,11 @@ class HelpDocPreferencesPage(PreferencesPage):
 
     # The UI label for the help doc, which appears in menus or dialogs.
     label = Str
-    
+
     # The full path to the document on disk.
     filename = File
-    
-    # The program to use to view the document. 'browser' means the platform 
+
+    # The program to use to view the document. 'browser' means the platform
     # default web browser.
     viewer = Either('browser', File)
 
@@ -103,7 +103,7 @@ class HelpDocPreferencesPage(PreferencesPage):
         ),
             Item('filename', show_label=True),
             Label("Filename can be absolute, or relative to the Python directory."),
-        
+
     )
 
 class HelpDemoPreferencesPage(PreferencesPage):
@@ -124,7 +124,7 @@ class HelpDemoPreferencesPage(PreferencesPage):
 
     def _name_default(self):
         return self.label
-        
+
     # The path to the preferences node that contains the preferences.
     preferences_path = Str
 
@@ -132,10 +132,10 @@ class HelpDemoPreferencesPage(PreferencesPage):
 
     # The UI label for the help demo, which appears in menus or dialogs.
     label = Str
-    
+
     # The full path to entry point for the demo.
     filename = File
-    
+
     traits_view = View(
         Item('filename', show_label=True),
         Label("Filename can be absolute, or relative to the Python directory."),
@@ -160,15 +160,15 @@ class HelpExamplePreferencesPage(PreferencesPage):
 
     def _name_default(self):
         return self.label
-        
+
     # The path to the preferences node that contains the preferences.
     preferences_path = Str
-    
+
     #### Preferences ###########################################################
 
     # The UI label for the help demo, which appears in menus or dialogs.
     label = Str
-    
+
     # The full path to the main file of the example.
     filename = File
 

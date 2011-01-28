@@ -30,7 +30,7 @@
     We have duplicated the API of the Python 'pickle' module within this
     package. Thus, users can simply import sweet_pickle in places where
     they previously used pickle or cPickle.  For example::
-        
+
         import cPickle          --->    import enthought.sweet_pickle as pickle
         s = pickle.dumps(obj)           s = pickle.dumps(obj)
         pickle.loads(s)                 pickle.loads(s)
@@ -77,10 +77,10 @@
     an instantiation of another class.  The classes can be in different
     modules, and the modules in different packages.  Mappings can be chained.
     For example, given the mappings::
-        
+
         foo.bar.Bar --> foo.baz.Baz
         foo.baz.Baz --> foo.Foo
-        
+
     An attempt to unpickle a foo.bar.Bar would actually generate a foo.Foo
     instance.
 

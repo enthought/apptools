@@ -32,7 +32,7 @@ class AbstractFactory(HasTraits):
 
         else:
             obj = None
-            
+
         return obj
 
     ###########################################################################
@@ -43,7 +43,7 @@ class AbstractFactory(HasTraits):
         """ Returns True if the factory can create objects of a class. """
 
         return NotImplementedError
-    
+
     def _create(self, target_class, *args, **kw):
         """ Creates an object of the specified target class. """
 

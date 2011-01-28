@@ -33,7 +33,7 @@ class DictContextAdapter(ContextAdapter):
         obj = self.adaptee[name]
 
         return naming_manager.get_object_instance(obj, name, self)
-    
+
     def _lookup_binding(self, name):
         """ Looks up the binding for a name in this context. """
 
@@ -56,7 +56,7 @@ class DictContextAdapter(ContextAdapter):
 
     def _unbind(self, name):
         """ Unbinds a name from this context. """
-        
+
         del self.adaptee[name]
 
         return
@@ -71,13 +71,13 @@ class DictContextAdapter(ContextAdapter):
         self._unbind(old_name)
 
         return
-    
+
     def _create_subcontext(self, name):
         """ Creates a sub-context of this context. """
 
         # Create a dictionary of the same type as the one we are adapting.
         sub = type(self.adaptee)()
-        
+
         self.adaptee[name] = sub
 
         return DictContextAdapter(adaptee=sub)
@@ -88,7 +88,7 @@ class DictContextAdapter(ContextAdapter):
         del self.adaptee[name]
 
         return
-    
+
     def _list_bindings(self):
         """ Lists the bindings in this context. """
 
@@ -104,5 +104,5 @@ class DictContextAdapter(ContextAdapter):
         """ Lists the names bound in this context. """
 
         return [str(key) for key in self.adaptee]
-        
+
 #### EOF ######################################################################

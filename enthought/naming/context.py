@@ -201,7 +201,7 @@ class Context(HasTraits):
         that is already bound to the specified name. The name may or may not be
         already used. Think of this as a safer version of 'bind' since this
         one will never raise an exception regarding a name being used.
-        
+
         """
 
         if len(name) == 0:
@@ -618,7 +618,7 @@ class Context(HasTraits):
         """
 
         return name.split('/')
-    
+
     def _is_bound(self, name):
         """ Is a name bound in this context? """
 

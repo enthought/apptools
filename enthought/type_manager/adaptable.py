@@ -15,7 +15,7 @@ class Adaptable(HasTraits):
 
     # The adapter manager in effect for the object.
     adapter_manager = Instance(AdapterManager)
-    
+
     ###########################################################################
     # 'Adaptable' interface.
     ###########################################################################
@@ -32,5 +32,5 @@ class Adaptable(HasTraits):
             adapter = None
 
         return adapter
-    
+
 #### EOF ######################################################################

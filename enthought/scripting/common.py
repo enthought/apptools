@@ -15,9 +15,9 @@ class _Camel2Enthought:
       >>> camel2enthought = _Camel2Enthought()
       >>> camel2enthought('XMLActor2DToSGML')
       'xml_actor2d_to_sgml'
-      
+
     """
-    
+
     def __init__(self):
         self.patn = re.compile(r'([A-Z0-9]+)([a-z0-9]*)')
         self.nd_patn = re.compile(r'(\D[123])_D')
@@ -26,7 +26,7 @@ class _Camel2Enthought:
         ret = self.nd_patn.sub(r'\1d', ret)
         if ret[0] == '_':
             ret = ret[1:]
-        return ret.lower()    
+        return ret.lower()
     def _repl(self, m):
         g1 = m.group(1)
         g2 = m.group(2)

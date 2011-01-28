@@ -21,10 +21,10 @@ import struct
 from pickle import Pickler, Unpickler, dumps, BUILD, NEWOBJ, REDUCE, \
      MARK, OBJ, INST, BUILD, TupleType, PicklingError, GLOBAL, \
      EXT1, EXT2, EXT4, _extension_registry, _keep_alive
-  
+
 from cStringIO import StringIO
 
-    
+
 ######################################################################
 # `State` class
 ######################################################################
@@ -99,7 +99,7 @@ class StatePickler(Pickler):
 
         stuff = dict(obj.__dict__)
         stuff.pop('__METADATA__')
-        
+
         if '__setstate_data__' in stuff:
             data = stuff.pop('__setstate_data__')
             _keep_alive(data, memo)
@@ -111,14 +111,14 @@ class StatePickler(Pickler):
     def _state_reduce(self, obj):
         # FIXME: this code is not as complete as pickle's reduce
         # handling code and is likely to not work in all cases.
-        
+
         md = obj.__METADATA__
         func = md.get('class')
         func_md = func.__METADATA__
         args = md.get('initargs')
         state = dict(obj.__dict__)
         state.pop('__METADATA__')
-        
+
         # This API is called by some subclasses
 
         # Assert that args is a tuple or None
@@ -174,7 +174,7 @@ class StatePickler(Pickler):
         memo = self.memo
 
         md = obj.__METADATA__
-        
+
         if name is None:
             name = md.get('name')
 
@@ -234,7 +234,7 @@ class StateUnpickler(Unpickler):
         #obj = cls.__new__(cls, *args)
         self.stack[-1] = obj
     Unpickler.dispatch[NEWOBJ] = load_newobj
-                
+
     def load_reduce(self):
         stack = self.stack
         args = stack.pop()
@@ -257,7 +257,7 @@ class StateUnpickler(Unpickler):
         dispatch[BUILD] = Unpickler.load_build
         dispatch[NEWOBJ] = Unpickler.load_newobj
         dispatch[REDUCE] = Unpickler.load_reduce
-        return ret        
+        return ret
 
     def find_class(self, module, name):
         metadata = {'module': module, 'name': name, 'type': 'class'}
@@ -279,7 +279,7 @@ def dump_state(state, file, protocol=None, bin=None):
 
 def dumps_state(state, protocol=None, bin=None):
     """Dump the state (potentially modified) to a string and return
-    the string."""    
+    the string."""
     file = StringIO()
     StatePickler(file, protocol, bin).dump(state)
     return file.getvalue()
@@ -288,7 +288,7 @@ def state2object(state):
     """Creates an object from a state."""
     s = dumps_state(state)
     return pickle.loads(s)
-    
+
 def load_state(file):
     """Loads the state from a file like object.  This does not import
     any modules."""

@@ -7,7 +7,7 @@ Unless stated in this file, icons are work of enthought, and are released
 under BSD-like license.
 Files and orginal authors:
 ----------------------------------------------------------------
-		     export2rep.png | Nuvola
+                     export2rep.png | Nuvola
           repo_add_root.png | Nuvola
        repo_delete_item.png | Nuvola
         repo_new_folder.png | Nuvola

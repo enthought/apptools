@@ -24,10 +24,10 @@ class Label(HasTraits):
 
     # The name.
     name = Unicode
-    
+
     # The size in points.
     size = Int(18)
-    
+
     # The style.
     style = Enum('normal', 'bold', 'italic')
 

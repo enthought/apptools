@@ -26,7 +26,7 @@ class CloseHandler(Handler):
 
 ################################################################################
 # `RecorderWithUI` class.
-################################################################################ 
+################################################################################
 class RecorderWithUI(Recorder):
     """
     This class represents a Recorder but with a simple user interface.
@@ -54,10 +54,10 @@ class RecorderWithUI(Recorder):
                 ),
                 Group(Item('code', show_label=False)),
                 ),
-             width=600, 
+             width=600,
              height=360,
              id='enthought.scripting.recorder_with_ui',
-             buttons=['Cancel'], 
+             buttons=['Cancel'],
              resizable=True,
              handler=CloseHandler()
              )
@@ -77,7 +77,7 @@ class RecorderWithUI(Recorder):
         else:
             self.recording = False
             self.unregister(self.root)
-        
+
     ######################################################################
     # Non-public interface.
     ######################################################################

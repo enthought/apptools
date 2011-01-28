@@ -34,7 +34,7 @@ class PreferencesTestCase(unittest.TestCase):
 
         # A temporary directory that can safely be written to.
         self.tmpdir = tempfile.mkdtemp()
-        
+
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
@@ -43,7 +43,7 @@ class PreferencesTestCase(unittest.TestCase):
         os.removedirs(self.tmpdir)
 
         return
-    
+
     ###########################################################################
     # Tests.
     ###########################################################################
@@ -58,7 +58,7 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual(self.preferences, get_default_preferences())
 
         return
-    
+
     def test_get_and_set_str(self):
         """ get and set str """
 
@@ -183,7 +183,7 @@ class PreferencesTestCase(unittest.TestCase):
 
         keys = p.keys('acme')
         keys.sort()
-        
+
         self.assertEqual(['a', 'b', 'c'], keys)
 
         # And, just to be sure, in a child of the child node ;^)
@@ -193,14 +193,14 @@ class PreferencesTestCase(unittest.TestCase):
 
         keys = p.keys('acme.ui')
         keys.sort()
-        
+
         self.assertEqual(['a', 'b', 'c'], keys)
 
         # Test keys of a non-existent node.
         self.assertEqual([], p.keys('bogus'))
         self.assertEqual([], p.keys('bogus.blargle'))
         self.assertEqual([], p.keys('bogus.blargle.foogle'))
-        
+
         return
 
     def test_node(self):
@@ -217,10 +217,10 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual('acme', node.name)
         self.assertEqual('acme', node.path)
         self.assertEqual(p, node.parent)
-        
+
         # Make sure we get the same node each time we ask for it!
         self.assertEqual(node, p.node('acme'))
-        
+
         # Try a nested path.
         node = p.node('acme.ui')
         self.assertNotEqual(None, node)
@@ -275,7 +275,7 @@ class PreferencesTestCase(unittest.TestCase):
 
         names = p.node_names('acme')
         names.sort()
-        
+
         self.assertEqual(['a', 'b', 'c'], names)
 
         # And, just to be sure, in a child of the child node ;^)
@@ -285,7 +285,7 @@ class PreferencesTestCase(unittest.TestCase):
 
         names = p.node_names('acme.ui')
         names.sort()
-        
+
         self.assertEqual(['a', 'b', 'c'], names)
 
         # Test keys of a non-existent node.
@@ -340,7 +340,7 @@ class PreferencesTestCase(unittest.TestCase):
 
         # A temporary .ini file for this test.
         tmp = join(self.tmpdir, 'tmp.ini')
-        
+
         # This could be set in the constructor of course, its just here we
         # want to use the instance declared in 'setUp'.
         p.filename = tmp
@@ -355,7 +355,7 @@ class PreferencesTestCase(unittest.TestCase):
             # Load it into a new node.
             p = Preferences()
             p.load(tmp)
-            
+
             # Make sure it was all loaded!
             self.assertEqual('blue', p.get('acme.ui.bgcolor'))
             self.assertEqual('50', p.get('acme.ui.width'))
@@ -372,7 +372,7 @@ class PreferencesTestCase(unittest.TestCase):
             os.remove(tmp)
 
         return
-        
+
     def test_load(self):
         """ load """
 
@@ -380,7 +380,7 @@ class PreferencesTestCase(unittest.TestCase):
 
         # Load the preferences from an 'ini' file.
         p.load(self.example)
-        
+
         # Make sure it was all loaded!
         self.assertEqual('blue', p.get('acme.ui.bgcolor'))
         self.assertEqual('50', p.get('acme.ui.width'))
@@ -399,10 +399,10 @@ class PreferencesTestCase(unittest.TestCase):
 
         p = self.preferences
         p.filename = self.example
-        
+
         # Load the preferences from an 'ini' file.
         p.load()
-        
+
         # Make sure it was all loaded!
         self.assertEqual('blue', p.get('acme.ui.bgcolor'))
         self.assertEqual('50', p.get('acme.ui.width'))
@@ -415,7 +415,7 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
 
         p = self.preferences
-        
+
         # Load the preferences from an 'ini' file.
         p.load(self.example)
 
@@ -453,7 +453,7 @@ class PreferencesTestCase(unittest.TestCase):
 
         # Make a change.
         p.set('acme.ui.bgcolor', 'yellow')
-        
+
         # Save it to another file.
         tmp = join(self.tmpdir, 'tmp.ini')
         p.save(tmp)
@@ -462,7 +462,7 @@ class PreferencesTestCase(unittest.TestCase):
             # Load it into a new node.
             p = Preferences()
             p.load(tmp)
-            
+
             # Make sure it was all loaded!
             self.assertEqual('yellow', p.get('acme.ui.bgcolor'))
             self.assertEqual('50', p.get('acme.ui.width'))
@@ -503,7 +503,7 @@ class PreferencesTestCase(unittest.TestCase):
         p.set('bgcolor', 'red')
         p.set('acme.bgcolor', 'green')
         p.set('acme.ui.bgcolor', 'blue')
-        
+
         self.assertEqual('blue', p.get('acme.ui.bgcolor', inherit=True))
 
         # Now remove the 'lowest' layer.
@@ -517,7 +517,7 @@ class PreferencesTestCase(unittest.TestCase):
         # And the last one.
         p.remove('bgcolor')
         self.assertEqual(None, p.get('acme.ui.bgcolor', inherit=True))
-        
+
         return
 
     def test_add_listener(self):
@@ -532,7 +532,7 @@ class PreferencesTestCase(unittest.TestCase):
             listener.key  = key
             listener.old  = old
             listener.new  = new
-            
+
             return
 
         # Add a listener.
@@ -552,7 +552,7 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual('bgcolor', listener.key)
         self.assertEqual('blue', listener.old)
         self.assertEqual('red', listener.new)
-        
+
         return
 
     def test_remove_listener(self):
@@ -567,7 +567,7 @@ class PreferencesTestCase(unittest.TestCase):
             listener.key  = key
             listener.old  = old
             listener.new  = new
-            
+
             return
 
         # Add a listener.
@@ -585,10 +585,10 @@ class PreferencesTestCase(unittest.TestCase):
 
         # Set a value and make sure the listener was *not* called.
         listener.node = None
-        
+
         p.set('acme.ui.bgcolor', 'blue')
         self.assertEqual(None, listener.node)
-        
+
         return
 
     def test_set_with_same_value(self):
@@ -603,7 +603,7 @@ class PreferencesTestCase(unittest.TestCase):
             listener.key  = key
             listener.old  = old
             listener.new  = new
-            
+
             return
 
         # Add a listener.
@@ -618,11 +618,11 @@ class PreferencesTestCase(unittest.TestCase):
 
         # Clear out the listener.
         listener.node = None
-        
+
         # Set the same value and make sure the listener *doesn't* get called.
         p.set('acme.ui.bgcolor', 'blue')
         self.assertEqual(None, listener.node)
-        
+
         return
 
 

@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
 #------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ class ObjectNodeType(NodeType):
         """ Does the node allow children (ie. a folder vs a file). """
 
         return False
-    
+
     def get_drag_value(self, node):
         """ Get the value that is dragged for a node. """
 
@@ -62,7 +62,7 @@ class ObjectNodeType(NodeType):
         # The parent context will NOT be None here (an object is ALWAYS
         # contained in a context).
         parent = node.context
-        
+
         return len(text.strip()) > 0 and text not in parent.list_names('')
 
     def set_text(self, node, text):
@@ -70,7 +70,7 @@ class ObjectNodeType(NodeType):
 
         node.context.rename(node.name, text)
         node.name = text
-        
+
         return
-    
+
 ##### EOF #####################################################################

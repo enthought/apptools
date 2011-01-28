@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought pyface package component>
 #------------------------------------------------------------------------------
@@ -41,7 +41,7 @@ class PreferencesNode(TreeItem):
 
     # The page that we are a node for.
     page = Instance(IPreferencesPage)
-    
+
     ###########################################################################
     # 'object' interface.
     ###########################################################################
@@ -54,11 +54,11 @@ class PreferencesNode(TreeItem):
 
         else:
             s = self.page.name
-            
+
         return s
 
     __repr__ = __str__
-    
+
     ###########################################################################
     # 'PreferencesNode' interface.
     ###########################################################################
@@ -67,7 +67,7 @@ class PreferencesNode(TreeItem):
         """ Creates the preference page for this node. """
 
         return self.page.create_control(parent)
-            
+
     def lookup(self, name):
         """ Returns the child of this node with the specified Id.
 
@@ -90,12 +90,12 @@ class PreferencesNode(TreeItem):
 
     def dump(self, indent=''):
         """ Pretty-print the node to stdout. """
-        
+
         print indent, 'Node', str(self)
 
         for child in self.children:
             child.dump(indent+'  ')
 
         return
-    
+
 #### EOF ######################################################################

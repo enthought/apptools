@@ -36,7 +36,7 @@ class ListContextAdapter(ContextAdapter):
         """ Looks up a name in this context. """
 
         binding = self._get_binding_with_name(name)
-        
+
         return naming_manager.get_object_instance(binding.obj, name, self)
 
     def _bind(self, name, obj):
@@ -61,7 +61,7 @@ class ListContextAdapter(ContextAdapter):
         # The name is not already bound.
         else:
             self._bind(name, obj)
-        
+
         return
 
     def _unbind(self, name):
@@ -88,7 +88,7 @@ class ListContextAdapter(ContextAdapter):
         self._set_name(binding.obj, new_name)
 
         return
-    
+
     def _create_subcontext(self, name):
         """ Creates a sub-context of this context. """
 
@@ -107,7 +107,7 @@ class ListContextAdapter(ContextAdapter):
         for obj in self.collection:
             # Bindings have to have a string name.
             name = self._get_name(obj)
-            
+
             # Create the binding.
             bindings.append(Binding(name=name, obj=obj, context=self))
 
@@ -121,12 +121,12 @@ class ListContextAdapter(ContextAdapter):
     ###########################################################################
     # Protected 'ListContext' interface.
     ###########################################################################
-    
+
     def _get_collection(self):
         """ Returns the collection that we are adapting. """
 
         return self.adaptee
-    
+
     ###########################################################################
     # Private interface.
     ###########################################################################
@@ -144,7 +144,7 @@ class ListContextAdapter(ContextAdapter):
 
         else:
             name = str(obj)
-            
+
         return name
 
     def _set_name(self, obj, name):
@@ -155,7 +155,7 @@ class ListContextAdapter(ContextAdapter):
 
         elif hasattr(obj, 'id'):
             obj.id = name
-            
+
         return
 
     def _get_binding_with_name(self, name):
@@ -171,7 +171,7 @@ class ListContextAdapter(ContextAdapter):
         # is bound
         else:
             raise SystemError('no binding with name %s' % name)
-        
+
         return binding
 
 #### EOF ######################################################################

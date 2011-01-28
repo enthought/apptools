@@ -22,13 +22,13 @@ class PreferenceBinding(HasTraits):
     # the package-global default preferences node is used (and if that is not
     # set then the binding won't work ;^)
     preferences = Instance(IPreferences)
-    
+
     # The path to the preference value.
     preference_path = Str
 
     # The name of the trait that we are binding the preference to.
     trait_name = Str
-    
+
     ###########################################################################
     # 'object' interface.
     ###########################################################################
@@ -43,7 +43,7 @@ class PreferenceBinding(HasTraits):
 
         # Wire-up trait change handlers etc.
         self._initialize()
-        
+
         return
 
     ###########################################################################
@@ -71,7 +71,7 @@ class PreferenceBinding(HasTraits):
         return
 
     #### Other observer pattern listeners #####################################
-    
+
     def _preferences_listener(self, node, key, old, new):
         """ Listener called when a preference value is changed. """
 
@@ -97,7 +97,7 @@ class PreferenceBinding(HasTraits):
         # If the trait type is 'Str' then we just take the raw value.
         if type(handler) is Str:
             pass
-            
+
         # If the trait type is 'Unicode' then we convert the raw value.
         elif type(handler) is Unicode:
             value = unicode(value)
@@ -123,7 +123,7 @@ class PreferenceBinding(HasTraits):
         # Listen for the preference value being changed.
         components = self.preference_path.split('.')
         node       = '.'.join(components[:-1])
-        
+
         self.preferences.add_preferences_listener(
             self._preferences_listener, node
         )
@@ -164,10 +164,10 @@ def bind_preference(obj, trait_name, preference_path, preferences=None):
         'trait_name'      : trait_name,
         'preference_path' : preference_path
     }
-    
+
     if preferences is not None:
         traits['preferences'] = preferences
-        
+
     return PreferenceBinding(**traits)
 
 #### EOF ######################################################################

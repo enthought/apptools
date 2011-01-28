@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
 #------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ class DirContext(Context):
     ###########################################################################
     # 'DirContext' interface.
     ###########################################################################
-    
+
     def get_attributes(self, name):
         """ Returns the attributes associated with a named object. """
 
@@ -61,11 +61,11 @@ class DirContext(Context):
             else:
                 if not self._is_bound(components[0]):
                     raise NameNotFoundError(components[0])
-                
+
                 next_context = self._get_next_context(components[0])
                 attributes = next_context.get_attributes(
                     '/'.join(components[1:]))
-                
+
         return attributes
 
     def set_attributes(self, name, attributes):
@@ -94,33 +94,33 @@ class DirContext(Context):
             else:
                 if not self._is_bound(components[0]):
                     raise NameNotFoundError(components[0])
-                   
+
                 next_context = self._get_next_context(components[0])
                 next_context.set_attributes(
                     '/'.join(components[1:]), attributes
                 )
-                
+
         return
 
     # fixme: Non-JNDI
     def find_bindings(self, visitor):
         """ Find bindings with attributes matching criteria in visitor.
-        
+
         Visitor is a function that is passed the bindings for each level of the
         heirarchy and the attribute dictionary for those bindings.  The visitor
         examines the bindings and dictionary and returns the bindings it is
         interested in.
-        
+
         """
 
         bindings = visitor(self.list_bindings(), self._attributes)
-            
-        # recursively check other sub contexts.         
+
+        # recursively check other sub contexts.
         for binding in self.list_bindings():
             obj = binding.obj
             if isinstance(obj, DirContext):
                 bindings.extend(obj.find_bindings(visitor))
-                    
+
         return bindings
 
     ###########################################################################
@@ -131,7 +131,7 @@ class DirContext(Context):
         """ Returns the attributes of an object in this context. """
 
         attributes = self._attributes.setdefault(name, {})
-        
+
         return attributes.copy()
 
     def _set_attributes(self, name, attributes):
@@ -147,7 +147,7 @@ class DirContext(Context):
 
     def _unbind(self, name):
         """ Unbinds a name from this context. """
-        
+
         super(DirContext, self)._unbind(name)
 
         if name in self._attributes:

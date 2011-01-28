@@ -20,7 +20,7 @@ from toolkit_editor import ToolkitEditor
 
 class ExampleEditorManager(EditorManager):
     """An editor manager that supports the editor memento protocol."""
-    
+
     #######################################################################
     # 'IEditorManager' interface.
     #######################################################################
@@ -54,7 +54,7 @@ class ExampleWorkbenchWindow(WorkbenchWindow):
                 PerspectiveItem(id='Debug', position='left')
             ]
         ),
-        
+
         Perspective(
             name     = 'Bar',
             contents = [
@@ -82,7 +82,7 @@ class ExampleWorkbenchWindow(WorkbenchWindow):
         """
 
         return ExampleEditorManager()
-    
+
     def _menu_bar_manager_default(self):
         """Trait initializer."""
 
@@ -120,7 +120,7 @@ class ExampleWorkbenchWindow(WorkbenchWindow):
 
     def __new_person_action_default(self):
         """Trait initializer."""
-        
+
         # Create the action and secure it with the appropriate permission.
         act = Action(name='New Person', on_perform=self._new_person)
         act = SecureProxy(act, permissions=[NewPersonPerm])

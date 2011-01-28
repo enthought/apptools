@@ -30,14 +30,14 @@ class TraitListContextAdapter(ListContextAdapter):
 
     # The name of the object's trait that provides the list.
     trait_name = Str
-    
+
     ###########################################################################
     # 'Context' interface.
     ###########################################################################
 
     def _get_namespace_name(self):
         """ Returns the name of the context within its own namespace. """
-        
+
         return self.context.namespace_name + '/' + self.trait_name
 
     ###########################################################################
@@ -62,5 +62,5 @@ class TraitListContextAdapter(ListContextAdapter):
             collection = getattr(obj, components[-1])
 
         return collection
-    
+
 #### EOF ######################################################################

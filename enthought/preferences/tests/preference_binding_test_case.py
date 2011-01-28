@@ -21,7 +21,7 @@ PKG = 'enthought.preferences.tests'
 
 def listener(obj, trait_name, old, new):
     """ A useful trait change handler for testing! """
-    
+
     listener.obj = obj
     listener.trait_name = trait_name
     listener.old = old
@@ -44,14 +44,14 @@ class PreferenceBindingTestCase(unittest.TestCase):
 
         # The filename of the example preferences file.
         self.example = resource_filename(PKG, 'example.ini')
-        
+
         return
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
 
         return
-    
+
     ###########################################################################
     # Tests.
     ###########################################################################
@@ -96,9 +96,9 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual('bgcolor', listener.trait_name)
         self.assertEqual('blue', listener.old)
         self.assertEqual('yellow', listener.new)
-        
+
         # Make sure we can set the preference via the preferences node...
-        p.set('acme.ui.bgcolor', 'red') 
+        p.set('acme.ui.bgcolor', 'red')
         self.assertEqual('red', p.get('acme.ui.bgcolor'))
         self.assertEqual('red', acme_ui.bgcolor)
 
@@ -117,7 +117,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
         p.set('acme.ui.ratio', '0.75')
         self.assertEqual('0.75', p.get('acme.ui.ratio'))
         self.assertEqual(0.75, acme_ui.ratio)
-       
+
         return
 
     def test_default_values(self):
@@ -135,13 +135,13 @@ class PreferenceBindingTestCase(unittest.TestCase):
             visible = Bool(True)
 
         acme_ui = AcmeUI()
-        
+
         # Make some bindings.
         bind_preference(acme_ui, 'bgcolor', 'acme.ui.bgcolor')
         bind_preference(acme_ui, 'width',   'acme.ui.width')
         bind_preference(acme_ui, 'ratio',   'acme.ui.ratio')
         bind_preference(acme_ui, 'visible', 'acme.ui.visible')
-            
+
         # Make sure the helper was initialized properly.
         self.assertEqual('blue', acme_ui.bgcolor)
         self.assertEqual(50, acme_ui.width)
@@ -152,10 +152,10 @@ class PreferenceBindingTestCase(unittest.TestCase):
 
     def test_load_and_save(self):
         """ load and save """
-        
+
         p = self.preferences
         p.load(self.example)
-        
+
         class AcmeUI(HasTraits):
             """ The Acme UI class! """
 
@@ -166,13 +166,13 @@ class PreferenceBindingTestCase(unittest.TestCase):
             visible = Bool(False)
 
         acme_ui = AcmeUI()
-        
+
         # Make some bindings.
         bind_preference(acme_ui, 'bgcolor', 'acme.ui.bgcolor')
         bind_preference(acme_ui, 'width',   'acme.ui.width')
         bind_preference(acme_ui, 'ratio',   'acme.ui.ratio')
         bind_preference(acme_ui, 'visible', 'acme.ui.visible')
-            
+
         # Make sure the helper was initialized properly (with the values in
         # the loaded .ini file *not* the trait defaults!).
         self.assertEqual('blue', acme_ui.bgcolor)
@@ -181,7 +181,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual(True, acme_ui.visible)
 
         # Make a change to one of the preference values.
-        p.set('acme.ui.bgcolor', 'yellow') 
+        p.set('acme.ui.bgcolor', 'yellow')
         self.assertEqual('yellow', acme_ui.bgcolor)
         self.assertEqual('yellow', p.get('acme.ui.bgcolor'))
 
@@ -193,15 +193,15 @@ class PreferenceBindingTestCase(unittest.TestCase):
         # Load the preferences again from that file.
         p = set_default_preferences(Preferences())
         p.load(tmp)
-        
+
         acme_ui = AcmeUI()
-        
+
         # Make some bindings.
         bind_preference(acme_ui, 'bgcolor', 'acme.ui.bgcolor')
         bind_preference(acme_ui, 'width',   'acme.ui.width')
         bind_preference(acme_ui, 'ratio',   'acme.ui.ratio')
         bind_preference(acme_ui, 'visible', 'acme.ui.visible')
-        
+
         # Make sure the helper was initialized properly (with the values in
         # the .ini file *not* the trait defaults!).
         self.assertEqual('yellow', acme_ui.bgcolor)
@@ -212,7 +212,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
         # Clean up!
         os.remove(tmp)
         os.removedirs(tmpdir)
-        
+
         return
 
     def test_explicit_preferences(self):
@@ -236,7 +236,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
         # Create an empty preferences node and use that in some of the
         # bindings!
         preferences = Preferences()
-        
+
         # Make some bindings.
         bind_preference(acme_ui, 'bgcolor', 'acme.ui.bgcolor', preferences)
         bind_preference(acme_ui, 'width',   'acme.ui.width')
@@ -272,7 +272,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
                 self.ratio = 3.0
 
                 return
-            
+
         acme_ui = AcmeUI()
         acme_ui.on_trait_change(listener)
 
@@ -299,10 +299,10 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual('3.0', p.get('acme.ui.ratio'))
 
         return
-    
+
 
 # Entry point for stand-alone testing.
 if __name__ == '__main__':
     unittest.main()
-    
+
 #### EOF ######################################################################

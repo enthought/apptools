@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
 #------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ from enthought.pyface.tree.api import NodeType
 # Local imports.
 from context_monitor import ContextMonitor
 
-        
+
 class ContextNodeType(NodeType):
     """ The node type for contexts in a naming system. """
 
@@ -50,7 +50,7 @@ class ContextNodeType(NodeType):
         """ Returns the children of a node. """
 
         return node.obj.list_bindings('')
-        
+
     def get_drag_value(self, node):
         """ Get the value that is dragged for a node. """
 
@@ -72,7 +72,7 @@ class ContextNodeType(NodeType):
 
         # The parent context will NOT be None here (see 'is_editable').
         parent = node.context
-        
+
         return len(text.strip()) > 0 and text not in parent.list_names('')
 
     def set_text(self, node, text):
@@ -86,7 +86,7 @@ class ContextNodeType(NodeType):
 
         # Update the binding.
         node.name = text
-        
+
         return
 
     def get_monitor(self, node):

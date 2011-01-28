@@ -29,12 +29,12 @@ class PyConfigFileTestCase(unittest.TestCase):
         # The filenames of the example preferences files.
         self.example = resource_filename(PKG, 'py_config_example.ini')
         self.example_2 = resource_filename(PKG, 'py_config_example_2.ini')
-        
+
         return
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
-        
+
         return
 
     ###########################################################################
@@ -123,7 +123,7 @@ class PyConfigFileTestCase(unittest.TestCase):
             # Clean up!
             os.remove(tmp)
             os.removedirs(tmpdir)
-        
+
         return
 
     def test_load_multiple_files(self):
@@ -167,7 +167,7 @@ class PyConfigFileTestCase(unittest.TestCase):
 
         # ... and that the new ones can refer to the old ones!
         self.assertEqual(180, config['acme.ui']['blimey'])
-        
+
         return
 
 

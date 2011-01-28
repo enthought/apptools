@@ -59,7 +59,7 @@ class PreferencesHelper(HasTraits):
         # If no specific preferences node is set then we use the package-wide
         # global node.
         return get_default_preferences()
-    
+
     #### Trait change handlers ################################################
 
     def _anytrait_changed(self, trait_name, old, new):
@@ -74,7 +74,7 @@ class PreferencesHelper(HasTraits):
 
     def _preferences_changed(self, old, new):
         """ Static trait change handler. """
-        
+
         # Stop listening to the old preferences node.
         if old is not None:
             old.remove_preferences_listener(
@@ -89,7 +89,7 @@ class PreferencesHelper(HasTraits):
         return
 
     #### Other observer pattern listeners #####################################
-    
+
     def _preferences_changed_listener(self, node, key, old, new):
         """ Listener called when a preference value is changed. """
 
@@ -115,7 +115,7 @@ class PreferencesHelper(HasTraits):
                 logger.warn('DEPRECATED: use "preferences_path" %s' % self)
 
         return path
-            
+
     def _get_value(self, trait_name, value):
         """ Get the actual value to set.
 
@@ -131,7 +131,7 @@ class PreferencesHelper(HasTraits):
         # If the trait type is 'Str' then we just take the raw value.
         if isinstance(handler, Str) or trait.is_str:
             pass
-            
+
         # If the trait type is 'Unicode' then we convert the raw value.
         elif isinstance(handler, Unicode):
             value = unicode(value)
@@ -166,7 +166,7 @@ class PreferencesHelper(HasTraits):
                 key = '%s.%s' % (path, trait_name)
                 value = self._get_value(trait_name, preferences.get(key))
                 traits_to_set[trait_name] = value
-                
+
         self.set(trait_change_notify=notify, **traits_to_set)
 
         # Listen for changes to the node's preferences.

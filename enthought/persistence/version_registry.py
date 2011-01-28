@@ -22,7 +22,7 @@ def get_version(obj):
     various classes and returns a list of tuples of the form
     ((class_name, module), version) in reverse order of the MRO.
     """
-    res = []    
+    res = []
     for cls in inspect.getmro(obj.__class__):
         class_name, module = cls.__name__, cls.__module__
         if module in ['__builtin__']:
@@ -49,7 +49,7 @@ class HandlerRegistry:
     with the state and the version of the state.  The state is
     modified in-place by the handlers.
     """
-    
+
     def __init__(self):
         # The version conversion handlers.
         # Key: (class_name, module), value: handler
@@ -70,7 +70,7 @@ class HandlerRegistry:
         """Unregisters any handlers for a class and module.
         """
         self.handlers.pop((class_name, module))
-        
+
     def update(self, state):
         """Updates the given state using the handlers.  Note that the
         state is modified in-place.
@@ -86,7 +86,7 @@ class HandlerRegistry:
                 pass
 
 
-def _create_registry():    
+def _create_registry():
     """Creates a reload safe, singleton registry.
     """
     registry = None

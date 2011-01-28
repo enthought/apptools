@@ -1,18 +1,18 @@
 #-------------------------------------------------------------------------------
 #
-#  A n row x m column scatter-plot template defined as a test for the template 
+#  A n row x m column scatter-plot template defined as a test for the template
 #  package.
-#  
-#  Written by: David C. Morrill 
+#
+#  Written by: David C. Morrill
 #  (based on the original cp.plot geo_scatter_plot.py file)
-#  
+#
 #  Date: 08/01/2007
-#  
+#
 #  (c) Copy 2007 by Enthought, Inc.
-#  
+#
 #-------------------------------------------------------------------------------
 
-""" A n row x m column scatter-plot template defined as a test for the template 
+""" A n row x m column scatter-plot template defined as a test for the template
     package.
 """
 
@@ -25,28 +25,28 @@ from enthought.traits.api \
 
 from enthought.traits.ui.api \
     import View, VGroup, Item, Label, Theme, TextEditor
-    
+
 from enthought.traits.ui.wx.themed_slider_editor \
     import ThemedSliderEditor
-    
+
 from enthought.traits.ui.wx.themed_text_editor \
     import ThemedTextEditor
-    
+
 from enthought.enable.api \
     import ColorTrait
 
 from enthought.chaco.api \
     import GridPlotContainer, PlotComponent
-    
+
 from enthought.chaco.scatter_markers \
     import marker_trait
-    
+
 from enthought.template.api \
     import MutableTemplate, TRange, TStr, TList, TDerived
-    
+
 from enable_editor \
     import EnableEditor
-    
+
 from scatter_plot \
     import ScatterPlot
 
@@ -62,12 +62,12 @@ TColor = ColorTrait( template = 'copy' )
 #-------------------------------------------------------------------------------
 
 class ScatterPlotNM ( MutableTemplate ):
-    
+
     #-- Template Traits --------------------------------------------------------
-    
+
     # The title of the plot:
     title = TStr( 'NxM Scatter Plots' )
-    
+
     # The type of marker to use.  This is a mapped trait using strings as the
     # keys:
     marker = marker_trait( template = 'copy', event = 'update' )
@@ -85,32 +85,32 @@ class ScatterPlotNM ( MutableTemplate ):
 
     # The color of the outline to draw around the marker
     outline_color = TColor( 'black', event = 'update' )
-    
+
     # The number of rows of plots:
     rows = TRange( 1, 3, 1, event = 'grid' )
-    
+
     # The number of columns of plots:
     columns = TRange( 1, 5, 1, event = 'grid' )
-    
+
     # The contained scatter plots:
     scatter_plots = TList( ScatterPlot )
-    
+
     #-- Derived Traits ---------------------------------------------------------
 
     plot = TDerived
-    
+
     #-- Traits UI Views --------------------------------------------------------
-    
+
     # The scatter plot view:
     template_view = View(
         VGroup(
             Item( 'title',
                   show_label = False,
                   style      = 'readonly',
-                  editor     = ThemedTextEditor( 
+                  editor     = ThemedTextEditor(
                                  theme = Theme( '@GBB', alignment = 'center' ) )
             ),
-            Item( 'plot', 
+            Item( 'plot',
                   show_label = False,
                   resizable  = True,
                   editor     = EnableEditor(),
@@ -119,12 +119,12 @@ class ScatterPlotNM ( MutableTemplate ):
         ),
         resizable = True
     )
-    
+
     # The scatter plot options view:
     options_view = View(
         VGroup(
             VGroup(
-                Label( 'Scatter Plot Options', 
+                Label( 'Scatter Plot Options',
                        item_theme = Theme( '@GBB', alignment = 'center' ) ),
                 show_labels = False
             ),
@@ -144,14 +144,14 @@ class ScatterPlotNM ( MutableTemplate ):
             )
         )
     )
-    
-    #-- ITemplate Interface Implementation ------------------------------------- 
-    
+
+    #-- ITemplate Interface Implementation -------------------------------------
+
     def activate_template ( self ):
         """ Converts all contained 'TDerived' objects to real objects using the
             template traits of the object. This method must be overridden in
             subclasses.
-            
+
             Returns
             -------
             None
@@ -167,33 +167,33 @@ class ScatterPlotNM ( MutableTemplate ):
                 row.append( plot )
                 i += 1
             plots.append( row )
-            
+
         self.plot = GridPlotContainer( shape = ( self.rows, self.columns ) )
         self.plot.component_grid = plots
-        
+
     #-- Default Values ---------------------------------------------------------
-    
+
     def _scatter_plots_default ( self ):
         """ Returns the default value for the scatter plots list.
         """
         plots = []
         for i in range( self.rows * self.columns ):
             plots.append( ScatterPlot() )
-                
-        self._update_plots( plots ) 
-                    
+
+        self._update_plots( plots )
+
         return plots
-        
+
     #-- Trait Event Handlers ---------------------------------------------------
 
     def _update_changed ( self, name, old, new ):
-        """ Handles a plot option being changed. 
+        """ Handles a plot option being changed.
         """
         for sp in self.scatter_plots:
             setattr( sp, name, new )
-            
+
         self.plot = Undefined
-        
+
     def _grid_changed ( self ):
         """ Handles the grid size being changed.
         """
@@ -204,13 +204,13 @@ class ScatterPlotNM ( MutableTemplate ):
         else:
             for j in range( len( plots ), n ):
                 plots.append( ScatterPlot() )
-                
+
         self._update_plots( plots )
-        
+
         self.template_mutated = True
-                
+
     #-- Private Methods --------------------------------------------------------
-    
+
     def _update_plots ( self, plots ):
         """ Update the data sources for all of the current plots.
         """
@@ -226,11 +226,11 @@ class ScatterPlotNM ( MutableTemplate ):
                     desc = desc[:col]
                 sp.value.description = '%s[%d,%d]' % ( desc, r, c )
                 sp.value.optional    = True
-                
+
                 if index is None:
                     index = sp.index
                     index.description = 'Shared Plot Index'
                     index.optional    = True
                 else:
                      sp.index = index
-       
+

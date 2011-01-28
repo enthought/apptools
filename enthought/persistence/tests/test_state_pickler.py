@@ -105,12 +105,12 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(tup[-1]['data']['data']['a'], 't')
         lst = data['list']['data']
         self.assertEqual(lst[:-1], obj.list[:-1])
-        
+
         if isinstance(obj, HasTraits):
             self.assertEqual(lst[-1]['type'], 'instance')
         else:
             self.assertEqual(lst[-1]['data']['data']['a'], 'b')
-            
+
         pure_lst = data['pure_list']['data']
         self.assertEqual(pure_lst, obj.pure_list)
         dct = data['dict']['data']
@@ -226,8 +226,8 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(r.__metadata__['has_instance'], True)
         self.assertEqual(r.a.has_instance, True)
         self.assertEqual(r.a[1].__metadata__['has_instance'], True)
-        
-    
+
+
     def test_pickle_classic(self):
         """Test if classic classes can be pickled."""
         t = TestClassic()
@@ -300,13 +300,13 @@ class TestDictPickler(unittest.TestCase):
         first = []
         state_pickler.set_state(t1, res, ignore=ignore, first=first, last=last)
         # Check everything.
-        self.verify_unpickled(t1, res)        
+        self.verify_unpickled(t1, res)
 
     def test_pickle_traits(self):
         """Test if traited classes can be pickled."""
         t = TestTraits()
         self.set_object(t)
-        
+
         # Generate the dict that is actually pickled.
         state = state_pickler.StatePickler().dump_state(t)
 
@@ -323,7 +323,7 @@ class TestDictPickler(unittest.TestCase):
         """Test if traited classes can be unpickled."""
         t = TestTraits()
         self.set_object(t)
-        
+
         # Get the pickled state.
         res = state_pickler.get_state(t)
         # Check each attribute.
@@ -333,7 +333,7 @@ class TestDictPickler(unittest.TestCase):
         """Test if traited classes' state can be set."""
         t = TestTraits()
         self.set_object(t)
-        
+
         # Get the saved state.
         res = state_pickler.get_state(t)
 
@@ -391,8 +391,8 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(s.a, 'getstate')
         del B.__getstate__
         s = state_pickler.get_state(b)
-        self.assertEqual(s.a, 'dict')        
-        
+        self.assertEqual(s.a, 'dict')
+
 
 def test_suite():
     """Collects all the tests to be run."""

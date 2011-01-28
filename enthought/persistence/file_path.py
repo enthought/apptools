@@ -73,7 +73,7 @@ class FilePath(object):
         # Store it.
         self.rel_pth = ret
 
-    def set_absolute(self, base_f_name):    
+    def set_absolute(self, base_f_name):
         """Sets the absolute file name for the current relative file
         name with respect to the given `base_f_name`.
         """
@@ -82,4 +82,4 @@ class FilePath(object):
         file_name = join(dirname(base_f_name), rel_file_name)
         file_name = os.path.normpath(file_name)
         self.abs_pth = file_name
-    
+

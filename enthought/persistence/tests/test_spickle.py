@@ -56,7 +56,7 @@ class TestStatePickler(unittest.TestCase):
         st = spickle.get_state(f)
         g = spickle.state2object(st)
         self._test_object(g)
-        
+
 
 def test_suite():
     """Collects all the tests to be run."""

@@ -15,7 +15,7 @@ class TraitDictContextAdapter(DictContextAdapter):
 
     # The name of the context within its own namespace.
     namespace_name = Property(Str)
-    
+
     #### 'ContextAdapter' interface ###########################################
 
     # The object that we are adapting.
@@ -32,7 +32,7 @@ class TraitDictContextAdapter(DictContextAdapter):
 
     def _get_namespace_name(self):
         """ Returns the name of the context within its own namespace. """
-        
+
         return self.context.namespace_name + '/' + self.trait_name
 
 #### EOF ######################################################################

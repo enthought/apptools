@@ -21,7 +21,7 @@ class AcmePreferencesPage(PreferencesPage):
     """ A preference page for the Acme preferences. """
 
     #### 'IPreferencesPage' interface #########################################
-    
+
     # The page's category (e.g. 'General/Appearence'). The empty string means
     # that this is a top-level page.
     category = ''
@@ -42,7 +42,7 @@ class AcmePreferencesPage(PreferencesPage):
     height = Int(600)
 
     #### Traits UI views ######################################################
-        
+
     view = View('width', 'height')
 
 
@@ -50,7 +50,7 @@ class AcmeWorkbenchPreferencesPage(PreferencesPage):
     """ A preference page for the Acme workbench preferences. """
 
     #### 'IPreferencesPage' interface #########################################
-    
+
     # The page's category (e.g. 'General/Appearence'). The empty string means
     # that this is a top-level page.
     category = 'Acme'

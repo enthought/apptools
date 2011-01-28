@@ -42,7 +42,7 @@ tree_editor = TreeEditor(
 
 class PreferencesHelpWindow(HasTraits):
     """ Container class to present a view with string info. """
-    
+
     def traits_view(self):
         """ Default view to show for this class. """
         args = []
@@ -58,20 +58,20 @@ class PreferencesHelpWindow(HasTraits):
             if name != 'trait_added' and name != 'trait_modified':
                 to_show[name] = trait_obj.help
         for name in to_show:
-                args.append(Item(name, 
+                args.append(Item(name,
                                  style='readonly',
                                  editor=HTMLEditor()
                                  ))
-                
+
         view = View(*args, **kw_args)
         return view
-    
+
 
 class PreferencesManagerHandler(Handler):
     """ The traits UI handler for the preferences manager. """
-    
+
     model = Instance(HasTraits)
-    
+
     ###########################################################################
     # 'Handler' interface.
     ###########################################################################
@@ -79,7 +79,7 @@ class PreferencesManagerHandler(Handler):
     def apply(self, info):
         """ Handle the **Apply** button being clicked. """
 
-        info.object.apply()        
+        info.object.apply()
         return
 
     def init(self, info):
@@ -96,10 +96,10 @@ class PreferencesManagerHandler(Handler):
 
         if is_ok:
             info.object.apply()
-            
+
         return super(PreferencesManagerHandler, self).close(info, is_ok)
-    
-    
+
+
     def preferences_help(self, info):
         """ Custom preferences help panel. The Traits help doesn't work."""
         current_page = self.model.selected_page
@@ -107,12 +107,12 @@ class PreferencesManagerHandler(Handler):
         for trait_name, trait_obj in current_page.traits().items():
             if hasattr(trait_obj, 'show_help') and trait_obj.show_help:
                 to_show[trait_name] = trait_obj.help
-        
+
         help_obj = PreferencesHelpWindow(**to_show)
         help_obj.edit_traits(kind='livemodal')
         return
 
-    
+
     ###########################################################################
     # Private interface.
     ###########################################################################
@@ -121,7 +121,7 @@ class PreferencesManagerHandler(Handler):
         """ Select the first node in the tree (if there is one). """
 
         root = info.object.root
-        
+
         if len(root.children) > 0:
             node = root.children[0]
             info.object.selected_page = node.page
@@ -140,34 +140,34 @@ class PreferencesManager(HasTraits):
 
     # The preferences node currently selected in the tree.
     selected_node = Instance(PreferencesNode)
-    
+
     # The preferences associated with the currently selected preferences node.
     selected_page = Instance(PreferencesPage)
-    
+
     # Should the custom Info button be shown?  If this is True, then an
     # Info button is shown that pops up a trait view with an HTML entry
-    # for each trait of the *selected_page* with the metadata 'show_help' 
-    # set to True. 
+    # for each trait of the *selected_page* with the metadata 'show_help'
+    # set to True.
     show_help = Bool(False)
-    
+
     # Should the Apply button be shown?
     show_apply = Bool(False)
-    
+
     #### Traits UI views ######################################################
 
     def traits_view(self):
         """ Default traits view for this class. """
-        
+
         help_action = Action(name = 'Info', action = 'preferences_help')
-        
+
         buttons = ['OK', 'Cancel']
-        
+
         if self.show_apply:
             buttons = ['Apply'] + buttons
         if self.show_help:
             buttons = [help_action] + buttons
-        
-        
+
+
         # A tree editor for preferences nodes.
         tree_editor = TreeEditor(
             nodes = [
@@ -189,7 +189,7 @@ class PreferencesManager(HasTraits):
             selected   = 'selected_node',
             show_icons = False
         )
-        
+
         view = View(
             HSplit(
                 Item(
@@ -198,7 +198,7 @@ class PreferencesManager(HasTraits):
                     show_label = False,
                     width      = 250,
                 ),
-    
+
                 Item(
                     name       = 'selected_page',
                     #editor     = WidgetEditor(),
@@ -207,7 +207,7 @@ class PreferencesManager(HasTraits):
                     style      = 'custom',
                 ),
             ),
-    
+
             buttons   = buttons,
             handler   = PreferencesManagerHandler(model=self),
             resizable = True,
@@ -250,7 +250,7 @@ class PreferencesManager(HasTraits):
             return cmp(len_a, len_b)
 
         self.pages.sort(sort)
-        
+
         # Create a corresponding preference node hierarchy (the root of the
         # hierachy is NOT displayed in the preference dialog).
         #
@@ -269,16 +269,16 @@ class PreferencesManager(HasTraits):
         return root
 
     #### Trait change handlers ################################################
-    
+
     def _selection_changed(self, new_selection):
         self.selected_node = new_selection
-    
-    
+
+
     def _selected_node_changed(self, new):
         """ Static trait change handler. """
         if self.selected_node:
             self.selected_page = self.selected_node.page
-        
+
         return
 
     #### Methods ##############################################################
@@ -290,7 +290,7 @@ class PreferencesManager(HasTraits):
             page.apply()
 
         return
-    
+
     ###########################################################################
     # Private interface.
     ###########################################################################
@@ -299,7 +299,7 @@ class PreferencesManager(HasTraits):
         """ Return the page's parent preference node. """
 
         parent = root
-        
+
         if len(page.category) > 0:
             components = page.category.split('/')
             for component in components:

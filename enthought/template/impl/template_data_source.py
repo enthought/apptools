@@ -1,14 +1,14 @@
 #-------------------------------------------------------------------------------
-#  
+#
 #  A concrete implementation of the ITemplateDataSource interface based on the
 #  implementation of the TemplateDataName class.
-#  
+#
 #  Write by: David C. Morrill
-#  
+#
 #  Date: 07/30/2007
-#  
+#
 #  (c) Copyright 2007 by Enthought, Inc.
-#  
+#
 #-------------------------------------------------------------------------------
 
 """ A concrete implementation of the ITemplateDataSource interface based on the
@@ -21,13 +21,13 @@
 
 from enthought.traits.api \
     import implements
-    
+
 from enthought.template.template_data_name \
     import TemplateDataName
-    
+
 from enthought.template.itemplate_data_source \
     import ITemplateDataSource
-    
+
 #-------------------------------------------------------------------------------
 #  'TemplateDataSource' class:
 #-------------------------------------------------------------------------------
@@ -38,16 +38,16 @@ class TemplateDataSource ( TemplateDataName ):
     """
 
     implements( ITemplateDataSource )
-    
+
     #-- ITemplateDataSource Interface Implementation ---------------------------
-        
+
     def name_from_data_source ( self ):
         """ Allows the object to provide a description of the possibly optional
             data binding it requires.
-            
+
             Returns
             -------
-            A **TemplateDataName** object describing the binding the data 
+            A **TemplateDataName** object describing the binding the data
             source object requires.
         """
         return self

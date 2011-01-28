@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
 #------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ def explore(obj):
 
     explorer = Explorer(root=root, size=(1200, 400))
     explorer.open()
-    
+
     return
 
 
@@ -41,7 +41,7 @@ class Explorer(SplitApplicationWindow):
     #### 'Window' interface ###################################################
 
     title = Str('Naming System Explorer')
-    
+
     #### 'SplitApplicationWindow' interface ###################################
 
     # The direction in which the panel is split.
@@ -52,7 +52,7 @@ class Explorer(SplitApplicationWindow):
 
     # The root binding (usually a binding to a context!).
     root = Instance(Binding)
-    
+
     ###########################################################################
     # Protected 'SplitApplicationWindow' interface.
     ###########################################################################
@@ -70,14 +70,14 @@ class Explorer(SplitApplicationWindow):
     ###########################################################################
     # Private interface.
     ###########################################################################
-    
+
     def _create_tree(self, parent, root):
         """ Creates the tree. """
 
         self._tree = tree = NamingTree(parent, root=root)
-        
+
         return tree.control
-    
+
     def _create_python_shell(self, parent):
         """ Creates the Python shell. """
 
@@ -88,10 +88,10 @@ class Explorer(SplitApplicationWindow):
         python_shell.bind('w', self._tree)
         python_shell.bind('window', self)
         python_shell.bind('explore', explore)
-        
+
         # Execute useful commands to bind useful names ;^)
         python_shell.execute_command('from enthought.naming.api import *')
-        
+
         return python_shell.control
 
 ##### EOF #####################################################################

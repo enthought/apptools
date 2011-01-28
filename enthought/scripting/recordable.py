@@ -20,9 +20,9 @@ def recordable(func):
     set via a `set_recorder` function call.
 
     This is almost entirely copied from the
-    enthought.appscripting.scriptable.scriptable decorator.  
+    enthought.appscripting.scriptable.scriptable decorator.
     """
-    
+
     def _wrapper(*args, **kw):
         """A wrapper returned to replace the decorated function."""
         global _outermost_call

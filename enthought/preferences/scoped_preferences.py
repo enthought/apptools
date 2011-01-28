@@ -29,12 +29,12 @@ class ScopedPreferences(Preferences):
     after the last '/'.
 
     e.g. A preference path might look like this::
-    
+
     'project/My Project/my.plugin.id/acme.ui.bgcolor'
-    
+
     The scope is           'project'.
     The scope context is   'My Project/my.plugin.id'
-    The preference path is 'acme.ui.bgcolor' 
+    The preference path is 'acme.ui.bgcolor'
 
     There is one drawback to this scheme. If you want to access a scope node
     itself via the 'clear', 'keys', 'node', 'node_exists' or 'node_names'
@@ -57,7 +57,7 @@ class ScopedPreferences(Preferences):
       scoped.get_scope('application')
 
     and then call whatever methods you like on it!
-      
+
     """
 
     #### 'ScopedPreferences' interface ########################################
@@ -65,11 +65,11 @@ class ScopedPreferences(Preferences):
     # The scopes (in the order that they should be searched when looking for
     # preferences).
     scopes = List(IPreferences)
-    
+
     ###########################################################################
     # 'IPreferences' interface.
     ###########################################################################
-    
+
     #### Methods where 'path' refers to a preference ####
 
     def get(self, path, default=None, inherit=False):
@@ -83,7 +83,7 @@ class ScopedPreferences(Preferences):
         if self._path_contains_scope(path):
             scope_name, path = self._parse_path(path)
             nodes = [self._get_scope(scope_name)]
-            
+
         # Otherwise, try each scope in turn.
         else:
             nodes = self.scopes
@@ -96,7 +96,7 @@ class ScopedPreferences(Preferences):
 
             else:
                 value = default
-                
+
         return value
 
     def remove(self, path):
@@ -118,7 +118,7 @@ class ScopedPreferences(Preferences):
         node.remove(path)
 
         return
-        
+
     def set(self, path, value):
         """ Set the value of the preference at the specified path. """
 
@@ -285,7 +285,7 @@ class ScopedPreferences(Preferences):
 
         if file_or_filename is None and len(self.filename) > 0:
             file_or_filename = self.filename
-            
+
         node = self.scopes[0]
         node.load(file_or_filename)
 
@@ -313,14 +313,14 @@ class ScopedPreferences(Preferences):
     ###########################################################################
     # 'ScopedPreferences' interface.
     ###########################################################################
-    
+
     def _scopes_default(self):
         """ Trait initializer. """
-        
+
         # The application scope is a persistent scope.
         application_scope = Preferences(
             name     = 'application',
-            filename = join(ETSConfig.get_application_home(create=False), 
+            filename = join(ETSConfig.get_application_home(create=False),
                             'preferences.ini')
         )
 
@@ -344,14 +344,14 @@ class ScopedPreferences(Preferences):
             scope = None
 
         return scope
-        
+
     ###########################################################################
     # Private interface.
     ###########################################################################
 
     def _get(self, path, default, nodes, inherit):
         """ Get a preference from a list of nodes. """
-        
+
         for node in nodes:
             value = node.get(path, Undefined, inherit)
             if value is not Undefined:
@@ -379,7 +379,7 @@ class ScopedPreferences(Preferences):
         """ Return True if the path contains a scope component. """
 
         return '/' in path
-    
+
     def _parse_path(self, path):
         """ 'Parse' the path into two parts, the scope name and the rest! """
 
@@ -396,13 +396,13 @@ class ScopedPreferences(Preferences):
 
         if indent == '':
             print
-            
+
         print indent, 'Node(%s)' % self.name, self._preferences
         indent += '  '
 
         for child in self.scopes:
             child.dump(indent)
-        
+
         return
-    
+
 #### EOF ######################################################################

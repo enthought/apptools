@@ -30,5 +30,5 @@ class ListContextAdapterFactory(ContextAdapterFactory):
         )
 
         return adapter
-    
+
 #### EOF ######################################################################

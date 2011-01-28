@@ -11,7 +11,7 @@ class IPreferences(Interface):
     # The absolute path to this node from the root node (the empty string if
     # this node *is* the root node).
     path = Str
-    
+
     # The parent node (None if this node *is* the root node).
     parent = Instance('IPreferences')
 
@@ -28,7 +28,7 @@ class IPreferences(Interface):
         exist) then return the default value.
 
         Preference values are *always* returned as strings.
-        
+
         e.g::
 
           preferences.set('acme.ui.bgcolor', 'blue')
@@ -51,7 +51,7 @@ class IPreferences(Interface):
           'acme.ui.bgcolor'
           'acme.bgcolor'
           'bgcolor'
-        
+
         Raise a 'ValueError' exception if the path is the empty string.
 
         """
@@ -67,7 +67,7 @@ class IPreferences(Interface):
         e.g.::
 
           preferences.remove('acme.ui.bgcolor')
-          
+
         """
 
     def set(self, path, value):
@@ -90,7 +90,7 @@ class IPreferences(Interface):
           preferences.get('acme.ui.visible') -> 'True'
 
         Raise a 'ValueError' exception if the path is the empty string.
-        
+
         """
 
     #### Methods where 'path' refers to a node ####
@@ -110,9 +110,9 @@ class IPreferences(Interface):
         Or to clear the preferences of a node at a given path::
 
           preferences.clear('acme.ui')
-          
+
         """
-    
+
     def keys(self, path=''):
         """ Return the preference keys of the node at the specified path.
 
@@ -122,7 +122,7 @@ class IPreferences(Interface):
         e.g::
 
           keys = preferences.keys('acme.ui')
-          
+
         """
 
     def node(self, path=''):
@@ -136,7 +136,7 @@ class IPreferences(Interface):
 
           node = preferences.node('acme.ui')
           bgcolor = node.get('bgcolor')
-          
+
         """
 
     def node_exists(self, path=''):
@@ -147,7 +147,7 @@ class IPreferences(Interface):
         e.g::
 
           exists = preferences.exists('acme.ui')
-          
+
         """
 
     def node_names(self, path=''):
@@ -159,7 +159,7 @@ class IPreferences(Interface):
         e.g::
 
           names = preferences.node_names('acme.ui')
-          
+
         """
 
     #### Persistence methods ####
@@ -170,5 +170,5 @@ class IPreferences(Interface):
         This includes any changes to the node's descendants.
 
         """
-        
+
 #### EOF ######################################################################

@@ -43,7 +43,7 @@ class FooToBarAdapterFactory(AdapterFactory):
 
     # The type of object that the factory can adapt.
     adaptee_class = Foo
-    
+
     # The adapter class (the class that adapts the adaptee to the target
     # class).
     adapter_class = FooToBarAdapter
@@ -63,7 +63,7 @@ class SubOfFooToBarAdapterFactory(AdapterFactory):
 
     # The type of object that the factory can adapt.
     adaptee_class = SubOfFoo
-    
+
     # The adapter class (the class that adapts the adaptee to the target
     # class).
     adapter_class = SubOfFooToBarAdapter
@@ -78,7 +78,7 @@ class BarFactory(Factory):
 
     def create(self, target_class, *args, **kw):
         return Bar(*args, **kw)
-    
+
 
 class TypeManagerTestCase(unittest.TestCase):
     """ Tests the type manager. """
@@ -92,14 +92,14 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # An empty type manager.
         self.type_manager = TypeManager()
-                       
+
         return
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
-        
+
         return
-    
+
     ###########################################################################
     # Tests.
     ###########################################################################
@@ -165,7 +165,7 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # The factory.
         factory = FooToBarAdapterFactory()
-        
+
         # Register an adapter Foo->Bar on the INSTANCE (this one should take
         # precedence).
         self.type_manager.register_instance_adapters(factory, foo)
@@ -187,13 +187,13 @@ class TypeManagerTestCase(unittest.TestCase):
         self.assertEqual(bar, None)
 
         return
-        
+
     def test_adapter_on_class(self):
         """ an adapter registered on an object's actual class. """
 
         # Register an adapter Foo->Bar.
         self.type_manager.register_type_adapters(FooToBarAdapterFactory(), Foo)
-        
+
         # Create a Foo.
         foo = Foo(name='fred')
 
@@ -201,7 +201,7 @@ class TypeManagerTestCase(unittest.TestCase):
         bar = self.type_manager.object_as(foo, Bar)
         self.assertNotEqual(bar, None)
         self.assertEqual(bar.blargle(), 'Foo.foogle.fred')
-        
+
         return
 
     def test_adapter_on_base_class(self):
@@ -209,7 +209,7 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # Register an adapter Foo->Bar.
         self.type_manager.register_type_adapters(FooToBarAdapterFactory(), Foo)
-        
+
         # Create an instance of a class derived from Foo.
         sub = SubOfFoo(name='fred')
 
@@ -217,7 +217,7 @@ class TypeManagerTestCase(unittest.TestCase):
         bar = self.type_manager.object_as(sub, Bar)
         self.assertNotEqual(bar, None)
         self.assertEqual(bar.blargle(), 'Sub.foogle.fred')
-        
+
         return
 
     def test_ignore_adapter_on_class(self):
@@ -227,7 +227,7 @@ class TypeManagerTestCase(unittest.TestCase):
         self.type_manager.register_type_adapters(
             SubOfFooToBarAdapterFactory(), Foo
         )
-        
+
         # Create a Foo.
         foo = Foo(name='fred')
 
@@ -236,7 +236,7 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # There should be no way to adapt a Foo to a Bar.
         self.assertEqual(bar, None)
-        
+
         return
 
     def test_ignore_adapter_on_derived_class(self):
@@ -246,7 +246,7 @@ class TypeManagerTestCase(unittest.TestCase):
         self.type_manager.register_type_adapters(
             FooToBarAdapterFactory(), SubOfFoo
         )
-        
+
         # Create a Foo.
         foo = Foo(name='fred')
 
@@ -255,17 +255,17 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # There should be no way to adapt a Foo to a Bar.
         self.assertEqual(bar, None)
-        
+
         return
 
     def test_unregister_adapter(self):
         """ unregister an adapter. """
 
         factory = FooToBarAdapterFactory()
-        
+
         # Register an adapter Foo->Bar.
         self.type_manager.register_type_adapters(factory, Foo)
-        
+
         # Create a Foo.
         foo = Foo(name='fred')
 
@@ -325,7 +325,7 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # Make sure that the hook was NOT called.
         self.assertEqual(len(l), 1)
-        
+
         return
 
     def test_post_hook(self):
@@ -351,7 +351,7 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # Make sure that the hook was NOT called.
         self.assertEqual(foo.foogle(), 'Foo.foogle.fred')
-        
+
         return
 
     def test_pre_hook_on_inherited_method(self):
@@ -395,7 +395,7 @@ class TypeManagerTestCase(unittest.TestCase):
         # 'EmptySubOfFoo'(since it didn't override it in the first place).
         method = EmptySubOfFoo.__dict__.get('foogle')
         self.assertEqual(method, None)
-        
+
         return
 
     def test_type_manager_hierarchy(self):
@@ -403,7 +403,7 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # Register an adapter Foo->Bar.
         self.type_manager.register_type_adapters(FooToBarAdapterFactory(), Foo)
-        
+
         # Create an empy type manager with the main type manager as its
         # parent.
         type_manager = TypeManager(parent=self.type_manager)
@@ -417,5 +417,5 @@ class TypeManagerTestCase(unittest.TestCase):
         self.assertEqual(bar.blargle(), 'Foo.foogle.fred')
 
         return
-        
+
 #### EOF ######################################################################

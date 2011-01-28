@@ -35,7 +35,7 @@ class TypeManager(HasTraits):
     # type managers. If a type manager fails to adapt or create an object of
     # some target class then it will give its parent a chance to do so.
     parent = Instance('TypeManager')
-    
+
     # The type system used by the manager (it determines 'is_a' relationships
     # and type MROs etc).
     #
@@ -46,7 +46,7 @@ class TypeManager(HasTraits):
 
     # The adapter manager looks after errr, all adapters.
     _adapter_manager = Instance(AdapterManager)
-    
+
     ###########################################################################
     # 'TypeManager' interface.
     ###########################################################################
@@ -57,9 +57,9 @@ class TypeManager(HasTraits):
         """ Returns the adapter manager. """
 
         return self._adapter_manager
-    
+
     #### Methods ##############################################################
-    
+
     def object_as(self, obj, target_class, *args, **kw):
         """ Adapts or creates an object of the target class.
 
@@ -84,7 +84,7 @@ class TypeManager(HasTraits):
         # If this type manager couldn't do the job, then give its parent a go!
         if result is None and self.parent is not None:
             result = self.parent.object_as(obj, target_class, *args, **kw)
-            
+
         return result
 
     # Adapters.
@@ -98,12 +98,12 @@ class TypeManager(HasTraits):
         self._adapter_manager.register_adapters(factory, adaptee_class)
 
         return
-        
+
     def unregister_adapters(self, factory):
         """ Unregisters an adapter factory. """
 
         self._adapter_manager.unregister_adapters(factory)
-                
+
         return
 
     def register_instance_adapters(self, factory, obj):
@@ -117,7 +117,7 @@ class TypeManager(HasTraits):
         self._adapter_manager.register_instance_adapters(factory, obj)
 
         return
-    
+
     def unregister_instance_adapters(self, factory, obj):
         """ Unregisters an adapter factory for an individual instance.
 
@@ -140,12 +140,12 @@ class TypeManager(HasTraits):
         self._adapter_manager.register_type_adapters(factory, adaptee_class)
 
         return
-        
+
     def unregister_type_adapters(self, factory):
         """ Unregisters an adapter factory. """
 
         self._adapter_manager.unregister_type_adapters(factory)
-                
+
         return
 
     # Categories.
@@ -159,7 +159,7 @@ class TypeManager(HasTraits):
         klass.add_trait_category(category_class)
 
         return
-    
+
     # Hooks.
     #
     # Currently, there is no technical reason why we have these convenience
@@ -169,28 +169,28 @@ class TypeManager(HasTraits):
         """ Adds a pre-hook to method 'method_name' on class 'klass. """
 
         add_pre(klass, method_name, callable)
-        
+
         return
 
     def add_post(self, klass, method_name, callable):
         """ Adds a post-hook to method 'method_name' on class 'klass. """
-        
+
         add_post(klass, method_name, callable)
-        
+
         return
 
     def remove_pre(self, klass, method_name, callable):
         """ Removes a pre-hook to method 'method_name' on class 'klass. """
-        
+
         remove_pre(klass, method_name, callable)
-        
+
         return
 
     def remove_post(self, klass, method_name, callable):
         """ Removes a post-hook to method 'method_name' on class 'klass. """
-        
+
         remove_post(klass, method_name, callable)
-        
+
         return
 
     ###########################################################################

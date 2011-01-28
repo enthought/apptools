@@ -93,7 +93,7 @@ def load_build_with_meta_data(self):
     # Call the standard load_build() method
     return self.load_build()
 
-    
+
 ##############################################################################
 # class 'NewUnpickler'
 ##############################################################################
@@ -160,12 +160,12 @@ class NewUnpickler(Unpickler):
                 except StopIteration:
                     generators.remove((o, g))
 
-    # Make this a class method since dispatch is a class variable. 
-    # Otherwise, supposing the initial sweet_pickle.load call (which would 
-    # have overloaded the load_build method) makes a pickle.load call at some 
-    # point, we would have the dispatch still pointing to 
-    # NewPickler.load_build whereas the object being passed in will be an 
-    # Unpickler instance, causing a TypeError. 
+    # Make this a class method since dispatch is a class variable.
+    # Otherwise, supposing the initial sweet_pickle.load call (which would
+    # have overloaded the load_build method) makes a pickle.load call at some
+    # point, we would have the dispatch still pointing to
+    # NewPickler.load_build whereas the object being passed in will be an
+    # Unpickler instance, causing a TypeError.
     def load_build(cls, obj):
         # Just save the instance in the list of objects.
         if isinstance(obj, NewUnpickler):
@@ -239,7 +239,7 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
             specified module.
 
             Overridden here to:
-                
+
             - Allow updaters to redirect to a different class, possibly
               within a different module.
             - Ensure that any setstate hooks for the class are called

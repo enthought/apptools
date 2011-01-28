@@ -1,18 +1,18 @@
 #-------------------------------------------------------------------------------
 #
-#  A simple dual scatter-plot template defined as a test for the template 
+#  A simple dual scatter-plot template defined as a test for the template
 #  package.
-#  
-#  Written by: David C. Morrill 
+#
+#  Written by: David C. Morrill
 #  (based on the original cp.plot geo_scatter_plot.py file)
-#  
+#
 #  Date: 08/01/2007
-#  
+#
 #  (c) Copy 2007 by Enthought, Inc.
-#  
+#
 #-------------------------------------------------------------------------------
 
-""" A simple dual scatter-plot template defined as a test for the template 
+""" A simple dual scatter-plot template defined as a test for the template
     package.
 """
 
@@ -25,28 +25,28 @@ from enthought.traits.api \
 
 from enthought.traits.ui.api \
     import View, VGroup, Item, Label, Theme, TextEditor
-    
+
 from enthought.traits.ui.wx.themed_slider_editor \
     import ThemedSliderEditor
-    
+
 from enthought.traits.ui.wx.themed_text_editor \
     import ThemedTextEditor
-    
+
 from enthought.enable.api \
     import ColorTrait
 
 from enthought.chaco.api \
     import HPlotContainer
-    
+
 from enthought.chaco.scatter_markers \
     import marker_trait
-    
+
 from enthought.template.api \
     import Template, TRange, TStr, TInstance, TDerived
-    
+
 from enable_editor \
     import EnableEditor
-    
+
 from scatter_plot \
     import ScatterPlot
 
@@ -62,12 +62,12 @@ TColor = ColorTrait( template = 'copy' )
 #-------------------------------------------------------------------------------
 
 class ScatterPlot2 ( Template ):
-    
+
     #-- Template Traits --------------------------------------------------------
-    
+
     # The title of the plot:
     title = TStr( 'Dual Scatter Plots' )
-    
+
     # The type of marker to use.  This is a mapped trait using strings as the
     # keys:
     marker = marker_trait( template = 'copy', event = 'update' )
@@ -85,30 +85,30 @@ class ScatterPlot2 ( Template ):
 
     # The color of the outline to draw around the marker
     outline_color = TColor( 'black', event = 'update' )
-    
+
     # The amount of space between plots:
     spacing = TRange( 0.0, 20.0, 0.0 )
-    
+
     # The contained scatter plots:
     scatter_plot_1 = TInstance( ScatterPlot, () )
     scatter_plot_2 = TInstance( ScatterPlot, () )
-    
+
     #-- Derived Traits ---------------------------------------------------------
 
     plot = TDerived
-    
+
     #-- Traits UI Views --------------------------------------------------------
-    
+
     # The scatter plot view:
     template_view = View(
         VGroup(
             Item( 'title',
                   show_label = False,
                   style      = 'readonly',
-                  editor     = ThemedTextEditor( 
+                  editor     = ThemedTextEditor(
                                  theme = Theme( '@GBB', alignment = 'center' ) )
             ),
-            Item( 'plot', 
+            Item( 'plot',
                   show_label = False,
                   resizable  = True,
                   editor     = EnableEditor(),
@@ -117,12 +117,12 @@ class ScatterPlot2 ( Template ):
         ),
         resizable = True
     )
-    
+
     # The scatter plot options view:
     options_view = View(
         VGroup(
             VGroup(
-                Label( 'Scatter Plot Options', 
+                Label( 'Scatter Plot Options',
                        item_theme = Theme( '@GBB', alignment = 'center' ) ),
                 show_labels = False
             ),
@@ -141,14 +141,14 @@ class ScatterPlot2 ( Template ):
             )
         )
     )
-    
-    #-- ITemplate Interface Implementation ------------------------------------- 
-    
+
+    #-- ITemplate Interface Implementation -------------------------------------
+
     def activate_template ( self ):
         """ Converts all contained 'TDerived' objects to real objects using the
             template traits of the object. This method must be overridden in
             subclasses.
-            
+
             Returns
             -------
             None
@@ -160,38 +160,38 @@ class ScatterPlot2 ( Template ):
             self.plot.add( *plots )
         elif len( plots ) == 1:
             self.plot = plots[0]
-        
+
     #-- Default Values ---------------------------------------------------------
-    
+
     def _scatter_plot_1_default ( self ):
         """ Returns the default value for the first scatter plot.
         """
         result = ScatterPlot()
         result.index.description  = 'Shared Plot Index'
         result.value.description += ' 1'
-        
+
         return result
-    
+
     def _scatter_plot_2_default ( self ):
         """ Returns the default value for the second scatter plot.
         """
         result = ScatterPlot( index = self.scatter_plot_1.index )
         result.value.description += ' 2'
         result.value.optional = True
-        
+
         return result
-        
+
     #-- Trait Event Handlers ---------------------------------------------------
 
     def _update_changed ( self, name, old, new ):
-        """ Handles a plot option being changed. 
+        """ Handles a plot option being changed.
         """
         setattr( self.scatter_plot_1, name, new )
         setattr( self.scatter_plot_2, name, new )
         self.plot = Undefined
-        
+
     def _spacing_changed ( self, spacing ):
         """ Handles the spacing between plots being changed.
         """
         self.plot = Undefined
-        
+

@@ -16,7 +16,7 @@ class PyConfigFile(dict):
 
         a) a filename
         b) a file-like object that must be open for reading
-        
+
         """
 
         # A dictionary containing one namespace instance for each root of the
@@ -47,7 +47,7 @@ class PyConfigFile(dict):
     ###########################################################################
     # 'PyConfigFile' interface.
     ###########################################################################
-    
+
     def load(self, file_or_filename):
         """ Load the configuration from a file.
 
@@ -88,7 +88,7 @@ class PyConfigFile(dict):
             self._parse_section(section_name, section_body)
 
         f.close()
-        
+
         return
 
     def save(self, file_or_filename):
@@ -107,9 +107,9 @@ class PyConfigFile(dict):
             self._write_section(f, section_name, section_data)
 
         f.close()
-        
+
         return
-            
+
     ###########################################################################
     # Private interface.
     ###########################################################################
@@ -123,7 +123,7 @@ class PyConfigFile(dict):
 
         if isinstance(file_or_filename, basestring):
             f = file(file_or_filename, mode)
-                
+
         else:
             f = file_or_filename
 
@@ -139,7 +139,7 @@ class PyConfigFile(dict):
             namespace = getattr(namespace, component)
 
         return namespace
-    
+
     def _parse_section(self, section_name, section_body):
         """ Parse a section.
 
@@ -216,13 +216,13 @@ class _Namespace(object):
 
     We build up a dotted namespace so that config values can refer to other
     config values using familiar Python syntax.
-    
+
     e.g.
 
     [acme.foo]
     bar = 1
     baz = 99
-    
+
     [acme.blargle]
     blitzel = acme.foo.bar + acme.foo.baz
 
@@ -238,9 +238,9 @@ class _Namespace(object):
         # This looks a little weird, but we are simply creating the next level
         # in the namespace hierarchy 'on-demand'.
         namespace = self.__dict__[name] = _Namespace()
-        
+
         return namespace
-    
+
     ###########################################################################
     # Debugging interface.
     ###########################################################################
@@ -257,5 +257,5 @@ class _Namespace(object):
                 print indent, name, ':', value
 
         return
-    
+
 #### EOF ######################################################################

@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought IO package component>
 #------------------------------------------------------------------------------
@@ -107,7 +107,7 @@ class FolderTestCase(unittest.TestCase):
 
         init = File('data/package/__init__.py')
         init.create_file()
-        
+
         self.assert_(os.path.abspath(os.path.curdir) in f.absolute_path)
         self.assertEqual(len(f.children), 1)
         self.assertEqual(f.ext, '')
@@ -121,7 +121,7 @@ class FolderTestCase(unittest.TestCase):
         self.assertEqual(f.parent.path, 'data')
         self.assertEqual(f.path, 'data/package')
         self.assert_(os.path.abspath(os.path.curdir) in f.url)
-        
+
         return
 
     def test_copy(self):
@@ -134,7 +134,7 @@ class FolderTestCase(unittest.TestCase):
         f.create_folder()
         self.assertEqual(f.exists, True)
         self.failUnlessRaises(ValueError, f.create_folder)
-        
+
         self.assertEqual(len(f.children), 0)
         self.assertEqual(f.ext, '')
         self.assertEqual(f.is_file, False)
@@ -149,7 +149,7 @@ class FolderTestCase(unittest.TestCase):
 
         f.copy(g)
         self.assertEqual(g.exists, True)
-        
+
         self.assertEqual(len(g.children), 0)
         self.assertEqual(g.ext, '')
         self.assertEqual(g.is_file, False)
@@ -164,12 +164,12 @@ class FolderTestCase(unittest.TestCase):
 
         g = File('data/bogus_copy')
         self.assertEqual(g.exists, False)
-        
+
         f.copy(g)
         self.assertEqual(g.exists, False)
 
         return
-    
+
     def test_create_folder(self):
         """ folder creation """
 
@@ -219,7 +219,7 @@ class FolderTestCase(unittest.TestCase):
         f.create_folder()
         self.assertEqual(f.exists, True)
         self.failUnlessRaises(ValueError, f.create_folder)
-        
+
         self.assertEqual(len(f.children), 0)
         self.assertEqual(f.ext, '')
         self.assertEqual(f.is_file, False)
@@ -240,5 +240,5 @@ class FolderTestCase(unittest.TestCase):
         self.assertEqual(f.exists, False)
 
         return
-    
+
 #### EOF ######################################################################

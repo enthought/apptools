@@ -21,7 +21,7 @@ class TraitListContextAdapterFactory(ContextAdapterFactory):
 
     # The name of the trait (on the adaptee) that provides the trait list.
     trait_name = Str
-    
+
     ###########################################################################
     # Protected 'AbstractAdapterFactory' interface.
     ###########################################################################

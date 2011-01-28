@@ -48,7 +48,7 @@ class AbstractAdapterFactory(HasTraits):
 
         else:
             adapter = None
-            
+
         return adapter
 
     ###########################################################################
@@ -84,5 +84,5 @@ class AbstractAdapterFactory(HasTraits):
         )
 
         return message
-    
+
 #### EOF ######################################################################

@@ -1,8 +1,8 @@
-""" (Pyface) Action for displaying a help doc. 
+""" (Pyface) Action for displaying a help doc.
 
     :Copyright: 2008, Enthought Inc.
     :License: BSD
-    :Author: Janet Swisher    
+    :Author: Janet Swisher
 """
 # This software is provided without warranty under the terms of the BSD
 # license included in AppTools/trunk/LICENSE.txt and may be redistributed only
@@ -15,7 +15,7 @@
 import logging
 from os.path import isabs, join, normpath
 from subprocess import Popen
-import sys 
+import sys
 
 # Enthought library imports.
 from enthought.envisage.api import IExtensionPointUser, IExtensionRegistry
@@ -36,63 +36,63 @@ PARENT = '.'.join(__name__.split('.')[:-2])
 
 # Implementation of the ImageResource class to be used for the DocAction class.
 class DocImageResource(ImageResource):
-    """ Implementation of the ImageResource class to be used for the DocAction 
+    """ Implementation of the ImageResource class to be used for the DocAction
     class.
     Overrides the '_image_not_found' trait in the base ImageResource class.
     """
-    
+
     _image_not_found = ImageResource('document')
-    
+
 class DocAction(WorkbenchAction):
     """ (Pyface) Action for displaying a help doc.
     """
     implements(IExtensionPointUser)
 
     ### Action interface ##############################################
-    
+
     # Image associated with this action instance.
     image = Property
-    
+
     ### IExtensionPointUser interface
-    
+
     extension_registry = Property(Instance(IExtensionRegistry))
-    
+
     def _get_extension_registry(self):
         return self.window.application.extension_registry
-    
+
     def _get_image(self):
-        """ Returns the image to be used for this DocAction instance. 
+        """ Returns the image to be used for this DocAction instance.
         """
-        # The current implementation searches for an image file matching 
+        # The current implementation searches for an image file matching
         # 'name' in all of the image paths. If such a file is not to be found,
         # the '_image_not_found' file for the DocImageResourceClass is used.
         return DocImageResource(self.name)
-    
+
     ### HelpDocAction interface
-    
+
     # Help doc associated with this action.
     my_help_doc = Instance(HelpDoc)
-    
+
     def _my_help_doc_default(self):
         exns = self.extension_registry.get_extensions(PARENT + '.help_docs')
         for hd in exns:
             if hd.label == self.name:
                 return hd
         return None
-            
+
     def _get_filename(self, doc):
         filename = None
         if doc is not None:
             if doc.url:
                 filename = doc.filename
-            else: 
+            else:
                 filename = get_sys_prefix_relative_filename(doc.filename)
         return filename
-    
+
     def perform(self, event):
-        """ Perform the action by displaying the document. 
+        """ Perform the action by displaying the document.
         """
-        
+
         filename = self._get_filename(self.my_help_doc)
         if filename is not None:
             if self.my_help_doc.url or self.my_help_doc.viewer == 'browser':

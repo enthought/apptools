@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
 #------------------------------------------------------------------------------
@@ -27,17 +27,17 @@ class Reference(HasPrivateTraits):
     References provide a way to store the address(s) of objects that live
     outside of the naming system.  A reference consists of a list of
     addresses that represent a communications endpoint for the object being
-    referenced. 
+    referenced.
 
     A reference also contains information to assist in the creation of an
     instance of the object to which it refers.  It contains the name of
-    the class that will be created and the class name and location of a 
+    the class that will be created and the class name and location of a
     factory that will be used to do the actual instance creation.
 
     """
 
     #### 'Reference' interface ################################################
-    
+
     # The list of addresses that can be used to 'contact' the object.
     addresses = List(Address)
 

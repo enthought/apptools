@@ -22,7 +22,7 @@ class PythonObject:
 
 class PythonTypeSystem(AbstractTypeSystem):
     """ A type system with standard(ish) Python semantics. """
-    
+
     ###########################################################################
     # 'AbstractTypeSystem' interface.
     ###########################################################################
@@ -31,7 +31,7 @@ class PythonTypeSystem(AbstractTypeSystem):
         """ Is an object and instance of the specified type? """
 
         return isinstance(obj, type) or type is PythonObject
-    
+
     def get_mro(self, type):
         """ Returns the MRO of a type. """
 

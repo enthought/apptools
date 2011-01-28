@@ -26,14 +26,14 @@ class Preferences(HasTraits):
     # The absolute path to this node from the root node (the empty string if
     # this node *is* the root node).
     path = Property(Str)
-    
+
     # The parent node (None if this node *is* the root node).
     parent = Instance(IPreferences)
 
     # The name of the node relative to its parent (the empty string if this
     # node *is* the root node).
     name = Str
-    
+
     #### 'Preferences' interface ##############################################
 
     # The default name of the file used to persist the preferences (if no
@@ -50,7 +50,7 @@ class Preferences(HasTraits):
     # It is something to do with 'cloning' the node for use in a 'modal' traits
     # UI... Hmmm...
     _lk = Any
-    
+
     # The node's children.
     _children = Dict(Str, IPreferences)
 
@@ -83,13 +83,13 @@ class Preferences(HasTraits):
             self.load()
 
         return
-    
+
     ###########################################################################
     # 'IPreferences' interface.
     ###########################################################################
 
     #### Trait properties #####################################################
-    
+
     def _get_path(self):
         """ Property getter. """
 
@@ -101,9 +101,9 @@ class Preferences(HasTraits):
             node = node.parent
 
         names.reverse()
-        
+
         return '.'.join(names)
-    
+
     #### Methods ##############################################################
 
     #### Methods where 'path' refers to a preference ####
@@ -147,7 +147,7 @@ class Preferences(HasTraits):
 
         if value is Undefined:
             value = default
-            
+
         return value
 
     def remove(self, path):
@@ -261,7 +261,7 @@ class Preferences(HasTraits):
             node = self._get_child(components[0])
             if node is not None:
                 exists = node.node_exists('.'.join(components[1:]))
-                
+
             else:
                 exists = False
 
@@ -297,7 +297,7 @@ class Preferences(HasTraits):
         This includes any changes to the node's descendants.
 
         """
-    
+
         self.save()
 
         return
@@ -341,7 +341,7 @@ class Preferences(HasTraits):
         return
 
     #### Persistence methods ####
-    
+
     def load(self, file_or_filename=None):
         """ Load preferences from a file.
 
@@ -354,7 +354,7 @@ class Preferences(HasTraits):
 
         if file_or_filename is None:
             file_or_filename = self.filename
-            
+
         logger.debug('loading preferences from <%s>', file_or_filename)
 
         # Do the import here so that we don't make 'ConfigObj' a requirement
@@ -395,13 +395,13 @@ class Preferences(HasTraits):
             # requirement if preferences aren't ever persisted (or a derived
             # class chooses to use a different persistence mechanism).
             from configobj import ConfigObj
-        
+
             logger.debug('saving preferences to <%s>', file_or_filename)
-            
+
             config_obj = ConfigObj(file_or_filename)
             self._add_node_to_dictionary(self, config_obj)
             config_obj.write()
-        
+
         return
 
     ###########################################################################
@@ -447,7 +447,7 @@ class Preferences(HasTraits):
         self._lk.release()
 
         return
-    
+
     def _clear(self):
         """ Remove all preferences from this node. """
 
@@ -472,22 +472,22 @@ class Preferences(HasTraits):
         self._lk.acquire()
         value = self._preferences.get(key, default)
         self._lk.release()
-        
+
         return value
-    
+
     def _get_child(self, name):
         """ Return the child of this node with the specified name.
 
         Return None if no such child exists.
 
         """
-            
+
         self._lk.acquire()
         child = self._children.get(name)
         self._lk.release()
 
         return child
-    
+
     def _keys(self):
         """ Return the preference keys of this node. """
 
@@ -496,14 +496,14 @@ class Preferences(HasTraits):
         self._lk.release()
 
         return keys
-    
+
     def _node(self, name):
         """ Return the child of this node with the specified name.
 
         Create the child node if it does not exist.
 
         """
-            
+
         node = self._get_child(name)
         if node is None:
             node = self._create_child(name)
@@ -526,7 +526,7 @@ class Preferences(HasTraits):
         if name in self._preferences:
             del self._preferences[name]
         self._lk.release()
-        
+
         return
 
     def _remove_preferences_listener(self, listener):
@@ -538,13 +538,13 @@ class Preferences(HasTraits):
         self._lk.release()
 
         return
-    
+
     def _set(self, key, value):
         """ Set the value of a preference in this node. """
 
         # Preferences are *always* stored as strings.
         value = str(value)
-        
+
         self._lk.acquire()
         old = self._preferences.get(key)
         self._preferences[key] = value
@@ -559,7 +559,7 @@ class Preferences(HasTraits):
 
         for listener in listeners:
             listener(self, key, old, value)
-            
+
         return
 
     ###########################################################################
@@ -571,15 +571,15 @@ class Preferences(HasTraits):
 
         if indent == '':
             print
-            
+
         print indent, 'Node(%s)' % self.name, self._preferences
         indent += '  '
 
         for child in self._children.values():
             child.dump(indent)
-        
+
         return
-    
+
 #### EOF ######################################################################
 
 

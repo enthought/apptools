@@ -11,7 +11,7 @@ from permissions import DebugViewPerm
 
 class SecuredDebugView(DebugView):
     """A secured DebugView."""
-    
+
     ###########################################################################
     # 'IWorkbenchPart' interface.
     ###########################################################################

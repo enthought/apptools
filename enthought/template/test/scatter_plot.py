@@ -1,14 +1,14 @@
 #-------------------------------------------------------------------------------
 #
 #  A simple scatter-plot template defined as a test for the template package.
-#  
-#  Written by: David C. Morrill 
+#
+#  Written by: David C. Morrill
 #  (based on the original cp.plot geo_scatter_plot.py file)
-#  
+#
 #  Date: 07/30/2007
-#  
+#
 #  (c) Copy 2007 by Enthought, Inc.
-#  
+#
 #-------------------------------------------------------------------------------
 
 """ A simple scatter-plot template defined as a test for the template package.
@@ -23,31 +23,31 @@ from enthought.traits.api \
 
 from enthought.traits.ui.api \
     import View, VGroup, Item, Label, Theme, TextEditor
-    
+
 from enthought.traits.ui.wx.themed_slider_editor \
     import ThemedSliderEditor
-    
+
 from enthought.traits.ui.wx.themed_text_editor \
     import ThemedTextEditor
-    
+
 from enthought.chaco.api \
     import ScatterPlot, ArrayPlotData, Plot
-    
+
 from enthought.chaco.tools.api \
     import PanTool, SimpleZoom
-    
+
 from enthought.enable.api \
     import ColorTrait
 
 from enthought.chaco.scatter_markers \
     import marker_trait
-    
+
 from enthought.template.api \
     import Template, TRange, TStr, TDerived, TDataSource
-    
+
 from enthought.template.impl.api \
     import TemplateDataSource, ValueDataNameItem
-    
+
 from enable_editor \
     import EnableEditor
 
@@ -63,18 +63,18 @@ TColor = ColorTrait( template = 'copy' )
 #-------------------------------------------------------------------------------
 
 class ScatterPlot ( Template ):
-    
+
     #-- Template Traits --------------------------------------------------------
-    
+
     # The plot index data source:
     index = TDataSource
-    
+
     # The plot value data source:
     value = TDataSource
-    
+
     # The title of the plot:
     title = TStr( 'Scatter Plot' )
-    
+
     # The type of marker to use.  This is a mapped trait using strings as the
     # keys:
     marker = marker_trait( template = 'copy', event = 'update' )
@@ -92,23 +92,23 @@ class ScatterPlot ( Template ):
 
     # The color of the outline to draw around the marker
     outline_color = TColor( 'black', event = 'update' )
-    
+
     #-- Derived Traits ---------------------------------------------------------
 
     plot = TDerived # Instance( ScatterPlot )
-    
+
     #-- Traits UI Views --------------------------------------------------------
-    
+
     # The scatter plot view:
     template_view = View(
         VGroup(
             Item( 'title',
                   show_label = False,
                   style      = 'readonly',
-                  editor     = ThemedTextEditor( 
+                  editor     = ThemedTextEditor(
                                  theme = Theme( '@GBB', alignment = 'center' ) )
             ),
-            Item( 'plot', 
+            Item( 'plot',
                   show_label = False,
                   resizable  = True,
                   editor     = EnableEditor(),
@@ -117,12 +117,12 @@ class ScatterPlot ( Template ):
         ),
         resizable = True
     )
-    
+
     # The scatter plot options view:
     options_view = View(
         VGroup(
             VGroup(
-                Label( 'Scatter Plot Options', 
+                Label( 'Scatter Plot Options',
                        item_theme = Theme( '@GBB', alignment = 'center' ) ),
                 show_labels = False
             ),
@@ -140,17 +140,17 @@ class ScatterPlot ( Template ):
             )
         )
     )
-    
+
     #-- Default Values ---------------------------------------------------------
-    
+
     def _index_default ( self ):
         """ Returns the default value for the 'index' trait.
         """
         return TemplateDataSource(
-                   items       = [ ValueDataNameItem( name    = 'index', 
+                   items       = [ ValueDataNameItem( name    = 'index',
                                                       flatten = True ) ],
                    description = 'Scatter Plot Index' )
-    
+
     def _value_default ( self ):
         """ Returns the default value for the 'value' trait.
         """
@@ -158,14 +158,14 @@ class ScatterPlot ( Template ):
                    items       = [ ValueDataNameItem( name    = 'value',
                                                       flatten = True ) ],
                    description = 'Scatter Plot Value' )
-    
-    #-- ITemplate Interface Implementation ------------------------------------- 
-    
+
+    #-- ITemplate Interface Implementation -------------------------------------
+
     def activate_template ( self ):
         """ Converts all contained 'TDerived' objects to real objects using the
             template traits of the object. This method must be overridden in
             subclasses.
-            
+
             Returns
             -------
             None
@@ -175,7 +175,7 @@ class ScatterPlot ( Template ):
         if ((self.index.context_data is Undefined) or
             (self.value.context_data is Undefined)):
             return
-            
+
         # Create a plot data object and give it this data:
         pd = ArrayPlotData()
         pd.set_data( 'index', self.index.context_data )
@@ -191,22 +191,22 @@ class ScatterPlot ( Template ):
                    outline_color  = self.outline_color,
                    marker_size    = self.marker_size,
                    line_width     = self.line_width,
-                   bgcolor        = 'white' ) 
+                   bgcolor        = 'white' )
         plot.set(  padding_left   = 50,
-                   padding_right  = 0, 
-                   padding_top    = 0, 
+                   padding_right  = 0,
+                   padding_top    = 0,
                    padding_bottom = 20 )
 
         # Attach some tools to the plot:
         plot.tools.append( PanTool( plot, constrain_key = 'shift' ) )
-        zoom = SimpleZoom( component = plot, tool_mode = 'box', 
+        zoom = SimpleZoom( component = plot, tool_mode = 'box',
                            always_on = False )
         plot.overlays.append( zoom )
-        
+
     #-- Trait Event Handlers ---------------------------------------------------
 
     def _update_changed ( self ):
-        """ Handles a plot option being changed. 
+        """ Handles a plot option being changed.
         """
         self.plot = Undefined
-        
+

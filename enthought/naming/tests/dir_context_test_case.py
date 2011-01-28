@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
 #------------------------------------------------------------------------------
@@ -74,14 +74,14 @@ class DirContextTestCase(ContextTestCase):
         """ get and set attributes """
 
         defaults = {'colour' : 'blue'}
-        
+
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
         self.assert_(isinstance(sub, DirContext))
 
         #### Generic name resolution tests ####
-        
+
         # Non-existent name.
         self.failUnlessRaises(
             NameNotFoundError, context.set_attributes, 'x', defaults
@@ -100,7 +100,7 @@ class DirContextTestCase(ContextTestCase):
         )
 
         #### Operation specific tests ####
-        
+
         # Attributes of the root context.
         attributes = self.context.get_attributes('')
         self.assertEqual(len(attributes), 0)
@@ -122,5 +122,5 @@ class DirContextTestCase(ContextTestCase):
         self.assertEqual(attributes['colour'], 'blue')
 
         return
-    
+
 #### EOF ######################################################################

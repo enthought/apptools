@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2008, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Ilan Schnell, Enthought, Inc.
 #
 # Description:
@@ -27,17 +27,17 @@ import unittest
 #   the return code is non-zero.
 
 class RefreshTestCase(unittest.TestCase):
-    
+
     def test_run(self):
         cwd = os.path.dirname(__file__)
         if not cwd:
             cwd = '.'
-        
+
         retcode = subprocess.call(['python', 'check_version_registry.py'],
                                   cwd=cwd)
-        
-        self.assertEqual(retcode, 0)
-        
 
-if __name__ == "__main__":          
+        self.assertEqual(retcode, 0)
+
+
+if __name__ == "__main__":
     unittest.main()

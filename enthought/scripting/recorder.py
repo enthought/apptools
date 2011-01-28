@@ -13,14 +13,14 @@ import warnings
 import types
 import __builtin__
 
-from enthought.traits.api import (HasTraits, List, Str, Dict, Bool, 
+from enthought.traits.api import (HasTraits, List, Str, Dict, Bool,
         Unicode, Property, Int, Instance)
 from common import camel2enthought
 
 
 ################################################################################
 # `_RegistryData` class.
-################################################################################ 
+################################################################################
 class _RegistryData(HasTraits):
     # Object's script ID
     script_id = Property(Str)
@@ -53,7 +53,7 @@ class _RegistryData(HasTraits):
         path = ''
         if pdata is not None:
             pid = pdata.script_id
-            ppath = pdata.path 
+            ppath = pdata.path
             tnop = self.trait_name_on_parent
             if '[' in tnop:
                 # If the object is a nested object through an iterator,
@@ -82,14 +82,14 @@ class _RegistryData(HasTraits):
 
 ################################################################################
 # `RecorderError` class.
-################################################################################ 
+################################################################################
 class RecorderError(Exception):
     pass
 
 
 ################################################################################
 # `Recorder` class.
-################################################################################ 
+################################################################################
 class Recorder(HasTraits):
 
     # The lines of code recorded.
@@ -157,8 +157,8 @@ class Recorder(HasTraits):
     def register(self, object, parent=None, trait_name_on_parent='',
                  ignore=None, known=False, script_id=None):
         """Register an object with the recorder.  This sets up the
-        object for recording.  
-        
+        object for recording.
+
         By default all traits (except those starting and ending with
         '_') are recorded.  For attributes that are themselves
         recordable, one may mark traits with a 'record' metadata as
@@ -224,7 +224,7 @@ class Recorder(HasTraits):
             # Find all the trait names we must ignore.
             ignore.extend(object.traits(record=False).keys())
             # The traits to listen for.
-            tnames = [t for t in object.trait_names() 
+            tnames = [t for t in object.trait_names()
                       if not t.startswith('_') and not t.endswith('_') \
                          and t not in ignore]
             # Find all list traits.
@@ -267,11 +267,11 @@ class Recorder(HasTraits):
                 sid = self._get_unique_name(object)
 
         # Register the object with the data.
-        data = _RegistryData(script_id=sid, 
+        data = _RegistryData(script_id=sid,
                              parent_data=pdata,
-                             trait_name_on_parent=trait_name_on_parent, 
+                             trait_name_on_parent=trait_name_on_parent,
                              names=tnames,
-                             sub_recordables=sub_recordables, 
+                             sub_recordables=sub_recordables,
                              list_names=list_names)
         registry[object] = data
 
@@ -295,7 +295,7 @@ class Recorder(HasTraits):
                 msg = "Cannot set 'recorder' trait of object %r: "\
                       "%s"%(object, e)
                 warnings.warn(msg, warnings.RuntimeWarning)
-        
+
         if isinstance(object, HasTraits):
             # Add handler for lists.
             for name in list_names:
@@ -313,7 +313,7 @@ class Recorder(HasTraits):
                         self.register(child, parent=object,
                                       trait_name_on_parent=attr)
                 elif obj is not None:
-                    self.register(obj, parent=object, 
+                    self.register(obj, parent=object,
                                   trait_name_on_parent=name)
                 # Listen for changes to the trait itself so the newly
                 # assigned object can also be listened to.
@@ -489,7 +489,7 @@ class Recorder(HasTraits):
 
     ######################################################################
     # Non-public interface.
-    ###################################################################### 
+    ######################################################################
     def _get_unique_name(self, obj):
         """Return a unique object name (a string).  Note that this does
         not cache the object, so if called with the same object 3 times
@@ -531,7 +531,7 @@ class Recorder(HasTraits):
 
     def _listner(self, object, name, old, new):
         """The listner for trait changes on an object.
-        
+
         This is called by child listners or when any of the recordable
         object's traits change when recording to a script is enabled.
 
@@ -644,7 +644,7 @@ class Recorder(HasTraits):
             argl = [self._object_as_string(arg) for arg in args]
 
         # Convert the keyword args.
-        kwl = ['%s=%s'%(key, self._object_as_string(value)) 
+        kwl = ['%s=%s'%(key, self._object_as_string(value))
                for key, value in kw.iteritems()]
         argl.extend(kwl)
 

@@ -1,13 +1,13 @@
 #------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
-# 
+#
 # This software is provided without warranty under the terms of the BSD
 # license included in enthought/LICENSE.txt and may be redistributed only
 # under the conditions described in the aforementioned license.  The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
-# 
+#
 # Author: Enthought, Inc.
 # Description: <Enthought IO package component>
 #------------------------------------------------------------------------------
@@ -29,10 +29,10 @@ class File(HasPrivateTraits):
 
     # The absolute path name of this file/folder.
     absolute_path = Property(Str)
-    
+
     # The folder's children (for files this is always None).
     children = Property(List('File'))
-        
+
     # The file extension (for folders this is always the empty string).
     #
     # fixme: Currently the extension includes the '.' (ie. we have '.py' and
@@ -45,13 +45,13 @@ class File(HasPrivateTraits):
 
     # Is this an existing file?
     is_file = Property(Bool)
-    
+
     # Is this an existing folder?
     is_folder = Property(Bool)
 
     # Is this a Python package (ie. a folder contaning an '__init__.py' file.
     is_package = Property(Bool)
-    
+
     # Is the file/folder readonly?
     is_readonly = Property(Bool)
 
@@ -70,7 +70,7 @@ class File(HasPrivateTraits):
 
     # A URL reference to the file.
     url = Property(Str)
-    
+
     ###########################################################################
     # 'object' interface.
     ###########################################################################
@@ -79,16 +79,16 @@ class File(HasPrivateTraits):
         """ Creates a new representation of the specified path. """
 
         super(File, self).__init__(path=path, **traits)
-        
+
         return
 
     def __cmp__(self, other):
         """ Comparison operators. """
         if isinstance(other, File):
             return cmp(self.path, other.path)
-            
+
         return 1
-    
+
     def __str__(self):
         """ Returns an 'informal' string representation of the object. """
 
@@ -119,7 +119,7 @@ class File(HasPrivateTraits):
 
         else:
             children = None
-            
+
         return children
 
     def _get_exists(self):
@@ -131,7 +131,7 @@ class File(HasPrivateTraits):
         """ Returns the file extension. """
 
         name, ext = os.path.splitext(self.path)
-        
+
         return ext
 
     def _get_is_file(self):
@@ -156,23 +156,23 @@ class File(HasPrivateTraits):
         # returns True for both read-only and writable folders on Windows
         # systems.
         if self.is_folder:
-            
+
             # Mask for the write-permission bits on the folder. If these bits
             # are set to zero, the folder is read-only.
             WRITE_MASK = 0x92
             permissions = os.stat(self.path)[0]
-            
+
             if permissions & WRITE_MASK == 0:
                 readonly = True
             else:
                 readonly = False
-            
+
         elif self.is_file:
             readonly = not os.access(self.path, os.W_OK)
 
         else:
             readonly = False
-            
+
         return readonly
 
     def _get_mime_type(self):
@@ -181,7 +181,7 @@ class File(HasPrivateTraits):
         mime_type, encoding = mimetypes.guess_type(self.path)
         if mime_type is None:
             mime_type = "content/unknown"
-            
+
         return mime_type
 
     def _get_name(self):
@@ -190,7 +190,7 @@ class File(HasPrivateTraits):
         basename = os.path.basename(self.path)
 
         name, ext = os.path.splitext(basename)
-        
+
         return name
 
     def _get_parent(self):
@@ -202,7 +202,7 @@ class File(HasPrivateTraits):
         """ Returns the path as a URL. """
 
         return 'file://%s' % self.absolute_path
-        
+
     #### Methods ##############################################################
 
     def copy(self, destination):
@@ -217,7 +217,7 @@ class File(HasPrivateTraits):
 
         elif self.is_file:
             shutil.copyfile(self.path, destination.path)
-            
+
         return
 
     def create_file(self, contents=''):
@@ -225,7 +225,7 @@ class File(HasPrivateTraits):
 
         if self.exists:
             raise ValueError("file %s already exists" % self.path)
-        
+
         f = file(self.path, 'w')
         f.write(contents)
         f.close()
@@ -241,7 +241,7 @@ class File(HasPrivateTraits):
 
         if self.exists:
             raise ValueError("folder %s already exists" % self.path)
-        
+
         os.mkdir(self.path)
 
         return
@@ -255,7 +255,7 @@ class File(HasPrivateTraits):
 
         if self.exists:
             raise ValueError("folder %s already exists" % self.path)
-        
+
         os.makedirs(self.path)
 
         return
@@ -269,16 +269,16 @@ class File(HasPrivateTraits):
 
         if self.exists:
             raise ValueError("package %s already exists" % self.path)
-        
+
         os.mkdir(self.path)
 
         # Create the '__init__.py' file that actually turns the folder into a
         # package!
         init = File(os.path.join(self.path, '__init__.py'))
         init.create_file()
-        
+
         return
-    
+
     def delete(self):
         """ Deletes this file/folder.
 
@@ -299,7 +299,7 @@ class File(HasPrivateTraits):
 
             # Delete it!
             os.remove(self.path)
-            
+
         return
 
     def make_writeable(self):
@@ -322,20 +322,20 @@ class File(HasPrivateTraits):
                 os.chmod(self.path, stat.S_IWUSR)
 
         return
-    
+
     def move(self, destination):
         """ Moves this file/folder. """
 
         # Allow the destination to be a string.
         if not isinstance(destination, File):
             destination = File(destination)
-            
+
         # Try to make sure that everything in the directory is writeable.
         self.make_writeable()
 
         # Move it!
         shutil.move(self.path, destination.path)
-            
+
         return
 
 #### EOF ######################################################################

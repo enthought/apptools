@@ -14,7 +14,7 @@ def sort_by_class_tree(objs):
     """ Sorts a list of objects by their class tree.
 
     Each item in the list should inherit from a common base class.
-    
+
     The list is returned ordered from the most specific to the least specific.
 
     """
@@ -37,7 +37,7 @@ def sort_by_class_tree(objs):
 
     # Now we can actually do the sort!
     def by_class_tree(x, y):
-        ix = classes.index(type(x)) 
+        ix = classes.index(type(x))
         iy = classes.index(type(y))
 
         # Note the reverse comparison (i.e., compare y with x). This is

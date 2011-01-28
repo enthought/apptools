@@ -14,8 +14,8 @@ class Adapter(HasTraits):
     """
 
     #### 'Adapter' interface ##################################################
-    
+
     # The object that we are adapting.
     adaptee = Any
-    
+
 #### EOF ######################################################################
