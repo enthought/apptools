@@ -1,2 +1,10 @@
-# Ignore the built documentation.
+# file types to ignore
+*.pyc
+*.so
+*~
+
+# ignore the build directories
+*.egg-info/
+build/
+dist/
 docs/build/
