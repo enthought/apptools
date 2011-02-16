@@ -22,8 +22,7 @@ class PreferencesHelper(HasTraits):
     #### 'PreferencesHelper' interface ########################################
 
     # The preferences node used by the helper. If this trait is not set then
-    # the package-global default preferences node is used (and if that is not
-    # set then the helper won't work ;^)
+    # the package-global default preferences node is used.
     #
     # fixme: This introduces a 'sneaky' global reference to the preferences
     # node!
@@ -43,7 +42,8 @@ class PreferencesHelper(HasTraits):
         super(PreferencesHelper, self).__init__(**traits)
 
         # Initialize the object's traits from the preferences node.
-        self._initialize(self.preferences)
+        if self.preferences:
+            self._initialize(self.preferences)
 
         return
 
@@ -67,7 +67,7 @@ class PreferencesHelper(HasTraits):
 
         # If we were the one that set the trait (because the underlying
         # preferences node changed) then do nothing.
-        if self._is_preference_trait(trait_name):
+        if self.preferences and self._is_preference_trait(trait_name):
             self.preferences.set('%s.%s' % (self._get_path(), trait_name), new)
 
         return
