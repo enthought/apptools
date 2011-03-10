@@ -15,7 +15,7 @@ import __builtin__
 
 from enthought.traits.api import (HasTraits, List, Str, Dict, Bool,
         Unicode, Property, Int, Instance)
-from common import camel2enthought
+from enthought.util.camel_case import camel_case_to_python
 
 
 ################################################################################
@@ -504,7 +504,7 @@ class Recorder(HasTraits):
             if hasattr(obj, '__name__'):
                 cname = obj.__name__
         else:
-            cname = camel2enthought(cname)
+            cname = camel_case_to_python(cname)
 
         special_ids = self._special_ids
         while len(result) == 0 or result in special_ids:
