@@ -16,30 +16,37 @@ from preferences import Preferences
 class ScopedPreferences(Preferences):
     """ A preferences node that adds the notion of preferences scopes.
 
-    Path names passed to the node can either contain scope information or can
-    simply be a preference path. In the latter case, the operation takes place
-    in the first scope in the node's list of scopes.
+    Scopes provide a way to access preferences in a precedence order, usually
+    depending on where they came from (see 'ApplicationPreferences' for a
+    common usage pattern).
 
-    The syntax of a fully qualified path name is::
+    By default, this class provides two scopes - 'application' which is
+    persistent and 'default' which is not. However, as mentioned above,
+    I would suggest that the newer 'ApplicationPreferences' class is a more
+    useful starting point).
+    
+    Path names passed to 'ScopedPreferences' nodes can be either::
 
-      scope_name/some/arbitrary/scope/context/path.to.a.preference
+    a) a preference path as used in a standard 'Preferences' node, e.g::
+    
+       'acme.widget.bgcolor'.
 
-    The scope is up to the first '/'. The scope context (if any) is from the
-    first '/' to the last '/', and the actual preference path is everything
-    after the last '/'.
+       In this case the operation either takes place in the primary scope
+       (for operations such as 'set' etc), or on all scopes in precedence order
+       (for operations such as 'get' etc).
+       
+    or
 
-    e.g. A preference path might look like this::
+    b) a preference path that refers to a specific scope e.g::
 
-    'project/My Project/my.plugin.id/acme.ui.bgcolor'
+       'default/acme.widget.bgcolor'
 
-    The scope is           'project'.
-    The scope context is   'My Project/my.plugin.id'
-    The preference path is 'acme.ui.bgcolor'
+       In this case the operation takes place *only* in the specified scope.
 
     There is one drawback to this scheme. If you want to access a scope node
     itself via the 'clear', 'keys', 'node', 'node_exists' or 'node_names'
     methods then you have to append a trailing '/' to the path. Without that,
-    the node would try to perform the operation in the first scope.
+    the node would try to perform the operation in the primary scope.
 
     e.g. To get the names of the children of the 'application' scope, use::
 
@@ -49,25 +56,47 @@ class ScopedPreferences(Preferences):
 
       scoped.node_names('application')
 
-    Then the node would get the first scope and try to find its child node
+    Then the node would get the primary scope and try to find its child node
     called 'application'.
 
     Of course you can just get the scope via::
 
-      scoped.get_scope('application')
+      application_scope = scoped.get_scope('application')
 
-    and then call whatever methods you like on it!
+    and then call whatever methods you like on it - which is definitely more
+    intentional and is highly recommended::
+
+      application_scope.node_names()
 
     """
 
     #### 'ScopedPreferences' interface ########################################
 
-    # The scopes (in the order that they should be searched when looking for
+    # The file that the application scope preferences are stored in.
+    #
+    # Defaults to:-
+    #
+    #    os.path.join(ETSConfig.application_home, 'preferences.ini')
+    application_preferences_filename = Str
+
+    # The scopes (in the order that they should be searched when looking up
     # preferences).
+    #
+    # By default, this class provides two scopes - 'application' which is
+    # persistent and 'default' which is not.
     scopes = List(IPreferences)
 
+    # The name of the 'primary' scope.
+    #
+    # This is the scope that operations take place in if no scope is specified
+    # in a given path (for the 'get' operation, if no scope is specified the
+    # operation takes place in *all* scopes in order of precedence). If this is
+    # the empty string (the default) then the primary scope is the first scope
+    # in the 'scopes' list.
+    primary_scope_name = Str
+
     ###########################################################################
-    # 'IPreferences' interface.
+    # 'IPreferences' protocol.
     ###########################################################################
 
     #### Methods where 'path' refers to a preference ####
@@ -84,7 +113,7 @@ class ScopedPreferences(Preferences):
             scope_name, path = self._parse_path(path)
             nodes = [self._get_scope(scope_name)]
 
-        # Otherwise, try each scope in turn.
+        # Otherwise, try each scope in turn (i.e. in order of precedence).
         else:
             nodes = self.scopes
 
@@ -111,9 +140,9 @@ class ScopedPreferences(Preferences):
             scope_name, path = self._parse_path(path)
             node = self._get_scope(scope_name)
 
-        # Otherwise, remove the preference from the first scope.
+        # Otherwise, remove the preference from the primary scope.
         else:
-            node = self.scopes[0]
+            node = self._get_primary_scope()
 
         node.remove(path)
 
@@ -131,9 +160,9 @@ class ScopedPreferences(Preferences):
             scope_name, path = self._parse_path(path)
             node = self._get_scope(scope_name)
 
-        # Otherwise, set the value in the first scope.
+        # Otherwise, set the value in the primary scope.
         else:
-            node = self.scopes[0]
+            node = self._get_primary_scope()
 
         node.set(path, value)
 
@@ -150,9 +179,9 @@ class ScopedPreferences(Preferences):
             scope_name, path = self._parse_path(path)
             node = self._get_scope(scope_name)
 
-        # Otherwise, remove the preferences from a node in the first scope.
+        # Otherwise, remove the preferences from a node in the primary scope.
         else:
-            node = self.scopes[0]
+            node = self._get_primary_scope()
 
         return node.clear(path)
 
@@ -188,9 +217,9 @@ class ScopedPreferences(Preferences):
                 scope_name, path = self._parse_path(path)
                 node = self._get_scope(scope_name)
 
-            # Otherwise, get the node from the first scope.
+            # Otherwise, get the node from the primary scope.
             else:
-                node = self.scopes[0]
+                node = self._get_primary_scope()
 
             node = node.node(path)
 
@@ -205,9 +234,9 @@ class ScopedPreferences(Preferences):
             scope_name, path = self._parse_path(path)
             node = self._get_scope(scope_name)
 
-        # Otherwise, look for the node in the first scope.
+        # Otherwise, look for the node in the primary scope.
         else:
-            node = self.scopes[0]
+            node = self._get_primary_scope()
 
         return node.node_exists(path)
 
@@ -233,7 +262,7 @@ class ScopedPreferences(Preferences):
         return list(names)
 
     ###########################################################################
-    # 'Preferences' interface.
+    # 'Preferences' protocol.
     ###########################################################################
 
     #### Listener methods ####
@@ -279,14 +308,18 @@ class ScopedPreferences(Preferences):
     def load(self, file_or_filename=None):
         """ Load preferences from a file.
 
-        This loads the preferences into the first scope.
+        This loads the preferences into the primary scope.
 
+        fixme: I'm not sure it is worth providing an implentation here. I
+        think it would be better to encourage people to explicitly reference
+        a particular scope.
+        
         """
 
         if file_or_filename is None and len(self.filename) > 0:
             file_or_filename = self.filename
 
-        node = self.scopes[0]
+        node = self._get_primary_scope()
         node.load(file_or_filename)
 
         return
@@ -296,38 +329,47 @@ class ScopedPreferences(Preferences):
 
         This asks each scope in turn to save its preferences.
 
-        If a file or filename is specified then it is only passed to the first
-        scope.
+        If a file or filename is specified then it is only passed to the
+        primary scope.
 
         """
 
         if file_or_filename is None and len(self.filename) > 0:
             file_or_filename = self.filename
 
-        self.scopes[0].save(file_or_filename)
-        for scope in self.scopes[1:]:
-            scope.save()
+        self._get_primary_scope().save(file_or_filename)
+        for scope in self.scopes:
+            if scope is not self._get_primary_scope():
+                scope.save()
 
         return
 
     ###########################################################################
-    # 'ScopedPreferences' interface.
+    # 'ScopedPreferences' protocol.
     ###########################################################################
 
+    def _application_preferences_filename_default(self):
+        """ Trait initializer. """
+
+        return join(ETSConfig.application_home, 'preferences.ini')
+        
+    # fixme: In hindsight, I don't think this class should have provided
+    # default scopes. This should have been an 'abstract' class and then
+    # things like the newer (and preferred) 'ApplicationPreferences' class
+    # layered on top.
     def _scopes_default(self):
         """ Trait initializer. """
 
-        # The application scope is a persistent scope.
-        application_scope = Preferences(
-            name     = 'application',
-            filename = join(ETSConfig.get_application_home(create=False),
-                            'preferences.ini')
-        )
+        scopes = [
+            Preferences(
+                name     = 'application',
+                filename = self.application_preferences_filename
+            ),
 
-        # The default scope is a transient scope.
-        default_scope = Preferences(name='default')
+            Preferences(name='default')
+        ]
 
-        return [application_scope, default_scope]
+        return scopes
 
     def get_scope(self, scope_name):
         """ Return the scope with the specified name.
@@ -346,7 +388,7 @@ class ScopedPreferences(Preferences):
         return scope
 
     ###########################################################################
-    # Private interface.
+    # Private protocol.
     ###########################################################################
 
     def _get(self, path, default, nodes, inherit):
@@ -375,6 +417,21 @@ class ScopedPreferences(Preferences):
 
         return scope
 
+    def _get_primary_scope(self):
+        """ Return the primary scope.
+
+        By default, this is the first scope.
+
+        """
+
+        if len(self.primary_scope_name) > 0:
+            scope = self._get_scope(self.primary_scope_name)
+
+        else:
+            scope = self.scopes[0]
+
+        return scope
+    
     def _path_contains_scope(self, path):
         """ Return True if the path contains a scope component. """
 

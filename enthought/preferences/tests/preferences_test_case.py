@@ -480,7 +480,7 @@ class PreferencesTestCase(unittest.TestCase):
 
         return
 
-    def test_dump(self):
+    def SKIPtest_dump(self):
         """ dump """
 
         # This make look like a weird test, since we don't ever actually check

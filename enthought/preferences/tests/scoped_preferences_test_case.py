@@ -121,6 +121,26 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
     # Tests.
     ###########################################################################
 
+    def test_ability_to_specify_primary_scope(self):
+
+        preferences = ScopedPreferences(
+            scopes = [
+                Preferences(name='a'),
+                Preferences(name='b'),
+                Preferences(name='c')
+            ],
+
+            primary_scope_name = 'b'
+        )
+
+        # This should set the prefrrence in the primary scope.
+        preferences.set('acme.foo', 'bar')
+
+        # Look it up specifically in the primary scope.
+        self.assertEqual('bar', preferences.get('b/acme.foo'))
+
+        return
+
     def test_builtin_scopes(self):
         """ builtin scopes """
 
