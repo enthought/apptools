@@ -5,3 +5,6 @@ from preferences import Preferences
 from preference_binding import PreferenceBinding, bind_preference
 from preferences_helper import PreferencesHelper
 from scoped_preferences import ScopedPreferences
+
+# Requires 'Preferences' and 'ScopedPreferences'.
+from application_preferences import ApplicationPreferences
