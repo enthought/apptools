@@ -24,17 +24,17 @@ class ScopedPreferences(Preferences):
     persistent and 'default' which is not. However, as mentioned above,
     I would suggest that the newer 'ApplicationPreferences' class is a more
     useful starting point).
-    
+
     Path names passed to 'ScopedPreferences' nodes can be either::
 
     a) a preference path as used in a standard 'Preferences' node, e.g::
-    
+
        'acme.widget.bgcolor'.
 
        In this case the operation either takes place in the primary scope
        (for operations such as 'set' etc), or on all scopes in precedence order
        (for operations such as 'get' etc).
-       
+
     or
 
     b) a preference path that refers to a specific scope e.g::
@@ -313,7 +313,7 @@ class ScopedPreferences(Preferences):
         fixme: I'm not sure it is worth providing an implentation here. I
         think it would be better to encourage people to explicitly reference
         a particular scope.
-        
+
         """
 
         if file_or_filename is None and len(self.filename) > 0:
@@ -352,7 +352,7 @@ class ScopedPreferences(Preferences):
         """ Trait initializer. """
 
         return join(ETSConfig.application_home, 'preferences.ini')
-        
+
     # fixme: In hindsight, I don't think this class should have provided
     # default scopes. This should have been an 'abstract' class and then
     # things like the newer (and preferred) 'ApplicationPreferences' class
@@ -431,7 +431,7 @@ class ScopedPreferences(Preferences):
             scope = self.scopes[0]
 
         return scope
-    
+
     def _path_contains_scope(self, path):
         """ Return True if the path contains a scope component. """
 
