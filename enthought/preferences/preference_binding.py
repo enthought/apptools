@@ -75,7 +75,8 @@ class PreferenceBinding(HasTraits):
     def _preferences_listener(self, node, key, old, new):
         """ Listener called when a preference value is changed. """
 
-        if key == self.trait_name:
+        components = self.preference_path.split('.')
+        if key == components[-1]:
             self._set_trait()
 
         return
