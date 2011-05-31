@@ -300,6 +300,36 @@ class PreferenceBindingTestCase(unittest.TestCase):
 
         return
 
+    def test_trait_name_different_to_preference_name(self):
+
+        p = self.preferences
+        p.load(self.example)
+
+        class AcmeUI(HasTraits):
+            """ The Acme UI class! """
+
+            # The test here is to have a different name for the trait than the
+            # preference value (which is 'bgcolor').
+            color = Str
+
+        acme_ui = AcmeUI()
+        acme_ui.on_trait_change(listener)
+
+        # Make some bindings.
+        bind_preference(acme_ui, 'color', 'acme.ui.bgcolor')
+
+        # Make sure the object was initialized properly.
+        self.assertEqual('blue', acme_ui.color)
+
+        # Change the width via the preferences node.
+        p.set('acme.ui.bgcolor', 'red')
+        self.assertEqual('color', listener.trait_name)
+        self.assertEqual('blue', listener.old)
+        self.assertEqual('red', listener.new)
+
+        return
+
+        
 
 # Entry point for stand-alone testing.
 if __name__ == '__main__':
