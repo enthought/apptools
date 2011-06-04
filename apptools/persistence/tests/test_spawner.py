@@ -39,7 +39,7 @@ class Tests(unittest.TestCase):
             being executed in a subprocess.
         """
         store_resource('AppTools',
-                       os.path.join('enthought', 'persistence','tests',
+                       os.path.join('apptools', 'persistence','tests',
                                     'check_file_path.py'),
                        self.tmpname)
 
