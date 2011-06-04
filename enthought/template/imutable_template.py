@@ -17,7 +17,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import Event
 
 from itemplate \

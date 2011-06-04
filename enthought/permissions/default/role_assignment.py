@@ -14,10 +14,10 @@
 
 
 # Enthought library imports.
-from enthought.pyface.api import error
-from enthought.traits.api import Dict, Instance
-from enthought.traits.ui.api import Group, Handler, Item, SetEditor, View
-from enthought.traits.ui.menu import Action, CancelButton
+from pyface.api import error
+from traits.api import Dict, Instance
+from traitsui.api import Group, Handler, Item, SetEditor, View
+from traitsui.menu import Action, CancelButton
 
 # Local imports.
 from enthought.permissions.package_globals import get_permissions_manager

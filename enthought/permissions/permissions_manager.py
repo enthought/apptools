@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Bool, HasTraits, Instance
+from traits.api import Bool, HasTraits, Instance
 
 # Local imports.
 from i_policy_manager import IPolicyManager

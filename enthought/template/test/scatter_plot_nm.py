@@ -20,25 +20,25 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import Undefined
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, Item, Label, Theme, TextEditor
 
-from enthought.traits.ui.wx.themed_slider_editor \
+from traitsui.wx.themed_slider_editor \
     import ThemedSliderEditor
 
-from enthought.traits.ui.wx.themed_text_editor \
+from traitsui.wx.themed_text_editor \
     import ThemedTextEditor
 
-from enthought.enable.api \
+from enable.api \
     import ColorTrait
 
-from enthought.chaco.api \
+from chaco.api \
     import GridPlotContainer, PlotComponent
 
-from enthought.chaco.scatter_markers \
+from chaco.scatter_markers \
     import marker_trait
 
 from enthought.template.api \

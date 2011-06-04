@@ -19,7 +19,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import Interface, Instance, List
 
 from itemplate_data_context \

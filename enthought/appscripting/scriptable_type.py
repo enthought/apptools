@@ -18,7 +18,7 @@ import inspect
 import types
 
 # Enthought library imports.
-from enthought.traits.api import HasTraits
+from traits.api import HasTraits
 
 # Local imports.
 from package_globals import get_script_manager

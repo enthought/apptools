@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 #
-#  Defines an adapter from an enthought.contexts.api.IContext
+#  Defines an adapter from an codetools.contexts.api.IContext
 #  to an ITemplateDataContext.
 #
 #  Written by: David C. Morrill
@@ -12,7 +12,7 @@
 #
 #-------------------------------------------------------------------------------
 
-""" Defines an adapter from an enthought.contexts.api.IContext to an
+""" Defines an adapter from an codetools.contexts.api.IContext to an
     ITemplateDataContext.
 """
 
@@ -20,13 +20,13 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import Adapter, Str, List, adapts
 
-from enthought.traits.protocols.api \
+from traits.protocols.api \
     import AdaptationError, adapt
 
-from enthought.contexts.api \
+from codetools.contexts.api \
     import IContext
 
 from enthought.template.itemplate_data_context \
@@ -40,7 +40,7 @@ from helper \
 #-------------------------------------------------------------------------------
 
 class IContextAdapter ( Adapter ):
-    """ Defines an adapter from an enthought.contexts.api.IContext
+    """ Defines an adapter from an codetools.contexts.api.IContext
         to an ITemplateDataContext.
     """
 

@@ -14,8 +14,8 @@
 
 
 # Enthought library imports.
-from enthought.etsconfig.api import ETSConfig
-from enthought.traits.ui.api import Handler
+from traits.etsconfig.api import ETSConfig
+from traitsui.api import Handler
 
 # Local imports.
 from adapter_base import AdapterBase

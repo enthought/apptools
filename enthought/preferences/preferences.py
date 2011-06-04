@@ -5,8 +5,8 @@
 import logging, threading
 
 # Enthought library imports.
-from enthought.traits.api import Any, Callable, Dict, HasTraits, Instance, List
-from enthought.traits.api import Property, Str, Undefined, implements
+from traits.api import Any, Callable, Dict, HasTraits, Instance, List
+from traits.api import Property, Str, Undefined, implements
 
 # Local imports.
 from i_preferences import IPreferences

@@ -16,9 +16,9 @@ import logging
 from subprocess import Popen
 
 # Enthought library imports.
-from enthought.envisage.api import IExtensionPointUser, IExtensionRegistry
-from enthought.pyface.workbench.action.workbench_action import WorkbenchAction
-from enthought.traits.api import Instance, implements, Property
+from envisage.api import IExtensionPointUser, IExtensionRegistry
+from pyface.workbench.action.workbench_action import WorkbenchAction
+from traits.api import Instance, implements, Property
 
 from enthought.help.help_plugin.api import HelpCode
 from enthought.help.help_plugin.examples_preferences import \

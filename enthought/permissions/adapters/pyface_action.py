@@ -15,7 +15,7 @@
 
 # Enthought library imports.
 from enthought.permissions.adapter_base import AdapterBase
-from enthought.pyface.action.api import Action
+from pyface.action.api import Action
 
 
 class ActionAdapter(AdapterBase):

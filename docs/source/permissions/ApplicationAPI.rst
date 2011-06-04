@@ -83,8 +83,8 @@ object that enables the ``age`` item when the user has the
 has the ``PersonSalaryPerm`` permission::
 
     from enthought.permissions.api import SecureHandler
-    from enthought.traits.api import HasTraits, Int, Unicode
-    from enthought.traits.ui.api import Item, View
+    from traits.api import HasTraits, Int, Unicode
+    from traitsui.api import Item, View
 
     from permissions import UpdatePersonAgePerm, PersonSalaryPerm
 

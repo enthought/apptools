@@ -14,8 +14,8 @@
 
 
 # Enthought library imports.
-from enthought.pyface.action.api import Action
-from enthought.traits.api import Bool, Event, HasTraits, implements, \
+from pyface.action.api import Action
+from traits.api import Bool, Event, HasTraits, implements, \
         Instance, List, Unicode
 
 # Local imports.

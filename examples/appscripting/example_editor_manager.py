@@ -14,8 +14,8 @@
 
 
 # Enthought library imports.
-from enthought.etsconfig.api import ETSConfig
-from enthought.pyface.workbench.api import Editor, EditorManager
+from traits.etsconfig.api import ETSConfig
+from pyface.workbench.api import Editor, EditorManager
 
 
 class _wxLabelEditor(Editor):

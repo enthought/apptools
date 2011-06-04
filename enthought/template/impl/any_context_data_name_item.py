@@ -23,7 +23,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Instance, Property, implements, on_trait_change
 
 from enthought.template.itemplate_data_context \

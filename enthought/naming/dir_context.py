@@ -15,7 +15,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Dict
+from traits.api import Dict
 
 # Local imports.
 from context import Context

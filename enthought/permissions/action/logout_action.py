@@ -14,8 +14,8 @@
 
 
 # Enthought library imports.
-from enthought.pyface.action.api import Action
-from enthought.traits.api import Bool, Unicode
+from pyface.action.api import Action
+from traits.api import Bool, Unicode
 
 # Local imports.
 from enthought.permissions.package_globals import get_permissions_manager

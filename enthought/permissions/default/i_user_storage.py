@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Interface, List, Str
+from traits.api import Interface, List, Str
 
 
 class UserStorageError(Exception):

@@ -14,9 +14,9 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, Instance, Str, Unicode
-from enthought.pyface.action.api import Action
-from enthought.pyface.workbench.api import WorkbenchWindow
+from traits.api import Any, Instance, Str, Unicode
+from pyface.action.api import Action
+from pyface.workbench.api import WorkbenchWindow
 
 # Local imports.
 from model import Label

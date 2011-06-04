@@ -21,7 +21,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Instance, Property, implements
 
 from enthought.template.template_traits \

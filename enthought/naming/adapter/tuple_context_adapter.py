@@ -2,7 +2,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Tuple
+from traits.api import Tuple
 
 # Local imports.
 from list_context_adapter import ListContextAdapter

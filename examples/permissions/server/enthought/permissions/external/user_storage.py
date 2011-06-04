@@ -19,7 +19,7 @@ import socket
 
 # Enthought library imports.
 from enthought.permissions.default.api import IUserStorage, UserStorageError
-from enthought.traits.api import HasTraits, implements, List, Str
+from traits.api import HasTraits, implements, List, Str
 
 # Local imports.
 from proxy_server import ProxyServer

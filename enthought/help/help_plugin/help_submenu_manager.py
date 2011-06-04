@@ -15,9 +15,9 @@
 import logging
 
 # Enthought library imports.
-from enthought.envisage.api import IExtensionPointUser, IExtensionRegistry
-from enthought.pyface.action.api import Group, MenuManager
-from enthought.traits.api import Any, implements, Instance, List, Property
+from envisage.api import IExtensionPointUser, IExtensionRegistry
+from pyface.action.api import Group, MenuManager
+from traits.api import Any, implements, Instance, List, Property
 
 # Local imports.
 from action.doc_action import DocAction
@@ -38,7 +38,7 @@ class HelpSubmenuManager(MenuManager):
     """ Base class for managers of submenus of the Help menu.
 
         This class is adapted from
-        enthought.pyface.ui.workbench.action.view_menu_manager.ViewMenuManager.
+        pyface.ui.workbench.action.view_menu_manager.ViewMenuManager.
     """
     implements(IExtensionPointUser)
 

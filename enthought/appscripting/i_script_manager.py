@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Bool, Event, Instance, Interface, Unicode
+from traits.api import Bool, Event, Instance, Interface, Unicode
 
 # Local imports.
 from i_bind_event import IBindEvent

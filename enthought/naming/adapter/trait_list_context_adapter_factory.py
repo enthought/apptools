@@ -3,7 +3,7 @@
 
 # Enthought library imports.
 from enthought.naming.api import ContextAdapterFactory
-from enthought.traits.api import Str, TraitList
+from traits.api import Str, TraitList
 
 # Local imports.
 from trait_list_context_adapter import TraitListContextAdapter

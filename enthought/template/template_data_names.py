@@ -19,14 +19,14 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Instance, Int, List, Property, Delegate, \
            cached_property
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, Item, TableEditor, EnumEditor, TextEditor
 
-from enthought.traits.ui.table_column \
+from traitsui.table_column \
     import ObjectColumn
 
 from template_data_name \

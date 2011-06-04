@@ -5,8 +5,8 @@ A Recorder subclass that presents a simple user interface.
 # Copyright (c) 2008, Prabhu Ramachandran.
 # License: BSD Style.
 
-from enthought.traits.api import Code, Button, Int, on_trait_change, Any
-from enthought.traits.ui.api import (View, Item, Group, HGroup, CodeEditor,
+from traits.api import Code, Button, Int, on_trait_change, Any
+from traitsui.api import (View, Item, Group, HGroup, CodeEditor,
                                      spring, Handler)
 
 from recorder import Recorder

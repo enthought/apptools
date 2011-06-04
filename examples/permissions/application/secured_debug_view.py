@@ -2,7 +2,7 @@
 
 
 # Enthought library imports.
-from enthought.pyface.workbench.debug.api import DebugView
+from pyface.workbench.debug.api import DebugView
 from enthought.permissions.api import SecureProxy
 
 # Local imports.

@@ -16,13 +16,13 @@
 
 import sys
 
-from enthought.traits.api \
+from traits.api \
     import Trait, TraitHandler, TraitFactory
 
-from enthought.traits.trait_base \
+from traits.trait_base \
     import class_of, get_module_name
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import DropEditor
 
 from enthought.naming.api \
@@ -101,7 +101,7 @@ class NamingTraitHandler ( TraitHandler ):
 
     def get_editor ( self, trait ):
         if self.editor is None:
-            from enthought.traits.ui.api import DropEditor
+            from traitsui.api import DropEditor
 
             self.editor = DropEditor( klass    = self.aClass,
                                       binding  = True,
@@ -123,9 +123,9 @@ class NamingTraitHandler ( TraitHandler ):
         # plugin!  This is horrible and should be refactored out, possibly to
         # a custom sub-class of whoever needs this behavior.
         try:
-            from enthought.envisage import get_application
+            from envisage import get_application
             workspace = get_application().service_registry.get_service(
-                            'enthought.envisage.project.IWorkspace' )
+                            'envisage.project.IWorkspace' )
             result = workspace.lookup_binding( value )
         except ImportError:
             pass

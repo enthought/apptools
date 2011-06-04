@@ -15,7 +15,7 @@
 
 
 # Enthought library imports.
-from enthought.pyface.tree.api import NodeMonitor
+from pyface.tree.api import NodeMonitor
 
 
 class ContextMonitor(NodeMonitor):

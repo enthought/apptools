@@ -13,7 +13,7 @@
 # Thanks for using Enthought open source!
 
 from enthought.preferences.api import PreferencesHelper
-from enthought.traits.api import File, Str, implements
+from traits.api import File, Str, implements
 
 from i_help_code import IHelpCode
 

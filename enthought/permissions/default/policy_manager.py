@@ -14,9 +14,9 @@
 
 
 # Enthought library imports.
-from enthought.pyface.api import error
-from enthought.pyface.action.api import Action
-from enthought.traits.api import Dict, HasTraits, implements, Instance, List
+from pyface.api import error
+from pyface.action.api import Action
+from traits.api import Dict, HasTraits, implements, Instance, List
 
 # Local imports.
 from enthought.permissions.i_policy_manager import IPolicyManager

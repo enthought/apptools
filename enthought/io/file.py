@@ -18,8 +18,8 @@
 import mimetypes, os, shutil, stat
 
 # Enthought library imports.
-from enthought.traits.api import Bool, HasPrivateTraits, Instance, List, Property
-from enthought.traits.api import Str
+from traits.api import Bool, HasPrivateTraits, Instance, List, Property
+from traits.api import Str
 
 
 class File(HasPrivateTraits):

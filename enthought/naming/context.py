@@ -15,8 +15,8 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, Dict, Event, HasTraits, Instance
-from enthought.traits.api import Property, Str
+from traits.api import Any, Dict, Event, HasTraits, Instance
+from traits.api import Property, Str
 from enthought.type_manager.api import TypeManager
 
 # Local imports.

@@ -23,7 +23,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api\
+from traits.api\
     import HasPrivateTraits, Dict, Str, Any, Property, implements, \
            cached_property
 

@@ -14,8 +14,8 @@
 
 
 # Enthought library imports.
-from enthought.pyface.action.api import Group, MenuManager
-from enthought.traits.api import Unicode
+from pyface.action.api import Group, MenuManager
+from traits.api import Unicode
 
 # Local imports.
 from enthought.permissions.package_globals import get_permissions_manager

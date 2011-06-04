@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Bool, Dict, Interface, Unicode
+from traits.api import Bool, Dict, Interface, Unicode
 
 
 class IUser(Interface):

@@ -2,7 +2,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, List, Property, Str
+from traits.api import Any, List, Property, Str
 
 # Local imports.
 from list_context_adapter import ListContextAdapter

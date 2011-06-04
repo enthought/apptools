@@ -10,7 +10,7 @@ from pkg_resources import resource_filename
 
 # Enthought library imports.
 from enthought.preferences.api import Preferences
-from enthought.traits.api import HasTraits, Int, Str
+from traits.api import HasTraits, Int, Str
 
 
 # This module's package.

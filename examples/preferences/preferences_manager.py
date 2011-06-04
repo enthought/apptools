@@ -2,8 +2,8 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Color, Int, Float, Str
-from enthought.traits.ui.api import View
+from traits.api import Color, Int, Float, Str
+from traitsui.api import View
 
 # Local imports.
 from enthought.preferences.api import Preferences, PreferencesHelper

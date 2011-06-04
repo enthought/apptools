@@ -17,7 +17,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import Event, implements
 
 from template_impl \

@@ -15,7 +15,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Str, implements
 
 from itemplate_choice \

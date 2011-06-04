@@ -11,8 +11,8 @@
 # Thanks for using Enthought open source!
 
 from enthought.preferences.ui.api import PreferencesPage
-from enthought.traits.api import Either, File, Str
-from enthought.traits.ui.api import Group, Item, Label, View
+from traits.api import Either, File, Str
+from traitsui.api import Group, Item, Label, View
 
 # This module's package.
 PKG = '.'.join(__name__.split('.')[:-1])

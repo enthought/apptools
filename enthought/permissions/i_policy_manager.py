@@ -14,8 +14,8 @@
 
 
 # Enthought library imports.
-from enthought.pyface.action.api import Action
-from enthought.traits.api import Instance, Interface, List
+from pyface.action.api import Action
+from traits.api import Instance, Interface, List
 
 
 class IPolicyManager(Interface):

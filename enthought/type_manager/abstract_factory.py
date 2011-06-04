@@ -4,7 +4,7 @@
 import logging
 
 # Enthought library imports.
-from enthought.traits.api import HasTraits
+from traits.api import HasTraits
 
 
 logger = logging.getLogger(__name__)

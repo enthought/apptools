@@ -2,7 +2,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import HasTraits, Instance, Property, Str
+from traits.api import HasTraits, Instance, Property, Str
 
 # Local imports.
 from abstract_type_system import AbstractTypeSystem

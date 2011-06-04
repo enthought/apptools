@@ -277,7 +277,7 @@ A scripting API is specified statically by the explicit use of the
 ``scriptable`` decorator and the ``Scriptable`` trait wrapper.  For example::
 
     from enthought.appscripting.api import scriptable, Scriptable
-    from enthought.traits.api import HasTraits, Int, Str
+    from traits.api import HasTraits, Int, Str
 
     class DataModel(HasTraits):
 
@@ -320,7 +320,7 @@ produces a scriptable object with the same scriptable API as above (with the
 exception that ``has_side_effects`` cannot be specified dynamically)::
 
     from enthought.appscripting.api import create_scriptable_type
-    from enthought.traits.api import HasTraits, Int, Str
+    from traits.api import HasTraits, Int, Str
 
     class DataModel(HasTraits):
 
@@ -346,7 +346,7 @@ Instead we could bypass the type and make the objects themselves scriptable as
 follows::
 
     from enthought.appscripting.api import make_object_scriptable
-    from enthought.traits.api import HasTraits, Int, Str
+    from traits.api import HasTraits, Int, Str
 
     class DataModel(HasTraits):
 
@@ -373,7 +373,7 @@ With a more sophisticated design we may choose to specify the scriptable API as
 an interface as follows::
 
     from enthought.appscripting.api import make_object_scriptable
-    from enthought.traits.api import HasTraits, Int, Interface, Str
+    from traits.api import HasTraits, Int, Interface, Str
 
     class DataModel(HasTraits):
 

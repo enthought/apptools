@@ -15,7 +15,7 @@
 
 
 # Enthought library imports.
-from enthought.pyface.tree.api import NodeManager
+from pyface.tree.api import NodeManager
 
 
 class NamingNodeManager(NodeManager):

@@ -19,13 +19,13 @@
 
 import wx
 
-from enthought.traits.ui.wx.editor \
+from traitsui.wx.editor \
     import Editor
 
-from enthought.traits.ui.wx.basic_editor_factory \
+from traitsui.wx.basic_editor_factory \
     import BasicEditorFactory
 
-from enthought.enable.wx_backend.api \
+from enable.wx_backend.api \
     import Window
 
 #-------------------------------------------------------------------------------

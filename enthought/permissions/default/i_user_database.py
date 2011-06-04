@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Bool, Instance, Interface
+from traits.api import Bool, Instance, Interface
 
 # Local imports.
 from i_user_storage import IUserStorage

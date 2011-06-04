@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Interface
+from traits.api import Interface
 
 
 class PolicyStorageError(Exception):

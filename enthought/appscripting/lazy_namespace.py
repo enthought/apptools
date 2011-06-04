@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, Callable, HasTraits
+from traits.api import Any, Callable, HasTraits
 
 # Local imports.
 from bind_event import BindEvent

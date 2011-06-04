@@ -15,7 +15,7 @@
 import logging
 
 # Enthought library imports
-from enthought.traits.api import Dict, HasPrivateTraits, Int, List, Tuple, Str
+from traits.api import Dict, HasPrivateTraits, Int, List, Tuple, Str
 
 
 logger = logging.getLogger(__name__)

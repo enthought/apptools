@@ -5,7 +5,7 @@
 import logging
 
 # Enthought library imports.
-from enthought.traits.api import HasTraits, Instance, Str, Unicode
+from traits.api import HasTraits, Instance, Str, Unicode
 
 # Local imports.
 from i_preferences import IPreferences

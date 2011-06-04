@@ -15,7 +15,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Delegate, Instance, Str
+from traits.api import Delegate, Instance, Str
 
 # Local imports.
 from i_preferences_page import IPreferencesPage

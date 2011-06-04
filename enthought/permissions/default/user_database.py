@@ -17,11 +17,11 @@
 import os
 
 # Enthought library imports.
-from enthought.pyface.api import confirm, error, YES
-from enthought.traits.api import Bool, Dict, HasTraits, implements, Instance, \
+from pyface.api import confirm, error, YES
+from traits.api import Bool, Dict, HasTraits, implements, Instance, \
         List, Password, Property, Unicode
-from enthought.traits.ui.api import Handler, Item, View
-from enthought.traits.ui.menu import Action, OKCancelButtons
+from traitsui.api import Handler, Item, View
+from traitsui.menu import Action, OKCancelButtons
 
 # Local imports.
 from enthought.permissions.i_user import IUser

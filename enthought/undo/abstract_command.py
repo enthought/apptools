@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, HasTraits, implements, Unicode
+from traits.api import Any, HasTraits, implements, Unicode
 
 # Local imports.
 from i_command import ICommand

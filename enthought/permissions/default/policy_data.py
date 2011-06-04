@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import HasTraits, Instance, List, Unicode
+from traits.api import HasTraits, Instance, List, Unicode
 
 # Local imports.
 from enthought.permissions.permission import Permission

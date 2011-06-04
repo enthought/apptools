@@ -2,7 +2,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Dict, Property, Str
+from traits.api import Dict, Property, Str
 
 # Local imports.
 from dict_context_adapter import DictContextAdapter

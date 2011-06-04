@@ -3,7 +3,7 @@
 
 # Enthought library imports.
 from enthought.preferences.api import PreferencesHelper
-from enthought.traits.api import Any, Dict, Str, implements
+from traits.api import Any, Dict, Str, implements
 
 # Local imports.
 from i_preferences_page import IPreferencesPage

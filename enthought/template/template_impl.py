@@ -19,7 +19,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Undefined, implements
 
 from itemplate \

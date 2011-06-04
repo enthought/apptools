@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Instance, Int, Unicode
+from traits.api import Instance, Int, Unicode
 from enthought.undo.api import AbstractCommand
 
 # Local imports.

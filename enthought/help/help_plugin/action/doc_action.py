@@ -18,10 +18,10 @@ from subprocess import Popen
 import sys
 
 # Enthought library imports.
-from enthought.envisage.api import IExtensionPointUser, IExtensionRegistry
-from enthought.pyface.workbench.action.workbench_action import WorkbenchAction
-from enthought.traits.api import Instance, implements, Property
-from enthought.pyface.api import ImageResource
+from envisage.api import IExtensionPointUser, IExtensionRegistry
+from pyface.workbench.action.workbench_action import WorkbenchAction
+from traits.api import Instance, implements, Property
+from pyface.api import ImageResource
 
 from enthought.help.help_plugin.api import HelpDoc
 

@@ -19,7 +19,7 @@ import types
 import weakref
 
 # Enthought library imports.
-from enthought.traits.api import Any, Bool, Callable, Dict, Event, HasTraits, \
+from traits.api import Any, Bool, Callable, Dict, Event, HasTraits, \
         implements, Instance, Int, List, Property, Str, Unicode
 
 # Local imports.

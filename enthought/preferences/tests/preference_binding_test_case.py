@@ -12,7 +12,7 @@ from pkg_resources import resource_filename
 from enthought.preferences.api import Preferences, PreferenceBinding
 from enthought.preferences.api import ScopedPreferences, bind_preference
 from enthought.preferences.api import set_default_preferences
-from enthought.traits.api import Bool, HasTraits, Int, Float, Str
+from traits.api import Bool, HasTraits, Int, Float, Str
 
 
 # This module's package.

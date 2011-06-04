@@ -15,7 +15,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, HasTraits, Str
+from traits.api import Any, HasTraits, Str
 
 
 class Address(HasTraits):

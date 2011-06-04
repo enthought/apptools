@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Bool, Instance, Interface, Unicode
+from traits.api import Bool, Instance, Interface, Unicode
 
 # Local imports.
 from i_undo_manager import IUndoManager

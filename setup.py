@@ -24,7 +24,7 @@ commonly needed by many applications
   to a dictionary, which can then be flexibly applied in restoring the state of
   the object.
 - **enthought.preferences**: Manages application preferences.
-- **enthought.resource**: Manages application resources such as images and
+- **pyface.resource**: Manages application resources such as images and
   sounds.
 - **enthought.scripting**: A framework for automatic recording of Python
   scripts.

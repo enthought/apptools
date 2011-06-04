@@ -15,7 +15,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import HasPrivateTraits, Instance
+from traits.api import HasPrivateTraits, Instance
 
 # Local imports.
 from reference import Reference

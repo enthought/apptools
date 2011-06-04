@@ -14,11 +14,11 @@
 
 
 # Enthought library imports.
-from enthought.pyface.action.api import Action, Group, MenuManager
-from enthought.pyface.workbench.api import WorkbenchWindow
-from enthought.pyface.workbench.action.api import MenuBarManager, \
+from pyface.action.api import Action, Group, MenuManager
+from pyface.workbench.api import WorkbenchWindow
+from pyface.workbench.action.api import MenuBarManager, \
         ToolBarManager
-from enthought.traits.api import Instance, on_trait_change
+from traits.api import Instance, on_trait_change
 from enthought.appscripting.api import get_script_manager
 from enthought.appscripting.action.api import StartRecordingAction, \
         StopRecordingAction

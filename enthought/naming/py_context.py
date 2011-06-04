@@ -15,7 +15,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, Dict, Instance, Property
+from traits.api import Any, Dict, Instance, Property
 
 # Local imports.
 from address import Address

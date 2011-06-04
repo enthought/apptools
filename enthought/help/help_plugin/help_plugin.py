@@ -17,9 +17,9 @@ import logging
 import new
 
 # Enthought libary imports
-from enthought.envisage.api import Plugin, ExtensionPoint
-from enthought.envisage.ui.action.api import ActionSet, Group, Menu
-from enthought.traits.api import Instance, List, Str
+from envisage.api import Plugin, ExtensionPoint
+from envisage.ui.action.api import ActionSet, Group, Menu
+from traits.api import Instance, List, Str
 
 # Local imports
 from help_code import HelpCode
@@ -59,9 +59,9 @@ class HelpPlugin(Plugin):
     HELP_DOWNLOADS = PKG + '.help_downloads'
 
     # IDs of extension points this plugin contributes to.
-    WORKBENCH_ACTION_SETS='enthought.envisage.ui.workbench.action_sets'
-    PREFERENCES       = 'enthought.envisage.preferences'
-    PREFERENCES_PAGES = 'enthought.envisage.ui.workbench.preferences_pages'
+    WORKBENCH_ACTION_SETS='envisage.ui.workbench.action_sets'
+    PREFERENCES       = 'envisage.preferences'
+    PREFERENCES_PAGES = 'envisage.ui.workbench.preferences_pages'
 
     #### 'IPlugin' interface ##################################################
 
@@ -94,7 +94,7 @@ class HelpPlugin(Plugin):
 
         1. Create a preferences file for your plugin if it doesn't already
            have one. (Be sure to contribute your preferences file to the
-           `enthought.envisage.preferences` extension point.)
+           `envisage.preferences` extension point.)
 
         2. Define a unique "node" (section heading) in your preferences file
            for each document, and specify values for the 'label', 'viewer',
@@ -122,7 +122,7 @@ class HelpPlugin(Plugin):
 
         1. Create a preferences file for your plugin if it doesn't already
            have one. (Be sure to contribute your preferences file to the
-           `enthought.envisage.preferences` extension point.)
+           `envisage.preferences` extension point.)
 
         2. Define a unique "node" (section heading) in your preferences file
            for each demo, and specify values for the 'label' and 'filename'
@@ -151,7 +151,7 @@ class HelpPlugin(Plugin):
 
         1. Create a preferences file for your plugin if it doesn't already
            have one. (Be sure to contribute your preferences file to the
-           `enthought.envisage.preferences` extension point.)
+           `envisage.preferences` extension point.)
 
         2. Define a unique "node" (section heading) in your preferences file
            for each example, and specify values for the 'label' and 'filename'
@@ -180,7 +180,7 @@ class HelpPlugin(Plugin):
 
         1. Create a preferences file for your plugin if it doesn't already
            have one. (Be sure to contribute your preferences file to the
-           `enthought.envisage.preferences` extension point.)
+           `envisage.preferences` extension point.)
 
         2. Define a unique "node" (section heading) in your preferences file
            for each url, and specify values for the 'label' and 'filename'

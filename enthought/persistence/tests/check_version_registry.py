@@ -9,7 +9,7 @@
 import unittest
 
 # Enthought library imports.
-from enthought.traits.api import HasTraits
+from traits.api import HasTraits
 
 from enthought.persistence import version_registry, state_pickler
 
@@ -57,7 +57,7 @@ class TestVersionRegistry(unittest.TestCase):
 
         t = TraitClass()
         v = version_registry.get_version(t)
-        res = [(('HasTraits', 'enthought.traits.has_traits'), -1),
+        res = [(('HasTraits', 'traits.has_traits'), -1),
                (('TraitClass', '__main__'), 0)]
         self.assertEqual(v, res)
         state = state_pickler.get_state(t)

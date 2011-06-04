@@ -13,7 +13,7 @@ import logging
 # Enthought library imports
 import enthought.sweet_pickle as sweet_pickle
 from enthought.sweet_pickle.global_registry import _clear_global_registry
-from enthought.traits.api import Bool, Float, HasTraits, Int, Str
+from traits.api import Bool, Float, HasTraits, Int, Str
 
 
 logger = logging.getLogger(__name__)

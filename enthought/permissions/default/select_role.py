@@ -14,10 +14,10 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import HasTraits, Instance, List, Unicode
-from enthought.traits.ui.api import Item, TableEditor, View
-from enthought.traits.ui.menu import OKCancelButtons
-from enthought.traits.ui.table_column import ObjectColumn
+from traits.api import HasTraits, Instance, List, Unicode
+from traitsui.api import Item, TableEditor, View
+from traitsui.menu import OKCancelButtons
+from traitsui.table_column import ObjectColumn
 
 
 class _Role(HasTraits):

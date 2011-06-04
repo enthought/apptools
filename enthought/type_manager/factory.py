@@ -2,7 +2,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any
+from traits.api import Any
 
 # Local imports.
 from abstract_factory import AbstractFactory

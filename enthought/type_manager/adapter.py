@@ -2,7 +2,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, HasTraits
+from traits.api import Any, HasTraits
 
 
 class Adapter(HasTraits):

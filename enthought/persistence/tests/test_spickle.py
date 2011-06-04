@@ -11,7 +11,7 @@ import numpy
 from pickle import dumps
 
 from enthought.persistence import spickle
-from enthought.traits.api import HasTraits, Float, Int
+from traits.api import HasTraits, Float, Int
 
 class A:
     def __init__(self):

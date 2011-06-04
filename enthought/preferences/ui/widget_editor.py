@@ -2,12 +2,12 @@
 
 
 # Enthought library imports.
-from enthought.etsconfig.api import ETSConfig
-from enthought.traits.api import Any
-from enthought.traits.ui.api import EditorFactory
+from traits.etsconfig.api import ETSConfig
+from traits.api import Any
+from traitsui.api import EditorFactory
 
 # fixme: We need to import the 'Editor' class from the appropriate toolkit.
-exec('from enthought.traits.ui.%s.editor import Editor' % ETSConfig.toolkit)
+exec('from traitsui.%s.editor import Editor' % ETSConfig.toolkit)
 
 
 class _WidgetEditor(Editor):

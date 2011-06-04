@@ -13,9 +13,9 @@ import warnings
 import types
 import __builtin__
 
-from enthought.traits.api import (HasTraits, List, Str, Dict, Bool,
+from traits.api import (HasTraits, List, Str, Dict, Bool,
         Unicode, Property, Int, Instance)
-from enthought.util.camel_case import camel_case_to_python
+from traits.util.camel_case import camel_case_to_python
 
 
 ################################################################################
@@ -408,7 +408,7 @@ class Recorder(HasTraits):
         """Save recording to file, pop up a UI dialog to find out where
         and close the file when done.
         """
-        from enthought.pyface.api import FileDialog, OK
+        from pyface.api import FileDialog, OK
         wildcard = 'Python files (*.py)|*.py|' + FileDialog.WILDCARD_ALL
         dialog = FileDialog(title='Save Script',
                             action='save as', wildcard=wildcard

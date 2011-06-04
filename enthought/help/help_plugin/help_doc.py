@@ -11,7 +11,7 @@
 # Thanks for using Enthought open source!
 
 from enthought.preferences.api import PreferencesHelper
-from enthought.traits.api import Either, File, Str, implements, Bool
+from traits.api import Either, File, Str, implements, Bool
 
 from i_help_doc import IHelpDoc
 

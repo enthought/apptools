@@ -5,7 +5,7 @@
 import unittest
 
 # Enthought library imports.
-from enthought.traits.api import HasTraits, Instance, Str
+from traits.api import HasTraits, Instance, Str
 from enthought.type_manager import AdapterFactory, Factory, TypeManager
 
 

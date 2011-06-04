@@ -16,7 +16,7 @@
 
 # Enthought library imports.
 from enthought.naming.api import Context
-from enthought.pyface.tree.api import NodeType
+from pyface.tree.api import NodeType
 
 
 class ObjectNodeType(NodeType):

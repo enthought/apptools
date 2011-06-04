@@ -14,7 +14,7 @@
 
 
 # Major library imports.
-from enthought.qt import QtGui
+from traits.qt import QtGui
 
 # Enthought library imports.
 from enthought.permissions.adapter_base import AdapterBase

@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import HasTraits, Instance, implements
+from traits.api import HasTraits, Instance, implements
 
 # Local imports.
 from i_policy_storage import IPolicyStorage, PolicyStorageError

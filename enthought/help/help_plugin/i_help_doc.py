@@ -10,7 +10,7 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 
-from enthought.traits.api import Interface, Either, File, Str, Bool
+from traits.api import Interface, Either, File, Str, Bool
 
 class IHelpDoc(Interface):
     """ The interface for help docs.

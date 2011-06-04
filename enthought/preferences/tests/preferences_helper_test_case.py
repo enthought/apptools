@@ -11,8 +11,8 @@ from pkg_resources import resource_filename
 from enthought.preferences.api import Preferences, PreferencesHelper
 from enthought.preferences.api import ScopedPreferences
 from enthought.preferences.api import set_default_preferences
-from enthought.traits.api import Any, Bool, HasTraits, Int, Float, List, Str
-from enthought.traits.api import Unicode
+from traits.api import Any, Bool, HasTraits, Int, Float, List, Str
+from traits.api import Unicode
 
 
 def listener(obj, trait_name, old, new):

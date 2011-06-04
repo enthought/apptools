@@ -2,11 +2,11 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import HasTraits, Instance, List, Property, \
+from traits.api import HasTraits, Instance, List, Property, \
     Any, Bool, Dict
-from enthought.traits.ui.api import Handler, HSplit, Item, TreeEditor
-from enthought.traits.ui.api import TreeNode, View, HTMLEditor
-from enthought.traits.ui.menu import Action
+from traitsui.api import Handler, HSplit, Item, TreeEditor
+from traitsui.api import TreeNode, View, HTMLEditor
+from traitsui.menu import Action
 
 # Local imports.
 from preferences_node import PreferencesNode

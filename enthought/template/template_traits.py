@@ -17,7 +17,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import Instance, Int, Float, Str, List, Bool, Range, TraitType, Undefined
 
 from itemplate_data_source \

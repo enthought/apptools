@@ -17,8 +17,8 @@
 import logging
 
 # Enthought library imports.
-from enthought.pyface.api import GUI, YES
-from enthought.pyface.workbench.api import Workbench
+from pyface.api import GUI, YES
+from pyface.workbench.api import Workbench
 
 # Local imports.
 from example_script_window import ExampleScriptWindow

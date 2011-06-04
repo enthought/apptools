@@ -2,8 +2,8 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, HasTraits, Instance, Str, Undefined
-from enthought.traits.api import Unicode
+from traits.api import Any, HasTraits, Instance, Str, Undefined
+from traits.api import Unicode
 
 # Local imports.
 from i_preferences import IPreferences

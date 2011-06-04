@@ -43,7 +43,7 @@ A tour by example
 The following example is taken from the test suite.  Consider a set of
 simple objects organized in a hierarchy::
 
-    from enthought.traits.api import (HasTraits, Float, Instance, 
+    from traits.api import (HasTraits, Float, Instance, 
             Str, List, Bool, HasStrictTraits, Tuple, Range, TraitPrefixMap,
             Trait)
     from enthought.scripting.api import (Recorder, recordable,

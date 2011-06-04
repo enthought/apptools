@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Enum, HasTraits, Int, Unicode
+from traits.api import Enum, HasTraits, Int, Unicode
 from enthought.appscripting.api import scriptable, Scriptable
 
 

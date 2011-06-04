@@ -14,8 +14,8 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, Property, Undefined
-from enthought.traits.traits import trait_cast
+from traits.api import Any, Property, Undefined
+from traits.traits import trait_cast
 
 # Local imports.
 from package_globals import get_script_manager

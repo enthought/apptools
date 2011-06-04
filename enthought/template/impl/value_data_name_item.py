@@ -23,7 +23,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.traits.api \
+from traits.api \
     import Bool
 
 from enthought.template.template_traits \

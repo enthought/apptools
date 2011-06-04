@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, Interface, Unicode
+from traits.api import Any, Interface, Unicode
 
 
 class ICommand(Interface):

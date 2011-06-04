@@ -4,7 +4,7 @@
 import logging
 
 # Enthought library imports.
-from enthought.traits.api import Delegate, HasTraits, Instance
+from traits.api import Delegate, HasTraits, Instance
 
 # Local imports.
 from adapter_manager import AdapterManager

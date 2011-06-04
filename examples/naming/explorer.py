@@ -27,10 +27,10 @@ from enthought.naming.api import Binding, Context, ContextAdapterFactory
 from enthought.naming.api import PyFSContext
 from enthought.naming.adapter import *
 from enthought.naming.ui.explorer import Explorer
-from enthought.pyface.api import GUI
-from enthought.traits.api import TraitDict, TraitList
+from pyface.api import GUI
+from traits.api import TraitDict, TraitList
 from enthought.type_manager import TypeManager
-from enthought.util.resource import find_resource
+from traits.util.resource import find_resource
 
 
 # Application entry point.

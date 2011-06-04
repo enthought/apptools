@@ -5,10 +5,10 @@
 * Refactor the state_pickler.py module to break the need to import
   enthought.tvtk at all.
 
-* Check to see if the enthought.resource package is redundant with the
-  enthought.envisage.resource code.  If so, let's minimize to one location.
+* Check to see if the pyface.resource package is redundant with the
+  envisage.resource code.  If so, let's minimize to one location.
   Note that, at least as of Jan 2008, we are considering moving
-  enthought.resource into the TraitsGUI project to resolve issues with
+  pyface.resource into the TraitsGUI project to resolve issues with
   dependencies there.
 
 * Port enthought.help to envisage2, currently it relies on the old envisage,

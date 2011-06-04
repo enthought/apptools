@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Any, Interface, Str
+from traits.api import Any, Interface, Str
 
 
 class IBindEvent(Interface):

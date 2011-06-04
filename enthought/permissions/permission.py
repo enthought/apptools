@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Bool, HasTraits, Property, Str, Unicode
+from traits.api import Bool, HasTraits, Property, Str, Unicode
 
 # Locals imports.
 from package_globals import get_permissions_manager

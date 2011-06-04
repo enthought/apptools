@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Bool, HasTraits, implements, Instance, \
+from traits.api import Bool, HasTraits, implements, Instance, \
         Int, List, Property, Unicode
 
 # Local imports.

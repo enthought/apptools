@@ -5,8 +5,8 @@
 from os.path import join
 
 # Enthought library imports.
-from enthought.etsconfig.api import ETSConfig
-from enthought.traits.api import List, Str, Undefined
+from traits.etsconfig.api import ETSConfig
+from traits.api import List, Str, Undefined
 
 # Local imports.
 from i_preferences import IPreferences

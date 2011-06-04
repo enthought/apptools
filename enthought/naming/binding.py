@@ -15,7 +15,7 @@
 
 
 # Enthought libary imports.
-from enthought.traits.api import Any, HasTraits, Property, Str
+from traits.api import Any, HasTraits, Property, Str
 
 
 class Binding(HasTraits):

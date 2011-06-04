@@ -7,7 +7,7 @@ Unit tests for the script recorder.
 
 import unittest
 
-from enthought.traits.api import (HasTraits, Float, Instance,
+from traits.api import (HasTraits, Float, Instance,
         Str, List, Bool, HasStrictTraits, Tuple, Range, TraitPrefixMap,
         Trait)
 from enthought.scripting.api import (Recorder, recordable,

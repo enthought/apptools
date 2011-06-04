@@ -19,7 +19,7 @@ import errno
 import os
 
 # Enthought library imports.
-from enthought.etsconfig.api import ETSConfig
+from traits.etsconfig.api import ETSConfig
 
 
 class Persistent(object):

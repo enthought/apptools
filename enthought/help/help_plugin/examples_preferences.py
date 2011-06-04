@@ -12,7 +12,7 @@
 
 
 from enthought.preferences.api import PreferencesHelper
-from enthought.traits.api import Either, Enum, File, Str, implements
+from traits.api import Either, Enum, File, Str, implements
 
 # This module's package.
 PKG = '.'.join(__name__.split('.')[:-1])

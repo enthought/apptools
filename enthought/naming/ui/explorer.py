@@ -16,8 +16,8 @@
 
 # Enthought library imports.
 from enthought.naming.api import Binding, PyContext
-from enthought.pyface.api import PythonShell, SplitApplicationWindow
-from enthought.traits.api import Float, Instance, Str
+from pyface.api import PythonShell, SplitApplicationWindow
+from traits.api import Float, Instance, Str
 
 # Local imports.
 from naming_tree import NamingTree

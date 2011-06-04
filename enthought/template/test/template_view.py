@@ -25,25 +25,25 @@ from os.path \
 from pickle \
     import dump, load
 
-from enthought.traits.api \
+from traits.api \
     import HasPrivateTraits, Str, Instance, Any, File, Button, on_trait_change
 
-from enthought.traits.ui.api \
+from traitsui.api \
     import View, VGroup, HGroup, Tabbed, Item, InstanceEditor, Theme, Label
 
-from enthought.traits.ui.wx.themed_text_editor \
+from traitsui.wx.themed_text_editor \
     import ThemedTextEditor
 
-from enthought.developer.features.api \
+from etsdevtools.developer.features.api \
     import DropFile
 
-from enthought.pyface.api \
+from pyface.api \
     import FileDialog, OK
 
-from enthought.developer.helper.themes \
+from etsdevtools.developer.helper.themes \
     import TButton
 
-from enthought.block_canvas.app.utils \
+from blockcanvas.app.utils \
     import import_log_files
 
 from enthought.template.api \

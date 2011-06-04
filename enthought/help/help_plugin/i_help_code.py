@@ -13,7 +13,7 @@
 # Thanks for using Enthought open source!
 
 
-from enthought.traits.api import Interface, File, Str
+from traits.api import Interface, File, Str
 
 class IHelpCode(Interface):
     """ The interface for help code.

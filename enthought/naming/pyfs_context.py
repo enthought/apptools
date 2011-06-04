@@ -20,7 +20,7 @@ from os.path import join, splitext
 
 # Enthought library imports.
 from enthought.io.api import File
-from enthought.traits.api import Any, Dict, Instance, Property, Str
+from traits.api import Any, Dict, Instance, Property, Str
 
 # Local imports.
 from address import Address

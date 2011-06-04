@@ -16,7 +16,7 @@
 # Enthought library imports.
 from enthought.permissions.default.api import IPolicyStorage, \
         PolicyStorageError
-from enthought.traits.api import HasTraits, implements
+from traits.api import HasTraits, implements
 
 # Local imports.
 from proxy_server import ProxyServer

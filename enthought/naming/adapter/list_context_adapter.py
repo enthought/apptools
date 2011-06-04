@@ -3,7 +3,7 @@
 
 # Enthought library imports.
 from enthought.naming.api import Binding, ContextAdapter, naming_manager
-from enthought.traits.api import List, Property
+from traits.api import List, Property
 
 
 class ListContextAdapter(ContextAdapter):

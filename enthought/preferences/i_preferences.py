@@ -2,7 +2,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import Instance, Interface, Str
+from traits.api import Instance, Interface, Str
 
 
 class IPreferences(Interface):

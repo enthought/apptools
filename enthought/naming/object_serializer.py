@@ -23,7 +23,7 @@ from os.path import splitext
 
 # Enthought library imports.
 import enthought.sweet_pickle as sweet_pickle
-from enthought.traits.api import HasTraits, Str
+from traits.api import HasTraits, Str
 
 
 # Setup a logger for this module.

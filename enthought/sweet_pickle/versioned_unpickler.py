@@ -25,7 +25,7 @@ import sys
 from types import DictionaryType, GeneratorType
 
 # Enthought library imports
-from enthought.traits.api import HasTraits, Instance
+from traits.api import HasTraits, Instance
 
 
 # Setup a logger for this module

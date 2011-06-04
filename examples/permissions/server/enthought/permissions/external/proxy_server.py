@@ -21,8 +21,8 @@ import socket
 import xmlrpclib
 
 # Enthought library imports.
-from enthought.etsconfig.api import ETSConfig
-from enthought.pyface.api import confirm, YES
+from traits.etsconfig.api import ETSConfig
+from pyface.api import confirm, YES
 
 
 # The default IP address to connect to.

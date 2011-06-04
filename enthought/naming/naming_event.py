@@ -15,7 +15,7 @@
 
 
 # Enthought library imports.
-from enthought.traits.api import HasTraits, Instance
+from traits.api import HasTraits, Instance
 
 # Local imports.
 from binding import Binding
