@@ -59,7 +59,7 @@ DOCLINES = __doc__.split("\n")
 setup(
     author = 'Enthought, Inc.',
     author_email = 'info@enthought.com',
-    download_url = ('http://www.enthought.com/repo/ETS/AppTools-%s.tar.gz' %
+    download_url = ('http://www.enthought.com/repo/ets/AppTools-%s.tar.gz' %
                     INFO['version']),
     classifiers = [c.strip() for c in """\
         Development Status :: 5 - Production/Stable
@@ -79,7 +79,7 @@ setup(
     description = DOCLINES[1],
     ext_modules = [],
     include_package_data = True,
-    package_data = {'enthought': [
+    package_data = {'apptools': [
             'help/help_plugin/*.ini',
             'naming/ui/images/*.png',
             'help/help_plugin/action/images/*.png',
@@ -90,9 +90,6 @@ setup(
     maintainer = 'ETS Developers',
     maintainer_email = 'enthought-dev@enthought.com',
     name = 'AppTools',
-    namespace_packages = [
-        "enthought",
-        ],
     packages = find_packages(),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
     tests_require = [
