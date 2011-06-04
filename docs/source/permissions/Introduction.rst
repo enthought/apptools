@@ -164,21 +164,21 @@ Deploying Alternative Managers
 ------------------------------
 
 The permissions framework will first try to import the different managers from
-the ``enthought.permissions.external`` namespace.  The default managers are
+the ``apptools.permissions.external`` namespace.  The default managers are
 only used if no alternative was found.  Therefore, alternative managers should
 be deployed as an egg containing that namespace.
 
 Specifically the framework looks for the following classes:
 
-    ``PolicyManager`` from ``enthought.permissions.external.policy_manager``
+    ``PolicyManager`` from ``apptools.permissions.external.policy_manager``
 
-    ``PolicyStorage`` from ``enthought.permissions.external.policy_storage``
+    ``PolicyStorage`` from ``apptools.permissions.external.policy_storage``
 
-    ``UserDatabase`` from ``enthought.permissions.external.user_database``
+    ``UserDatabase`` from ``apptools.permissions.external.user_database``
 
-    ``UserManager`` from ``enthought.permissions.external.user_manager``
+    ``UserManager`` from ``apptools.permissions.external.user_manager``
 
-    ``UserStorage`` from ``enthought.permissions.external.user_storage``
+    ``UserStorage`` from ``apptools.permissions.external.user_storage``
 
 The example server is such a package that provides PolicyStorage and
 UserStorage implementations that use an XML-RPC based server to provide remote

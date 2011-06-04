@@ -18,7 +18,7 @@ import errno
 import socket
 
 # Enthought library imports.
-from enthought.permissions.default.api import IUserStorage, UserStorageError
+from apptools.permissions.default.api import IUserStorage, UserStorageError
 from traits.api import HasTraits, implements, List, Str
 
 # Local imports.

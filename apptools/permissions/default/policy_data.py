@@ -17,7 +17,7 @@
 from traits.api import HasTraits, Instance, List, Unicode
 
 # Local imports.
-from enthought.permissions.permission import Permission
+from apptools.permissions.permission import Permission
 
 
 class Role(HasTraits):

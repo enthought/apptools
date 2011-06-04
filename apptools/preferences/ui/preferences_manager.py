@@ -51,7 +51,7 @@ class PreferencesHelpWindow(HasTraits):
                    'width' : 800,
                    'height' : 800,
                    'resizable' : True,
-                   'id' : 'enthought.preferences.ui.preferences_manager.help'}
+                   'id' : 'apptools.preferences.ui.preferences_manager.help'}
         to_show = {}
 
         for name, trait_obj in self.traits().items():

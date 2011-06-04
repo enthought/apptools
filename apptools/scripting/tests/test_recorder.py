@@ -10,7 +10,7 @@ import unittest
 from traits.api import (HasTraits, Float, Instance,
         Str, List, Bool, HasStrictTraits, Tuple, Range, TraitPrefixMap,
         Trait)
-from enthought.scripting.api import (Recorder, recordable,
+from apptools.scripting.api import (Recorder, recordable,
     set_recorder)
 
 

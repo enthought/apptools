@@ -13,8 +13,8 @@ from os.path import abspath, dirname, basename, join
 import StringIO
 
 # Enthought library imports.
-from enthought.persistence import state_pickler
-from enthought.persistence import file_path
+from apptools.persistence import state_pickler
+from apptools.persistence import file_path
 
 class Test:
     def __init__(self):

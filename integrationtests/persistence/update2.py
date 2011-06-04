@@ -1,7 +1,7 @@
 # Update class names from the immediately prior version only
 # to ensure that cycles are not possible
 
-from enthought.persistence.updater import Updater
+from apptools.persistence.updater import Updater
 
 
 def update_project(self, state):

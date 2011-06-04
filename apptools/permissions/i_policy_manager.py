@@ -27,7 +27,7 @@ class IPolicyManager(Interface):
     management_actions = List(Instance(Action))
 
     # The list of permissions assigned to the current user.
-    user_permissions = List(Instance('enthought.permissions.api.Permission'))
+    user_permissions = List(Instance('apptools.permissions.api.Permission'))
 
     def bootstrapping(self):
         """Return True if the policy manager is bootstrapping.  Typically this

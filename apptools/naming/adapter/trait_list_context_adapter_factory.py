@@ -2,7 +2,7 @@
 
 
 # Enthought library imports.
-from enthought.naming.api import ContextAdapterFactory
+from apptools.naming.api import ContextAdapterFactory
 from traits.api import Str, TraitList
 
 # Local imports.

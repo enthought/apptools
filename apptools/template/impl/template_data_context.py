@@ -27,7 +27,7 @@ from traits.api\
     import HasPrivateTraits, Dict, Str, Any, Property, implements, \
            cached_property
 
-from enthought.template.itemplate_data_context \
+from apptools.template.itemplate_data_context \
     import ITemplateDataContext, ITemplateDataContextError
 
 #-------------------------------------------------------------------------------

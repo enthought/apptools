@@ -15,7 +15,7 @@
 
 
 # Enthought library imports.
-from enthought.naming.api import Binding
+from apptools.naming.api import Binding
 from pyface.tree.api import NodeTreeModel
 from traits.api import Instance
 

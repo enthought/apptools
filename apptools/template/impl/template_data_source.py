@@ -22,10 +22,10 @@
 from traits.api \
     import implements
 
-from enthought.template.template_data_name \
+from apptools.template.template_data_name \
     import TemplateDataName
 
-from enthought.template.itemplate_data_source \
+from apptools.template.itemplate_data_source \
     import ITemplateDataSource
 
 #-------------------------------------------------------------------------------

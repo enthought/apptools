@@ -17,7 +17,7 @@
 # Enthought library imports.
 from traits.api import Any, Dict, Event, HasTraits, Instance
 from traits.api import Property, Str
-from enthought.type_manager.api import TypeManager
+from apptools.type_manager.api import TypeManager
 
 # Local imports.
 from binding import Binding
@@ -32,12 +32,12 @@ from unique_name import make_unique_name
 
 
 # Constants for environment property keys.
-INITIAL_CONTEXT_FACTORY = "enthought.naming.factory.initial"
-OBJECT_FACTORIES = "enthought.naming.factory.object"
-STATE_FACTORIES = "enthought.naming.factory.state"
+INITIAL_CONTEXT_FACTORY = "apptools.naming.factory.initial"
+OBJECT_FACTORIES = "apptools.naming.factory.object"
+STATE_FACTORIES = "apptools.naming.factory.state"
 
 # Non-JNDI.
-TYPE_MANAGER = "enthought.naming.factory.type.manager"
+TYPE_MANAGER = "apptools.naming.factory.type.manager"
 
 
 # The default environment.

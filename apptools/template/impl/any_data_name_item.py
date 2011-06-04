@@ -24,16 +24,16 @@
 from traits.api \
     import HasPrivateTraits, Instance, Property, implements
 
-from enthought.template.template_traits \
+from apptools.template.template_traits \
     import TBool
 
-from enthought.template.itemplate_data_context \
+from apptools.template.itemplate_data_context \
     import ITemplateDataContext
 
-from enthought.template.itemplate_data_name_item \
+from apptools.template.itemplate_data_name_item \
     import ITemplateDataNameItem
 
-from enthought.template.template_impl \
+from apptools.template.template_impl \
     import Template
 
 from template_data_context \

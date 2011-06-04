@@ -10,7 +10,7 @@ import unittest
 import numpy
 from pickle import dumps
 
-from enthought.persistence import spickle
+from apptools.persistence import spickle
 from traits.api import HasTraits, Float, Int
 
 class A:

@@ -5,7 +5,7 @@ import pickle
 import logging
 
 # Enthought library imports
-from enthought.persistence.versioned_unpickler import VersionedUnpickler
+from apptools.persistence.versioned_unpickler import VersionedUnpickler
 
 
 logger = logging.getLogger(__name__)

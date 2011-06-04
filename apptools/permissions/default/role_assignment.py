@@ -20,7 +20,7 @@ from traitsui.api import Group, Handler, Item, SetEditor, View
 from traitsui.menu import Action, CancelButton
 
 # Local imports.
-from enthought.permissions.package_globals import get_permissions_manager
+from apptools.permissions.package_globals import get_permissions_manager
 from i_policy_storage import PolicyStorageError
 from policy_data import Assignment, Role
 

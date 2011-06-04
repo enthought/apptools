@@ -199,7 +199,7 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
     ### public 'VersionedUnpickler' interface ################################
 
     # The updater used to modify the objects being unpickled.
-    updater = Instance('enthought.sweet_pickle.updater.Updater')
+    updater = Instance('apptools.sweet_pickle.updater.Updater')
 
 
     ##########################################################################
@@ -272,7 +272,7 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
         try:
             klass = super(VersionedUnpickler, self).find_class(module, name)
         except Exception, e:
-            from enthought.sweet_pickle import UnpicklingError
+            from apptools.sweet_pickle import UnpicklingError
             logger.debug('Traceback when finding class [%s.%s]:' \
                          % (module, name), exc_info=True)
             raise UnpicklingError('Unable to load class [%s.%s]. '
@@ -368,7 +368,7 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
         if module != obj.__class__.__module__ \
             or name != obj.__class__.__name__ \
             or version != target_version:
-            from enthought.sweet_pickle import UnpicklingError
+            from apptools.sweet_pickle import UnpicklingError
             raise UnpicklingError('Unexpected state! Got ' + \
                 '[%s.%s (v.%s)] expected [%s.%s (v.%s)]' % (module, name,
                 version, obj.__class__.__module__, obj.__class__.__name__,
@@ -424,7 +424,7 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
         visited = []
         while self.updater.has_class_mapping(module, name):
             if (module, name) in visited:
-                from enthought.sweet_pickle import UnpicklingError
+                from apptools.sweet_pickle import UnpicklingError
                 raise UnpicklingError('Detected infinite loop in class ' + \
                     'mapping from [%s.%s] to [%s.%s] within Updater [%s]' % \
                     (original_module, original_name, module, name,

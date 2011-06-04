@@ -14,7 +14,7 @@ from traits.api import Bool, Int, Long, Array, Float, Complex, Any, \
      Str, Unicode, Instance, Tuple, List, Dict, HasTraits
 from enthought.tvtk.api import tvtk
 
-from enthought.persistence import state_pickler
+from apptools.persistence import state_pickler
 
 
 # A simple class to test instances.

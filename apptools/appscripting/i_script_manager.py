@@ -47,7 +47,7 @@ class IScriptManager(Interface):
 
     # This event is fired when the recorded script changes.  The value of the
     # event will be the ScriptManager instance.
-    script_updated = Event(Instance('enthought.appscripting.api.IScriptManager'))
+    script_updated = Event(Instance('apptools.appscripting.api.IScriptManager'))
 
     ###########################################################################
     # 'IScriptManager' interface.

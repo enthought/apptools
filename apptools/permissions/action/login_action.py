@@ -18,7 +18,7 @@ from pyface.action.api import Action
 from traits.api import Unicode
 
 # Local imports.
-from enthought.permissions.package_globals import get_permissions_manager
+from apptools.permissions.package_globals import get_permissions_manager
 
 
 class LoginAction(Action):

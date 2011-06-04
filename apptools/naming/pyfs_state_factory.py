@@ -15,7 +15,7 @@
 
 
 # Enthought library imports.
-from enthought.io.api import File
+from apptools.io.api import File
 
 # Local imports.
 from address import Address

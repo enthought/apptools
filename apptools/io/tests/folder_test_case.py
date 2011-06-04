@@ -19,7 +19,7 @@ import os, shutil, stat, unittest
 from os.path import join
 
 # Enthought library imports.
-from enthought.io import File
+from apptools.io import File
 
 
 class FolderTestCase(unittest.TestCase):

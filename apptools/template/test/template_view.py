@@ -46,7 +46,7 @@ from etsdevtools.developer.helper.themes \
 from blockcanvas.app.utils \
     import import_log_files
 
-from enthought.template.api \
+from apptools.template.api \
     import ITemplate, ITemplateDataContext, TemplateDataNames, Template
 
 from enable_editor \
@@ -54,7 +54,7 @@ from enable_editor \
 
 #-- Adapters that might be used ------------------------------------------------
 
-from enthought.template.impl.base_data_context_adapter \
+from apptools.template.impl.base_data_context_adapter \
     import BaseDataContextAdapter
 
 #-------------------------------------------------------------------------------

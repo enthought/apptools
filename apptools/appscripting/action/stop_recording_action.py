@@ -18,7 +18,7 @@ from pyface.action.api import Action
 from traits.api import Bool, Unicode
 
 # Local imports.
-from enthought.appscripting.package_globals import get_script_manager
+from apptools.appscripting.package_globals import get_script_manager
 
 
 class StopRecordingAction(Action):

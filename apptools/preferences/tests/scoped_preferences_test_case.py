@@ -9,14 +9,14 @@ from os.path import join
 from pkg_resources import resource_filename
 
 # Enthought library imports.
-from enthought.preferences.api import Preferences, ScopedPreferences
+from apptools.preferences.api import Preferences, ScopedPreferences
 
 # Local imports.
 from preferences_test_case import PreferencesTestCase
 
 
 # This module's package.
-PKG = 'enthought.preferences.tests'
+PKG = 'apptools.preferences.tests'
 
 
 class ScopedPreferencesTestCase(PreferencesTestCase):

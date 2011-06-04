@@ -15,8 +15,8 @@ import unittest
 import logging
 
 # Enthought library imports
-import enthought.sweet_pickle as sweet_pickle
-from enthought.sweet_pickle.global_registry import _clear_global_registry
+import apptools.sweet_pickle as sweet_pickle
+from apptools.sweet_pickle.global_registry import _clear_global_registry
 
 
 logger = logging.getLogger(__name__)

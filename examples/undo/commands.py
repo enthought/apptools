@@ -15,7 +15,7 @@
 
 # Enthought library imports.
 from traits.api import Instance, Int, Unicode
-from enthought.undo.api import AbstractCommand
+from apptools.undo.api import AbstractCommand
 
 # Local imports.
 from model import Label

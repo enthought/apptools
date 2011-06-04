@@ -19,7 +19,7 @@ import cPickle, glob, logging, os
 from os.path import join, splitext
 
 # Enthought library imports.
-from enthought.io.api import File
+from apptools.io.api import File
 from traits.api import Any, Dict, Instance, Property, Str
 
 # Local imports.
@@ -46,8 +46,8 @@ logger = logging.getLogger(__name__)
 ATTRIBUTES_FILE = '__attributes__'
 
 # Constants for environment property keys.
-FILTERS = "enthought.naming.pyfs.filters"
-OBJECT_SERIALIZERS = "enthought.naming.pyfs.object.serializers"
+FILTERS = "apptools.naming.pyfs.filters"
+OBJECT_SERIALIZERS = "apptools.naming.pyfs.object.serializers"
 
 
 # The default environment.

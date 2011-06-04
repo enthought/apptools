@@ -26,13 +26,13 @@
 from traits.api \
     import Bool
 
-from enthought.template.template_traits \
+from apptools.template.template_traits \
     import TStr, TBool
 
-from enthought.template.template_choice \
+from apptools.template.template_choice \
     import TemplateChoice
 
-from enthought.template.itemplate_data_context \
+from apptools.template.itemplate_data_context \
     import ITemplateDataContext
 
 from any_data_name_item \

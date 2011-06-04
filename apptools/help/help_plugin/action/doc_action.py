@@ -23,7 +23,7 @@ from pyface.workbench.action.workbench_action import WorkbenchAction
 from traits.api import Instance, implements, Property
 from pyface.api import ImageResource
 
-from enthought.help.help_plugin.api import HelpDoc
+from apptools.help.help_plugin.api import HelpDoc
 
 # Local imports
 from util import get_sys_prefix_relative_filename

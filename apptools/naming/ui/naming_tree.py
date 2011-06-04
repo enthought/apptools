@@ -15,7 +15,7 @@
 
 
 # Enthought library imports.
-from enthought.naming.api import OperationNotSupportedError
+from apptools.naming.api import OperationNotSupportedError
 from pyface.tree.api import NodeTree
 from traits.api import Instance
 

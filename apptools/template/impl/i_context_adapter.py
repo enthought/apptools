@@ -29,7 +29,7 @@ from traits.protocols.api \
 from codetools.contexts.api \
     import IContext
 
-from enthought.template.itemplate_data_context \
+from apptools.template.itemplate_data_context \
     import ITemplateDataContext, ITemplateDataContextError
 
 from helper \

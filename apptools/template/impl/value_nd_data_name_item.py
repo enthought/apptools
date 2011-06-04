@@ -26,10 +26,10 @@
 from numpy \
     import array
 
-from enthought.template.template_traits \
+from apptools.template.template_traits \
     import TRange
 
-from enthought.template.template_choice \
+from apptools.template.template_choice \
     import TemplateChoice
 
 from any_data_name_item \

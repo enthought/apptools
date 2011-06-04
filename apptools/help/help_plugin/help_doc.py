@@ -10,7 +10,7 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 
-from enthought.preferences.api import PreferencesHelper
+from apptools.preferences.api import PreferencesHelper
 from traits.api import Either, File, Str, implements, Bool
 
 from i_help_doc import IHelpDoc

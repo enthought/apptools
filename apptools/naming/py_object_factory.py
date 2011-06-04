@@ -38,7 +38,7 @@ class PyObjectFactory(ObjectFactory):
                     obj = context._context_factory(name, namespace)
 
         elif hasattr(state, '__dict__'):
-            from enthought.naming.py_context import PyContext
+            from apptools.naming.py_context import PyContext
             if not isinstance(state, PyContext):
                 obj = context._context_factory(name, state)
 

@@ -8,8 +8,8 @@ from pyface.workbench.api import Perspective, PerspectiveItem
 from pyface.workbench.action.api import MenuBarManager
 from pyface.workbench.action.api import ToolBarManager
 from pyface.workbench.action.api import ViewMenuManager
-from enthought.permissions.api import SecureProxy
-from enthought.permissions.action.api import UserMenuManager
+from apptools.permissions.api import SecureProxy
+from apptools.permissions.action.api import UserMenuManager
 from traits.api import Callable, HasTraits, List, Instance
 
 # Local imports.

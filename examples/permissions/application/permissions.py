@@ -1,7 +1,7 @@
 """The definitions of all the permissions used in the example."""
 
 
-from enthought.permissions.api import Permission
+from apptools.permissions.api import Permission
 
 
 # Access to the Debug view.

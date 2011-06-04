@@ -64,7 +64,7 @@ if __name__ == '__main__':
 
     print '===================================================================='
 
-    from enthought.persistence.versioned_unpickler import VersionedUnpickler
+    from apptools.persistence.versioned_unpickler import VersionedUnpickler
     from update1 import Update1
     # Try and read them back in ...
     f = open('foo0.txt')

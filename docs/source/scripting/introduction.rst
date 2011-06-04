@@ -29,7 +29,7 @@ The scripting API primarily allows you to record UI actions for objects
 that have Traits.  Technically the framework listens to all trait
 changes so will work outside a UI.  We do not document the full API
 here, the best place to look for that is the
-``enthought.scripting.recorder`` module which is reasonably well
+``apptools.scripting.recorder`` module which is reasonably well
 documented.  We provide a high level overview of the library. 
 
 The quickest way to get started is to look at a small example.
@@ -46,7 +46,7 @@ simple objects organized in a hierarchy::
     from traits.api import (HasTraits, Float, Instance, 
             Str, List, Bool, HasStrictTraits, Tuple, Range, TraitPrefixMap,
             Trait)
-    from enthought.scripting.api import (Recorder, recordable,
+    from apptools.scripting.api import (Recorder, recordable,
         set_recorder)
 
     class Property(HasStrictTraits):

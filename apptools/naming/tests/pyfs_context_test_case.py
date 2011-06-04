@@ -18,8 +18,8 @@
 import os, shutil, unittest
 
 # Enthought library imports.
-from enthought.io import File
-from enthought.naming.api import *
+from apptools.io import File
+from apptools.naming.api import *
 
 
 class PyFSContextTestCase(unittest.TestCase):

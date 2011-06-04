@@ -11,7 +11,7 @@
 # Thanks for using Enthought open source!
 
 
-from enthought.preferences.api import PreferencesHelper
+from apptools.preferences.api import PreferencesHelper
 from traits.api import Either, Enum, File, Str, implements
 
 # This module's package.

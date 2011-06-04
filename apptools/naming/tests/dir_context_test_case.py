@@ -15,7 +15,7 @@
 
 
 # Enthought library imports.
-from enthought.naming.api import *
+from apptools.naming.api import *
 
 # Local imports.
 from context_test_case import ContextTestCase

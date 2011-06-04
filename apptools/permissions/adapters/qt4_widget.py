@@ -17,7 +17,7 @@
 from traits.qt import QtGui
 
 # Enthought library imports.
-from enthought.permissions.adapter_base import AdapterBase
+from apptools.permissions.adapter_base import AdapterBase
 
 
 class QWidgetAdapter(AdapterBase):

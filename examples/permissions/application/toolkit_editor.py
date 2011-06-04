@@ -5,7 +5,7 @@ ability to apply permissions to toolkit specific widgets.
 
 # Enthought library imports.
 from traits.etsconfig.api import ETSConfig
-from enthought.permissions.api import SecureProxy
+from apptools.permissions.api import SecureProxy
 from pyface.workbench.api import Editor
 
 # Local imports.

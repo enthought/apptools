@@ -10,31 +10,31 @@ The AppTools project includes a set of packages that Enthought has found useful
 in creating a number of applications. They implement functionality that is
 commonly needed by many applications
 
-- **enthought.appscripting**: Framework for scripting applications.
-- **enthought.help**: Provides a plugin for displaying documents and examples
+- **apptools.appscripting**: Framework for scripting applications.
+- **apptools.help**: Provides a plugin for displaying documents and examples
   and running demos in Envisage Workbench applications.
-- **enthought.io**: Provides an abstraction for files and folders in a file
+- **apptools.io**: Provides an abstraction for files and folders in a file
   system.
-- **enthought.naming**: Manages naming contexts, supporting non-string data
+- **apptools.naming**: Manages naming contexts, supporting non-string data
   types and scoped preferences
-- **enthought.permissions**: Supports limiting access to parts of an
+- **apptools.permissions**: Supports limiting access to parts of an
   application unless the user is appropriately authorised (not full-blown
   security).
-- **enthought.persistence**: Supports pickling the state of a Python object
+- **apptools.persistence**: Supports pickling the state of a Python object
   to a dictionary, which can then be flexibly applied in restoring the state of
   the object.
-- **enthought.preferences**: Manages application preferences.
+- **apptools.preferences**: Manages application preferences.
 - **pyface.resource**: Manages application resources such as images and
   sounds.
-- **enthought.scripting**: A framework for automatic recording of Python
+- **apptools.scripting**: A framework for automatic recording of Python
   scripts.
-- **enthought.sweet_pickle**: Handles class-level versioning, to support
+- **apptools.sweet_pickle**: Handles class-level versioning, to support
   loading of saved data that exist over several generations of internal class
   structures.
-- **enthought.template**: Supports creating templatizable object hierarchies.
-- **enthought.type_manager**: Manages type extensions, including factories
+- **apptools.template**: Supports creating templatizable object hierarchies.
+- **apptools.type_manager**: Manages type extensions, including factories
   to generate adapters, and hooks for methods and functions.
-- **enthought.undo**: Supports undoing and scripting application commands.
+- **apptools.undo**: Supports undoing and scripting application commands.
 
 Prerequisites
 -------------

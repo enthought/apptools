@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from enthought.permissions.default.api import IPolicyStorage, \
+from apptools.permissions.default.api import IPolicyStorage, \
         PolicyStorageError
 from traits.api import HasTraits, implements
 

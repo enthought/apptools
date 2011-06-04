@@ -18,15 +18,15 @@
 import os, sys
 
 # Enthought library imports.
-from enthought.naming.api import Context, InitialContext
+from apptools.naming.api import Context, InitialContext
 
 
 # Application entry point.
 if __name__ == '__main__':
 
     # Set up the naming environment.
-    klass_name = "enthought.naming.InitialContextFactory"
-    klass_name = "enthought.naming.PyFSInitialContextFactory"
+    klass_name = "apptools.naming.InitialContextFactory"
+    klass_name = "apptools.naming.PyFSInitialContextFactory"
     environment = {Context.INITIAL_CONTEXT_FACTORY : klass_name}
 
     # Create an initial context.

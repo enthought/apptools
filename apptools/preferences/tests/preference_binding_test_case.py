@@ -9,14 +9,14 @@ from os.path import join
 from pkg_resources import resource_filename
 
 # Enthought library imports.
-from enthought.preferences.api import Preferences, PreferenceBinding
-from enthought.preferences.api import ScopedPreferences, bind_preference
-from enthought.preferences.api import set_default_preferences
+from apptools.preferences.api import Preferences, PreferenceBinding
+from apptools.preferences.api import ScopedPreferences, bind_preference
+from apptools.preferences.api import set_default_preferences
 from traits.api import Bool, HasTraits, Int, Float, Str
 
 
 # This module's package.
-PKG = 'enthought.preferences.tests'
+PKG = 'apptools.preferences.tests'
 
 
 def listener(obj, trait_name, old, new):

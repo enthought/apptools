@@ -19,9 +19,9 @@ from pyface.action.api import Action
 from traits.api import Dict, HasTraits, implements, Instance, List
 
 # Local imports.
-from enthought.permissions.i_policy_manager import IPolicyManager
-from enthought.permissions.permission import ManagePolicyPermission, Permission
-from enthought.permissions.secure_proxy import SecureProxy
+from apptools.permissions.i_policy_manager import IPolicyManager
+from apptools.permissions.permission import ManagePolicyPermission, Permission
+from apptools.permissions.secure_proxy import SecureProxy
 from i_policy_storage import IPolicyStorage, PolicyStorageError
 from role_assignment import role_assignment
 from role_definition import role_definition
@@ -139,8 +139,8 @@ class PolicyManager(HasTraits):
 
         # Defer to an external storage manager if there is one.
         try:
-            from enthought.permissions.external.policy_storage import PolicyStorage
+            from apptools.permissions.external.policy_storage import PolicyStorage
         except ImportError:
-            from enthought.permissions.default.policy_storage import PolicyStorage
+            from apptools.permissions.default.policy_storage import PolicyStorage
 
         return PolicyStorage()

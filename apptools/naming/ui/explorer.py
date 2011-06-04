@@ -15,7 +15,7 @@
 
 
 # Enthought library imports.
-from enthought.naming.api import Binding, PyContext
+from apptools.naming.api import Binding, PyContext
 from pyface.api import PythonShell, SplitApplicationWindow
 from traits.api import Float, Instance, Str
 
@@ -90,7 +90,7 @@ class Explorer(SplitApplicationWindow):
         python_shell.bind('explore', explore)
 
         # Execute useful commands to bind useful names ;^)
-        python_shell.execute_command('from enthought.naming.api import *')
+        python_shell.execute_command('from apptools.naming.api import *')
 
         return python_shell.control
 

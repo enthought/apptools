@@ -19,7 +19,7 @@ from pyface.workbench.api import WorkbenchWindow
 from pyface.workbench.action.api import MenuBarManager, \
         ToolBarManager
 from traits.api import Instance, on_trait_change
-from enthought.undo.action.api import CommandAction, RedoAction, UndoAction
+from apptools.undo.action.api import CommandAction, RedoAction, UndoAction
 
 # Local imports.
 from example_editor_manager import ExampleEditorManager

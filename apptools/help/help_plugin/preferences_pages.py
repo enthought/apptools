@@ -10,7 +10,7 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 
-from enthought.preferences.ui.api import PreferencesPage
+from apptools.preferences.ui.api import PreferencesPage
 from traits.api import Either, File, Str
 from traitsui.api import Group, Item, Label, View
 

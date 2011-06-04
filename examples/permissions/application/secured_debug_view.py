@@ -3,7 +3,7 @@
 
 # Enthought library imports.
 from pyface.workbench.debug.api import DebugView
-from enthought.permissions.api import SecureProxy
+from apptools.permissions.api import SecureProxy
 
 # Local imports.
 from permissions import DebugViewPerm

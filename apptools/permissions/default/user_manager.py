@@ -19,10 +19,10 @@ from traits.api import Bool, Event, HasTraits, implements, \
         Instance, List, Unicode
 
 # Local imports.
-from enthought.permissions.i_user import IUser
-from enthought.permissions.i_user_manager import IUserManager
-from enthought.permissions.package_globals import get_permissions_manager
-from enthought.permissions.permission import ManageUsersPermission
+from apptools.permissions.i_user import IUser
+from apptools.permissions.i_user_manager import IUserManager
+from apptools.permissions.package_globals import get_permissions_manager
+from apptools.permissions.permission import ManageUsersPermission
 from i_user_database import IUserDatabase
 
 
@@ -90,7 +90,7 @@ class UserManager(HasTraits):
     def _management_actions_default(self):
         """Return the list of management actions."""
 
-        from enthought.permissions.secure_proxy import SecureProxy
+        from apptools.permissions.secure_proxy import SecureProxy
 
         user_db = self.user_db
         actions = []
@@ -132,9 +132,9 @@ class UserManager(HasTraits):
 
         # Defer to an external user database if there is one.
         try:
-            from enthought.permissions.external.user_database import UserDatabase
+            from apptools.permissions.external.user_database import UserDatabase
         except ImportError:
-            from enthought.permissions.default.user_database import UserDatabase
+            from apptools.permissions.default.user_database import UserDatabase
 
         return UserDatabase()
 

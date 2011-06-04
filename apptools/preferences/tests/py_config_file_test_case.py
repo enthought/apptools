@@ -13,7 +13,7 @@ from py_config_file import PyConfigFile
 
 
 # This module's package.
-PKG = 'enthought.preferences.tests'
+PKG = 'apptools.preferences.tests'
 
 
 class PyConfigFileTestCase(unittest.TestCase):

@@ -2,7 +2,7 @@
 
 
 # Enthought library imports.
-from enthought.permissions.api import SecureHandler
+from apptools.permissions.api import SecureHandler
 from traits.api import HasTraits, Int, Unicode
 from traitsui.api import Item, View
 

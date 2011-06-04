@@ -10,7 +10,7 @@
 # Test cases.
 import random
 import pickle
-import enthought.sweet_pickle as sweet_pickle
+import apptools.sweet_pickle as sweet_pickle
 
 ########################################
 

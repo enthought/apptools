@@ -7,7 +7,7 @@
 #
 #-----------------------------------------------------------------------------
 
-""" Tests the state function functionality of the enthought.sweet_pickle
+""" Tests the state function functionality of the apptools.sweet_pickle
     framework.
 """
 
@@ -16,8 +16,8 @@ import unittest
 import logging
 
 # Enthought library imports
-import enthought.sweet_pickle as sweet_pickle
-from enthought.sweet_pickle.global_registry import _clear_global_registry
+import apptools.sweet_pickle as sweet_pickle
+from apptools.sweet_pickle.global_registry import _clear_global_registry
 from traits.api import Bool, Float, HasTraits, Int, Str
 
 
@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 # Need complete package name so that mapping matches correctly.
 # The problem here is the Python loader that will load the same module with
 # multiple names in sys.modules due to relative naming. Nice.
-from enthought.sweet_pickle.tests.state_function_classes import Foo, Bar, Baz
+from apptools.sweet_pickle.tests.state_function_classes import Foo, Bar, Baz
 
 ##############################################################################
 # State functions to use within the tests
@@ -50,7 +50,7 @@ def bar_state_function(state):
 ##############################################################################
 
 class StateFunctionTestCase(unittest.TestCase):
-    """ Tests the state function functionality of the enthought.sweet_pickle
+    """ Tests the state function functionality of the apptools.sweet_pickle
         framework.
     """
 

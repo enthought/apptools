@@ -22,7 +22,7 @@ from os.path import splitext
 #import pickle
 
 # Enthought library imports.
-import enthought.sweet_pickle as sweet_pickle
+import apptools.sweet_pickle as sweet_pickle
 from traits.api import HasTraits, Str
 
 

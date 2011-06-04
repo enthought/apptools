@@ -41,7 +41,7 @@ from chaco.api \
 from chaco.scatter_markers \
     import marker_trait
 
-from enthought.template.api \
+from apptools.template.api \
     import MutableTemplate, TRange, TStr, TList, TDerived
 
 from enable_editor \

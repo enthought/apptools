@@ -15,7 +15,7 @@
 
 
 # Enthought library imports.
-from enthought.type_manager.api import AdapterFactory
+from apptools.type_manager.api import AdapterFactory
 
 # Local imports.
 from context import Context

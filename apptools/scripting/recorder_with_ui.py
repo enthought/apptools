@@ -56,7 +56,7 @@ class RecorderWithUI(Recorder):
                 ),
              width=600,
              height=360,
-             id='enthought.scripting.recorder_with_ui',
+             id='apptools.scripting.recorder_with_ui',
              buttons=['Cancel'],
              resizable=True,
              handler=CloseHandler()

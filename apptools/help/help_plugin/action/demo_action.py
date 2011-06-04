@@ -21,7 +21,7 @@ from envisage.api import IExtensionPointUser, IExtensionRegistry
 from pyface.workbench.action.workbench_action import WorkbenchAction
 from traits.api import Instance, implements, Property
 from pyface.api import ImageResource
-from enthought.help.help_plugin.api import HelpCode
+from apptools.help.help_plugin.api import HelpCode
 
 # Logging.
 logger = logging.getLogger(__name__)

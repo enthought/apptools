@@ -6,10 +6,10 @@ from traits.api import Color, Int, Float, Str
 from traitsui.api import View
 
 # Local imports.
-from enthought.preferences.api import Preferences, PreferencesHelper
-from enthought.preferences.api import get_default_preferences
-from enthought.preferences.api import set_default_preferences
-from enthought.preferences.ui.api import PreferencesManager, PreferencesPage
+from apptools.preferences.api import Preferences, PreferencesHelper
+from apptools.preferences.api import get_default_preferences
+from apptools.preferences.api import set_default_preferences
+from apptools.preferences.ui.api import PreferencesManager, PreferencesPage
 
 
 # Create a preferences collection from a file and make it the default root

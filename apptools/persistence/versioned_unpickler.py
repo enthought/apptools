@@ -5,7 +5,7 @@ import logging
 from types import GeneratorType
 
 # Enthought library imports
-from enthought.persistence.updater import __replacement_setstate__
+from apptools.persistence.updater import __replacement_setstate__
 
 
 logger = logging.getLogger(__name__)

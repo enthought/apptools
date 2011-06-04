@@ -2,9 +2,9 @@
 
 
 # Enthought library imports.
-from enthought.naming.api import ContextAdapterFactory
+from apptools.naming.api import ContextAdapterFactory
 from traits.api import List, Str
-from enthought.type_manager import PythonObject
+from apptools.type_manager import PythonObject
 
 # Local imports.
 from instance_context_adapter import InstanceContextAdapter

@@ -9,12 +9,12 @@ from os.path import join
 from pkg_resources import resource_filename
 
 # Enthought library imports.
-from enthought.preferences.api import Preferences
+from apptools.preferences.api import Preferences
 from traits.api import HasTraits, Int, Str
 
 
 # This module's package.
-PKG = 'enthought.preferences.tests'
+PKG = 'apptools.preferences.tests'
 
 
 class PreferencesTestCase(unittest.TestCase):
@@ -51,8 +51,8 @@ class PreferencesTestCase(unittest.TestCase):
     def test_package_global_default_preferences(self):
         """ package global default preferences """
 
-        from enthought.preferences.api import get_default_preferences
-        from enthought.preferences.api import set_default_preferences
+        from apptools.preferences.api import get_default_preferences
+        from apptools.preferences.api import set_default_preferences
 
         set_default_preferences(self.preferences)
         self.assertEqual(self.preferences, get_default_preferences())

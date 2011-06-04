@@ -23,13 +23,13 @@ import os, sys
 #sys.path.append(os.path.abspath(r'..\..\..'))
 
 # Enthought library imports.
-from enthought.naming.api import Binding, Context, ContextAdapterFactory
-from enthought.naming.api import PyFSContext
-from enthought.naming.adapter import *
-from enthought.naming.ui.explorer import Explorer
+from apptools.naming.api import Binding, Context, ContextAdapterFactory
+from apptools.naming.api import PyFSContext
+from apptools.naming.adapter import *
+from apptools.naming.ui.explorer import Explorer
 from pyface.api import GUI
 from traits.api import TraitDict, TraitList
-from enthought.type_manager import TypeManager
+from apptools.type_manager import TypeManager
 from traits.util.resource import find_resource
 
 

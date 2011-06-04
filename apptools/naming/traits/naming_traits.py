@@ -25,7 +25,7 @@ from traits.trait_base \
 from traitsui.api \
     import DropEditor
 
-from enthought.naming.api \
+from apptools.naming.api \
     import Binding
 
 

@@ -16,7 +16,7 @@
 # Enthought library imports.
 from pyface.action.api import Action
 from traits.api import Instance
-from enthought.undo.api import IUndoManager
+from apptools.undo.api import IUndoManager
 
 
 class AbstractCommandStackAction(Action):

@@ -31,7 +31,7 @@
     package. Thus, users can simply import sweet_pickle in places where
     they previously used pickle or cPickle.  For example::
 
-        import cPickle          --->    import enthought.sweet_pickle as pickle
+        import cPickle          --->    import apptools.sweet_pickle as pickle
         s = pickle.dumps(obj)           s = pickle.dumps(obj)
         pickle.loads(s)                 pickle.loads(s)
 

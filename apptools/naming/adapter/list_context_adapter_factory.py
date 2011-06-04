@@ -2,7 +2,7 @@
 
 
 # Enthought library imports.
-from enthought.naming.api import ContextAdapterFactory
+from apptools.naming.api import ContextAdapterFactory
 
 # Local imports.
 from list_context_adapter import ListContextAdapter

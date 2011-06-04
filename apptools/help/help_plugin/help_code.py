@@ -12,7 +12,7 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 
-from enthought.preferences.api import PreferencesHelper
+from apptools.preferences.api import PreferencesHelper
 from traits.api import File, Str, implements
 
 from i_help_code import IHelpCode

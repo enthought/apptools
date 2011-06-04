@@ -11,7 +11,7 @@ import unittest
 # Enthought library imports.
 from traits.api import HasTraits
 
-from enthought.persistence import version_registry, state_pickler
+from apptools.persistence import version_registry, state_pickler
 
 
 class Classic:

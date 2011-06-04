@@ -18,7 +18,7 @@
 import unittest
 
 # Enthought library imports.
-from enthought.naming.api import *
+from apptools.naming.api import *
 
 
 class ContextTestCase(unittest.TestCase):

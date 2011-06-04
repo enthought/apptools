@@ -78,9 +78,9 @@ class PermissionsManager(HasTraits):
 
         # Defer to an external manager if there is one.
         try:
-            from enthought.permissions.external.policy_manager import PolicyManager
+            from apptools.permissions.external.policy_manager import PolicyManager
         except ImportError:
-            from enthought.permissions.default.policy_manager import PolicyManager
+            from apptools.permissions.default.policy_manager import PolicyManager
 
         return PolicyManager()
 
@@ -89,9 +89,9 @@ class PermissionsManager(HasTraits):
 
         # Defer to an external manager if there is one.
         try:
-            from enthought.permissions.external.user_manager import UserManager
+            from apptools.permissions.external.user_manager import UserManager
         except ImportError:
-            from enthought.permissions.default.user_manager import UserManager
+            from apptools.permissions.default.user_manager import UserManager
 
         return UserManager()
 

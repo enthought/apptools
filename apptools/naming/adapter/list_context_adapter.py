@@ -2,7 +2,7 @@
 
 
 # Enthought library imports.
-from enthought.naming.api import Binding, ContextAdapter, naming_manager
+from apptools.naming.api import Binding, ContextAdapter, naming_manager
 from traits.api import List, Property
 
 

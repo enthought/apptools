@@ -8,9 +8,9 @@ import unittest
 from pkg_resources import resource_filename
 
 # Enthought library imports.
-from enthought.preferences.api import Preferences, PreferencesHelper
-from enthought.preferences.api import ScopedPreferences
-from enthought.preferences.api import set_default_preferences
+from apptools.preferences.api import Preferences, PreferencesHelper
+from apptools.preferences.api import ScopedPreferences
+from apptools.preferences.api import set_default_preferences
 from traits.api import Any, Bool, HasTraits, Int, Float, List, Str
 from traits.api import Unicode
 
@@ -27,7 +27,7 @@ def listener(obj, trait_name, old, new):
 
 
 # This module's package.
-PKG = 'enthought.preferences.tests'
+PKG = 'apptools.preferences.tests'
 
 
 class PreferencesHelperTestCase(unittest.TestCase):

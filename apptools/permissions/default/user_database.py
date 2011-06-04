@@ -24,7 +24,7 @@ from traitsui.api import Handler, Item, View
 from traitsui.menu import Action, OKCancelButtons
 
 # Local imports.
-from enthought.permissions.i_user import IUser
+from apptools.permissions.i_user import IUser
 from i_user_database import IUserDatabase
 from i_user_storage import IUserStorage, UserStorageError
 from select_user import select_user
@@ -449,9 +449,9 @@ class UserDatabase(HasTraits):
 
         # Defer to an external storage manager if there is one.
         try:
-            from enthought.permissions.external.user_storage import UserStorage
+            from apptools.permissions.external.user_storage import UserStorage
         except ImportError:
-            from enthought.permissions.default.user_storage import UserStorage
+            from apptools.permissions.default.user_storage import UserStorage
 
         return UserStorage()
 

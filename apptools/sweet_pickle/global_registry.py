@@ -9,7 +9,7 @@
 
 """ Manages a singleton updater that acts as a global registry.
 
-    Our goal is to enable the enthought.sweet_pickle framework to
+    Our goal is to enable the apptools.sweet_pickle framework to
     understand how pickled data should be treated during unpickling so
     that the resulting object hierarchy reflects the current versions
     of the object's classes -AND- that this should work no matter who
@@ -26,7 +26,7 @@
     class instances into the project.
 
 
-    This registry is used by the enthought.sweet_pickle framework's
+    This registry is used by the apptools.sweet_pickle framework's
     unpickler only by default.   That is, only if no updater was
     explicitly provided.
 
@@ -81,7 +81,7 @@ def _clear_global_registry():
     """ Clears out the current global registry.
 
         This exists purely to allow testing of the global registry and the
-        enthought.sweet_pickle framework.  THIS METHOD SHOULD NEVER BE
+        apptools.sweet_pickle framework.  THIS METHOD SHOULD NEVER BE
         CALLED DURING NORMAL OPERATIONS!
     """
     global _global_registry

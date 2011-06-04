@@ -66,7 +66,7 @@ class HelpPlugin(Plugin):
     #### 'IPlugin' interface ##################################################
 
     # The plugin's unique identifier.
-    id = 'enthought.help.help_plugin'
+    id = 'apptools.help.help_plugin'
 
     # The plugin's name (suitable for displaying to the user).
     name = 'Help Plugin'
@@ -88,7 +88,7 @@ class HelpPlugin(Plugin):
 
         Each contribution to this extension point must be an instance of a
         class that implements IHelpDoc. The easiest way to do this is to
-        create an instance of  `enthought.help.help_plugin.api.HelpDoc`.
+        create an instance of  `apptools.help.help_plugin.api.HelpDoc`.
 
         So, to contribute a help doc:
 
@@ -116,7 +116,7 @@ class HelpPlugin(Plugin):
 
         Each contribution to this extension point must be an instance of a
         class that implements IHelpCode. The easiest way to do this is to
-        create an instance of  `enthought.help.help_plugin.api.HelpCode`.
+        create an instance of  `apptools.help.help_plugin.api.HelpCode`.
 
         So, to contribute a help demo:
 
@@ -145,7 +145,7 @@ class HelpPlugin(Plugin):
 
         Each contribution to this extension point must be an instance of a
         class that implements IHelpCode. The easiest way to do this is to
-        create an instance of `enthought.help.help_plugin.api.HelpCode`.
+        create an instance of `apptools.help.help_plugin.api.HelpCode`.
 
         So, to contribute a help example:
 
@@ -174,7 +174,7 @@ class HelpPlugin(Plugin):
         Each contribution to this extension point must be an instance of a
         class that implements IHelpDoc, and has the url trait set to True. The
         easiest way to do this is to create an instance of
-        `enthought.help.help_plugin.api.HelpDoc`.
+        `apptools.help.help_plugin.api.HelpDoc`.
 
         So, to contribute a help doc:
 
@@ -213,7 +213,7 @@ class HelpPlugin(Plugin):
                                 DOWNLOADS_MENU: self.help_downloads}
 
         # Construct traits for the action set
-        ns = {'id': 'enthought.help.help_plugin.help_action_set',
+        ns = {'id': 'apptools.help.help_plugin.help_action_set',
               'name': 'Help Plugin ActionSet',
               'groups': [ Group( id=DOCS_GROUP, before='AboutGroup',
                                  path=HELP_MENU ) ]
@@ -243,7 +243,7 @@ class HelpPlugin(Plugin):
 
     preferences_pages = List(contributes_to=PREFERENCES_PAGES)
     def _preferences_pages_default(self):
-        from enthought.help.help_plugin.preferences_pages import \
+        from apptools.help.help_plugin.preferences_pages import \
             DocumentsPreferencesPage, DemosPreferencesPage, \
             ExamplesPreferencesPage, HelpDocPreferencesPage, \
             HelpDemoPreferencesPage, HelpExamplePreferencesPage

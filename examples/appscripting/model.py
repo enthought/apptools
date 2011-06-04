@@ -15,7 +15,7 @@
 
 # Enthought library imports.
 from traits.api import Enum, HasTraits, Int, Unicode
-from enthought.appscripting.api import scriptable, Scriptable
+from apptools.appscripting.api import scriptable, Scriptable
 
 
 class Label(HasTraits):

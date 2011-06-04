@@ -42,10 +42,10 @@ from enable.api \
 from chaco.scatter_markers \
     import marker_trait
 
-from enthought.template.api \
+from apptools.template.api \
     import Template, TRange, TStr, TDerived, TDataSource
 
-from enthought.template.impl.api \
+from apptools.template.impl.api \
     import TemplateDataSource, ValueDataNameItem
 
 from enable_editor \

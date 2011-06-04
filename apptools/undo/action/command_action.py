@@ -16,7 +16,7 @@
 # Enthought library imports.
 from pyface.action.api import Action
 from traits.api import Any, Callable, Instance
-from enthought.undo.api import ICommand, ICommandStack
+from apptools.undo.api import ICommand, ICommandStack
 
 
 class CommandAction(Action):

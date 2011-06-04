@@ -17,7 +17,7 @@
 import wx
 
 # Enthought library imports.
-from enthought.permissions.adapter_base import AdapterBase
+from apptools.permissions.adapter_base import AdapterBase
 
 
 class wxWindowAdapter(AdapterBase):

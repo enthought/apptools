@@ -15,8 +15,8 @@
 import unittest
 
 # Enthought library imports
-import enthought.sweet_pickle as sweet_pickle
-from enthought.sweet_pickle.global_registry import _clear_global_registry
+import apptools.sweet_pickle as sweet_pickle
+from apptools.sweet_pickle.global_registry import _clear_global_registry
 
 
 ##############################################################################
@@ -26,14 +26,14 @@ from enthought.sweet_pickle.global_registry import _clear_global_registry
 # Need complete package name so that mapping matches correctly.
 # The problem here is the Python loader that will load the same module with
 # multiple names in sys.modules due to relative naming. Nice.
-from enthought.sweet_pickle.tests.class_mapping_classes import Foo, Bar, Baz
+from apptools.sweet_pickle.tests.class_mapping_classes import Foo, Bar, Baz
 
 ##############################################################################
 # class 'ClassMappingTestCase'
 ##############################################################################
 
 class ClassMappingTestCase(unittest.TestCase):
-    """ Tests the class mapping functionality of the enthought.sweet_pickle
+    """ Tests the class mapping functionality of the apptools.sweet_pickle
         framework.
     """
 

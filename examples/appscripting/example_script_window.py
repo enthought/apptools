@@ -19,8 +19,8 @@ from pyface.workbench.api import WorkbenchWindow
 from pyface.workbench.action.api import MenuBarManager, \
         ToolBarManager
 from traits.api import Instance, on_trait_change
-from enthought.appscripting.api import get_script_manager
-from enthought.appscripting.action.api import StartRecordingAction, \
+from apptools.appscripting.api import get_script_manager
+from apptools.appscripting.action.api import StartRecordingAction, \
         StopRecordingAction
 
 # Local imports.

@@ -5,8 +5,8 @@
 import re
 
 # Enthought library imports.
-from enthought.naming.api import Binding, ContextAdapter
-from enthought.naming.api import OperationNotSupportedError, naming_manager
+from apptools.naming.api import Binding, ContextAdapter
+from apptools.naming.api import OperationNotSupportedError, naming_manager
 from traits.api import HasTraits, List, Property, Str
 
 

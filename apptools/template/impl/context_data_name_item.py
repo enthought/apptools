@@ -21,7 +21,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from enthought.template.template_traits \
+from apptools.template.template_traits \
     import TStr
 
 from any_context_data_name_item \

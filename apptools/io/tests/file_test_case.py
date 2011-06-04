@@ -18,7 +18,7 @@
 import os, shutil, stat, unittest
 
 # Enthought library imports.
-from enthought.io import File
+from apptools.io import File
 
 
 class FileTestCase(unittest.TestCase):
