@@ -977,7 +977,7 @@ def create_instance(state):
         # FIXME: This sort of special-case is probably indicative of something
         # that needs more thought, plus it makes it tought to decide whether
         # this component depends on tvtk!
-        from enthought.tvtk.api import tvtk
+        from tvtk.api import tvtk
         return getattr(tvtk, class_name)()
 
     initargs = metadata['initargs']

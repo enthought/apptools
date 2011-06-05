@@ -93,7 +93,7 @@ follows::
 Given this hierarchy, we'd like to be able to record a script.  To do
 this we setup the recording infrastructure::
 
-    from enthought.mayavi.core.recorder import Recorder, set_recorder
+    from mayavi.core.recorder import Recorder, set_recorder
     # Create a recorder.
     r = Recorder()
     # Set the global recorder so the decorator works.

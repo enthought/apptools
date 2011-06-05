@@ -12,7 +12,7 @@ import numpy
 
 from traits.api import Bool, Int, Long, Array, Float, Complex, Any, \
      Str, Unicode, Instance, Tuple, List, Dict, HasTraits
-from enthought.tvtk.api import tvtk
+from tvtk.api import tvtk
 
 from apptools.persistence import state_pickler
 

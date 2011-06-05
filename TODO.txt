@@ -3,7 +3,7 @@
   For now, its use is controlled through an extra.
 
 * Refactor the state_pickler.py module to break the need to import
-  enthought.tvtk at all.
+  tvtk at all.
 
 * Check to see if the pyface.resource package is redundant with the
   envisage.resource code.  If so, let's minimize to one location.
