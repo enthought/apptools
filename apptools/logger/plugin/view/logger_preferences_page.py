@@ -14,7 +14,7 @@
 
 import logging
 
-from enthought.preferences.ui.api import PreferencesPage
+from apptools.preferences.ui.api import PreferencesPage
 from traits.api import Bool, Trait, Str
 from traitsui.api import EnumEditor, Group, Item, View
 

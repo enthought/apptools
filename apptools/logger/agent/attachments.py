@@ -34,7 +34,7 @@ class Attachments(HasTraits):
         if self.application is None:
             pass
 
-        workspace = self.application.get_service('enthought.envisage.project.IWorkspace')
+        workspace = self.application.get_service('envisage.project.IWorkspace')
         if workspace is not None:
             dir = workspace.path
             self._attach_directory(dir)
@@ -44,7 +44,7 @@ class Attachments(HasTraits):
         if self.application is None:
             pass
 
-        single_project = self.application.get_service('enthought.envisage.single_project.ModelService')
+        single_project = self.application.get_service('envisage.single_project.ModelService')
         if single_project is not None:
             dir = single_project.location
             self._attach_directory(dir)

@@ -19,7 +19,7 @@ import logging, inspect, os
 
 # Local imports.
 #
-# fixme: This module was just copied over from 'enthought.envisage.core' (so
+# fixme: This module was just copied over from 'envisage.core' (so
 # that we don't rely on Envisage here!). Where should this module go?
 from util import get_module_name
 
@@ -35,11 +35,11 @@ class FilteringHandler(logging.Handler):
 
         handler = FilteringHandler(
             include = {
-                'enthought.envisage.core' : True
+                'envisage.core' : True
             },
 
             exclude = {
-                'enthought.envisage.core.application' : False
+                'envisage.core.application' : False
             }
         )
 
@@ -53,8 +53,8 @@ class FilteringHandler(logging.Handler):
     to any sub-packages and modules.
 
     The above example includes all log messages from anything contained in, or
-    under the 'enthought.envisage.core' package, EXCEPT for any log messages
-    from the 'enthought.envisage.core.application' module.
+    under the 'envisage.core' package, EXCEPT for any log messages
+    from the 'envisage.core.application' module.
 
     """
 
@@ -134,7 +134,7 @@ class FilteringHandler(logging.Handler):
         # e.g. for the core plugin definition:-
         #
         # using inspect -> 'core_plugin_definition'
-        # using ours    -> 'enthought.envisage.core.core_plugin_definition'
+        # using ours    -> 'envisage.core.core_plugin_definition'
         return get_module_name(filename)
 
     def _include(self, module_name):

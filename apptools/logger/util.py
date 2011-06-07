@@ -21,7 +21,7 @@ def get_module_name(filename):
 
     this method would return
 
-    enthought.envisage.core.core_plugin_definition
+    envisage.core.core_plugin_definition
 
     """
 

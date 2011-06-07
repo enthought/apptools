@@ -18,7 +18,7 @@
 import logging
 
 # Enthought library imports.
-from enthought.envisage.api import ExtensionPoint, Plugin
+from envisage.api import ExtensionPoint, Plugin
 from traits.logger.log_queue_handler import LogQueueHandler
 from traits.api import Callable, List
 
@@ -55,9 +55,9 @@ class LoggerPlugin(Plugin):
 
     #### Contributions to extension points made by this plugin #################
 
-    PREFERENCES = 'enthought.envisage.preferences'
-    PREFERENCES_PAGES = 'enthought.envisage.ui.workbench.preferences_pages'
-    VIEWS = 'enthought.envisage.ui.workbench.views'
+    PREFERENCES = 'envisage.preferences'
+    PREFERENCES_PAGES = 'envisage.ui.workbench.preferences_pages'
+    VIEWS = 'envisage.ui.workbench.views'
 
     preferences = List(contributes_to=PREFERENCES)
     preferences_pages = List(contributes_to=PREFERENCES_PAGES)
