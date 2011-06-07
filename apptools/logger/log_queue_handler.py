@@ -15,8 +15,8 @@
 # Standard library imports.
 from logging import Handler
 
-# Enthought library imports.
-from traits.util.ring_buffer import RingBuffer
+# Local imports.
+from ring_buffer import RingBuffer
 
 
 class LogQueueHandler(Handler):
