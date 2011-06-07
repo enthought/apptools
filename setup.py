@@ -15,6 +15,7 @@ commonly needed by many applications
   and running demos in Envisage Workbench applications.
 - **apptools.io**: Provides an abstraction for files and folders in a file
   system.
+- **apptools.logger**: Convenience functions for creating logging handlers
 - **apptools.naming**: Manages naming contexts, supporting non-string data
   types and scoped preferences
 - **apptools.permissions**: Supports limiting access to parts of an
