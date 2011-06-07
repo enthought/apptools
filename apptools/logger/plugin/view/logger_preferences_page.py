@@ -36,7 +36,7 @@ class LoggerPreferencesPage(PreferencesPage):
     name = 'Logger'
 
     # The path to the preferences node that contains the preferences.
-    preferences_path = 'traits.logger'
+    preferences_path = 'apptools.logger'
 
 
     #### Preferences ###########################################################

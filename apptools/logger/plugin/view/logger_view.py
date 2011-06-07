@@ -26,9 +26,9 @@ from traitsui.api import View, Group, Item, CodeEditor, \
 from traitsui.tabular_adapter import TabularAdapter
 
 # Local imports
-from traits.logger.agent.quality_agent_view import QualityAgentView
-from traits.logger.plugin import view
-from traits.logger.plugin.logger_service import LoggerService
+from apptools.logger.agent.quality_agent_view import QualityAgentView
+from apptools.logger.plugin import view
+from apptools.logger.plugin.logger_service import LoggerService
 
 # Constants
 _IMAGE_MAP = { logging.DEBUG: ImageResource('debug'),
@@ -85,7 +85,7 @@ class LoggerView(TraitsUIView):
     """ The Workbench View showing the list of log items.
     """
 
-    id = Str('traits.logger.plugin.view.logger_view.LoggerView')
+    id = Str('apptools.logger.plugin.view.logger_view.LoggerView')
     name = Str('Logger')
     service = Instance(LoggerService)
 

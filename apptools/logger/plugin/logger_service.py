@@ -139,7 +139,7 @@ class LoggerService(HasTraits):
 
     def _get_mail_files(self):
         return self.application.get_extensions(
-            'traits.logger.plugin.mail_files')
+            'apptools.logger.plugin.mail_files')
 
     @on_trait_change('preferences.level_')
     def _level_changed(self, new):

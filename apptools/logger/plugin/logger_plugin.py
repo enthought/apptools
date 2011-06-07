@@ -19,7 +19,7 @@ import logging
 
 # Enthought library imports.
 from envisage.api import ExtensionPoint, Plugin
-from traits.logger.log_queue_handler import LogQueueHandler
+from apptools.logger.log_queue_handler import LogQueueHandler
 from traits.api import Callable, List
 
 # Local imports.
@@ -27,7 +27,7 @@ from logger_preferences import LoggerPreferences
 from logger_service import LoggerService
 
 
-ID = 'traits.logger'
+ID = 'apptools.logger'
 ILOGGER = ID + '.plugin.logger_service.LoggerService'
 
 class LoggerPlugin(Plugin):
@@ -39,7 +39,7 @@ class LoggerPlugin(Plugin):
 
     #### Extension points for this plugin ######################################
 
-    MAIL_FILES = 'traits.logger.plugin.mail_files'
+    MAIL_FILES = 'apptools.logger.plugin.mail_files'
 
     mail_files = ExtensionPoint(
         List(Callable), id=MAIL_FILES, desc="""
@@ -68,7 +68,7 @@ class LoggerPlugin(Plugin):
         return ['pkgfile://%s/plugin/preferences.ini' % ID]
 
     def _preferences_pages_default(self):
-        from traits.logger.plugin.view.logger_preferences_page import \
+        from apptools.logger.plugin.view.logger_preferences_page import \
             LoggerPreferencesPage
         return [LoggerPreferencesPage]
 
@@ -104,7 +104,7 @@ class LoggerPlugin(Plugin):
     #### LoggerPlugin private interface ########################################
 
     def _logger_view_factory(self, **traits):
-        from traits.logger.plugin.view.logger_view import LoggerView
+        from apptools.logger.plugin.view.logger_view import LoggerView
         service = self.application.get_service(ILOGGER)
         view = LoggerView(service=service, **traits)
         # Record the created view on the service.

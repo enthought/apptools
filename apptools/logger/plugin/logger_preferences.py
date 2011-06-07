@@ -27,4 +27,4 @@ class LoggerPreferences(PreferencesHelper):
     from_address = Str()
 
     # The path to the preferences node that contains the preferences.
-    preferences_path = Str('traits.logger')
+    preferences_path = Str('apptools.logger')

@@ -31,7 +31,7 @@ class FilteringHandler(logging.Handler):
     -------
     ::
 
-        from traits.logger.api import DebugHandler, logger
+        from apptools.logger.api import DebugHandler, logger
 
         handler = FilteringHandler(
             include = {
