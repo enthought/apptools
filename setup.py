@@ -39,8 +39,9 @@ commonly needed by many applications
 
 Prerequisites
 -------------
-If you want to build AppTools from source, you must first install
-`setuptools <http://pypi.python.org/pypi/setuptools/0.6c8>`_ and
+If you want to run AppTools, you must install:
+
+* `configobj <http://pypi.python.org/pypi/configobj>`_
 """
 
 from setuptools import setup, find_packages
