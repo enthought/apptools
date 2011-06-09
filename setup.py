@@ -83,6 +83,7 @@ setup(
     include_package_data = True,
     package_data = {'apptools': [
             'help/help_plugin/*.ini',
+            'logger/plugin/*.ini',
             'naming/ui/images/*.png',
             'help/help_plugin/action/images/*.png',
             ]},
