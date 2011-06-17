@@ -8,10 +8,3 @@ try:
 except:
     pass
 
-# For py2app / py2exe support
-try:
-    import modulefinder
-    for p in __path__:
-        modulefinder.AddPackagePath(__name__, p)
-except:
-    pass
