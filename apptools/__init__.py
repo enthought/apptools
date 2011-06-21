@@ -4,5 +4,5 @@
 __version__ = '4.0.0'
 
 __requires__ = [
-    'traitsui >= 3.6.0.dev',
+    'traitsui',
 ]
