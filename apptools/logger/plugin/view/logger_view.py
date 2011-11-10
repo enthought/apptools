@@ -124,8 +124,10 @@ class LoggerView(TraitsUIView):
         """
         service = self.service
         if service.handler.has_new_records() or force:
-            self.log_records = [ rec for rec in service.handler.get()
-                                 if rec.levelno >= service.preferences.level_ ]
+            log_records = [ rec for rec in service.handler.get()
+                            if rec.levelno >= service.preferences.level_ ]
+            log_records.reverse()
+            self.log_records = log_records
 
     ###########################################################################
     # Private interface
