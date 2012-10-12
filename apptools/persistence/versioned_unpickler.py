@@ -97,8 +97,7 @@ class VersionedUnpickler(NewUnpickler):
 
     I decided to keep the loading of the updater out of this generic class
     because we will want updaters to be generated for each plugin's type
-    of project. eg ProAVA2 projects will need different updaters to the
-    ProAct project.
+    of project.
 
     This ensures that the VersionedUnpickler can remain ignorant about the
     actual version numbers - all it needs to do is upgrade one release.
@@ -220,4 +219,3 @@ class VersionedUnpickler(NewUnpickler):
         return vars(module)[name]
 
 ### EOF #################################################################
-
