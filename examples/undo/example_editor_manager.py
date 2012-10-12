@@ -76,7 +76,7 @@ class _PyQt4LabelEditor(Editor):
 
     def create_control(self, parent):
 
-        from PyQt4 import QtCore, QtGui
+        from pyface.qt import QtCore, QtGui
 
         w = QtGui.QLabel(parent)
         w.setAlignment(QtCore.Qt.AlignCenter)
