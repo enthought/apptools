@@ -16,11 +16,11 @@
 # Enthought library imports.
 from pyface.action.api import Action
 from traits.api import Any, Callable, Instance
-from apptools.undo.api import ICommand, ICommandStack
+from apptools.undo.i_command_stack import ICommandStack
 
 
 class CommandAction(Action):
-    """ The CommandAction class is an Action class that wrap undo/redo
+    """ The CommandAction class is an Action class that wraps undo/redo
     commands.  It is only useful for commands that do not take any arguments or
     return any result.
     """
