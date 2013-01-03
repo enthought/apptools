@@ -44,6 +44,21 @@ class AbstractCommandStackAction(Action):
         self._update_action()
 
     ###########################################################################
+    # 'Action' interface.
+    ###########################################################################
+
+    def destroy(self):
+        """ Called when the action is no longer required.
+
+        By default this method does nothing, but this would be a great place to
+        unhook trait listeners etc.
+
+        """
+
+        self.undo_manager.on_trait_event(self._on_stack_updated,
+                                         'stack_updated', remove=True)
+
+    ###########################################################################
     # Protected interface.
     ###########################################################################
 
