@@ -15,11 +15,22 @@
 
 
 # Standard/built-in imports.
-import mimetypes, os, shutil, stat
+import os
+import sys
+import stat
+import shutil
+import mimetypes
 
 # Enthought library imports.
 from traits.api import Bool, HasPrivateTraits, Instance, List, Property
 from traits.api import Str
+
+
+# Permissions errors are different on Windows than other systems.
+if sys.platform == 'win32':
+    AccessError = WindowsError
+else:
+    AccessError = OSError
 
 
 class File(HasPrivateTraits):
@@ -113,8 +124,13 @@ class File(HasPrivateTraits):
         """
 
         if self.is_folder:
+            try:
+                contents = os.listdir(self.path)
+            except AccessError:
+                return None
+
             children = []
-            for name in os.listdir(self.path):
+            for name in contents:
                 children.append(File(os.path.join(self.path, name)))
 
         else:
