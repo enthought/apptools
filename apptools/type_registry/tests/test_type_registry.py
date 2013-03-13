@@ -60,7 +60,7 @@ class TestTypeRegistry(unittest.TestCase):
         self.assertRaises(KeyError, self.registry.lookup, D())
 
     def test_abc(self):
-        self.registry.push(Abstract, 'Abstract')
+        self.registry.push_abc(Abstract, 'Abstract')
         self.assertEqual(self.registry.lookup_by_type(Concrete), 'Abstract')
         self.assertEqual(self.registry.lookup_by_type(ConcreteSubclass),
             'Abstract')
@@ -94,8 +94,8 @@ class TestTypeRegistry(unittest.TestCase):
         self.assertEqual(self.registry.abc_map, {})
 
     def test_stack_abc(self):
-        self.registry.push(Abstract, 'Abstract1')
-        self.registry.push(Abstract, 'Abstract2')
+        self.registry.push_abc(Abstract, 'Abstract1')
+        self.registry.push_abc(Abstract, 'Abstract2')
         self.assertEqual(self.registry.lookup_by_type(Concrete), 'Abstract2')
         self.registry.pop(Abstract)
         self.assertEqual(self.registry.lookup_by_type(Concrete), 'Abstract1')

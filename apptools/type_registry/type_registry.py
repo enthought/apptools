@@ -68,14 +68,22 @@ class TypeRegistry(object):
                 if typ not in self.name_map:
                     self.name_map[typ] = []
                 self.name_map[typ].append(obj)
-        elif isinstance(typ, abc.ABCMeta):
-            if typ not in self.abc_map:
-                self.abc_map[typ] = []
-            self.abc_map[typ].append(obj)
         else:
             if typ not in self.type_map:
                 self.type_map[typ] = []
             self.type_map[typ].append(obj)
+
+    def push_abc(self, typ, obj):
+        """ Push an object onto the stack for the given ABC.
+
+        Parameters
+        ----------
+        typ : abc.ABCMeta
+        obj : object
+        """
+        if typ not in self.abc_map:
+            self.abc_map[typ] = []
+        self.abc_map[typ].append(obj)
 
     def pop(self, typ):
         """ Pop a registered object for the given type.
@@ -105,11 +113,11 @@ class TypeRegistry(object):
                     raise KeyError("No registered value for {0!r}".format(typ))
             else:
                 old = self._pop_value(self.name_map, typ)
-        elif isinstance(typ, abc.ABCMeta):
-            old = self._pop_value(self.abc_map, typ)
         else:
             if typ in self.type_map:
                 old = self._pop_value(self.type_map, typ)
+            elif typ in self.abc_map:
+                old = self._pop_value(self.abc_map, typ)
             else:
                 old = self._pop_value(self.name_map, _mod_name_key(typ))
         return old
@@ -159,8 +167,8 @@ class TypeRegistry(object):
                     return objs[-1]
 
         # None of the concrete superclasses. Check the ABCs.
-        for abc, objs in self.abc_map.iteritems():
-            if issubclass(typ, abc) and objs:
+        for abstract, objs in self.abc_map.iteritems():
+            if issubclass(typ, abstract) and objs:
                 return objs[-1]
 
         # If we have reached here, the lookup failed.
