@@ -201,7 +201,8 @@ class File(HasPrivateTraits):
     def _get_url(self):
         """ Returns the path as a URL. """
 
-        return 'file://%s' % self.absolute_path
+        # Strip out the leading slash on POSIX systems.
+        return 'file:///%s' % self.absolute_path.lstrip('/')
 
     #### Methods ##############################################################
 
