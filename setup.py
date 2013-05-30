@@ -38,9 +38,10 @@ setup(
     include_package_data = True,
     package_data = dict(apptools=[
             'help/help_plugin/*.ini',
-            'logger/plugin/*.ini',
-            'naming/ui/images/*.png',
             'help/help_plugin/action/images/*.png',
+            'logger/plugin/*.ini',
+            'logger/plugin/view/images/*.png',
+            'naming/ui/images/*.png',
     ]),
     install_requires = info['__requires__'],
     license = 'BSD',
