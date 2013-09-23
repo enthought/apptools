@@ -168,8 +168,9 @@ class TypeRegistry(object):
         Returns
         -------
         objs : list of objects
-            The list of registered objects for the type of the instance, one of
-            its superclasses, or else one of the abcs it implements.
+            The list of registered objects for the instance. If the given
+            instance is not registered, its superclasses are searched. If none
+            of the superclasses are regesiterd, search the possible ABCs.
 
         Raises
         ------
@@ -187,8 +188,9 @@ class TypeRegistry(object):
         Returns
         -------
         objs : list of objects
-            The list of registered objects for the type, one of its
-            superclasses, or else one of the abcs it implements.
+            The list of registered objects for the type. If the given type is
+            not registered, its superclasses are searched. If none of the
+            superclasses are regesiterd, search the possible ABCs.
 
         Raises
         ------
