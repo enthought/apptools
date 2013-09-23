@@ -1,6 +1,3 @@
-import abc
-
-
 def get_mro(obj_class):
     """ Get a reasonable method resolution order of a class and its
     superclasses for both old-style and new-style classes.
@@ -45,7 +42,6 @@ class TypeRegistry(object):
 
         # Map abstract base classes to lists of registered objects.
         self.abc_map = {}
-
 
     #### TypeRegistry public interface ########################################
 
@@ -159,21 +155,59 @@ class TypeRegistry(object):
         ------
         KeyError if the type has not been registered.
         """
+        return self.lookup_all_by_type(typ)[-1]
+
+    def lookup_all(self, instance):
+        """ Look up all the registered objects for the given instance.
+
+        Parameters
+        ----------
+        instance : object
+            An instance of a possibly registered type.
+
+        Returns
+        -------
+        objs : list of objects
+            The list of registered objects for the type of the instance, one of
+            its superclasses, or else one of the abcs it implements.
+
+        Raises
+        ------
+        KeyError if the instance's type has not been registered.
+        """
+        return self.lookup_all_by_type(type(instance))
+
+    def lookup_all_by_type(self, typ):
+        """ Look up all the registered objects for a type.
+
+        Parameters
+        ----------
+        typ  : type
+
+        Returns
+        -------
+        objs : list of objects
+            The list of registered objects for the type, one of its
+            superclasses, or else one of the abcs it implements.
+
+        Raises
+        ------
+        KeyError if the type has not been registered.
+        """
         # If a concrete superclass is registered use it.
         for cls in get_mro(typ):
             if cls in self.type_map or self._in_name_map(cls):
                 objs = self.type_map[cls]
                 if objs:
-                    return objs[-1]
+                    return objs
 
         # None of the concrete superclasses. Check the ABCs.
         for abstract, objs in self.abc_map.iteritems():
             if issubclass(typ, abstract) and objs:
-                return objs[-1]
+                return objs
 
         # If we have reached here, the lookup failed.
         raise KeyError("No registered value for {0!r}".format(typ))
-
 
     #### Private implementation ###############################################
 

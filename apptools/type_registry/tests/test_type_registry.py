@@ -59,6 +59,15 @@ class TestTypeRegistry(unittest.TestCase):
         self.assertEqual(self.registry.lookup(C()), 'C')
         self.assertRaises(KeyError, self.registry.lookup, D())
 
+    def test_lookup_all(self):
+        self.registry.push(A, 'A')
+        self.registry.push(C, 'C')
+        self.assertEqual(self.registry.lookup_all(A()), ['A'])
+        self.assertEqual(self.registry.lookup_all(B()), ['A'])
+        self.registry.push(A, 'A2')
+        self.assertEqual(self.registry.lookup_all(A()), ['A', 'A2'])
+        self.assertEqual(self.registry.lookup_all(B()), ['A', 'A2'])
+
     def test_abc(self):
         self.registry.push_abc(Abstract, 'Abstract')
         self.assertEqual(self.registry.lookup_by_type(Concrete), 'Abstract')
