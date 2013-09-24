@@ -170,7 +170,7 @@ class TypeRegistry(object):
         objs : list of objects
             The list of registered objects for the instance. If the given
             instance is not registered, its superclasses are searched. If none
-            of the superclasses are regesiterd, search the possible ABCs.
+            of the superclasses are registered, search the possible ABCs.
 
         Raises
         ------
@@ -190,7 +190,7 @@ class TypeRegistry(object):
         objs : list of objects
             The list of registered objects for the type. If the given type is
             not registered, its superclasses are searched. If none of the
-            superclasses are regesiterd, search the possible ABCs.
+            superclasses are registered, search the possible ABCs.
 
         Raises
         ------
