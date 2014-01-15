@@ -12,16 +12,17 @@
 # Description: <Enthought undo package component>
 #------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 
 # Enthought library imports.
-from traits.api import Bool, HasTraits, implements, Instance, \
-        Int, List, Property, Unicode
+from traits.api import Bool, HasTraits, Instance, Int, List, Property, \
+    Supports, Unicode, provides
 
 # Local imports.
-from abstract_command import AbstractCommand
-from i_command import ICommand
-from i_command_stack import ICommandStack
-from i_undo_manager import IUndoManager
+from .abstract_command import AbstractCommand
+from .i_command import ICommand
+from .i_command_stack import ICommandStack
+from .i_undo_manager import IUndoManager
 
 
 class _StackEntry(HasTraits):
@@ -33,7 +34,7 @@ class _StackEntry(HasTraits):
     clean = Bool(False)
 
     # The command instance.
-    command = Instance(ICommand)
+    command = Supports(ICommand)
 
     # The sequence number of the entry.
     sequence_nr = Int
@@ -45,7 +46,7 @@ class _MacroCommand(AbstractCommand):
     #### '_MacroCommand' interface ############################################
 
     # The commands that make up this macro.
-    macro_commands = List(Instance(ICommand))
+    macro_commands = List(Supports(ICommand))
 
     ###########################################################################
     # 'ICommand' interface.
@@ -83,12 +84,11 @@ class _MacroCommand(AbstractCommand):
             cmd.undo()
 
 
+@provides(ICommandStack)
 class CommandStack(HasTraits):
     """ The CommandStack class is the default implementation of the
     ICommandStack interface.
     """
-
-    implements(ICommandStack)
 
     #### 'ICommandStack' interface ############################################
 
@@ -104,7 +104,7 @@ class CommandStack(HasTraits):
     redo_name = Property(Unicode)
 
     # This is the undo manager that manages this stack.
-    undo_manager = Instance(IUndoManager)
+    undo_manager = Supports(IUndoManager)
 
     # This is the name of the command that can be undone.  It will be empty if
     # there is no command that can be undone.  It is maintained by the undo

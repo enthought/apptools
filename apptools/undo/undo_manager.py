@@ -12,27 +12,27 @@
 # Description: <Enthought undo package component>
 #------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 
 # Enthought library imports.
-from traits.api import Bool, Event, HasTraits, implements, \
-        Instance, Int, Property, Unicode
+from traits.api import Bool, Event, HasTraits, Int, Property, Supports, \
+    Unicode, provides
 
 # Local imports.
-from i_undo_manager import IUndoManager
+from .i_undo_manager import IUndoManager
 
 
+@provides(IUndoManager)
 class UndoManager(HasTraits):
     """ The UndoManager class is the default implementation of the
     IUndoManager interface.
     """
 
-    implements(IUndoManager)
-
     #### 'IUndoManager' interface #############################################
 
     # This is the currently active command stack and may be None.  Typically it
     # is set when some sort of editor becomes active.
-    active_stack = Instance('apptools.undo.api.ICommandStack')
+    active_stack = Supports('apptools.undo.api.ICommandStack')
 
     # This reflects the clean state of the currently active command stack.  It
     # is intended to support a "document modified" indicator in the GUI.  It is

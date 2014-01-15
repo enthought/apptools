@@ -12,11 +12,14 @@
 # Description: <Enthought undo package component>
 #------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 
 # Enthought library imports.
 from pyface.action.api import Action
-from traits.api import Instance
-from apptools.undo.api import IUndoManager
+from traits.api import Supports
+
+# Local library imports
+from ..i_undo_manager import IUndoManager
 
 
 class AbstractCommandStackAction(Action):
@@ -27,7 +30,7 @@ class AbstractCommandStackAction(Action):
     #### 'AbstractCommandStackAction' interface ###############################
 
     # The undo manager.
-    undo_manager = Instance(IUndoManager)
+    undo_manager = Supports(IUndoManager)
 
     ###########################################################################
     # 'object' interface.

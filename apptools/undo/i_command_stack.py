@@ -12,12 +12,13 @@
 # Description: <Enthought undo package component>
 #------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 
 # Enthought library imports.
-from traits.api import Bool, Instance, Interface, Unicode
+from traits.api import Bool, Interface, Supports, Unicode
 
 # Local imports.
-from i_undo_manager import IUndoManager
+from .i_undo_manager import IUndoManager
 
 
 class ICommandStack(Interface):
@@ -40,7 +41,7 @@ class ICommandStack(Interface):
     redo_name = Unicode
 
     # This is the undo manager that manages this stack.
-    undo_manager = Instance(IUndoManager)
+    undo_manager = Supports(IUndoManager)
 
     # This is the name of the command that can be undone.  It will be empty if
     # there is no command that can be undone.  It is maintained by the undo

@@ -12,6 +12,8 @@
 # Description: <Enthought undo package component>
 #------------------------------------------------------------------------------
 
-from command_action import CommandAction
-from redo_action import RedoAction
-from undo_action import UndoAction
+from __future__ import absolute_import
+
+from .command_action import CommandAction
+from .redo_action import RedoAction
+from .undo_action import UndoAction
