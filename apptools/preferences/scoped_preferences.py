@@ -17,13 +17,12 @@ class ScopedPreferences(Preferences):
     """ A preferences node that adds the notion of preferences scopes.
 
     Scopes provide a way to access preferences in a precedence order, usually
-    depending on where they came from (see 'ApplicationPreferences' for a
-    common usage pattern).
+    depending on where they came from, for example from the command-line,
+    or set by the user in a preferences file, or the defaults (set by the
+    developer).
 
     By default, this class provides two scopes - 'application' which is
-    persistent and 'default' which is not. However, as mentioned above,
-    I would suggest that the newer 'ApplicationPreferences' class is a more
-    useful starting point).
+    persistent and 'default' which is not.
 
     Path names passed to 'ScopedPreferences' nodes can be either::
 
@@ -354,9 +353,8 @@ class ScopedPreferences(Preferences):
         return join(ETSConfig.application_home, 'preferences.ini')
 
     # fixme: In hindsight, I don't think this class should have provided
-    # default scopes. This should have been an 'abstract' class and then
-    # things like the newer (and preferred) 'ApplicationPreferences' class
-    # layered on top.
+    # default scopes. This should have been an 'abstract' class that could
+    # be subclassed by classes providing specific scopes.
     def _scopes_default(self):
         """ Trait initializer. """
 
