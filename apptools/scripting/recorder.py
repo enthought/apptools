@@ -660,19 +660,8 @@ class Recorder(HasTraits):
         """
         ob_id = id(object)
         orepr = repr(object)
-        # We remove the leading '0x' so that leading  zeros after the 'x' in
-        # the orepr string will not lead to a  mismatch. (ie. 0xA3E will not
-        # match 0x0A3E)
-        hex_id = hex(ob_id)[:2]
-        if hex_id.endswith('L'):
-            # On 64 bit Windows, the object ID is a long and this leaves a
-            # residual 'L' at the end which should be ignored.
-            hex_id = hex_id[:-1]
-
-        if hex_id.upper() in orepr.upper():
-            return True
-        else:
-            return False
+        hex_id = "%x"%ob_id
+        return hex_id.upper() in orepr.upper()
 
     def _object_as_string(self, object):
         """Return a string representing the object.
