@@ -652,6 +652,28 @@ class Recorder(HasTraits):
         argstr = ', '.join(argl)
         return '%s(%s)'%(func_name, argstr)
 
+    def _is_arbitrary_object(self, object):
+        """Return True if the object is an arbitrary non-primitive object.
+
+        As done in appscripting, we assume that if the hex id of the object is
+        in its string representation then it is an arbitrary object.
+        """
+        ob_id = id(object)
+        orepr = repr(object)
+        # We remove the leading '0x' so that leading  zeros after the 'x' in
+        # the orepr string will not lead to a  mismatch. (ie. 0xA3E will not
+        # match 0x0A3E)
+        hex_id = hex(ob_id)[:2]
+        if hex_id.endswith('L'):
+            # On 64 bit Windows, the object ID is a long and this leaves a
+            # residual 'L' at the end which should be ignored.
+            hex_id = hex_id[:-1]
+
+        if hex_id.upper() in orepr.upper():
+            return True
+        else:
+            return False
+
     def _object_as_string(self, object):
         """Return a string representing the object.
         """
@@ -664,16 +686,8 @@ class Recorder(HasTraits):
             self.write_script_id_in_namespace(base_id)
             return sid
         else:
-            # Try and return the object.
-            ob_id = id(object)
-            orepr = repr(object)
-            # As done in appscripting, we assume that if the hexid of
-            # the object is in its string representation then it is an
-            # arbitrary object. We remove the leading '0x' so that leading
-            # zeros after the 'x' in the orepr string will not lead to a
-            # mismatch. (ie. 0xA3E will not match 0x0A3E)
-            if hex(ob_id)[2:].upper() not in orepr.upper():
-                return orepr
+            if not self._is_arbitrary_object(object):
+                return repr(object)
 
         # If we get here, we just register the object and call ourselves
         # again to do the needful.
@@ -710,4 +724,3 @@ class Recorder(HasTraits):
                 result = 'from %s import %s'%(mod, cname)
                 self._known_types.append(typename)
         return result
-
