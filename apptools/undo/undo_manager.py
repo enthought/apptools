@@ -15,7 +15,7 @@
 from __future__ import absolute_import
 
 # Enthought library imports.
-from traits.api import Bool, Event, HasTraits, Int, Property, Supports, \
+from traits.api import Bool, Event, HasTraits, Instance, Int, Property, \
     Unicode, provides
 
 # Local imports.
@@ -32,7 +32,7 @@ class UndoManager(HasTraits):
 
     # This is the currently active command stack and may be None.  Typically it
     # is set when some sort of editor becomes active.
-    active_stack = Supports('apptools.undo.api.ICommandStack')
+    active_stack = Instance('apptools.undo.api.ICommandStack')
 
     # This reflects the clean state of the currently active command stack.  It
     # is intended to support a "document modified" indicator in the GUI.  It is
