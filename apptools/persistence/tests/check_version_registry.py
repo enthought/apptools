@@ -43,22 +43,23 @@ class TestVersionRegistry(unittest.TestCase):
         """Test the get_version function."""
         c = Classic()
         v = version_registry.get_version(c)
-        res = [(('Classic', '__main__'), 0)]
+        res = [(('Classic', __name__), 0)]
         self.assertEqual(v, res)
         state = state_pickler.get_state(c)
         self.assertEqual(state.__metadata__['version'], res)
 
         n = New()
         v = version_registry.get_version(n)
-        res = [(('New', '__main__'), 0)]
+        res = [(('New', __name__), 0)]
         self.assertEqual(v, res)
         state = state_pickler.get_state(n)
         self.assertEqual(state.__metadata__['version'], res)
 
         t = TraitClass()
         v = version_registry.get_version(t)
-        res = [(('HasTraits', 'traits.has_traits'), -1),
-               (('TraitClass', '__main__'), 0)]
+        res = [(('CHasTraits', 'traits.ctraits'), -1),
+               (('HasTraits', 'traits.has_traits'), -1),
+               (('TraitClass', __name__), 0)]
         self.assertEqual(v, res)
         state = state_pickler.get_state(t)
         self.assertEqual(state.__metadata__['version'], res)
@@ -70,13 +71,13 @@ class TestVersionRegistry(unittest.TestCase):
             pass
 
         registry = version_registry.registry
-        registry.register('A', '__main__', h)
-        self.assertEqual(registry.handlers.get(('A', '__main__')), h)
+        registry.register('A', __name__, h)
+        self.assertEqual(registry.handlers.get(('A', __name__)), h)
         reload(version_registry)
         registry = version_registry.registry
-        self.assertEqual(registry.handlers.get(('A', '__main__')), h)
-        del registry.handlers[('A', '__main__')]
-        self.assertEqual(registry.handlers.has_key(('A', '__main__')), False)
+        self.assertEqual(registry.handlers.get(('A', __name__)), h)
+        del registry.handlers[('A', __name__)]
+        self.assertEqual(registry.handlers.has_key(('A', __name__)), False)
 
     def test_update(self):
         """Test if update method calls the handlers in order."""
@@ -86,20 +87,20 @@ class TestVersionRegistry(unittest.TestCase):
         c = Classic()
         state = state_pickler.get_state(c)
         h = Handler()
-        registry.register('Classic', '__main__', h.upgrade)
+        registry.register('Classic', __name__, h.upgrade)
         c1 = state_pickler.create_instance(state)
         state_pickler.set_state(c1, state)
         self.assertEqual(h.calls, [('upgrade', state, 0)])
         # Remove the handler.
-        registry.unregister('Classic', '__main__')
+        registry.unregister('Classic', __name__)
 
         # Now check to see if this works for inheritance trees.
         t = Test()
         state = state_pickler.get_state(t)
         h = Handler()
-        registry.register('Classic', '__main__', h.upgrade)
-        registry.register('New', '__main__', h.upgrade)
-        registry.register('Test', '__main__', h.upgrade1)
+        registry.register('Classic', __name__, h.upgrade)
+        registry.register('New', __name__, h.upgrade)
+        registry.register('Test', __name__, h.upgrade1)
         t1 = state_pickler.create_instance(state)
         state_pickler.set_state(t1, state)
         # This should call New handler, then the Test and then
