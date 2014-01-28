@@ -73,6 +73,7 @@ class TestFilePath(unittest.TestCase):
         t = Test()
         t.f.set('t.vtk')
         cwd = os.getcwd()
+        curdir = basename(cwd)
 
         # Create a dummy file in the parent dir.
         s = StringIO.StringIO()
@@ -87,7 +88,7 @@ class TestFilePath(unittest.TestCase):
         s.name = join(cwd, 'foo', 'test', 't.mv2')
         state = state_pickler.load_state(s)
         self.assertEqual(state.f.abs_pth,
-                         join(cwd, 'foo', 'test', 'tests', 't.vtk'))
+                         join(cwd, 'foo', 'test', curdir, 't.vtk'))
 
 
         # Create a dummy file in a subdir.
