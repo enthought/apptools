@@ -12,12 +12,13 @@
 # Description: <Enthought undo package component>
 #------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 
 # Enthought library imports.
 from traits.api import Bool, Instance, Interface, Unicode
 
 # Local imports.
-from i_undo_manager import IUndoManager
+from .i_undo_manager import IUndoManager
 
 
 class ICommandStack(Interface):

@@ -12,16 +12,17 @@
 # Description: <Enthought undo package component>
 #------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 
 # Enthought library imports.
-from traits.api import Bool, HasTraits, implements, Instance, \
-        Int, List, Property, Unicode
+from traits.api import Bool, HasTraits, Instance, Int, List, Property, \
+    Unicode, provides
 
 # Local imports.
-from abstract_command import AbstractCommand
-from i_command import ICommand
-from i_command_stack import ICommandStack
-from i_undo_manager import IUndoManager
+from .abstract_command import AbstractCommand
+from .i_command import ICommand
+from .i_command_stack import ICommandStack
+from .i_undo_manager import IUndoManager
 
 
 class _StackEntry(HasTraits):
@@ -83,12 +84,11 @@ class _MacroCommand(AbstractCommand):
             cmd.undo()
 
 
+@provides(ICommandStack)
 class CommandStack(HasTraits):
     """ The CommandStack class is the default implementation of the
     ICommandStack interface.
     """
-
-    implements(ICommandStack)
 
     #### 'ICommandStack' interface ############################################
 

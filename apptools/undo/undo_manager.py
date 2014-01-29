@@ -12,21 +12,21 @@
 # Description: <Enthought undo package component>
 #------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 
 # Enthought library imports.
-from traits.api import Bool, Event, HasTraits, implements, \
-        Instance, Int, Property, Unicode
+from traits.api import Bool, Event, HasTraits, Instance, Int, Property, \
+    Unicode, provides
 
 # Local imports.
-from i_undo_manager import IUndoManager
+from .i_undo_manager import IUndoManager
 
 
+@provides(IUndoManager)
 class UndoManager(HasTraits):
     """ The UndoManager class is the default implementation of the
     IUndoManager interface.
     """
-
-    implements(IUndoManager)
 
     #### 'IUndoManager' interface #############################################
 

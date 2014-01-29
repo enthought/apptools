@@ -12,20 +12,20 @@
 # Description: <Enthought undo package component>
 #------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 
 # Enthought library imports.
-from traits.api import Any, HasTraits, implements, Unicode
+from traits.api import Any, HasTraits, Unicode, provides
 
 # Local imports.
-from i_command import ICommand
+from .i_command import ICommand
 
 
+@provides(ICommand)
 class AbstractCommand(HasTraits):
     """ The AbstractCommand class is an abstract base class that implements the
     ICommand interface.
     """
-
-    implements(ICommand)
 
     #### 'ICommand' interface #################################################
 
