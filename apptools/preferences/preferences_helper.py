@@ -109,7 +109,7 @@ class PreferencesHelper(HasTraits):
         else:
             path = getattr(self, 'PREFERENCES_PATH', None)
             if path is None:
-                raise SystemError('no preferences path' % self)
+                raise SystemError('no preferences path, %s' % self)
 
             else:
                 logger.warn('DEPRECATED: use "preferences_path" %s' % self)

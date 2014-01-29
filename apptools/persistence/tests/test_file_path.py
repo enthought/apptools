@@ -73,6 +73,7 @@ class TestFilePath(unittest.TestCase):
         t = Test()
         t.f.set('t.vtk')
         cwd = os.getcwd()
+        curdir = basename(cwd)
 
         # Create a dummy file in the parent dir.
         s = StringIO.StringIO()
@@ -87,7 +88,7 @@ class TestFilePath(unittest.TestCase):
         s.name = join(cwd, 'foo', 'test', 't.mv2')
         state = state_pickler.load_state(s)
         self.assertEqual(state.f.abs_pth,
-                         join(cwd, 'foo', 'test', 'tests', 't.vtk'))
+                         join(cwd, 'foo', 'test', curdir, 't.vtk'))
 
 
         # Create a dummy file in a subdir.
@@ -105,21 +106,6 @@ class TestFilePath(unittest.TestCase):
         self.assertEqual(state.f.abs_pth,
                          join(cwd, 'foo', 't.vtk'))
 
-
-
-def test_suite():
-    """Collects all the tests to be run."""
-    suites = []
-    suites.append(unittest.makeSuite(TestFilePath, 'test_'))
-    total_suite = unittest.TestSuite(suites)
-    return total_suite
-
-def test(verbose=2):
-    """Useful when you need to run the tests interactively."""
-    all_tests = test_suite()
-    runner = unittest.TextTestRunner(verbosity=verbose)
-    result = runner.run(all_tests)
-    return result, runner
 
 if __name__ == "__main__":
     unittest.main()
