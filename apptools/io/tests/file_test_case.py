@@ -74,21 +74,21 @@ class FileTestCase(unittest.TestCase):
         self.assertEqual(str(f), 'File(%s)' % f.path)
 
         # Properties of an existing file.
-        f = File('data/foo.py')
+        f = File('data/foo.txt')
         f.create_file()
 
         self.assert_(os.path.abspath(os.path.curdir) in f.absolute_path)
         self.assertEqual(f.children, None)
-        self.assertEqual(f.ext, '.py')
+        self.assertEqual(f.ext, '.txt')
         self.assertEqual(f.exists, True)
         self.assertEqual(f.is_file, True)
         self.assertEqual(f.is_folder, False)
         self.assertEqual(f.is_package, False)
         self.assertEqual(f.is_readonly, False)
-        self.assertEqual(f.mime_type, 'text/x-python')
+        self.assertEqual(f.mime_type, 'text/plain')
         self.assertEqual(f.name, 'foo')
         self.assertEqual(f.parent.path, 'data')
-        self.assertEqual(f.path, 'data/foo.py')
+        self.assertEqual(f.path, 'data/foo.txt')
         self.assert_(os.path.abspath(os.path.curdir) in f.url)
 
         # Make it readonly.
@@ -107,7 +107,7 @@ class FileTestCase(unittest.TestCase):
 
         content = 'print "Hello World!"\n'
 
-        f = File('data/foo.py')
+        f = File('data/foo.txt')
         self.assertEqual(f.exists, False)
 
         # Create the file.
@@ -116,33 +116,33 @@ class FileTestCase(unittest.TestCase):
         self.failUnlessRaises(ValueError, f.create_file, content)
 
         self.assertEqual(f.children, None)
-        self.assertEqual(f.ext, '.py')
+        self.assertEqual(f.ext, '.txt')
         self.assertEqual(f.is_file, True)
         self.assertEqual(f.is_folder, False)
-        self.assertEqual(f.mime_type, 'text/x-python')
+        self.assertEqual(f.mime_type, 'text/plain')
         self.assertEqual(f.name, 'foo')
-        self.assertEqual(f.path, 'data/foo.py')
+        self.assertEqual(f.path, 'data/foo.txt')
 
         # Copy the file.
-        g = File('data/bar.py')
+        g = File('data/bar.txt')
         self.assertEqual(g.exists, False)
 
         f.copy(g)
         self.assertEqual(g.exists, True)
 
         self.assertEqual(g.children, None)
-        self.assertEqual(g.ext, '.py')
+        self.assertEqual(g.ext, '.txt')
         self.assertEqual(g.is_file, True)
         self.assertEqual(g.is_folder, False)
-        self.assertEqual(g.mime_type, 'text/x-python')
+        self.assertEqual(g.mime_type, 'text/plain')
         self.assertEqual(g.name, 'bar')
-        self.assertEqual(g.path, 'data/bar.py')
+        self.assertEqual(g.path, 'data/bar.txt')
 
         # Attempt to copy a non-existent file (should do nothing).
         f = File('data/bogus.xx')
         self.assertEqual(f.exists, False)
 
-        g = File('data/bogus_copy.py')
+        g = File('data/bogus_copy.txt')
         self.assertEqual(g.exists, False)
 
         f.copy(g)
@@ -155,7 +155,7 @@ class FileTestCase(unittest.TestCase):
 
         content = 'print "Hello World!"\n'
 
-        f = File('data/foo.py')
+        f = File('data/foo.txt')
         self.assertEqual(f.exists, False)
 
         # Create the file.
@@ -173,7 +173,7 @@ class FileTestCase(unittest.TestCase):
 
         content = 'print "Hello World!"\n'
 
-        f = File('data/foo.py')
+        f = File('data/foo.txt')
         self.assertEqual(f.exists, False)
 
         # Create the file.
@@ -182,19 +182,19 @@ class FileTestCase(unittest.TestCase):
         self.failUnlessRaises(ValueError, f.create_file, content)
 
         self.assertEqual(f.children, None)
-        self.assertEqual(f.ext, '.py')
+        self.assertEqual(f.ext, '.txt')
         self.assertEqual(f.is_file, True)
         self.assertEqual(f.is_folder, False)
-        self.assertEqual(f.mime_type, 'text/x-python')
+        self.assertEqual(f.mime_type, 'text/plain')
         self.assertEqual(f.name, 'foo')
-        self.assertEqual(f.path, 'data/foo.py')
+        self.assertEqual(f.path, 'data/foo.txt')
 
         # Delete it.
         f.delete()
         self.assertEqual(f.exists, False)
 
         # Attempt to delete a non-existet file (should do nothing).
-        f = File('data/bogus.py')
+        f = File('data/bogus.txt')
         self.assertEqual(f.exists, False)
 
         f.delete()
