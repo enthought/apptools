@@ -1,7 +1,7 @@
 from traits.api import Dict, HasTraits
 
 from apptools.selection.errors import (SelectionProviderNotFoundError,
-                                       IDConflictError)
+                                       IDConflictError, ListenerNotConnectedError)
 
 
 class SelectionService(HasTraits):
@@ -105,6 +105,25 @@ class SelectionService(HasTraits):
 
         if self.has_selection_provider(id):
             self._toggle_listener(id, func, remove=False)
+
+    def disconnect_selection_listener(self, id, func):
+        """ Disonnect a listener from a specific provider.
+
+        Arguments
+        ---------
+        id -- str
+            The selection provider ID.
+        func -- callable(id, i_selection)
+            A callable object that is notified when the selection changes.
+        """
+
+        if self.has_selection_provider(id):
+            self._toggle_listener(id, func, remove=True)
+
+        try:
+            self._listeners[id].remove(func)
+        except (ValueError, KeyError):
+            raise ListenerNotConnectedError(provider_id=id, listener=func)
 
     #### Private protocol #####################################################
 

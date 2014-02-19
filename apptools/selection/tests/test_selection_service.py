@@ -2,7 +2,8 @@ from traits.api import Any, Event, HasTraits, Instance, List, provides, Str
 from traits.testing.unittest_tools import unittest
 
 from apptools.selection.api import (IDConflictError, ISelection,
-    ISelectionProvider, SelectionProviderNotFoundError, SelectionService)
+    ISelectionProvider, ListenerNotConnectedError,
+    SelectionProviderNotFoundError, SelectionService)
 
 
 @provides(ISelection)
@@ -146,8 +147,43 @@ class TestSelectionService(unittest.TestCase):
         self.assertEqual(len(selections), 3)
         self.assertEqual(selections[-1].content, expected.content)
 
+    def test_disconnect_listener(self):
+        service = SelectionService()
+        provider_id = 'Bogus'
+        provider = BogusSelectionProvider(id=provider_id)
+        service.add_selection_provider(provider)
 
-# disconnect_selection_listener(func)
+        listener = BogusListener()
+        service.connect_selection_listener(provider_id,
+                                           listener.on_selection_changed)
+        service.disconnect_selection_listener(provider_id,
+                                              listener.on_selection_changed)
+
+        provider.set_selection([1, 2, 3])
+
+        self.assertEqual(len(listener.selections), 0)
+
+    def test_disconnect_unknown_listener(self):
+        service = SelectionService()
+        provider_id = 'Bogus'
+        provider = BogusSelectionProvider(id=provider_id)
+        service.add_selection_provider(provider)
+
+        # First case: there are listeners to a provider, but not the one we
+        # pass to the disconnect method
+        listener_1 = BogusListener()
+        service.connect_selection_listener(provider_id,
+                                           listener_1.on_selection_changed)
+
+        listener_2 = BogusListener()
+        with self.assertRaises(ListenerNotConnectedError):
+            service.disconnect_selection_listener(
+                provider_id, listener_2.on_selection_changed)
+
+        # Second case: there is no listener connected to the ID
+        with self.assertRaises(ListenerNotConnectedError):
+            service.disconnect_selection_listener(
+                'does-not-exists', listener_2.on_selection_changed)
 
 
 if __name__ == '__main__':
