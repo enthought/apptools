@@ -1,8 +1,8 @@
 from traits.api import HasTraits, Instance, provides, Str
 from traits.testing.unittest_tools import unittest
 
-from apptools.selection.api import (ISelection, ISelectionProvider,
-    SelectionProviderNotFoundError, SelectionService)
+from apptools.selection.api import (IDConflictError, ISelection,
+    ISelectionProvider, SelectionProviderNotFoundError, SelectionService)
 
 
 @provides(ISelection)
@@ -32,7 +32,18 @@ class TestSelectionService(unittest.TestCase):
         provider = BogusSelectionProvider()
 
         service.add_selection_provider(provider)
-        self.assertTrue(service.has_selection_provider(provider))
+        self.assertTrue(service.has_selection_provider(provider.id))
+
+    def test_add_selection_id_conflict(self):
+        service = SelectionService()
+
+        provider_id = 'Foo'
+        provider = BogusSelectionProvider(id=provider_id)
+        another_provider = BogusSelectionProvider(id=provider_id)
+
+        service.add_selection_provider(provider)
+        with self.assertRaises(IDConflictError):
+            service.add_selection_provider(another_provider)
 
     def test_remove_selection_provider(self):
         service = SelectionService()
@@ -40,7 +51,7 @@ class TestSelectionService(unittest.TestCase):
 
         service.add_selection_provider(provider)
         service.remove_selection_provider(provider)
-        self.assertFalse(service.has_selection_provider(provider))
+        self.assertFalse(service.has_selection_provider(provider.id))
 
         with self.assertRaises(SelectionProviderNotFoundError):
             service.remove_selection_provider(provider)
@@ -56,11 +67,12 @@ class TestSelectionService(unittest.TestCase):
         self.assertIsInstance(selection, ISelection)
         self.assertEqual(selection.from_, provider)
 
+    def test_get_selection_id_not_registered(self):
+        service = SelectionService()
 
+        with self.assertRaises(SelectionProviderNotFoundError):
+            service.get_selection('not-registered')
 
-# Test ID conflict
-# Test empty ID
-# Test get_selection with not-exitent ID
 
 if __name__ == '__main__':
     unittest.main()
