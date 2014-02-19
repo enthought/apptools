@@ -1,4 +1,4 @@
-class SelectionProviderNotFoundError(Exception):
+class ProviderNotRegisteredError(Exception):
     """ Raised when a provider is requested by ID and not found. """
 
     def __init__(self, provider_id):

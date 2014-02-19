@@ -3,7 +3,7 @@ from traits.testing.unittest_tools import unittest
 
 from apptools.selection.api import (IDConflictError, ISelection,
     ISelectionProvider, ListenerNotConnectedError,
-    SelectionProviderNotFoundError, SelectionService)
+    ProviderNotRegisteredError, SelectionService)
 
 
 @provides(ISelection)
@@ -72,7 +72,7 @@ class TestSelectionService(unittest.TestCase):
         service.remove_selection_provider(provider)
         self.assertFalse(service.has_selection_provider(provider.id))
 
-        with self.assertRaises(SelectionProviderNotFoundError):
+        with self.assertRaises(ProviderNotRegisteredError):
             service.remove_selection_provider(provider)
 
     def test_get_selection(self):
@@ -89,7 +89,7 @@ class TestSelectionService(unittest.TestCase):
     def test_get_selection_id_not_registered(self):
         service = SelectionService()
 
-        with self.assertRaises(SelectionProviderNotFoundError):
+        with self.assertRaises(ProviderNotRegisteredError):
             service.get_selection('not-registered')
 
     def test_connect_listener(self):

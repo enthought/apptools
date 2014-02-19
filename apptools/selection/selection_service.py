@@ -1,7 +1,7 @@
 from traits.api import Dict, HasTraits
 
-from apptools.selection.errors import (SelectionProviderNotFoundError,
-                                       IDConflictError, ListenerNotConnectedError)
+from apptools.selection.errors import (ProviderNotRegisteredError,
+    IDConflictError, ListenerNotConnectedError)
 
 
 class SelectionService(HasTraits):
@@ -46,7 +46,7 @@ class SelectionService(HasTraits):
         """ Remove a selection provider.
 
         If the provider has not been registered, a
-        :class:`~.SelectionProviderNotFoundError` is raised.
+        :class:`~.ProviderNotRegisteredError` is raised.
 
         Arguments
         ---------
@@ -64,7 +64,7 @@ class SelectionService(HasTraits):
         """ Return the current selection of the provider with the given ID.
 
         If a provider with that ID has not been registered, a
-        :class:`~.SelectionProviderNotFoundError` is raised.
+        :class:`~.ProviderNotRegisteredError` is raised.
 
         Arguments
         ---------
@@ -149,4 +149,4 @@ class SelectionService(HasTraits):
 
     def _raise_if_not_registered(self, id):
         if not self.has_selection_provider(id):
-            raise SelectionProviderNotFoundError(provider_id=id)
+            raise ProviderNotRegisteredError(provider_id=id)
