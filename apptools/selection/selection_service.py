@@ -32,7 +32,11 @@ class SelectionService(HasTraits):
         """
         if self.has_selection_provider(provider.id):
             raise IDConflictError(provider_id=provider.id)
+
         self._providers[provider.id] = provider
+
+        if self._listeners.has_key(provider.id):
+            self._connect_all_listeners(provider.id)
 
     def has_selection_provider(self, id):
         """ Has a provider with the given ID been registered? """
@@ -50,6 +54,10 @@ class SelectionService(HasTraits):
             The selection provider added to the internal registry.
         """
         self._raise_if_not_registered(provider.id)
+
+        if self._listeners.has_key(provider.id):
+            self._disconnect_all_listeners(provider.id)
+
         del self._providers[provider.id]
 
     def get_selection(self, id):
@@ -72,9 +80,53 @@ class SelectionService(HasTraits):
         provider = self._providers[id]
         return provider.get_selection()
 
+    def connect_selection_listener(self, id, func):
+        """ Connect a listener to selection events from a specific provider.
+
+        The signature if the listener callback is ``func(id, i_selection)``.
+        The listener is called:
+        1) When a provider with the given ID is registered, with its initial
+           selection as argument, or
+        2) whenever the provider fires a selection event.
+
+        It is perfectly valid to connect a listener before a provider with the
+        given ID is registered. The listener will remain connected even if
+        the provider is repeatedly connected and disconnected.
+
+        Arguments
+        ---------
+        id -- str
+            The selection provider ID.
+        func -- callable(id, i_selection)
+            A callable object that is notified when the selection changes.
+        """
+        self._listeners.setdefault(id, [])
+        self._listeners[id].append(func)
+
+        if self.has_selection_provider(id):
+            self._toggle_listener(id, func, remove=False)
+
     #### Private protocol #####################################################
 
+    _listeners = Dict()
+
     _providers = Dict()
+
+    def _toggle_listener(self, provider_id, func, remove):
+        provider = self._providers[provider_id]
+        provider.on_trait_change(func, 'selection', remove=remove)
+
+    def _connect_all_listeners(self, provider_id):
+        provider = self._providers[provider_id]
+        selection = provider.get_selection()
+        for func in self._listeners[provider_id]:
+            self._toggle_listener(provider_id, func, remove=False)
+            func(provider_id, selection)
+
+    def _disconnect_all_listeners(self, provider_id):
+        provider = self._providers[provider_id]
+        for func in self._listeners[provider_id]:
+            self._toggle_listener(provider_id, func, remove=True)
 
     def _raise_if_not_registered(self, id):
         if not self.has_selection_provider(id):

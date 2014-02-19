@@ -1,4 +1,4 @@
-from traits.api import Interface, Str
+from traits.api import Event, Interface, Str
 
 
 class ISelectionProvider(Interface):
@@ -6,6 +6,8 @@ class ISelectionProvider(Interface):
 
     #: Unique ID identifying the provider.
     id = Str()
+
+    selection = Event
 
     def get_selection(self):
         """ Return the current selection.
