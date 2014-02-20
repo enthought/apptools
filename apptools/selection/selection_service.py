@@ -24,10 +24,9 @@ class SelectionService(HasTraits):
         ID has been already registered, an :class:`~.IDConflictError`
         is raised.
 
-        Arguments
-        ---------
-        provider -- ISelectionProvider
-            The selection provider added to the internal registry.
+        Arguments:
+            provider -- ISelectionProvider
+                The selection provider added to the internal registry.
 
         """
         if self.has_selection_provider(provider.id):
@@ -48,10 +47,9 @@ class SelectionService(HasTraits):
         If the provider has not been registered, a
         :class:`~.ProviderNotRegisteredError` is raised.
 
-        Arguments
-        ---------
-        provider -- ISelectionProvider
-            The selection provider added to the internal registry.
+        Arguments:
+            provider -- ISelectionProvider
+                The selection provider added to the internal registry.
         """
         self._raise_if_not_registered(provider.id)
 
@@ -66,15 +64,13 @@ class SelectionService(HasTraits):
         If a provider with that ID has not been registered, a
         :class:`~.ProviderNotRegisteredError` is raised.
 
-        Arguments
-        ---------
-        id -- str
-            The selection provider ID.
+        Arguments:
+            id -- str
+                The selection provider ID.
 
-        Returns
-        -------
-        selection -- ISelection
-            The current selection of the provider.
+        Returns:
+            selection -- ISelection
+                The current selection of the provider.
         """
         self._raise_if_not_registered(id)
         provider = self._providers[id]
@@ -90,19 +86,18 @@ class SelectionService(HasTraits):
         selection provider are silently ignored. If it is ``False`` (default),
         a :class:`ValueError` should be raised.
 
-        Arguments
-        ---------
-        id -- str
-            The selection provider ID.
+        Arguments:
+            id -- str
+                The selection provider ID.
 
-        items -- list
-            List of items to be selected.
+            items -- list
+                List of items to be selected.
 
-        ignore_missing -- bool
-            If ``False`` (default), the provider raises an exception if any
-            of the items in ``items`` is not available to be selected.
-            Otherwise, missing elements are silently ignored, and the rest
-            is selected.
+            ignore_missing -- bool
+                If ``False`` (default), the provider raises an exception if any
+                of the items in ``items`` is not available to be selected.
+                Otherwise, missing elements are silently ignored, and the rest
+                is selected.
         """
         self._raise_if_not_registered(id)
         provider = self._providers[id]
@@ -113,20 +108,21 @@ class SelectionService(HasTraits):
 
         The signature if the listener callback is ``func(i_selection)``.
         The listener is called:
+
         1) When a provider with the given ID is registered, with its initial
            selection as argument, or
+
         2) whenever the provider fires a selection event.
 
         It is perfectly valid to connect a listener before a provider with the
         given ID is registered. The listener will remain connected even if
         the provider is repeatedly connected and disconnected.
 
-        Arguments
-        ---------
-        id -- str
-            The selection provider ID.
-        func -- callable(id, i_selection)
-            A callable object that is notified when the selection changes.
+        Arguments:
+            id -- str
+                The selection provider ID.
+            func -- callable(id, i_selection)
+                A callable object that is notified when the selection changes.
         """
         self._listeners.setdefault(id, [])
         self._listeners[id].append(func)
@@ -137,12 +133,11 @@ class SelectionService(HasTraits):
     def disconnect_selection_listener(self, id, func):
         """ Disonnect a listener from a specific provider.
 
-        Arguments
-        ---------
-        id -- str
-            The selection provider ID.
-        func -- callable(id, i_selection)
-            A callable object that is notified when the selection changes.
+        Arguments:
+            id -- str
+                The selection provider ID.
+            func -- callable(id, i_selection)
+                A callable object that is notified when the selection changes.
         """
 
         if self.has_selection_provider(id):

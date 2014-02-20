@@ -7,15 +7,16 @@ class ISelectionProvider(Interface):
     #: Unique ID identifying the provider.
     id = Str()
 
+    #: Event triggered when the selection changes.
+    #: The content of the event is an :class:`~.ISelection` instance.
     selection = Event
 
     def get_selection(self):
         """ Return the current selection.
 
-        Returns
-        -------
-        selection -- ISelection
-            Object representing the current selection.
+        Returns:
+            selection -- ISelection
+                Object representing the current selection.
         """
 
     def set_selection(self, items, ignore_missing=False):
@@ -23,16 +24,15 @@ class ISelectionProvider(Interface):
 
         If ``ignore_missing`` is ``True``, items that are not available in the
         selection provider are silently ignored. If it is ``False`` (default),
-        an :class:`ValueError` should be raised.
+        an :class:`~.ValueError` should be raised.
 
-        Arguments
-        ---------
-        items -- list
-            List of items to be selected.
+        Arguments:
+            items -- list
+                List of items to be selected.
 
-        ignore_missing -- bool
-            If ``False`` (default), the provider raises an exception if any
-            of the items in ``items`` is not available to be selected.
-            Otherwise, missing elements are silently ignored, and the rest
-            is selected.
+            ignore_missing -- bool
+                If ``False`` (default), the provider raises an exception if any
+                of the items in ``items`` is not available to be selected.
+                Otherwise, missing elements are silently ignored, and the rest
+                is selected.
         """

@@ -13,6 +13,6 @@ AppTools Documentation
     preferences/*
     scripting/*
     undo/*
+    selection/*
       
 * :ref:`search`
-
