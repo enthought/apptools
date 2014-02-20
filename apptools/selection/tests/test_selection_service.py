@@ -57,8 +57,8 @@ class SimpleListProvider(HasTraits):
     selection = Event
 
     def get_selection(self):
-        selection = ListSelection(source_id=self.id, selected=self._selected,
-                                  all_items=self.items)
+        selection = ListSelection.from_available_items(
+            source_id=self.id, selected=self._selected, all_items=self.items)
         return selection
 
     def set_selection(self, items, ignore_missing=False):

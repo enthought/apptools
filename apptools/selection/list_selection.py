@@ -7,9 +7,8 @@ from apptools.selection.i_selection import IListSelection
 class ListSelection(HasTraits):
     """ Selection for ordered sequences of items.
 
-    This is a default implementation if the :class:`~.IListSelection`
-    interface, which fills in the required information based on a list of
-    selected items and a list of all available items.
+    This is the default implementation of the :class:`~.IListSelection`
+    interface.
     """
 
     #### 'ISelection' protocol ################################################
@@ -29,11 +28,17 @@ class ListSelection(HasTraits):
     #: Indices of the selected objects in the selection provider.
     indices = List
 
-    #### 'ListSelection' protocol #############################################
+    #### 'ListSelection' class protocol #######################################
 
-    def __init__(self, source_id, selected, all_items):
+    @classmethod
+    def from_available_items(cls, source_id, selected, all_items):
+        """ Create a list selection given a list of all available items.
+
+        Fills in the required information (in particular, the indices) based
+        on a list of selected items and a list of all available items.
+
+        The list of available items must not contain any duplicate items.
+        """
         indices = [all_items.index(x) for x in selected]
 
-        super(ListSelection, self).__init__(source_id=source_id,
-                                            items=selected,
-                                            indices=indices)
+        return cls(source_id=source_id, items=selected, indices=indices)
