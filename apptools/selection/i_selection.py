@@ -1,4 +1,4 @@
-from traits.api import Interface, Str
+from traits.api import Interface, List, Str
 
 
 class ISelection(Interface):
@@ -9,3 +9,13 @@ class ISelection(Interface):
 
     def is_empty(self):
         """ Is the selection empty? """
+
+
+class IListSelection(ISelection):
+    """ Selection for ordered sequences of items. """
+
+    #: Selected objects.
+    items = List
+
+    #: Indices of the selected objects in the selection provider.
+    indices = List
