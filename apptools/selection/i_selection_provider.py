@@ -17,3 +17,22 @@ class ISelectionProvider(Interface):
         selection -- ISelection
             Object representing the current selection.
         """
+
+    def set_selection(self, items, ignore_missing=False):
+        """ Set the current selection to the given items.
+
+        If ``ignore_missing`` is ``True``, items that are not available in the
+        selection provider are silently ignored. If it is ``False`` (default),
+        an :class:`ValueError` should be raised.
+
+        Arguments
+        ---------
+        items -- list
+            List of items to be selected.
+
+        ignore_missing -- bool
+            If ``False`` (default), the provider raises an exception if any
+            of the items in ``items`` is not available to be selected.
+            Otherwise, missing elements are silently ignored, and the rest
+            is selected.
+        """

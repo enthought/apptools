@@ -9,7 +9,7 @@ class ListSelection(HasTraits):
 
     This is a default implementation if the :class:`~.IListSelection`
     interface, which fills in the required information based on a list of
-    selected items, and a list of all available items.
+    selected items and a list of all available items.
     """
 
     #### 'ISelection' protocol ################################################

@@ -80,6 +80,34 @@ class SelectionService(HasTraits):
         provider = self._providers[id]
         return provider.get_selection()
 
+    def set_selection(self, id, items, ignore_missing=False):
+        """ Set the current selection in a provider to the given items.
+
+        If a provider with the given ID has not been registered, a
+        :class:`~.ProviderNotRegisteredError` is raised.
+
+        If ``ignore_missing`` is ``True``, items that are not available in the
+        selection provider are silently ignored. If it is ``False`` (default),
+        a :class:`ValueError` should be raised.
+
+        Arguments
+        ---------
+        id -- str
+            The selection provider ID.
+
+        items -- list
+            List of items to be selected.
+
+        ignore_missing -- bool
+            If ``False`` (default), the provider raises an exception if any
+            of the items in ``items`` is not available to be selected.
+            Otherwise, missing elements are silently ignored, and the rest
+            is selected.
+        """
+        self._raise_if_not_registered(id)
+        provider = self._providers[id]
+        return provider.set_selection(items, ignore_missing=ignore_missing)
+
     def connect_selection_listener(self, id, func):
         """ Connect a listener to selection events from a specific provider.
 
@@ -136,10 +164,16 @@ class SelectionService(HasTraits):
         provider.on_trait_change(func, 'selection', remove=remove)
 
     def _connect_all_listeners(self, provider_id):
+        """ Connect all listeners connected to a provider.
+
+        As soon as they are connected, they receive the initial selection.
+        """
         provider = self._providers[provider_id]
         selection = provider.get_selection()
         for func in self._listeners[provider_id]:
             self._toggle_listener(provider_id, func, remove=False)
+            # FIXME: make this robust to notifications that raise exceptions.
+            # Can we send the error to the traits exception hook?
             func(provider_id, selection)
 
     def _disconnect_all_listeners(self, provider_id):
