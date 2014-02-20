@@ -111,7 +111,7 @@ class SelectionService(HasTraits):
     def connect_selection_listener(self, id, func):
         """ Connect a listener to selection events from a specific provider.
 
-        The signature if the listener callback is ``func(id, i_selection)``.
+        The signature if the listener callback is ``func(i_selection)``.
         The listener is called:
         1) When a provider with the given ID is registered, with its initial
            selection as argument, or
@@ -174,7 +174,7 @@ class SelectionService(HasTraits):
             self._toggle_listener(provider_id, func, remove=False)
             # FIXME: make this robust to notifications that raise exceptions.
             # Can we send the error to the traits exception hook?
-            func(provider_id, selection)
+            func(selection)
 
     def _disconnect_all_listeners(self, provider_id):
         provider = self._providers[provider_id]

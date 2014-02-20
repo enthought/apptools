@@ -43,7 +43,7 @@ class BogusSelectionProvider(HasTraits):
 class BogusListener(HasTraits):
     selections = List
 
-    def on_selection_changed(self, id, selection):
+    def on_selection_changed(self, selection):
         self.selections.append(selection)
 
 
