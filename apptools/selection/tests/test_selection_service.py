@@ -9,7 +9,7 @@ from apptools.selection.api import (
 @provides(ISelection)
 class BogusSelection(HasTraits):
 
-    source_id = Str
+    provider_id = Str
 
     # Some content to check that two selections are the same
     content = Any
@@ -24,12 +24,13 @@ class BogusSelectionProvider(HasTraits):
 
     #### 'ISelectionProvider' protocol ########################################
 
-    id = Str
+    provider_id = Str
 
     selection = Event
 
     def get_selection(self):
-        return BogusSelection(source_id=self.id, content='get_selection')
+        return BogusSelection(provider_id=self.provider_id,
+                              content='get_selection')
 
     def set_selection(self, items, ignore_missing=False):
         pass
@@ -37,7 +38,8 @@ class BogusSelectionProvider(HasTraits):
     #### 'BogusSelectionProvider' protocol ####################################
 
     def trigger_selection(self, content):
-        self.selection = BogusSelection(source_id=self.id, content=content)
+        self.selection = BogusSelection(provider_id=self.provider_id,
+                                        content=content)
 
 
 class BogusListener(HasTraits):
@@ -52,13 +54,16 @@ class SimpleListProvider(HasTraits):
 
     #### 'ISelectionProvider' protocol ########################################
 
-    id = Str('test.simple_list_provider')
+    provider_id = Str('test.simple_list_provider')
 
     selection = Event
 
     def get_selection(self):
         selection = ListSelection.from_available_items(
-            source_id=self.id, selected=self._selected, all_items=self.items)
+            provider_id=self.provider_id,
+            selected=self._selected,
+            all_items=self.items
+        )
         return selection
 
     def set_selection(self, items, ignore_missing=False):
@@ -81,14 +86,14 @@ class TestSelectionService(unittest.TestCase):
         provider = BogusSelectionProvider()
 
         service.add_selection_provider(provider)
-        self.assertTrue(service.has_selection_provider(provider.id))
+        self.assertTrue(service.has_selection_provider(provider.provider_id))
 
     def test_add_selection_id_conflict(self):
         service = SelectionService()
 
         provider_id = 'Foo'
-        provider = BogusSelectionProvider(id=provider_id)
-        another_provider = BogusSelectionProvider(id=provider_id)
+        provider = BogusSelectionProvider(provider_id=provider_id)
+        another_provider = BogusSelectionProvider(provider_id=provider_id)
 
         service.add_selection_provider(provider)
         with self.assertRaises(IDConflictError):
@@ -96,11 +101,11 @@ class TestSelectionService(unittest.TestCase):
 
     def test_remove_selection_provider(self):
         service = SelectionService()
-        provider = BogusSelectionProvider(id='Bogus')
+        provider = BogusSelectionProvider(provider_id='Bogus')
 
         service.add_selection_provider(provider)
         service.remove_selection_provider(provider)
-        self.assertFalse(service.has_selection_provider(provider.id))
+        self.assertFalse(service.has_selection_provider(provider.provider_id))
 
         with self.assertRaises(ProviderNotRegisteredError):
             service.remove_selection_provider(provider)
@@ -108,13 +113,13 @@ class TestSelectionService(unittest.TestCase):
     def test_get_selection(self):
         service = SelectionService()
         provider_id = 'Bogus'
-        provider = BogusSelectionProvider(id=provider_id)
+        provider = BogusSelectionProvider(provider_id=provider_id)
         service.add_selection_provider(provider)
 
         selection = service.get_selection(provider_id)
 
         self.assertIsInstance(selection, ISelection)
-        self.assertEqual(selection.source_id, provider.id)
+        self.assertEqual(selection.provider_id, provider.provider_id)
 
     def test_get_selection_id_not_registered(self):
         service = SelectionService()
@@ -125,7 +130,7 @@ class TestSelectionService(unittest.TestCase):
     def test_connect_listener(self):
         service = SelectionService()
         provider_id = 'Bogus'
-        provider = BogusSelectionProvider(id=provider_id)
+        provider = BogusSelectionProvider(provider_id=provider_id)
         service.add_selection_provider(provider)
 
         listener = BogusListener()
@@ -137,7 +142,7 @@ class TestSelectionService(unittest.TestCase):
 
         selections = listener.selections
         self.assertEqual(len(selections), 1)
-        self.assertEqual(selections[0].source_id, provider.id)
+        self.assertEqual(selections[0].provider_id, provider.provider_id)
         self.assertEqual(selections[0].content, content)
 
     def test_connect_listener_then_add_remove_provider(self):
@@ -151,7 +156,7 @@ class TestSelectionService(unittest.TestCase):
 
         # When the provider is first added, the listener should receive the
         # initial selection (as returned by provider.get_selection)
-        provider = BogusSelectionProvider(id=provider_id)
+        provider = BogusSelectionProvider(provider_id=provider_id)
         expected = provider.get_selection()
         service.add_selection_provider(provider)
 
@@ -180,7 +185,7 @@ class TestSelectionService(unittest.TestCase):
     def test_disconnect_listener(self):
         service = SelectionService()
         provider_id = 'Bogus'
-        provider = BogusSelectionProvider(id=provider_id)
+        provider = BogusSelectionProvider(provider_id=provider_id)
         service.add_selection_provider(provider)
 
         listener = BogusListener()
@@ -196,7 +201,7 @@ class TestSelectionService(unittest.TestCase):
     def test_disconnect_unknown_listener(self):
         service = SelectionService()
         provider_id = 'Bogus'
-        provider = BogusSelectionProvider(id=provider_id)
+        provider = BogusSelectionProvider(provider_id=provider_id)
         service.add_selection_provider(provider)
 
         # First case: there are listeners to a provider, but not the one we
@@ -220,13 +225,14 @@ class TestSelectionService(unittest.TestCase):
         provider = SimpleListProvider(items=range(10))
         service.add_selection_provider(provider)
 
-        selection = service.get_selection(provider.id)
+        provider_id = provider.provider_id
+        selection = service.get_selection(provider_id)
         self.assertTrue(selection.is_empty())
 
         new_selection = [5, 6, 3]
-        service.set_selection(provider.id, new_selection)
+        service.set_selection(provider_id, new_selection)
 
-        selection = service.get_selection(provider.id)
+        selection = service.get_selection(provider_id)
         self.assertFalse(selection.is_empty())
 
         # We can't assume that the order of the items in the selection we set
@@ -239,7 +245,7 @@ class TestSelectionService(unittest.TestCase):
 
         new_selection = [5, 6, 3]
         with self.assertRaises(ProviderNotRegisteredError):
-            service.set_selection(id='not-existent', items=[])
+            service.set_selection(provider_id='not-existent', items=[])
 
     def test_ignore_missing(self):
         # What we are really testing here is that the selection service
@@ -252,15 +258,16 @@ class TestSelectionService(unittest.TestCase):
         service.add_selection_provider(provider)
 
         new_selection = [0, 11, 1]
-        service.set_selection(provider.id, new_selection, ignore_missing=True)
+        provider_id = provider.provider_id
+        service.set_selection(provider_id, new_selection, ignore_missing=True)
 
-        selection = service.get_selection(provider.id)
+        selection = service.get_selection(provider_id)
         self.assertFalse(selection.is_empty())
         self.assertItemsEqual(selection.items, [0, 1])
 
         new_selection = [0, 11, 1]
         with self.assertRaises(ValueError):
-            service.set_selection(provider.id, new_selection,
+            service.set_selection(provider_id, new_selection,
                                   ignore_missing=False)
 
 

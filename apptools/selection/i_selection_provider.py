@@ -5,7 +5,7 @@ class ISelectionProvider(Interface):
     """ Source of selections. """
 
     #: Unique ID identifying the provider.
-    id = Str()
+    provider_id = Str()
 
     #: Event triggered when the selection changes.
     #: The content of the event is an :class:`~.ISelection` instance.

@@ -9,7 +9,7 @@ class TestListSelection(unittest.TestCase):
         all_items = ['a', 'b', 'c', 'd']
         selected = ['d', 'b']
         list_selection = ListSelection.from_available_items(
-            source_id='foo', selected=selected, all_items=all_items)
+            provider_id='foo', selected=selected, all_items=all_items)
 
         self.assertEqual(list_selection.items, selected)
         self.assertEqual(list_selection.indices, [3, 1])

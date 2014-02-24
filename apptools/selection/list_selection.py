@@ -14,7 +14,7 @@ class ListSelection(HasTraits):
     #### 'ISelection' protocol ################################################
 
     #: ID of the selection provider that created this selection object.
-    source_id = Str
+    provider_id = Str
 
     def is_empty(self):
         """ Is the selection empty? """
@@ -31,7 +31,7 @@ class ListSelection(HasTraits):
     #### 'ListSelection' class protocol #######################################
 
     @classmethod
-    def from_available_items(cls, source_id, selected, all_items):
+    def from_available_items(cls, provider_id, selected, all_items):
         """ Create a list selection given a list of all available items.
 
         Fills in the required information (in particular, the indices) based
@@ -41,4 +41,4 @@ class ListSelection(HasTraits):
         """
         indices = [all_items.index(x) for x in selected]
 
-        return cls(source_id=source_id, items=selected, indices=indices)
+        return cls(provider_id=provider_id, items=selected, indices=indices)

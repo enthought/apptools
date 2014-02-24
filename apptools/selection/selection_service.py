@@ -29,17 +29,18 @@ class SelectionService(HasTraits):
                 The selection provider added to the internal registry.
 
         """
-        if self.has_selection_provider(provider.id):
-            raise IDConflictError(provider_id=provider.id)
+        provider_id = provider.provider_id
+        if self.has_selection_provider(provider_id):
+            raise IDConflictError(provider_id=provider_id)
 
-        self._providers[provider.id] = provider
+        self._providers[provider_id] = provider
 
-        if self._listeners.has_key(provider.id):
-            self._connect_all_listeners(provider.id)
+        if self._listeners.has_key(provider_id):
+            self._connect_all_listeners(provider_id)
 
-    def has_selection_provider(self, id):
+    def has_selection_provider(self, provider_id):
         """ Has a provider with the given ID been registered? """
-        return id in self._providers
+        return provider_id in self._providers
 
     def remove_selection_provider(self, provider):
         """ Remove a selection provider.
@@ -51,32 +52,33 @@ class SelectionService(HasTraits):
             provider -- ISelectionProvider
                 The selection provider added to the internal registry.
         """
-        self._raise_if_not_registered(provider.id)
+        provider_id = provider.provider_id
+        self._raise_if_not_registered(provider_id)
 
-        if self._listeners.has_key(provider.id):
-            self._disconnect_all_listeners(provider.id)
+        if self._listeners.has_key(provider_id):
+            self._disconnect_all_listeners(provider_id)
 
-        del self._providers[provider.id]
+        del self._providers[provider_id]
 
-    def get_selection(self, id):
+    def get_selection(self, provider_id):
         """ Return the current selection of the provider with the given ID.
 
         If a provider with that ID has not been registered, a
         :class:`~.ProviderNotRegisteredError` is raised.
 
         Arguments:
-            id -- str
+            provider_id -- str
                 The selection provider ID.
 
         Returns:
             selection -- ISelection
                 The current selection of the provider.
         """
-        self._raise_if_not_registered(id)
-        provider = self._providers[id]
+        self._raise_if_not_registered(provider_id)
+        provider = self._providers[provider_id]
         return provider.get_selection()
 
-    def set_selection(self, id, items, ignore_missing=False):
+    def set_selection(self, provider_id, items, ignore_missing=False):
         """ Set the current selection in a provider to the given items.
 
         If a provider with the given ID has not been registered, a
@@ -87,7 +89,7 @@ class SelectionService(HasTraits):
         a :class:`ValueError` should be raised.
 
         Arguments:
-            id -- str
+            provider_id -- str
                 The selection provider ID.
 
             items -- list
@@ -99,11 +101,11 @@ class SelectionService(HasTraits):
                 Otherwise, missing elements are silently ignored, and the rest
                 is selected.
         """
-        self._raise_if_not_registered(id)
-        provider = self._providers[id]
+        self._raise_if_not_registered(provider_id)
+        provider = self._providers[provider_id]
         return provider.set_selection(items, ignore_missing=ignore_missing)
 
-    def connect_selection_listener(self, id, func):
+    def connect_selection_listener(self, provider_id, func):
         """ Connect a listener to selection events from a specific provider.
 
         The signature if the listener callback is ``func(i_selection)``.
@@ -119,34 +121,34 @@ class SelectionService(HasTraits):
         the provider is repeatedly connected and disconnected.
 
         Arguments:
-            id -- str
+            provider_id -- str
                 The selection provider ID.
-            func -- callable(id, i_selection)
+            func -- callable(provider_id, i_selection)
                 A callable object that is notified when the selection changes.
         """
-        self._listeners.setdefault(id, [])
-        self._listeners[id].append(func)
+        self._listeners.setdefault(provider_id, [])
+        self._listeners[provider_id].append(func)
 
-        if self.has_selection_provider(id):
-            self._toggle_listener(id, func, remove=False)
+        if self.has_selection_provider(provider_id):
+            self._toggle_listener(provider_id, func, remove=False)
 
-    def disconnect_selection_listener(self, id, func):
-        """ Disonnect a listener from a specific provider.
+    def disconnect_selection_listener(self, provider_id, func):
+        """ Disconnect a listener from a specific provider.
 
         Arguments:
-            id -- str
+            provider_id -- str
                 The selection provider ID.
-            func -- callable(id, i_selection)
+            func -- callable(provider_id, i_selection)
                 A callable object that is notified when the selection changes.
         """
 
-        if self.has_selection_provider(id):
-            self._toggle_listener(id, func, remove=True)
+        if self.has_selection_provider(provider_id):
+            self._toggle_listener(provider_id, func, remove=True)
 
         try:
-            self._listeners[id].remove(func)
+            self._listeners[provider_id].remove(func)
         except (ValueError, KeyError):
-            raise ListenerNotConnectedError(provider_id=id, listener=func)
+            raise ListenerNotConnectedError(provider_id=provider_id, listener=func)
 
     #### Private protocol #####################################################
 
@@ -176,6 +178,6 @@ class SelectionService(HasTraits):
         for func in self._listeners[provider_id]:
             self._toggle_listener(provider_id, func, remove=True)
 
-    def _raise_if_not_registered(self, id):
-        if not self.has_selection_provider(id):
-            raise ProviderNotRegisteredError(provider_id=id)
+    def _raise_if_not_registered(self, provider_id):
+        if not self.has_selection_provider(provider_id):
+            raise ProviderNotRegisteredError(provider_id=provider_id)
