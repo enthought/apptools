@@ -25,6 +25,8 @@ that is commonly needed by many applications
 - **apptools.preferences**: Manages application preferences.
 - **pyface.resource**: Manages application resources such as images and
   sounds.
+- **apptools.selection**: Manages the communication between providers and
+  listener of selected items in an application.
 - **apptools.scripting**: A framework for automatic recording of Python
   scripts.
 - **apptools.sweet_pickle**: Handles class-level versioning, to support
