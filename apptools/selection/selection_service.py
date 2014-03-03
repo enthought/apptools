@@ -123,7 +123,7 @@ class SelectionService(HasTraits):
         Arguments:
             provider_id -- str
                 The selection provider ID.
-            func -- callable(provider_id, i_selection)
+            func -- callable(i_selection)
                 A callable object that is notified when the selection changes.
         """
         self._listeners.setdefault(provider_id, [])
@@ -148,7 +148,8 @@ class SelectionService(HasTraits):
         try:
             self._listeners[provider_id].remove(func)
         except (ValueError, KeyError):
-            raise ListenerNotConnectedError(provider_id=provider_id, listener=func)
+            raise ListenerNotConnectedError(provider_id=provider_id,
+                                            listener=func)
 
     #### Private protocol #####################################################
 
