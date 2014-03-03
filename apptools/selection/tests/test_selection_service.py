@@ -1,4 +1,4 @@
-from traits.api import Any, Event, HasTraits, Instance, List, provides, Str
+from traits.api import Any, Event, HasTraits, List, provides, Str
 from traits.testing.unittest_tools import unittest
 
 from apptools.selection.api import (
@@ -243,7 +243,6 @@ class TestSelectionService(unittest.TestCase):
     def test_selection_id_not_registered(self):
         service = SelectionService()
 
-        new_selection = [5, 6, 3]
         with self.assertRaises(ProviderNotRegisteredError):
             service.set_selection(provider_id='not-existent', items=[])
 

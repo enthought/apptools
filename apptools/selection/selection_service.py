@@ -1,7 +1,8 @@
 from traits.api import Dict, HasTraits
 
-from apptools.selection.errors import (ProviderNotRegisteredError,
-    IDConflictError, ListenerNotConnectedError)
+from apptools.selection.errors import (
+    ProviderNotRegisteredError, IDConflictError, ListenerNotConnectedError
+)
 
 
 class SelectionService(HasTraits):
@@ -35,7 +36,7 @@ class SelectionService(HasTraits):
 
         self._providers[provider_id] = provider
 
-        if self._listeners.has_key(provider_id):
+        if provider_id in self._listeners:
             self._connect_all_listeners(provider_id)
 
     def has_selection_provider(self, provider_id):
@@ -55,7 +56,7 @@ class SelectionService(HasTraits):
         provider_id = provider.provider_id
         self._raise_if_not_registered(provider_id)
 
-        if self._listeners.has_key(provider_id):
+        if provider_id in self._listeners:
             self._disconnect_all_listeners(provider_id)
 
         del self._providers[provider_id]
@@ -175,7 +176,6 @@ class SelectionService(HasTraits):
             func(selection)
 
     def _disconnect_all_listeners(self, provider_id):
-        provider = self._providers[provider_id]
         for func in self._listeners[provider_id]:
             self._toggle_listener(provider_id, func, remove=True)
 
