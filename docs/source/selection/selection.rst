@@ -9,7 +9,7 @@ other parts of the application must react to changes in the selection
 ("selection listeners").
 
 Ideally, the listeners would not have a direct dependency on the UI object.
-This is especially important in extensible ``envisage`` application, where
+This is especially important in extensible `envisage`_ applications, where
 a plugin might need to react to a selection change, but we do not want to
 expose the internal organization of the application to external developers.
 
@@ -20,10 +20,77 @@ between providers and listener.
 The :class:`~.SelectionService` object
 --------------------------------------
 
-The :class:`~SelectionService` object is the central manager that handles
+The :class:`~.SelectionService` object is the central manager that handles
 the communication between selection providers and listener.
 
-It supports two distinct use cases:
+:ref:`Selection providers <selection_providers>` are components that wish to
+publish information about their current selection for public consumption.
+They register to a selection
+service instance when they first have a selection available (e.g., when the
+UI showing a list of selectable items is initialized), and un-register as soon
+as the selection is not available anymore (e.g., the UI is destroyed when the
+windows is closed).
+
+:ref:`Selection listeners <selection_listeners>` can query the selection
+service to get the current selection published by a provider, using the
+provider unique ID.
+
+The service acts as a broker between providers and listeners, making sure that
+they are notified when the
+:attr:`~apptools.selection.i_selection_provider.ISelectionProvider.selection`
+event is fired.
+
+.. _selection_providers:
+
+Selection providers
+-------------------
+
+Any object can become a selection provider by implementing the
+:class:`~apptools.selection.i_selection_provider.ISelectionProvider`
+interface, and registering to the selection service.
+
+Selection providers must provide a unique ID
+:attr:`~apptools.selection.i_selection_provider.ISelectionProvider.provider_id`,
+which is used by listeners to request its current selection.
+
+Whenever its selection changes, providers fire a
+:attr:`~apptools.selection.i_selection_provider.ISelectionProvider.selection`
+event. The content of the event is an instance implementing
+:class:`~.ISelection` that contains information about the selected items.
+For example, a :class:`~.ListSelection` object contains a list of selected
+items, and their indices.
+
+Selection providers can also be queried directly about their current selection
+using the
+:attr:`~apptools.selection.i_selection_provider.ISelectionProvider.get_selection`
+method, and can be requested to change their selection to a new one with the
+:attr:`~apptools.selection.i_selection_provider.ISelectionProvider.set_selection`
+method.
+
+Registration
+~~~~~~~~~~~~
+
+Selection providers publish their selection by registering to the selection
+service using the
+:attr:`~apptools.selection.selection_service.SelectionService.add_selection_provider`
+method. When the selection is no longer available, selection providers
+should un-register through
+:attr:`~apptools.selection.selection_service.SelectionService.remove_selection_provider`.
+
+Typically, selection providers are UI objects showing a list or tree of items,
+they register as soon as the UI component is initialized, and un-register
+when the UI component disappears (e.g., because their window has been closed).
+In more complex applications, the registration could be done by a controller
+object instead.
+
+.. _selection_listeners:
+
+Selection listeners
+-------------------
+
+Selection listeners request information regarding the current selection
+of a selection provider given their provider ID. The :class:`~.SelectionService`
+supports two distinct use cases:
 
  1) Passively listening to selection changes: listener connect to a specific
     provider and are notified when the provider's selection changes.
@@ -41,25 +108,12 @@ method. They need to provide the unique ID of the provider, and a function
 one argument, an implementation of the :class:`~.ISelection` that represents
 the selection.
 
-On their side, providers need to register to the selection service through
-:attr:`~apptools.selection.selection_service.SelectionService.add_selection_provider`.
-When their selection changes, providers emit a
-:attr:`~apptools.selection.i_selection_provider.ISelectionProvider.selection`
-event that contains an :class:`~.ISelection` instance.
-
-The service acts as a broker between providers and listeners, making sure that
-they are notified when the
-:attr:`~apptools.selection.i_selection_provider.ISelectionProvider.selection`
-event is fired.
-
 It is possible for a listener to connect to a provider ID before it is
 registered. As soon as the provider is registered, the listener will receive
 a notification containing the provider's initial selection.
 
-To disconnect a listener / unregister a provider use the methods
-:attr:`~apptools.selection.selection_service.SelectionService.disconnect_selection_listener`
-and
-:attr:`~apptools.selection.selection_service.SelectionService.remove_selection_provider`
+To disconnect a listener use the methods
+:attr:`~apptools.selection.selection_service.SelectionService.disconnect_selection_listener`.
 
 Active querying
 ~~~~~~~~~~~~~~~
@@ -84,8 +138,8 @@ The main use case for this method is multiple views of the same list of
 objects, which need to keep their selection synchronized.
 
 If the items specified in the arguments are not available in the provider,
-a :class:`~.ProviderNotRegisteredError` is raised, unless the optional
-keyword argument :attr:`ignore_missing` is set to ``True``.
+a :class:`~apptools.selection.errors.ProviderNotRegisteredError` is raised,
+unless the optional keyword argument :attr:`ignore_missing` is set to ``True``.
 
 
 API Reference
@@ -98,33 +152,44 @@ Users of the :mod:`apptools.selection` package can access the objects that are
 part of the public API through the convenience :mod:`apptools.selection.api`.
 
 :mod:`~apptools.selection.selection_service` Module
-''''''''''''''''''''''''''''''''''''''''''''''''''
+'''''''''''''''''''''''''''''''''''''''''''''''''''
 
 .. automodule:: apptools.selection.selection_service
-    :members:
-    :undoc-members:
-    :show-inheritance:
+        :members:
+        :undoc-members:
+        :show-inheritance:
 
 :mod:`~apptools.selection.i_selection_provider` Module
-'''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
 .. automodule:: apptools.selection.i_selection_provider
-    :members:
-    :undoc-members:
-    :show-inheritance:
+        :members:
+        :undoc-members:
+        :show-inheritance:
 
 :mod:`~apptools.selection.is_selection` Module
-'''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''
 
 .. automodule:: apptools.selection.i_selection
-    :members:
-    :undoc-members:
-    :show-inheritance:
+        :members:
+        :undoc-members:
+        :show-inheritance:
 
 :mod:`~apptools.selection.list_selection` Module
-'''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''
 
 .. automodule:: apptools.selection.list_selection
-    :members:
-    :undoc-members:
-    :show-inheritance:
+        :members:
+        :undoc-members:
+        :show-inheritance:
+
+:mod:`~apptools.selection.errors` Module
+''''''''''''''''''''''''''''''''''''''''''''''''
+
+.. automodule:: apptools.selection.errors
+        :members:
+        :undoc-members:
+        :show-inheritance:
+
+
+.. _envisage: http://docs.enthought.com/envisage/
