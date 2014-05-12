@@ -18,7 +18,7 @@ from subprocess import Popen
 # Enthought library imports.
 from envisage.api import IExtensionPointUser, IExtensionRegistry
 from pyface.workbench.action.workbench_action import WorkbenchAction
-from traits.api import Instance, implements, Property
+from traits.api import Instance, provides, Property
 
 from apptools.help.help_plugin.api import HelpCode
 from apptools.help.help_plugin.examples_preferences import \
@@ -33,10 +33,11 @@ logger = logging.getLogger(__name__)
 # This module's parent package.
 PARENT = '.'.join(__name__.split('.')[:-2])
 
+@provides(IExtensionPointUser)
 class ExampleAction(WorkbenchAction):
     """ (Pyface) Action for displaying a help example.
     """
-    implements(IExtensionPointUser)
+
 
     ### IExtensionPointUser interface
     extension_registry = Property(Instance(IExtensionRegistry))

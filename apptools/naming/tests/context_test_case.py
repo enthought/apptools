@@ -68,10 +68,10 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Empty name.
-        self.failUnlessRaises(InvalidNameError, context.bind, '', 1)
+        self.assertRaises(InvalidNameError, context.bind, '', 1)
 
         # Attempt to resolve via a non-existent context.
-        self.failUnlessRaises(NameNotFoundError, context.bind, 'xx/a', 1)
+        self.assertRaises(NameNotFoundError, context.bind, 'xx/a', 1)
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Bind a name.
@@ -79,11 +79,11 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 1)
 
         # Attempt to resolve via an existing name that is not a context.
-        self.failUnlessRaises(NotContextError, context.bind, 'sub/a/xx', 1)
+        self.assertRaises(NotContextError, context.bind, 'sub/a/xx', 1)
         self.assertEqual(len(sub.list_bindings('')), 1)
 
         # Try to bind it again.
-        self.failUnlessRaises(NameAlreadyBoundError, context.bind, 'sub/a', 1)
+        self.assertRaises(NameAlreadyBoundError, context.bind, 'sub/a', 1)
 
         return
 
@@ -99,7 +99,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Empty name.
-        self.failUnlessRaises(InvalidNameError, context.bind, '', 1, True)
+        self.assertRaises(InvalidNameError, context.bind, '', 1, True)
 
         # Attempt to resolve via a non-existent context - which should result
         # in the context being created automatically.
@@ -125,10 +125,10 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Empty name.
-        self.failUnlessRaises(InvalidNameError, context.rebind, '', 1)
+        self.assertRaises(InvalidNameError, context.rebind, '', 1)
 
         # Attempt to resolve via a non-existent context.
-        self.failUnlessRaises(NameNotFoundError, context.rebind, 'xx/a', 1)
+        self.assertRaises(NameNotFoundError, context.rebind, 'xx/a', 1)
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Bind a name.
@@ -140,7 +140,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 1)
 
         # Attempt to resolve via an existing name that is not a context.
-        self.failUnlessRaises(NotContextError, context.rebind, 'sub/a/xx', 1)
+        self.assertRaises(NotContextError, context.rebind, 'sub/a/xx', 1)
         self.assertEqual(len(sub.list_bindings('')), 1)
 
         return
@@ -157,7 +157,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Empty name.
-        self.failUnlessRaises(InvalidNameError, context.rebind, '', 1, True)
+        self.assertRaises(InvalidNameError, context.rebind, '', 1, True)
 
         # Attempt to resolve via a non-existent context - which should result
         # in the context being created automatically.
@@ -188,10 +188,10 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Empty name.
-        self.failUnlessRaises(InvalidNameError, context.unbind, '')
+        self.assertRaises(InvalidNameError, context.unbind, '')
 
         # Attempt to resolve via a non-existent context.
-        self.failUnlessRaises(NameNotFoundError, context.unbind, 'xx/a')
+        self.assertRaises(NameNotFoundError, context.unbind, 'xx/a')
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Bind a name.
@@ -199,7 +199,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 1)
 
         # Attempt to resolve via an existing name that is not a context.
-        self.failUnlessRaises(NotContextError, context.unbind, 'sub/a/xx')
+        self.assertRaises(NotContextError, context.unbind, 'sub/a/xx')
         self.assertEqual(len(sub.list_bindings('')), 1)
 
         # Unbind it.
@@ -207,7 +207,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Try to unbind a non-existent name.
-        self.failUnlessRaises(NameNotFoundError, context.unbind, 'sub/b')
+        self.assertRaises(NameNotFoundError, context.unbind, 'sub/b')
 
         return
 
@@ -222,11 +222,11 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Empty name.
-        self.failUnlessRaises(InvalidNameError, context.rename, '', 'x')
-        self.failUnlessRaises(InvalidNameError, context.rename, 'x', '')
+        self.assertRaises(InvalidNameError, context.rename, '', 'x')
+        self.assertRaises(InvalidNameError, context.rename, 'x', '')
 
         # Attempt to resolve via a non-existent context.
-        self.failUnlessRaises(NameNotFoundError, context.rename, 'x/a', 'x/b')
+        self.assertRaises(NameNotFoundError, context.rename, 'x/a', 'x/b')
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Bind a name.
@@ -234,7 +234,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 1)
 
         # Attempt to resolve via an existing name that is not a context.
-        self.failUnlessRaises(NotContextError, context.bind, 'sub/a/xx', 1)
+        self.assertRaises(NotContextError, context.bind, 'sub/a/xx', 1)
         self.assertEqual(len(sub.list_bindings('')), 1)
 
         # Rename it.
@@ -245,7 +245,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(context.lookup('sub/b'), 1)
 
         # Lookup using the old name.
-        self.failUnlessRaises(NameNotFoundError, context.lookup, 'sub/a')
+        self.assertRaises(NameNotFoundError, context.lookup, 'sub/a')
 
         return
 
@@ -260,11 +260,11 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Empty name.
-        self.failUnlessRaises(InvalidNameError, context.rename, '', 'x')
-        self.failUnlessRaises(InvalidNameError, context.rename, 'x', '')
+        self.assertRaises(InvalidNameError, context.rename, '', 'x')
+        self.assertRaises(InvalidNameError, context.rename, 'x', '')
 
         # Attempt to resolve via a non-existent context.
-        self.failUnlessRaises(NameNotFoundError, context.rename, 'x/a', 'x/b')
+        self.assertRaises(NameNotFoundError, context.rename, 'x/a', 'x/b')
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Create a context.
@@ -279,7 +279,7 @@ class ContextTestCase(unittest.TestCase):
         context.lookup('sub/b')
 
         # Lookup using the old name.
-        self.failUnlessRaises(NameNotFoundError, context.lookup, 'sub/a')
+        self.assertRaises(NameNotFoundError, context.lookup, 'sub/a')
 
         return
 
@@ -294,7 +294,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Attempt to resolve via a non-existent context.
-        self.failUnlessRaises(NameNotFoundError, context.lookup, 'xx/a')
+        self.assertRaises(NameNotFoundError, context.lookup, 'xx/a')
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Bind a name.
@@ -302,7 +302,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 1)
 
         # Attempt to resolve via an existing name that is not a context.
-        self.failUnlessRaises(NotContextError, context.lookup, 'sub/a/xx')
+        self.assertRaises(NotContextError, context.lookup, 'sub/a/xx')
         self.assertEqual(len(sub.list_bindings('')), 1)
 
         # Look it up.
@@ -312,7 +312,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(context.lookup(''), context)
 
         # Non-existent name.
-        self.failUnlessRaises(NameNotFoundError, context.lookup, 'sub/b')
+        self.assertRaises(NameNotFoundError, context.lookup, 'sub/b')
 
         return
 
@@ -327,10 +327,10 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Empty name.
-        self.failUnlessRaises(InvalidNameError, context.create_subcontext, '')
+        self.assertRaises(InvalidNameError, context.create_subcontext, '')
 
         # Attempt to resolve via a non-existent context.
-        self.failUnlessRaises(
+        self.assertRaises(
             NameNotFoundError, context.create_subcontext, 'xx/a'
         )
         self.assertEqual(len(sub.list_bindings('')), 0)
@@ -340,7 +340,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 1)
 
         # Try to bind it again.
-        self.failUnlessRaises(
+        self.assertRaises(
             NameAlreadyBoundError, context.create_subcontext, 'sub/a'
         )
 
@@ -349,7 +349,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 2)
 
         # Attempt to resolve via an existing name that is not a context.
-        self.failUnlessRaises(
+        self.assertRaises(
             NotContextError, context.create_subcontext, 'sub/b/xx'
         )
         self.assertEqual(len(sub.list_bindings('')), 2)
@@ -367,10 +367,10 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Empty name.
-        self.failUnlessRaises(InvalidNameError, context.destroy_subcontext, '')
+        self.assertRaises(InvalidNameError, context.destroy_subcontext, '')
 
         # Attempt to resolve via a non-existent context.
-        self.failUnlessRaises(
+        self.assertRaises(
             NameNotFoundError, context.destroy_subcontext, 'xx/a'
         )
         self.assertEqual(len(sub.list_bindings('')), 0)
@@ -388,17 +388,17 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 1)
 
         # Try to destroy it.
-        self.failUnlessRaises(
+        self.assertRaises(
             NotContextError, context.destroy_subcontext, 'sub/a'
         )
 
         # Try to destroy a non-existent name.
-        self.failUnlessRaises(
+        self.assertRaises(
             NameNotFoundError, context.destroy_subcontext, 'sub/b'
         )
 
         # Attempt to resolve via an existing name that is not a context.
-        self.failUnlessRaises(
+        self.assertRaises(
             NotContextError, context.destroy_subcontext, 'sub/a/xx'
         )
         self.assertEqual(len(sub.list_bindings('')), 1)
@@ -421,7 +421,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(bindings), 0)
 
         # Attempt to resolve via a non-existent context.
-        self.failUnlessRaises(NameNotFoundError, context.list_bindings, 'xx/a')
+        self.assertRaises(NameNotFoundError, context.list_bindings, 'xx/a')
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Bind a name.
@@ -429,7 +429,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 1)
 
         # Attempt to resolve via an existing name that is not a context.
-        self.failUnlessRaises(
+        self.assertRaises(
             NotContextError, context.list_bindings, 'sub/a/xx'
         )
         self.assertEqual(len(sub.list_bindings('')), 1)
@@ -452,7 +452,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(names), 0)
 
         # Attempt to resolve via a non-existent context.
-        self.failUnlessRaises(NameNotFoundError, context.list_names, 'xx/a')
+        self.assertRaises(NameNotFoundError, context.list_names, 'xx/a')
         self.assertEqual(len(sub.list_bindings('')), 0)
 
         # Bind a name.
@@ -460,7 +460,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings('')), 1)
 
         # Attempt to resolve via an existing name that is not a context.
-        self.failUnlessRaises(
+        self.assertRaises(
             NotContextError, context.list_names, 'sub/a/xx'
         )
         self.assertEqual(len(sub.list_bindings('')), 1)
@@ -471,12 +471,12 @@ class ContextTestCase(unittest.TestCase):
         """ default object and state factories. """
 
         object_factory = ObjectFactory()
-        self.failUnlessRaises(
+        self.assertRaises(
             NotImplementedError, object_factory.get_object_instance, 0, 0, 0
         )
 
         state_factory = StateFactory()
-        self.failUnlessRaises(
+        self.assertRaises(
             NotImplementedError, state_factory.get_state_to_bind, 0, 0, 0
         )
 

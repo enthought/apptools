@@ -20,7 +20,7 @@
 #-------------------------------------------------------------------------------
 
 from traits.api \
-    import implements
+    import provides
 
 from apptools.template.template_data_name \
     import TemplateDataName

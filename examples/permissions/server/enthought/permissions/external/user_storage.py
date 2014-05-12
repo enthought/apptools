@@ -19,16 +19,17 @@ import socket
 
 # Enthought library imports.
 from apptools.permissions.default.api import IUserStorage, UserStorageError
-from traits.api import HasTraits, implements, List, Str
+from traits.api import HasTraits, provides, List, Str
 
 # Local imports.
 from proxy_server import ProxyServer
 
 
+@provides(IUserStorage)
 class UserStorage(HasTraits):
     """This implements a user database accessed via XML RPC."""
 
-    implements(IUserStorage)
+
 
     #### 'IUserStorage' interface #############################################
 

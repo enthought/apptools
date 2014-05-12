@@ -267,7 +267,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             names       = List(Str)
 
         # Cannot create a helper with a preferences path.
-        self.failUnlessRaises(SystemError, AcmeUIPreferencesHelper)
+        self.assertRaises(SystemError, AcmeUIPreferencesHelper)
 
         return
 
