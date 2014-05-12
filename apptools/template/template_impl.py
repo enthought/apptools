@@ -20,7 +20,7 @@
 #-------------------------------------------------------------------------------
 
 from traits.api \
-    import HasPrivateTraits, Undefined, implements
+    import HasPrivateTraits, Undefined, provides
 
 from itemplate \
     import ITemplate

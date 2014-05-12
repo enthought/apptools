@@ -14,18 +14,19 @@
 
 
 # Enthought library imports.
-from traits.api import HasTraits, Instance, implements
+from traits.api import HasTraits, Instance, provides
 
 # Local imports.
 from i_user_storage import IUserStorage, UserStorageError
 from persistent import Persistent, PersistentError
 
 
+@provides(IUserStorage)
 class UserStorage(HasTraits):
     """This implements a user database that pickles its data in a local file.
     """
 
-    implements(IUserStorage)
+
 
     #### 'IUserStorage' interface #############################################
 

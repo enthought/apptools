@@ -18,7 +18,7 @@ import os
 
 # Enthought library imports.
 from pyface.api import confirm, error, YES
-from traits.api import Bool, Dict, HasTraits, implements, Instance, \
+from traits.api import Bool, Dict, HasTraits, provides, Instance, \
         List, Password, Property, Unicode
 from traitsui.api import Handler, Item, View
 from traitsui.menu import Action, OKCancelButtons
@@ -30,6 +30,7 @@ from i_user_storage import IUserStorage, UserStorageError
 from select_user import select_user
 
 
+@provides(IUser)
 class _LoginUser(HasTraits):
     """This represents the login data and view."""
 
@@ -244,7 +245,7 @@ class User(HasTraits):
     """The user implementation.  We don't store any extra information other
     than that defined by IUser."""
 
-    implements(IUser)
+
 
     #### 'IUser' interface ####################################################
 
@@ -257,12 +258,13 @@ class User(HasTraits):
     blob = Dict
 
 
+@provides(IUserDatabase)
 class UserDatabase(HasTraits):
     """This implements a user database that supports IUser for the default user
     manager (ie. using password authorisation) except that it leaves the actual
     access of the data to an implementation of IUserStorage."""
 
-    implements(IUserDatabase)
+
 
     #### 'IUserDatabase' interface ############################################
 

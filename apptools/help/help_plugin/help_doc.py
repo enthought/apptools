@@ -11,16 +11,17 @@
 # Thanks for using Enthought open source!
 
 from apptools.preferences.api import PreferencesHelper
-from traits.api import Either, File, Str, implements, Bool
+from traits.api import Either, File, Str, provides, Bool
 
 from i_help_doc import IHelpDoc
 
+@provides(IHelpDoc)
 class HelpDoc(PreferencesHelper):
     """ The implementation for help docs.
 
     A help doc is defined by a UI label, a filename, and a viewer program.
     """
-    implements(IHelpDoc)
+
 
     #### IHelpDoc interface / Preferences ######################################
 

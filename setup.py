@@ -5,7 +5,8 @@ from setuptools import setup, find_packages
 
 
 info = {}
-execfile(join('apptools', '__init__.py'), info)
+apptools_init = join('apptools', '__init__.py')
+exec(compile(open(apptools_init).read(), apptools_init, 'exec'), info)
 
 
 setup(

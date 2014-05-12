@@ -13,16 +13,17 @@
 # Thanks for using Enthought open source!
 
 from apptools.preferences.api import PreferencesHelper
-from traits.api import File, Str, implements
+from traits.api import File, Str, provides
 
 from i_help_code import IHelpCode
 
+@provides(IHelpCode)
 class HelpCode(PreferencesHelper):
     """ The implementation for help codes.
 
     A help code is defined by a UI label and a filename.
     """
-    implements(IHelpCode)
+
 
     #### IHelpCode interface / Preferences #####################################
 

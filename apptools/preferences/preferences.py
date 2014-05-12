@@ -6,7 +6,7 @@ import logging, threading
 
 # Enthought library imports.
 from traits.api import Any, Callable, Dict, HasTraits, Instance, List
-from traits.api import Property, Str, Undefined, implements
+from traits.api import Property, Str, Undefined, provides
 
 # Local imports.
 from i_preferences import IPreferences
@@ -16,10 +16,10 @@ from i_preferences import IPreferences
 logger = logging.getLogger(__name__)
 
 
+@provides(IPreferences)
 class Preferences(HasTraits):
     """ The default implementation of a node in a preferences hierarchy. """
 
-    implements(IPreferences)
 
     #### 'IPreferences' interface #############################################
 

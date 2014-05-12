@@ -448,7 +448,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         p = self.preferences
 
-        self.failUnlessRaises(ValueError, p.get, 'bogus/acme.ui.bgcolor')
+        self.assertRaises(ValueError, p.get, 'bogus/acme.ui.bgcolor')
 
         return
 

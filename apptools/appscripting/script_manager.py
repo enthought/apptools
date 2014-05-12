@@ -30,6 +30,7 @@ from lazy_namespace import add_to_namespace, FactoryWrapper, LazyNamespace
 from scriptable_type import make_object_scriptable
 
 
+@provides(IScriptManager)
 class _BoundObject(HasTraits):
     """The base class for any object that can be bound to a name."""
 
@@ -294,7 +295,7 @@ class ScriptManager(HasTraits):
     IScriptManager.
     """
 
-    implements(IScriptManager)
+
 
     #### 'IScriptManager' interface ###########################################
 

@@ -15,7 +15,7 @@
 
 # Enthought library imports.
 from pyface.action.api import Action
-from traits.api import Bool, Event, HasTraits, implements, \
+from traits.api import Bool, Event, HasTraits, provides, \
         Instance, List, Unicode
 
 # Local imports.
@@ -26,10 +26,11 @@ from apptools.permissions.permission import ManageUsersPermission
 from i_user_database import IUserDatabase
 
 
+@provides(IUserManager)
 class UserManager(HasTraits):
     """The default user manager implementation."""
 
-    implements(IUserManager)
+
 
     #### 'IUserManager' interface #############################################
 

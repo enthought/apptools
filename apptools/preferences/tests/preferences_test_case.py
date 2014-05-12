@@ -135,9 +135,9 @@ class PreferencesTestCase(unittest.TestCase):
 
         p = self.preferences
 
-        self.failUnlessRaises(ValueError, p.get, '')
-        self.failUnlessRaises(ValueError, p.remove, '')
-        self.failUnlessRaises(ValueError, p.set, '', 'a value')
+        self.assertRaises(ValueError, p.get, '')
+        self.assertRaises(ValueError, p.remove, '')
+        self.assertRaises(ValueError, p.set, '', 'a value')
 
         return
 

@@ -48,15 +48,15 @@ class DirContextTestCase(ContextTestCase):
         #### Generic name resolution tests ####
 
         # Non-existent name.
-        self.failUnlessRaises(NameNotFoundError, context.get_attributes, 'x')
+        self.assertRaises(NameNotFoundError, context.get_attributes, 'x')
 
         # Attempt to resolve via a non-existent context.
-        self.failUnlessRaises(NameNotFoundError, context.get_attributes, 'x/a')
+        self.assertRaises(NameNotFoundError, context.get_attributes, 'x/a')
 
         # Attempt to resolve via an existing name that is not a context.
         context.bind('sub/a', 1)
         self.assertEqual(len(sub.list_bindings('')), 1)
-        self.failUnlessRaises(NotContextError,context.get_attributes,'sub/a/x')
+        self.assertRaises(NotContextError,context.get_attributes,'sub/a/x')
 
         #### Operation specific tests ####
 
@@ -83,19 +83,19 @@ class DirContextTestCase(ContextTestCase):
         #### Generic name resolution tests ####
 
         # Non-existent name.
-        self.failUnlessRaises(
+        self.assertRaises(
             NameNotFoundError, context.set_attributes, 'x', defaults
         )
 
         # Attempt to resolve via a non-existent context.
-        self.failUnlessRaises(
+        self.assertRaises(
             NameNotFoundError, context.set_attributes, 'x/a', defaults
         )
 
         # Attempt to resolve via an existing name that is not a context.
         context.bind('sub/a', 1)
         self.assertEqual(len(sub.list_bindings('')), 1)
-        self.failUnlessRaises(
+        self.assertRaises(
             NotContextError, context.set_attributes, 'sub/a/xx', defaults
         )
 
