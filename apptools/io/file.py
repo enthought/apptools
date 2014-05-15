@@ -227,7 +227,7 @@ class File(HasPrivateTraits):
         if self.exists:
             raise ValueError("file %s already exists" % self.path)
 
-        f = file(self.path, 'w')
+        f = open(self.path, 'w')
         f.write(contents)
         f.close()
 
