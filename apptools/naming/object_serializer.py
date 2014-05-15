@@ -53,7 +53,7 @@ class ObjectSerializer(HasTraits):
         """ Loads an object from a file. """
 
         # Unpickle the object.
-        f = file(path, 'rb')
+        f = open(path, 'rb')
         try:
             try:
                  obj = sweet_pickle.load(f)
@@ -84,7 +84,7 @@ class ObjectSerializer(HasTraits):
             actual_path = path
 
         # Pickle the object.
-        f = file(actual_path, 'wb')
+        f = open(actual_path, 'wb')
         try:
             sweet_pickle.dump(obj, f, 1)
 #            cPickle.dump(obj, f, 1)

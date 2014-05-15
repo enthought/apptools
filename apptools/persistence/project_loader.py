@@ -20,7 +20,7 @@ def load_project(pickle_filename, updater_path, application_version, protocol,
     latest_file = pickle_filename
 
     # Read the pickled project's metadata.
-    f = file(latest_file, 'rb')
+    f = open(latest_file, 'rb')
     metadata = VersionedUnpickler(f).load(max_pass)
     f.close()
     project_version = metadata.get('version', False)
@@ -39,7 +39,7 @@ def load_project(pickle_filename, updater_path, application_version, protocol,
 
     # Finally we can import the project ...
     logger.info('loading %s' % latest_file)
-    i_f = file(latest_file, 'rb')
+    i_f = open(latest_file, 'rb')
     version = VersionedUnpickler(i_f).load(max_pass)
     project = VersionedUnpickler(i_f).load(max_pass)
     i_f.close()
@@ -70,13 +70,13 @@ def upgrade_project(pickle_filename, updater_path, project_version, application_
         next_version = project_version + 1
 
         if first_time:
-            i_f = file(pickle_filename, 'rb')
+            i_f = open(pickle_filename, 'rb')
             data = i_f.read()
             open('%s.bak' % pickle_filename, 'wb').write(data)
             i_f.seek(0) # rewind the file to the start
         else:
             name = '%s.v%d' % (pickle_filename, project_version)
-            i_f = file(name, 'rb')
+            i_f = open(name, 'rb')
             latest_file = name
 
         logger.info('converting %s' % latest_file)
@@ -100,7 +100,7 @@ def upgrade_project(pickle_filename, updater_path, project_version, application_
         # Persist the updated project ...
         name = '%s.v%d' % (pickle_filename, next_version)
         latest_file = name
-        o_f = file(name, 'wb')
+        o_f = open(name, 'wb')
         pickle.dump(project.metadata, o_f, protocol=protocol)
         pickle.dump(project, o_f, protocol=protocol)
         o_f.close()
