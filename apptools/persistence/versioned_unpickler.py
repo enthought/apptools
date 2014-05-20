@@ -30,7 +30,7 @@ class NewUnpickler(Unpickler):
 
         # We overload the load_build method.
         dispatch = self.dispatch
-        dispatch[BUILD] = NewUnpickler.load_build
+        dispatch[BUILD[0]] = NewUnpickler.load_build
 
         # call the super class' method.
         ret = Unpickler.load(self)
@@ -38,7 +38,7 @@ class NewUnpickler(Unpickler):
         self.objects = []
 
         # Reset the Unpickler's dispatch table.
-        dispatch[BUILD] = Unpickler.load_build
+        dispatch[BUILD[0]] = Unpickler.load_build
         return ret
 
     def initialize(self, max_pass):

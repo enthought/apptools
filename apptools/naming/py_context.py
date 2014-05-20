@@ -102,7 +102,7 @@ class PyContext(Context, Referenceable):
     def _is_bound(self, name):
         """ Is a name bound in this context? """
 
-        return self.namespace.has_key(name)
+        return name in self.namespace
 
     def _lookup(self, name):
         """ Looks up a name in this context. """
