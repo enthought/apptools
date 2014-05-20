@@ -114,11 +114,8 @@ def load(file, max_pass=-1):
 
 # Use our custom unpickler to load from strings
 def loads(str, max_pass=-1):
-    try:
-        from cStringIO import StringIO
-    except ImportError:
-        from StringIO import StringIO
-    file = StringIO(str)
+    from io import BytesIO
+    file = BytesIO(str)
 
     return Unpickler(file).load(max_pass)
 
