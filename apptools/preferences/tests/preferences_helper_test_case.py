@@ -360,7 +360,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
     def test_preferences_node_changed(self):
         """ preferences node changed """
-        # from IPython.core.debugger import Tracer; Tracer()()
 
         p = self.preferences
         p.load(self.example)
