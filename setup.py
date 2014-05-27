@@ -51,5 +51,5 @@ setup(
     packages = find_packages(),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
     zip_safe = False,
-    use_2to3 = sys.version_info[0] >= 3
+    use_2to3 = True
 )
