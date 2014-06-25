@@ -258,7 +258,7 @@ class H5File(object):
         if i == 0:
             return '/', node_path[1:]
         else:
-            return node_path[:i], node_path[i+1:]
+            return node_path[:i], node_path[i + 1:]
 
     @classmethod
     def join_path(cls, *args):
@@ -296,11 +296,10 @@ class H5Attrs(MutableMapping):
         return self._node_attrs[key]
 
     def __iter__(self):
-        for key in self._node_attrs:
-            yield key
+        return iter(self.keys())
 
     def __len__(self):
-        return len(self._node_attrs)
+        return len(self._node_attrs._f_list())
 
     def __setitem__(self, key, value):
         if isinstance(value, tuple) or isinstance(value, list):
@@ -309,6 +308,15 @@ class H5Attrs(MutableMapping):
 
     def get(self, key, default=None):
         return default if key not in self else self[key]
+
+    def keys(self):
+        return self._node_attrs._f_list()
+
+    def values(self):
+        return [self[k] for k in self.keys()]
+
+    def items(self):
+        return [(k, self[k]) for k in self.keys()]
 
 
 class H5Group(object):

@@ -187,6 +187,28 @@ def test_get_attribute_default():
         assert h5['/'].attrs.get('missing', 'null') == 'null'
 
 
+def test_attribute_iteration_methods():
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        attrs = h5['/'].attrs
+        attrs['organ'] = 'gallbladder'
+        attrs['count'] = 42
+        attrs['alpha'] = 0xff
+
+        items = attrs.items()
+
+        assert all(isinstance(x, tuple) for x in items)
+
+        # unfold the pairs
+        keys, vals = map(list, zip(*items))
+
+        assert keys == attrs.keys()
+        assert vals == attrs.values()
+
+        # Check that __iter__ is consistent
+        assert keys == list(iter(attrs))
+        assert len(attrs) == len(keys)
+
+
 def test_bad_node_name():
     with open_h5file(H5_TEST_FILE, mode='w') as h5:
         testing.assert_raises(ValueError, h5.create_array,
