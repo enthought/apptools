@@ -62,7 +62,7 @@ def test_create_duplicate_array_raises():
         testing.assert_raises(ValueError, h5.create_array, '/array', array)
 
 
-def test_delete_existing():
+def test_delete_existing_array():
     old_array = np.arange(3)
     new_array = np.ones(5)
     with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
@@ -70,6 +70,28 @@ def test_delete_existing():
         # New array with the same node name should delete old array
         h5.create_array('/array', new_array)
         testing.assert_allclose(h5['/array'], new_array)
+
+
+def test_delete_existing_dict():
+    old_dict = {'a': 'Goose'}
+    new_dict = {'b': 'Quail'}
+    with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
+        h5.create_dict('/dict', old_dict)
+        # New dict with the same node name should delete old dict
+        h5.create_dict('/dict', new_dict)
+        assert h5['/dict'].data == new_dict
+
+
+def test_delete_existing_table():
+    old_description = [('Honk', 'int'), ('Wink', 'float')]
+    new_description = [('Toot', 'float'), ('Pop', 'int')]
+    with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
+        h5.create_table('/table', old_description)
+        # New table with the same node name should delete old table
+        h5.create_table('/table', new_description)
+        tab = h5['/table']
+        tab.append({'Pop': (1,), 'Toot': (np.pi,)})
+        assert tab.ix[0][0] == np.pi
 
 
 def test_remove_node():
