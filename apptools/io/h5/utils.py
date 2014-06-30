@@ -5,7 +5,7 @@ from .file import H5File
 
 @contextmanager
 def open_h5file(filename, mode='r+', **kwargs):
-     """Context manager for reading an HDF5 file as an H5File object.
+    """Context manager for reading an HDF5 file as an H5File object.
 
     Parameters
     ----------
@@ -21,7 +21,7 @@ def open_h5file(filename, mode='r+', **kwargs):
 
     See `H5File` for additional keyword arguments.
     """
-   h5 = H5File(filename, mode=mode, **kwargs)
+    h5 = H5File(filename, mode=mode, **kwargs)
     try:
         yield h5
     finally:
