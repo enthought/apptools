@@ -94,6 +94,21 @@ def test_delete_existing_table():
         assert tab.ix[0][0] == np.pi
 
 
+def test_delete_existing_group():
+    with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
+        h5.create_group('/group')
+        grp = h5['/group']
+        grp.attrs['test'] = 4
+
+        assert grp.attrs['test'] == 4
+
+        h5.create_group('/group')
+        grp = h5['/group']
+        grp.attrs['test'] = 6
+
+        assert grp.attrs['test'] == 6
+
+
 def test_remove_node():
     with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
         h5.create_array('/array', np.arange(3))

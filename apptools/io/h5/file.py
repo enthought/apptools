@@ -170,6 +170,7 @@ class H5File(object):
         kwargs : key/value pairs
             Keyword args passed to PyTables `File.createGroup`.
         """
+        self._check_node(group_path)
         self._assert_valid_path(group_path)
         path, name = self.split_path(group_path)
         self._h5.createGroup(path, name, **kwargs)
@@ -215,7 +216,10 @@ class H5File(object):
 
         if node_path in self:
             if self.delete_existing:
-                self.remove_node(node_path)
+                if isinstance(self[node_path], H5Group):
+                    self.remove_group(node_path, recursive=True)
+                else:
+                    self.remove_node(node_path)
             else:
                 msg = self.exists_error.format(node_path, self.filename)
                 raise ValueError(msg)
@@ -237,6 +241,16 @@ class H5File(object):
         """
         node = self[node_path]
         node._f_remove()
+
+    def remove_group(self, group_path, **kwargs):
+        """Remove group
+
+        Parameters
+        ----------
+        group_path : str
+            PyTable group path; e.g. '/path/to/group'.
+        """
+        self[group_path]._h5_group._g_remove(**kwargs)
 
     @classmethod
     def _assert_valid_path(self, node_path):
