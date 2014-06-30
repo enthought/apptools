@@ -2,19 +2,10 @@ from contextlib import contextmanager
 import tempfile
 import os
 
-from ..file import H5File
+from ..utils import open_h5file
 
 
 SEPARATOR = '-' * 60
-
-
-@contextmanager
-def open_h5file(filename, mode='r+', **kwargs):
-    h5 = H5File(filename, mode=mode, **kwargs)
-    try:
-        yield h5
-    finally:
-        h5.close()
 
 
 @contextmanager
