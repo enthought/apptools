@@ -14,5 +14,6 @@ AppTools Documentation
     scripting/*
     undo/*
     selection/*
+    traits-cereal/*
       
 * :ref:`search`
