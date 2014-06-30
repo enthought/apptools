@@ -50,9 +50,8 @@ def test_iteritems():
 
         for path, node in h5.iteritems():
             iter_paths.append(path)
-            assert path in node_paths
 
-    assert len(node_paths) == len(iter_paths)
+    assert set(node_paths) == set(iter_paths)
 
 
 def test_create_plain_array():
