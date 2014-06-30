@@ -5,6 +5,7 @@
 *.enamlc
 *~
 .DS_Store
+.coverage
 
 # ignore the build directories
 *.egg-info/

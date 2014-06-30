@@ -87,7 +87,7 @@ class H5File(object):
     def __getitem__(self, node_path):
         try:
             node = self._h5.getNode(node_path)
-        except NameError:
+        except tables.NoSuchNodeError:
             msg = "Node {!r} not found in {!r}"
             raise NameError(msg.format(node_path, self.filename))
         return _wrap_node(node)
@@ -386,8 +386,3 @@ def _wrap_node(node):
     elif H5TableNode.is_table_node(node):
         node = H5TableNode(node)
     return node
-
-
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
