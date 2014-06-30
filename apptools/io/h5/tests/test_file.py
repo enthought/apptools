@@ -50,7 +50,6 @@ def test_iteritems():
 
         for path, node in h5.iteritems():
             iter_paths.append(path)
-            print path
             assert path in node_paths
 
     assert len(node_paths) == len(iter_paths)
