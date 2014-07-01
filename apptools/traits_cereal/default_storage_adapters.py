@@ -6,18 +6,27 @@ from __future__ import division, print_function
 from functools import partial
 import uuid
 
-from traits.api import HasTraits, Instance
+from traits.api import HasTraits, Instance, provides
 from traits.adaptation.adapter import Adapter
 
 from .blob import Blob, blob_skeleton
+from .interfaces import IDeflatable, IInflatable
 from .utils import get_obj_of_type
 
 
+@provides(IDeflatable)
 class DefaultDeflator(Adapter):
+
+    """ The default implementation of the IDeflatable protocol. """
+
+    #: The version of the deflation algorithm used
     version = 1
+
+    #: The object that is being adapted to IDeflatable
     adaptee = Instance(HasTraits)
 
     def deflate(self, get_or_create_key):
+        """ Return the Blob that represents the deflated adaptee. """
         children = set()
         obj_attrs = {}
 
@@ -37,13 +46,24 @@ class DefaultDeflator(Adapter):
             children=children)
 
 
+@provides(IInflatable)
 class DefaultInflator(Adapter):
+    """ The default implementation of the IInflatable protocol. """
+
+    #: The version of the deflation algorithm that this inflator expects
     version = 1
+
+    #: The `Blob` that is being adapted to IInflatable
     adaptee = Instance(Blob)
 
-    # IInflatable #########################################################
-
     def inflate(self, get_obj_by_key, reify=True):
+        """ If reify is True, return the fully instantiated object that the
+        adaptee Blob represents.
+
+        Otherwise, return the Blob itself with the set
+        of children populated with the necessary child Blobs.
+        """
+
         blob = self.adaptee
 
         # Go through the attr dict and replace keys with objects as needed
@@ -54,6 +74,8 @@ class DefaultInflator(Adapter):
 
 
 def reify_blob(blob):
+    """ Return an instance of the same class as the object that was deflated
+    to create this blob. """
     modpath, clsname = blob.class_name.rsplit('.', 1)
     mod = __import__(modpath, fromlist=[clsname])
     klass = getattr(mod, clsname)
