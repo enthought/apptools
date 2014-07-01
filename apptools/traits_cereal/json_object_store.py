@@ -31,10 +31,19 @@ def decoder_object_hook(obj):
 @provides(IObjectStore)
 class JSONObjectStore(HasTraits):
 
-    _encode = Callable
-    _decode = Callable
-    _disk_mirror = Dict
+    """ An IObjectStore backed by a JSON file. """
+
+    #: The filename of the JSON storage on disk
     filename = File(os.path.join(tempfile.gettempdir(), 'object_store.json'))
+
+    #: The function for turning values into JSON
+    _encode = Callable
+
+    #: The function for turning JSON into values
+    _decode = Callable
+
+    #: A python representation of the JSON file
+    _disk_mirror = Dict
 
     def __encode_default(self):
         return JSONBlobEncoder(indent=4, sort_keys=True).encode
@@ -87,7 +96,7 @@ class JSONBlobEncoder(json.JSONEncoder):
             return self._make_object('tuple', map(self._convert, obj))
         if isinstance(obj, list):
             return map(self._convert, obj)
-        elif isinstance(obj, Blob):
+        if isinstance(obj, Blob):
             attrs = obj.__getstate__()
             attrs.pop('__traits_version__')
             return self._make_object('Blob', self._convert(attrs))
