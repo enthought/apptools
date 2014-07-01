@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from apptools.traits_cereal.traits.api import Instance, provides
 from apptools.traits_cereal.traits.adaptation.adaptation_manager import (
     adaptation_manager as GLOBAL_ADAPTATION_MANAGER)
+from apptools.traits_cereal.traits.api import Instance, provides
 
-from storables import Parent
-from apptools.traits_cereal.storage_manager import IDeflatable, IInflatable, Blob
 from apptools.traits_cereal.default_storage_adapters import (
     DefaultDeflator, DefaultInflator)
+from apptools.traits_cereal.storage_manager import (
+    IDeflatable, IInflatable, Blob)
+
+from .storables import Parent
 
 
 @provides(IDeflatable)
