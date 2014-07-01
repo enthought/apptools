@@ -60,7 +60,7 @@ aptly named interfaces such as ``IDeflatable`` and ``IInflatable``::
         adaptee = Instance(Blob)
         version = Int
 
-        def inflate(self, get_obj_by_key):
+        def inflate(self, get_obj_by_key, reify=True):
            """Return the object tagged with the key in the adaptee Blob,
            reifying it and its children from disk if necessary.
 
@@ -223,9 +223,9 @@ defaults can be subclassed modified further before returning the deflated
     class FooToIInflatableV1(Adapter):
         adaptee = Instance(Blob)
 
-        def inflate(self, get_obj_by_uuid):
+        def inflate(self, get_obj_by_uuid, reify=True):
             print("Inflating V1")
-            super(FooToIInflatable, self).inflate(get_obj_by_uuid)
+            super(FooToIInflatable, self).inflate(get_obj_by_uuid, reify=reify)
             # In version we saved `_baz`, we should remove it now
             self.adaptee.attrs.pop('_baz')
             return Foo(**self.adaptee.attrs)
@@ -235,17 +235,17 @@ defaults can be subclassed modified further before returning the deflated
     class FooToIInflatableV2(Adapter):
         adaptee = Instance(Blob)
 
-        def inflate(self, get_obj_by_uuid):
+        def inflate(self, get_obj_by_uuid, reify=reify):
             print("Inflating V2")
-            super(FooToIInflatable, self).inflate(get_obj_by_uuid)
+            super(FooToIInflatable, self).inflate(get_obj_by_uuid, reify=reify)
             # In version 2 we didn't save `_baz`, no further action needed
             return Foo(**self.adaptee.attrs)
 
 We'll use Traits' conditional adaptation to handle finding the right inflator
 for each ``Blob``. An adapter factory is defined which inspects the ``Blob``
-and adapts it to ``IInflator`` if possible. If no inflator adapter matches
-the type and version of this ``Blob``, we return ``None`` and allow Traits to
-continue searching. ::
+and adapts it to ``IInflatable`` if possible. If no adapter matches the type
+and version of this ``Blob``, we return ``None`` and allow Traits to continue
+searching. ::
 
     inflators = {
         1: FooToIInflatableV1,
@@ -267,6 +267,8 @@ continue searching. ::
 
 Seed Points
 ===========
+
+**CURRENTLY UNIMPLEMENTED**
 
 Our preference is to avoid serializing an entire tree of objects when only a
 simple instance is needed. For example, the configuration for the view on an
@@ -310,4 +312,5 @@ calls required to bring the stored ``BaboonCorral`` back to life.
 Examples
 ========
 
-A more comprehensive example is found in ``apptools.traits_cereal.demo``.
+A more comprehensive example is found in ``apptools.traits_cereal.demo``. The
+test suite also illustrates how best to use ``traits-cereal``.
