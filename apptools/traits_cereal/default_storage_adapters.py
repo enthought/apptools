@@ -3,6 +3,7 @@
 
 from __future__ import division, print_function
 
+from functools import partial
 import uuid
 
 from traits.api import HasTraits, Instance
@@ -42,14 +43,9 @@ class DefaultInflator(Adapter):
     def inflate(self, get_obj_by_uuid, reify=True):
         blob = self.adaptee
 
-        # FIXME: we'd like to pass `reify` down recursively and avoid
-        # instantiating *anything* yet, but does it even make sense to call
-        # this method in such a case?
-
         # Go through the attr dict and replace uuids with objects as needed
         blob.obj_attrs = inflate(
-            blob.obj_attrs, get_obj_by_uuid)
-        #    blob.obj_attrs, partial(get_obj_by_uuid, reify=reify))
+            blob.obj_attrs, partial(get_obj_by_uuid, reify=reify))
 
         return blob if not reify else reify_blob(blob)
 

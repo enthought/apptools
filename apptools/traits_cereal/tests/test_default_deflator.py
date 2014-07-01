@@ -27,7 +27,12 @@ def test_blob(uuid=None):
 
 
 def inflator_callback_factory(objs, get_or_create_uuid):
-    return {get_or_create_uuid(o): o for o in objs}.get
+    f = {get_or_create_uuid(o): o for o in objs}.get
+
+    def inflator_callback(*args, **kwargs):
+        return f(*args)
+
+    return inflator_callback
 
 
 def get_or_create_uuid_factory():
