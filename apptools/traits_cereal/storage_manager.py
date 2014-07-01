@@ -26,6 +26,9 @@ logger = logging.getLogger(__name__)
 
 class WeakRefCache(collections.MutableMapping):
 
+    """A cache that stores keys by strong reference, but values by weakref,
+    while maintaining quick lookup of both values and keys."""
+
     def __init__(self):
         self._value_to_key = WeakKeyDictionary()
         self._key_to_value = WeakValueDictionary()
@@ -58,6 +61,7 @@ class WeakRefCache(collections.MutableMapping):
         return self._key_to_value.get(key, default)
 
     def get_by_value(self, value, default=None):
+        """ Return the key associated with the given value. """
         self._sanity_check()
         return self._value_to_key.get(value, default)
 
@@ -92,11 +96,34 @@ class WeakRefCache(collections.MutableMapping):
 
 class StorageManager(HasStrictTraits):
 
+    """ A manager for objects that must be sent to remote storage.
+
+    By default, it uses an YAML-in-HDF5 backend, but supports any
+    backend that can be adapted to `interfaces.IObjectStore`.
+
+    All objects exposing `__getstate__` can be stored using
+    a default deflation algorithm that tries to preserve as much
+    information about the object as possible. Objects which only
+    require storing part of their state should have their own
+    adapters to `IDeflatable`.
+
+    Access to the underlying storage layer is cached using
+    `WeakRefCache`. As such, the StorageManager guarantees that
+    any attempt to load an already-existant object will immediately
+    return a reference to that same object instance.
+
+    """
+
+    #: The adaptation manager used to adapt storable objects
     adaptation_manager = Instance(AdaptationManager)
 
+    #: The backend used to marshall objects to and from storage
     store = Supports(IObjectStore)
+
+    #: The caching layer between storage and application
     _cache = Instance(WeakRefCache, WeakRefCache)
 
+    #: Whether to use the default deflator
     use_default = Bool(True)
 
     def _adaptation_manager_default(self):
