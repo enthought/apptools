@@ -15,19 +15,6 @@ from .utils import get_obj_of_type
 SPECIAL_KEY = u'__SPECIAL__'
 
 
-def decoder_object_hook(obj):
-    hooks = {'UUID': UUID,
-             'set': set,
-             'tuple': tuple,
-             'Blob': lambda val: Blob(**val)}
-    key = obj.get(SPECIAL_KEY)
-    if key is not None:
-        name, val = key
-        if name in hooks:
-            return hooks[name](val)
-    return obj
-
-
 @provides(IObjectStore)
 class JSONObjectStore(HasTraits):
 
@@ -111,5 +98,18 @@ class JSONBlobEncoder(json.JSONEncoder):
 class JSONBlobDecoder(json.JSONDecoder):
 
     def __init__(self, **kwargs):
-        args = ('utf-8', decoder_object_hook)
+        args = ('utf-8', _decoder_object_hook)
         super(JSONBlobDecoder, self).__init__(*args, **kwargs)
+
+
+def _decoder_object_hook(obj):
+    hooks = {'UUID': UUID,
+             'set': set,
+             'tuple': tuple,
+             'Blob': lambda val: Blob(**val)}
+    key = obj.get(SPECIAL_KEY)
+    if key is not None:
+        name, val = key
+        if name in hooks:
+            return hooks[name](val)
+    return obj
