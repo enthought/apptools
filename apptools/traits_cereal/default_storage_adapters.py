@@ -26,7 +26,8 @@ class DefaultDeflator(Adapter):
             obj_attrs.pop('__traits_version__')
             # Go through the attr dict and replace objects with uuids as needed
             for attr, val in obj_attrs.items():
-                obj_attrs[attr], more_children = deflate(val, get_or_create_uuid)
+                obj_attrs[attr], more_children = deflate(
+                    val, get_or_create_uuid)
                 children |= more_children
 
         return blob_skeleton(

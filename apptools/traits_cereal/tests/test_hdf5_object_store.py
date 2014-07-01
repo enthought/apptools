@@ -3,23 +3,19 @@
 
 from __future__ import division, print_function
 
-# import json
-# import uuid
-
 from ..hdf5_object_store import HDF5ObjectStore
 from .sample_data import TEST_ATTRS, Generic
 from ..storage_manager import StorageManager
 
 
 def test_roundtrip():
-    # expected = Generic(**TEST_ATTRS)
-    expected = Generic()
+    expected = Generic(**TEST_ATTRS)
 
     sm = StorageManager(store=HDF5ObjectStore())
-    expected_uuid = sm.save(expected)
+    expected_key = sm.save(expected)
     sm._cache.clear()
 
-    result = sm.load(expected_uuid)
+    result = sm.load(expected_key)
     assert result.get() == expected.get()
 
 
@@ -30,17 +26,16 @@ def test_very_nested_roundtrip():
     s1 = Generic(**TEST_ATTRS)
     s1.dict_ = {'child_list': [s0, s0, s0]}
 
-
     expected = Generic(**TEST_ATTRS)
     expected.list_ = [{'24': {'Tron': (s0, None)}},
                       (s0, [s0, 98, s1], s1),
                       set([False])]
 
     sm = StorageManager(store=HDF5ObjectStore())
-    expected_uuid = sm.save(expected)
+    expected_key = sm.save(expected)
     sm._cache.clear()
 
-    result = sm.load(expected_uuid)
+    result = sm.load(expected_key)
     assert result.get() == expected.get()
 
     rs0 = result.list_[0]['24']['Tron'][0]
