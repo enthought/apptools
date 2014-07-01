@@ -78,7 +78,7 @@ def test_roundtrip():
     expected = Generic(**TEST_ATTRS)
     sm = StorageManager(store=JSONObjectStore())
     expected_uuid = sm.save(expected)
-    sm._cache_clear()
+    sm._cache.clear()
 
     result = sm.load(expected_uuid)
     assert result.get() == expected.get()
@@ -97,7 +97,7 @@ def test_very_nested_roundtrip():
 
     sm = StorageManager(store=JSONObjectStore())
     expected_uuid = sm.save(expected)
-    sm._cache_clear()
+    sm._cache.clear()
 
     result = sm.load(expected_uuid)
     assert result.get() == expected.get()

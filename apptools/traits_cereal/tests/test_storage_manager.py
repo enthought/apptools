@@ -46,7 +46,7 @@ def test_load_hits_cache_first():
     expected = Generic()
     key = uuid4()
 
-    sm._cache_set(key, expected)
+    sm._cache[key] = expected
     result = sm.load(key)
 
     assert result is expected
@@ -70,7 +70,7 @@ def test_load_twice_returns_same_instance():
     obj01 = sm.load(key)
 
     # Without caching
-    sm._cache_clear()
+    sm._cache.clear()
     obj10 = sm.load(key)
     obj11 = sm.load(key)
 
@@ -90,7 +90,7 @@ def test_save_updates_load_cache():
     obj01 = sm.load(key)
 
     # Without caching
-    sm._cache_clear()
+    sm._cache.clear()
     obj10 = sm.load(key)
     obj11 = sm.load(key)
 

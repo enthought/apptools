@@ -3,6 +3,7 @@
 
 from __future__ import print_function
 
+import collections
 from uuid import uuid4
 from weakref import WeakKeyDictionary, WeakValueDictionary
 
@@ -23,16 +24,80 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+class WeakRefCache(collections.MutableMapping):
+
+    def __init__(self):
+        self._value_to_key = WeakKeyDictionary()
+        self._key_to_value = WeakValueDictionary()
+
+    def __contains__(self, key):
+        self._sanity_check()
+        return key in self._value_to_key or key in self._key_to_value
+
+    def __setitem__(self, key, val):
+        self._sanity_check()
+        self._key_to_value[key] = val
+        self._value_to_key[val] = key
+
+    def __getitem__(self, key):
+        self._sanity_check()
+        return self._key_to_value.get(key)
+
+    def setdefault(self, key, default=None):
+        value = self._key_to_value.setdefault(key, default)
+        self._value_to_key[value] = key
+        return value
+
+    def setdefault_by_value(self, value, default=None):
+        key = self._value_to_key.setdefault(value, default)
+        self._key_to_value[key] = value
+        return key
+
+    def get(self, key, default=None):
+        self._sanity_check()
+        return self._key_to_value.get(key, default)
+
+    def get_by_value(self, value, default=None):
+        self._sanity_check()
+        return self._value_to_key.get(value, default)
+
+    def __len__(self):
+        self._sanity_check()
+        return len(self._value_to_key)
+
+    def __delitem__(self, key):
+        self._sanity_check()
+        val = self._key_to_value[key]
+        del self._key_to_value[key]
+        del self._value_to_key[val]
+
+    def __iter__(self):
+        self._sanity_check()
+        return iter(self.data.keys())
+
+    def _sanity_check(self):
+        left = dict(self._value_to_key.items())
+        right = {v: k for k, v in self._key_to_value.items()}
+        assert left == right
+
+    def clear(self):
+        """ DANGER!!! Clear everything out of the cache.
+
+        This is mainly for testing purposes, but can be useful to force
+        reloading valueects from cold storage.
+        """
+        self._value_to_key.clear()
+        self._key_to_value.clear()
+
+
 class StorageManager(HasStrictTraits):
 
     adaptation_manager = Instance(AdaptationManager)
 
     store = Supports(IObjectStore)
+    _cache = Instance(WeakRefCache, WeakRefCache)
 
     use_default = Bool(True)
-
-    _obj_to_uuid_cache = Instance(WeakKeyDictionary, WeakKeyDictionary)
-    _uuid_to_obj_cache = Instance(WeakValueDictionary, WeakValueDictionary)
 
     def _adaptation_manager_default(self):
         return get_global_adaptation_manager()
@@ -41,13 +106,15 @@ class StorageManager(HasStrictTraits):
         return HDF5ObjectStore()
 
     def save(self, obj):
+        if obj is None:
+            return None
         return self._save(obj, set())
 
     def _save(self, obj, saved_objects):
         if obj in saved_objects:
             logger.debug("Object already saved: {} -> {}".format(
-                obj, self._obj_to_uuid_cache[obj]))
-            return self._obj_to_uuid_cache[obj]
+                obj, self._cache.get_by_value(obj)))
+            return self._cache.get_by_value(obj)
         else:
             saved_objects.add(obj)
             logger.debug("Saving: {} -> {}".format(
@@ -61,15 +128,17 @@ class StorageManager(HasStrictTraits):
         blob.children = {self._save(c, saved_objects) for c in blob.children}
 
         # Send parent out to storage
-        self._cache_set(key, obj)
+        self._cache[key] = obj
         self.store.set(key, blob)
 
         return key
 
     def load(self, key, reify=True):
-        if self._cache_contains(key):
+        if key is None:
+            return None
+        if key in self._cache and reify:
             logger.info("Loading {} from cache".format(key))
-            return self._cache_get(key)
+            return self._cache[key]
         else:
             blob = self.store.get(key)
 
@@ -80,7 +149,7 @@ class StorageManager(HasStrictTraits):
             obj = inflatable.inflate(self.load, reify=reify)
             if reify:
                 # Store in loaded object cache
-                self._cache_set(key, obj)
+                self._cache[key] = obj
             return obj
 
     def _adapt_to_IInflatable(self, blob):
@@ -104,33 +173,4 @@ class StorageManager(HasStrictTraits):
         return deflatable
 
     def _get_or_create_uuid(self, obj):
-        uuid = self._obj_to_uuid_cache.setdefault(obj, uuid4())
-        self._uuid_to_obj_cache[uuid] = obj
-        return uuid
-
-    def _cache_contains(self, key):
-        return key in self._obj_to_uuid_cache or key in self._uuid_to_obj_cache
-
-    def _cache_set(self, key, val):
-        self._uuid_to_obj_cache[key] = val
-        self._obj_to_uuid_cache[val] = key
-
-    def _cache_get(self, key):
-        return self._uuid_to_obj_cache.get(key)
-
-    def _cache_get_by_obj(self, obj):
-        return self._obj_to_uuid_cache.get(obj)
-
-    def _cache_del(self, key):
-        val = self._uuid_to_obj_cache[key]
-        del self._uuid_to_obj_cache[key]
-        del self._obj_to_uuid_cache[val]
-
-    def _cache_clear(self):
-        """ DANGER!!! Clear everything out of this StorageManager's cache.
-
-        This is mainly for testing purposes, but can be useful to force
-        reloading objects from disk.
-        """
-        self._obj_to_uuid_cache.clear()
-        self._uuid_to_obj_cache.clear()
+        return self._cache.setdefault(obj, uuid4())
