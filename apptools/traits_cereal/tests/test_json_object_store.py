@@ -41,7 +41,7 @@ def test_encode_blob():
         encode('Blob', {'obj_attrs': {},
                         'children': json.loads(encode('set', [])),
                         'class_name': '',
-                        'obj_uuid': None,
+                        'obj_key': None,
                         'version': 0}))
     assert result == expected
 
@@ -65,22 +65,22 @@ def test_decode_blob():
         "obj_attrs": {},
         "children": {"__SPECIAL__": ["set", []]},
         "class_name": "",
-        "obj_uuid": {"__SPECIAL__": ["UUID", "''' + u.urn + '''"]},
+        "obj_key": {"__SPECIAL__": ["UUID", "''' + u.urn + '''"]},
         "version": 0
     }]}'''
     result = BD.decode(data)
     expected = Blob()
-    expected.obj_uuid = u
+    expected.obj_key = u
     assert result.get() == expected.get()
 
 
 def test_roundtrip():
     expected = Generic(**TEST_ATTRS)
     sm = StorageManager(store=JSONObjectStore())
-    expected_uuid = sm.save(expected)
+    expected_key = sm.save(expected)
     sm._cache.clear()
 
-    result = sm.load(expected_uuid)
+    result = sm.load(expected_key)
     assert result.get() == expected.get()
 
 
@@ -96,10 +96,10 @@ def test_very_nested_roundtrip():
                       set([False])]
 
     sm = StorageManager(store=JSONObjectStore())
-    expected_uuid = sm.save(expected)
+    expected_key = sm.save(expected)
     sm._cache.clear()
 
-    result = sm.load(expected_uuid)
+    result = sm.load(expected_key)
     assert result.get() == expected.get()
 
     rs0 = result.list_[0]['24']['Tron'][0]

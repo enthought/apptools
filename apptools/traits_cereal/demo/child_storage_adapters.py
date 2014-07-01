@@ -27,10 +27,10 @@ class ChildToIDeflatable(DefaultDeflator):
 class ChildToIInflatable1(DefaultInflator):
     adaptee = Instance(Blob)
 
-    def inflate(self, get_obj_by_uuid, reify=True):
+    def inflate(self, get_obj_by_key, reify=True):
         print("Loading Child v1")
         self.adaptee = super(ChildToIInflatable1, self).inflate(
-            get_obj_by_uuid, reify=False)
+            get_obj_by_key, reify=False)
         return Child(**self.adaptee.attrs)
 
 
@@ -38,10 +38,10 @@ class ChildToIInflatable1(DefaultInflator):
 class ChildToIInflatable2(DefaultInflator):
     adaptee = Instance(Blob)
 
-    def inflate(self, get_obj_by_uuid, reify=True):
+    def inflate(self, get_obj_by_key, reify=True):
         print("Loading Child v2")
         self.adaptee = super(ChildToIInflatable2, self).inflate(
-            get_obj_by_uuid, reify=False)
+            get_obj_by_key, reify=False)
         return Child(**self.adaptee.attrs)
 
 

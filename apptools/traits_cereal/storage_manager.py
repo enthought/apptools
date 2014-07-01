@@ -105,12 +105,12 @@ class StorageManager(HasStrictTraits):
     def _store_default(self):
         return HDF5ObjectStore()
 
-    def save(self, obj):
+    def save(self, obj, key=None):
         if obj is None:
             return None
-        return self._save(obj, set())
+        return self._save(key, obj, set())
 
-    def _save(self, obj, saved_objects):
+    def _save(self, key, obj, saved_objects):
         if obj in saved_objects:
             logger.debug("Object already saved: {} -> {}".format(
                 obj, self._cache.get_by_value(obj)))
@@ -118,14 +118,18 @@ class StorageManager(HasStrictTraits):
         else:
             saved_objects.add(obj)
             logger.debug("Saving: {} -> {}".format(
-                obj, self._get_or_create_uuid(obj)))
+                obj, key or self._get_or_create_key(obj)))
 
         deflatable = self._adapt_to_IDeflatable(obj)
-        blob = deflatable.deflate(self._get_or_create_uuid)
-        key = blob.obj_uuid
+        blob = deflatable.deflate(self._get_or_create_key)
+        if key is not None:
+            blob.obj_key = key
+        else:
+            key = blob.obj_key
 
         # Send children out to storage
-        blob.children = {self._save(c, saved_objects) for c in blob.children}
+        blob.children = {self._save(None, c, saved_objects)
+                         for c in blob.children}
 
         # Send parent out to storage
         self._cache[key] = obj
@@ -172,5 +176,5 @@ class StorageManager(HasStrictTraits):
                 obj, IDeflatable)
         return deflatable
 
-    def _get_or_create_uuid(self, obj):
+    def _get_or_create_key(self, obj):
         return self._cache.setdefault(obj, uuid4())

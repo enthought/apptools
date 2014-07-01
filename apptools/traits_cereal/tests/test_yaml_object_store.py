@@ -17,14 +17,14 @@ def yaml_str(s):
     return s
 
 
-def yaml_empty_blob(uuid):
+def yaml_empty_blob(key):
     return (
         "!traits_cereal/Blob\n"
         "children: !!set {{}}\n"
         "class_name: ''\n"
         "obj_attrs: {{}}\n"
-        "obj_uuid: {0}\n"
-        "version: 0\n").format(uuid or 'null')
+        "obj_key: {0}\n"
+        "version: 0\n").format(key or 'null')
 
 
 def test_encode_uuid():
@@ -43,17 +43,17 @@ def test_decode_uuid():
 def test_encode_blob():
     b = Blob()
     result = YOS._encode(b)
-    expected = yaml_empty_blob(b.obj_uuid)
+    expected = yaml_empty_blob(b.obj_key)
     assert result == expected
 
 
 def test_roundtrip():
     expected = Generic(**TEST_ATTRS)
     sm = StorageManager(store=YAMLObjectStore())
-    expected_uuid = sm.save(expected)
+    expected_key = sm.save(expected)
     sm._cache.clear()
 
-    result = sm.load(expected_uuid)
+    result = sm.load(expected_key)
     assert result.get() == expected.get()
 
 
@@ -69,10 +69,10 @@ def test_very_nested_roundtrip():
                       set([False])]
 
     sm = StorageManager(store=YAMLObjectStore())
-    expected_uuid = sm.save(expected)
+    expected_key = sm.save(expected)
     sm._cache.clear()
 
-    result = sm.load(expected_uuid)
+    result = sm.load(expected_key)
     assert result.get() == expected.get()
 
     rs0 = result.list_[0]['24']['Tron'][0]

@@ -3,12 +3,12 @@
 
 from uuid import UUID, uuid4
 
-from traits.api import Dict, HasTraits, Instance, Int, Set, Str
+from traits.api import Dict, Either, HasTraits, Instance, Int, Set, Str
 
 from .utils import class_qualname
 
 
-def blob_skeleton(obj, uuid_factory=None, **kwargs):
+def blob_skeleton(obj, key_factory=None, **kwargs):
 
         defaults = {
             'version': 1,
@@ -17,10 +17,10 @@ def blob_skeleton(obj, uuid_factory=None, **kwargs):
             'class_name': class_qualname(obj),
         }
 
-        if uuid_factory is not None:
-            defaults['obj_uuid'] = uuid_factory(obj)
+        if key_factory is not None:
+            defaults['obj_key'] = key_factory(obj)
         else:
-            defaults['obj_uuid'] = uuid4()
+            defaults['obj_key'] = uuid4()
 
         defaults.update(kwargs)
 
@@ -30,11 +30,11 @@ def blob_skeleton(obj, uuid_factory=None, **kwargs):
 class Blob(HasTraits):
     """ This is a low-level object that has just come from the ether and has
     not yet been fully reified. """
-    obj_uuid = Instance(UUID)
+    obj_key = Either(Str, Instance(UUID))
     class_name = Str
     version = Int
 
-    # Attributes with serializable objects replaced by uuid.UUIDs
+    # Attributes with serializable objects replaced by keys
     obj_attrs = Dict
 
     # A set of serializable objects that must also be handled for this blob
@@ -42,10 +42,10 @@ class Blob(HasTraits):
     children = Set()
 
     def __str__(self):
-        return "<Blob of {}({})>".format(self.class_name, self.obj_uuid)
+        return "<Blob of {}({})>".format(self.class_name, self.obj_key)
 
     def __repr__(self):
-        msg = ("Blob(obj_uuid={obj_uuid!r}, class_name={class_name!r}, "
+        msg = ("Blob(obj_key={obj_key!r}, class_name={class_name!r}, "
                "version={version!r}, obj_attrs={obj_attrs!r}, "
                "children={children!s})")
         return msg.format(**self.get())

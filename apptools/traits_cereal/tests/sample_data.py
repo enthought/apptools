@@ -15,7 +15,6 @@ logger = logging.getLogger(__name__)
 
 
 class Generic(HasTraits):
-    # uuid = Instance(uuid.UUID, factory=uuid.uuid4)
     int_ = Int
     str_ = Str
     list_ = List

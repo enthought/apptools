@@ -109,4 +109,18 @@ def test_calls_to_save_are_idempotent():
 
     parent_blob = sm.load(parent_key, reify=False)
 
-    assert child_key == parent_blob.obj_attrs['child_'].obj_uuid
+    assert child_key == parent_blob.obj_attrs['child_'].obj_key
+
+
+def test_arbitrary_keys():
+    sm = StorageManager()
+    expected = Generic(child_=Generic(), **TEST_ATTRS)
+    key = 'banana'
+
+    new_key = sm.save(expected, key=key)
+    assert new_key == key
+
+    sm._cache.clear()
+    result = sm.load(key)
+
+    assert result == expected

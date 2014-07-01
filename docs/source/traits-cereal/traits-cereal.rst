@@ -52,7 +52,7 @@ aptly named interfaces such as ``IDeflatable`` and ``IInflatable``::
         adaptee = Any
         version = Int
 
-        def deflate(self, get_or_create_uuid):
+        def deflate(self, get_or_create_key):
            """Return a Blob representation of the adaptee."""
 
     class IInflatable(Interface):
@@ -60,8 +60,8 @@ aptly named interfaces such as ``IDeflatable`` and ``IInflatable``::
         adaptee = Instance(Blob)
         version = Int
 
-        def inflate(self, get_obj_by_uuid):
-           """Return the object tagged with the UUID in the adaptee Blob,
+        def inflate(self, get_obj_by_key):
+           """Return the object tagged with the key in the adaptee Blob,
            reifying it and its children from disk if necessary.
 
            If this function has been called once before, it must *not* be
@@ -89,8 +89,8 @@ below::
 
         Parameters:
 
-        obj_uuid : uuid.UUID
-            The UUID of the object that this Blob represents.
+        obj_key : Either(Str, uuid.UUID)
+            The UUID or key-string of the object that this Blob represents.
 
         class_name : str
             The fully qualified class name of the object that this Blob
@@ -102,22 +102,22 @@ below::
         attrs : dict
             The attribute dictionary of the object that this Blob represents.
             All serializable objects in this dictionary are replaced with the
-            UUID of that object.
+            key of that object.
 
         children : set
             During saving, this is the set of child objects that were removed
-            from attrs and replaced by their UUIDs. These objects must all be
+            from attrs and replaced by their keys. These objects must all be
             persisted for this Blob to be considered correctly persisted.
 
-            During loading, this is the set of UUIDs found in attrs. These
-            UUIDs must all be loaded before we try to load this Blob.
+            During loading, this is the set of keys found in attrs. These
+            keys must all be loaded before we try to load this Blob.
         """
 
-        obj_uuid = Instance(UUID)
+        obj_key = Either(Str, Instance(UUID))
         class_name = Str
         version = Int
 
-        # Attributes with serializable objects replaced by uuid.UUIDs
+        # Attributes with serializable objects replaced by keys
         attrs = Dict
 
         # A set of serializable objects that must also be handled for this blob
@@ -127,7 +127,7 @@ below::
 
 ``Blob.attrs`` is created via a shallow traversal of the attributes of the
 object being persisted, adding all serializable objects to ``Blob.children``
-and replacing them with their UUIDs.
+and replacing them with their keys.
 
 After the Blob has been constructed, we must create Blobs for all objects in
 ``Blob.children`` and pass them to the ``StorageManager`` to be written out to
@@ -153,16 +153,16 @@ The loading of an object from disk proceeds like saving in reverse. The
 is assumed that this will be possible by simply inspecting the node at which
 the blob data has been serialized.
 
-Each UUID present in ``Blob.children`` is requested before proceeding to
+Each keys present in ``Blob.children`` is requested before proceeding to
 produce references to all of the objects that will be needed to populate
-``Blob.attrs``. We can then traverse ``Blob.attrs``, replacing UUIDs with their
+``Blob.attrs``. We can then traverse ``Blob.attrs``, replacing keys with their
 objects. Once this is done, we can pass ``Blob.attrs`` to the object's
 constructor (defined in ``Blob.class_name``) and reify the object.
 
 We should now have the real object again, in the same state it was in when it
-was saved, including maintaining the same UUID.
+was saved, including maintaining the same key.
 
-Further calls to load this object's UUID will produce *this same instance* of
+Further calls to load this object's key will produce *this same instance* of
 the object. The ``StorageManager`` should handle this by caching loaded objects
 in a ``weakref.WeakValueDictionary`` or something similar.
 
@@ -274,17 +274,18 @@ annotation might be saved, but we don't need to save the annotation manager, or
 some such similar object that serves as a container for annotations.
 
 This causes a problem. We want to serialize state, but we don't want the parent
-object to know what *exactly* was serialized. If we kept the ``UUID`` of the
-serialized object, we'd then have to serialize the parent as well or the
-``UUID`` would be forgotten on restart.
+object to know what *exactly* was serialized. If we kept the key of the
+serialized object, we'd then have to serialize the parent as well or the key
+would be forgotten on restart.
 
 To maneuver around this, we will require that loading (and thus saving) occurs
 at few "seed points" which are known in advance and **unique within the
 application**. A seed point is then associated with a magic key which is used
-in place of a ``UUID`` for that unique object. The parent of this object will
-not construct the object themselves, but instead will simply request the object
-associated with its magic key from the data store. If the object has been
-stored, it will be returned, otherwise it will be created and returned.
+in place of an auto-generated key for that unique object. The parent of this
+object will not construct the object themselves, but instead will simply
+request the object associated with its magic key from the data store. If the
+object has been stored, it will be returned, otherwise it will be created and
+returned.
 
 A small example::
 
