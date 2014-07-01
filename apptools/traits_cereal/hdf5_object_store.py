@@ -17,13 +17,13 @@ import os
 import tempfile
 from uuid import UUID
 
-from traits.api import Callable, File, HasTraits, Instance, provides
 from apptools.io.h5.file import H5File
+from traits.api import Callable, File, HasTraits, Instance, provides
 
 from .blob import Blob
 from .interfaces import IObjectStore
-from .yaml_object_store import yaml_encoder_factory, yaml_decoder_factory
 from .utils import class_qualname
+from .yaml_object_store import yaml_encoder_factory, yaml_decoder_factory
 
 
 PROTOCOL_TAG = "__PROTOCOL__"
@@ -33,12 +33,19 @@ VERSION_TAG = "__VERSION__"
 @provides(IObjectStore)
 class HDF5ObjectStore(HasTraits):
 
-    """An IObjectStore implementation that is backed by an HDF5 file. """
+    """An IObjectStore that is backed by an HDF5 file. """
 
+    #: A Callable that turns values into YAML
     _encode = Callable
+
+    #: A Callable that turns YAML into values
     _decode = Callable
-    filename = File(os.path.join(tempfile.gettempdir(), 'object_store.h5'))
+
+    #: The H5File that is currently open
     _file = Instance(H5File)
+
+    #: The filename of the YAML storage on disk
+    filename = File(os.path.join(tempfile.gettempdir(), 'object_store.h5'))
 
     def __encode_default(self):
         return yaml_encoder_factory(default_flow_style=True, width=int(1e4))
