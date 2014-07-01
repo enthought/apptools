@@ -100,13 +100,13 @@ def test_save_updates_load_cache():
     assert obj01 is not obj11
 
 
-# def test_calls_to_save_are_idempotent():
-    # sm = StorageManager()
-    # parent = Generic(child_=Generic())
+def test_calls_to_save_are_idempotent():
+    sm = StorageManager()
+    parent = Generic(child_=Generic())
 
-    # parent_key = sm.save(parent)
-    # child_key = sm.save(parent.child_)
+    parent_key = sm.save(parent)
+    child_key = sm.save(parent.child_)
 
-    # parent_blob = sm.load(parent_key, reify=False)
+    parent_blob = sm.load(parent_key, reify=False)
 
-    # assert child_key == parent_blob.child_.obj_uuid
+    assert child_key == parent_blob.obj_attrs['child_'].obj_uuid
