@@ -17,9 +17,12 @@ from traits.trait_handlers import (
 from .blob import Blob
 from .interfaces import IObjectStore
 
+# Magic keys representing special classes that we care about
 YAML_TAG_BLOB = u'!traits_cereal/Blob'
 YAML_TAG_UUID = u'!UUID'
 
+# This regex matches uuid.UUID.hex and uuid.UUID.urn formatted strings,
+# allowing the YAML to avoid using YAML_TAG_UUID explicitly
 UUID_REGEX = pattern = re.compile(
     '^(?:urn:uuid:)?'  # Optional prefix
     '(?:[0-9a-f]{8}'  # 8 hex
@@ -28,13 +31,9 @@ UUID_REGEX = pattern = re.compile(
     '|[0-9a-f]{32})')  # or just 32 hex, no hyphens
 
 
+# Functions for representing special classes as YAML
 def _represent_uuid(dumper, data):
     return dumper.represent_scalar(YAML_TAG_UUID, data.urn)
-
-
-def _construct_uuid(loader, node):
-    value = loader.construct_scalar(node)
-    return UUID(value)
 
 
 def _represent_blob(dumper, blob):
@@ -46,6 +45,12 @@ def _represent_blob(dumper, blob):
     return node
 
 
+# Functions for constructing special classes from YAML
+def _construct_uuid(loader, node):
+    value = loader.construct_scalar(node)
+    return UUID(value)
+
+
 def _construct_blob(loader, node):
     blob_attrs = loader.construct_mapping(node, deep=True)
     blob = Blob(**blob_attrs)
@@ -53,6 +58,7 @@ def _construct_blob(loader, node):
 
 
 def yaml_encoder_factory(**kwargs):
+    """ Return a callable that encodes its arguments as YAML. """
     suffix = '\n...\n'
     suffix_slice = slice(-len(suffix))
 
@@ -73,10 +79,13 @@ def yaml_encoder_factory(**kwargs):
 
 
 def yaml_decoder_factory():
+    """ Return a callable that decodes YAML. """
     return partial(yaml.load, Loader=loader_factory)
 
 
 def dumper_factory(*args, **kwargs):
+    """ Return a `yaml.Dumper` that correctly handles some special classes like
+    TraitSetObject. """
     dumper = yaml.Dumper(*args, **kwargs)
     dumper.add_representer(TraitSetObject, yaml.Dumper.represent_set)
     dumper.add_representer(TraitListObject, yaml.Dumper.represent_list)
@@ -88,6 +97,8 @@ def dumper_factory(*args, **kwargs):
 
 
 def loader_factory(*args, **kwargs):
+    """ Return a `yaml.Loader` that can construct objects encoded by
+    `yaml.Decoder` produced by `dumper_factory`. """
     loader = yaml.Loader(*args, **kwargs)
     loader.add_constructor(YAML_TAG_UUID, _construct_uuid)
     loader.add_implicit_resolver(YAML_TAG_UUID, UUID_REGEX, None)
@@ -98,10 +109,19 @@ def loader_factory(*args, **kwargs):
 @provides(IObjectStore)
 class YAMLObjectStore(HasTraits):
 
-    _encode = Callable
-    _decode = Callable
-    _disk_mirror = Dict
+    """ An IObjectStore backed by a YAML file. """
+
+    #: The filename of the YAML storage on disk
     filename = File(os.path.join(tempfile.gettempdir(), 'object_store.yaml'))
+
+    #: A Callable that turns values into YAML
+    _encode = Callable
+
+    #: A Callable that turns YAML into values
+    _decode = Callable
+
+    #: A python representation of the YAML file
+    _disk_mirror = Dict
 
     def __encode_default(self):
         return yaml_encoder_factory()
