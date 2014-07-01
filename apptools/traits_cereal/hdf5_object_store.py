@@ -1,13 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#
-# Enthought product code
-#
-# (C) Copyright 2014 Enthought, Inc., Austin, TX
-# All right reserved.
-#
-# This file is confidential and NOT open source.  Do not distribute.
-#
 
 from __future__ import division, print_function
 
