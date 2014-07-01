@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from apptools.traits_cereal.aits.api import Instance, provides
-from apptools.traits_cereal.aits.adaptation.adaptation_manager import (
+from traits.api import Instance, provides
+from traits.adaptation.adaptation_manager import (
     adaptation_manager as GLOBAL_ADAPTATION_MANAGER)
 
 from storables import Child
-from apptools.traits_cereal.storage_manager import IDeflatable, IInflatable, Blob
+from apptools.traits_cereal.storage_manager import (
+    Blob, IDeflatable, IInflatable)
 from apptools.traits_cereal.default_storage_adapters import (
     DefaultDeflator, DefaultInflator)
 
 
 @provides(IDeflatable)
 class ChildToIDeflatable(DefaultDeflator):
-    # class_name = 'Child'
     version = 2
     adaptee = Instance(Child)
 

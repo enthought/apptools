@@ -23,12 +23,9 @@ def main():
     parent_blob_key = sm.save(parent)
     child_blob_key = sm.save(child)
 
-    import sys
-    sys.exit()
-
     # For the example, make sure we are pulling out of dry storage and not
     # cache. One wouldn't normally need (or want!) to call this.
-    sm._cache_clear()
+    sm._cache.clear()
 
     print("================================================")
 
