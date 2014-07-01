@@ -62,7 +62,7 @@ class HDF5ObjectStore(HasTraits):
 
         # Check special attributes
         class_path = group_attrs.pop(PROTOCOL_TAG, '__builtin__.dict')
-        version = group_attrs.pop(VERSION_TAG, 1)  # noqa
+        group_attrs.pop(VERSION_TAG, 1)
 
         for attr, val in group_attrs.items():
             if isinstance(val, basestring):
