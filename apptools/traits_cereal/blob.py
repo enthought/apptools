@@ -9,36 +9,43 @@ from .utils import class_qualname
 
 
 def blob_skeleton(obj, key_factory=None, **kwargs):
+    """ Return a Blob with the correct `class_name` for `obj` and default
+    values elsewhere. """
 
-        defaults = {
-            'version': 1,
-            # Py3 introduces this for real in __qualname__. If we don't want to
-            # implement lots of wrapper adapters we have to do it this way.
-            'class_name': class_qualname(obj),
-        }
+    defaults = {
+        'version': 1,
+        # Py3 introduces this for real in __qualname__. If we don't want to
+        # implement lots of wrapper adapters we have to do it this way.
+        'class_name': class_qualname(obj),
+    }
 
-        if key_factory is not None:
-            defaults['obj_key'] = key_factory(obj)
-        else:
-            defaults['obj_key'] = uuid4()
+    if key_factory is not None:
+        defaults['obj_key'] = key_factory(obj)
+    else:
+        defaults['obj_key'] = uuid4()
 
-        defaults.update(kwargs)
+    defaults.update(kwargs)
 
-        return Blob(**defaults)
+    return Blob(**defaults)
 
 
 class Blob(HasTraits):
-    """ This is a low-level object that has just come from the ether and has
-    not yet been fully reified. """
+    """ A low-level object that has just come from the ether and represents
+    an object to be reified. """
+
+    #: The key used to store this blob
     obj_key = Either(Str, Instance(UUID))
+
+    #: The fully qualified class name of the object this blob represents
     class_name = Str
+
+    #: The version of the storage protocol used to create this blob
     version = Int
 
-    # Attributes with serializable objects replaced by keys
+    #: The deflated object's attributes with child objects replaced by keys
     obj_attrs = Dict
 
-    # A set of serializable objects that must also be handled for this blob
-    # to be considered persisted.
+    #: The set of serializable objects represented by the keys in `obj_attrs`
     children = Set()
 
     def __str__(self):
