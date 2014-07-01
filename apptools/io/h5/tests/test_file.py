@@ -30,6 +30,30 @@ def test_create_array():
         testing.assert_allclose(h5['/array'], array)
 
 
+def test_getitem_failure():
+    array = np.arange(3)
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5.create_array('/array', array)
+        testing.assert_raises(NameError, h5.__getitem__, '/not_there')
+
+
+def test_iteritems():
+    node_paths = ['/foo', '/bar', '/baz']
+    array = np.arange(3)
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        for path in node_paths:
+            h5.create_array(path, array)
+
+        # We expect to see the root node when calling iteritems...
+        node_paths.append('/')
+        iter_paths = []
+
+        for path, node in h5.iteritems():
+            iter_paths.append(path)
+
+    assert set(node_paths) == set(iter_paths)
+
+
 def test_create_plain_array():
     with open_h5file(H5_TEST_FILE, mode='w') as h5:
         h5array = h5.create_array('/array', np.arange(3), chunked=False)
@@ -45,6 +69,23 @@ def test_create_chunked_array():
         assert isinstance(h5array, tables.CArray)
 
 
+def test_create_extendable_array():
+    array = np.arange(3, dtype=np.uint8)
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5array = h5.create_array('/array', array, extendable=True)
+        testing.assert_allclose(h5array, array)
+        assert isinstance(h5array, tables.EArray)
+
+
+def test_str_and_repr():
+    array = np.arange(3)
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5array = h5.create_array('/array', array)
+
+        assert repr(h5) == repr(h5._h5)
+        assert str(h5) == str(h5._h5)
+
+
 def test_shape_and_dtype():
     array = np.ones((3, 4), dtype=np.uint8)
     with open_h5file(H5_TEST_FILE, mode='w') as h5:
@@ -53,6 +94,12 @@ def test_shape_and_dtype():
                                       chunked=chunked)
             assert h5array.dtype == array.dtype
             assert h5array.shape == array.shape
+
+
+def test_shape_only_raises():
+    shape = (3, 4)
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        testing.assert_raises(ValueError, h5.create_array, '/array', shape)
 
 
 def test_create_duplicate_array_raises():
@@ -203,6 +250,28 @@ def test_group_attributes():
         assert group.attrs['name'] == value_2
 
 
+def test_group_properties():
+    with open_h5file(H5_TEST_FILE, mode='w', auto_groups=True) as h5:
+        h5.create_array('/group1/group2/array', np.arange(3))
+        h5.create_array('/group1/array1', np.arange(3))
+
+        assert h5['/group1'].name == 'group1'
+
+        child_names = h5['/group1'].children_names
+        assert sorted(child_names) == sorted(['group2', 'array1'])
+
+        sub_names = h5['/group1'].subgroup_names
+        assert sub_names == ['group2']
+
+
+def test_group_str_and_repr():
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        group = h5['/']
+
+        assert str(group) == str(group._h5_group)
+        assert repr(group) == repr(group._h5_group)
+
+
 def test_attribute_translation():
     value_1 = (1, 2, 3)
     value_1_array = np.array(value_1)
@@ -217,6 +286,14 @@ def test_get_attribute():
         attrs = h5['/'].attrs
         attrs['name'] = 'hello'
         assert attrs.get('name') == attrs['name']
+
+
+def test_del_attribute():
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        attrs = h5['/'].attrs
+        attrs['name'] = 'hello'
+        del attrs['name']
+        assert 'name' not in attrs
 
 
 def test_get_attribute_default():
