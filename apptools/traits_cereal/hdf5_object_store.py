@@ -65,7 +65,7 @@ class HDF5ObjectStore(HasTraits):
         version = group_attrs.pop(VERSION_TAG, 1)  # noqa
 
         for attr, val in group_attrs.items():
-            if isinstance(val, basestring):  # noqa
+            if isinstance(val, basestring):
                 try:
                     # We encoded the value on the way in, let's decode it.
                     val = self._decode(val)
