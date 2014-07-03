@@ -37,8 +37,22 @@ class ListSelection(HasTraits):
         Fills in the required information (in particular, the indices) based
         on a list of selected items and a list of all available items.
 
-        The list of available items must not contain any duplicate items.
+        .. note::
+            - The list of available items must not contain any duplicate items.
+            - It is expected that ``selected`` is populated by items in
+              ``all_items``.
+
         """
-        indices = [all_items.index(x) for x in selected]
+        number_of_items = len(all_items)
+        indices = []
+
+        for item in selected:
+            for index in range(number_of_items):
+                if all_items[index] is item:
+                    indices.append(index)
+                    break
+            else:
+                msg = 'Selected item: {!r}, could not be found'
+                raise ValueError(msg.format(item))
 
         return cls(provider_id=provider_id, items=selected, indices=indices)
