@@ -36,6 +36,15 @@ class TestListSelection(unittest.TestCase):
         self.assertEqual(list_selection.items, selected)
         self.assertEqual(list_selection.indices, [0, 2])
 
+    def test_list_selection_with_invalid_selected_items(self):
+        data = numpy.array(range(10))
+        all_items = [data, data + 10, data + 30]
+        selected = [data-10, ]
+
+        with self.assertRaises(ValueError):
+            ListSelection.from_available_items(
+                provider_id='foo', selected=selected, all_items=all_items)
+
 
 if __name__ == '__main__':
     unittest.main()

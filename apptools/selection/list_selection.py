@@ -39,7 +39,7 @@ class ListSelection(HasTraits):
 
         .. note::
             - The list of available items must not contain any duplicate items.
-            - It is assumed that ``selected`` is populated by items in
+            - It is expected that ``selected`` is populated by items in
               ``all_items``.
 
         """
@@ -51,5 +51,8 @@ class ListSelection(HasTraits):
                 if all_items[index] is item:
                     indices.append(index)
                     break
+            else:
+                msg = 'Selected item: {!r}, could not be found'
+                raise ValueError(msg.format(item))
 
         return cls(provider_id=provider_id, items=selected, indices=indices)
