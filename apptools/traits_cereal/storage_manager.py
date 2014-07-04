@@ -126,22 +126,86 @@ class StorageManager(HasStrictTraits):
     #: Whether to use the default deflator
     use_default = Bool(True)
 
+    ### Traits defaults #######################################################
+
     def _adaptation_manager_default(self):
         return get_global_adaptation_manager()
 
     def _store_default(self):
         return HDF5ObjectStore()
 
+    ### Public methods ########################################################
+
     def save(self, obj, key=None):
+        """ Save `obj` in the object store and return its associated key.
+
+        If no key is specified, a UUID is used.
+
+        If the key is already in use, the original value is overwritten.
+        """
         if obj is None:
             return None
         return self._save(key, obj, set())
 
+    def load(self, key, reify=True):
+        """ If `reify == True`, return the object corresponding to `key`,
+        otherwise return the `Blob` representing that object.
+
+        If no blob is found for `key` raise a KeyError.
+        """
+        if key is None:
+            return None
+        if key in self._cache and reify:
+            logger.info("Loading {} from cache".format(key))
+            return self._cache[key]
+        else:
+            blob = self.store.get(key)
+
+            if blob is None:
+                raise KeyError("Key: {!r} unavailable".format(key))
+
+            inflatable = self._adapt_to_IInflatable(blob)
+            obj = inflatable.inflate(self.load, reify=reify)
+            if reify:
+                # Store in loaded object cache
+                self._cache[key] = obj
+            return obj
+
+    def load_default(self, key, default=lambda: None, **kwargs):
+        """ Call self.load(key, **kwargs) but return `default()` if `key`
+        is unknown.
+
+        Similar to dict.get(), but passing in a callable.
+        """
+
+        try:
+            return self.load(key, **kwargs)
+        except KeyError:
+            value = default()
+            self._cache[key] = value
+            return value
+
+    ### Private methods #######################################################
+
     def _save(self, key, obj, saved_objects):
+        """ If obj is not in saved_objects store it in the object store
+        using `key`. Return the key that it is stored under.
+
+        If an object appears in saved_objects but has been previously saved
+        under a different key, a warning is raised and the new key is ignored.
+        The return value will be the original key used.
+
+        In all cases, the returned key is the key that can be later used to
+        retrieve the object.
+        """
         if obj in saved_objects:
-            logger.debug("Object already saved: {} -> {}".format(
-                obj, self._cache.get_by_value(obj)))
-            return self._cache.get_by_value(obj)
+            orig_key = self._cache.get_by_value(obj)
+            logger.debug("Object already saved: {!r} -> {!r}".format(
+                obj, orig_key))
+            if orig_key != key:
+                logger.warning("Ignoring second key {!r} for {!r}".format(
+                    obj, key))
+            return orig_key
         else:
             saved_objects.add(obj)
             logger.debug("Saving: {} -> {}".format(
@@ -164,26 +228,9 @@ class StorageManager(HasStrictTraits):
 
         return key
 
-    def load(self, key, reify=True):
-        if key is None:
-            return None
-        if key in self._cache and reify:
-            logger.info("Loading {} from cache".format(key))
-            return self._cache[key]
-        else:
-            blob = self.store.get(key)
-
-            if blob is None:
-                raise ValueError("Key: {!r} unavailable".format(key))
-
-            inflatable = self._adapt_to_IInflatable(blob)
-            obj = inflatable.inflate(self.load, reify=reify)
-            if reify:
-                # Store in loaded object cache
-                self._cache[key] = obj
-            return obj
-
     def _adapt_to_IInflatable(self, blob):
+        """ Return an adapted version of `blob`, using the DefaultInflator if
+        necessary."""
         inflatable = self.adaptation_manager.adapt(
             blob, IInflatable, None)
         if inflatable is None:
@@ -191,6 +238,11 @@ class StorageManager(HasStrictTraits):
         return inflatable
 
     def _adapt_to_IDeflatable(self, obj):
+        """ Return an adapted version of `blob`.
+
+        If `self.use_default` is True, use the DefaultDeflator when an
+        adaptation cannot be found, otherwise raise an AdaptationError.
+        """
         # We use two different signatures because we want the "no adapter"
         # error message
         if self.use_default:
@@ -204,4 +256,6 @@ class StorageManager(HasStrictTraits):
         return deflatable
 
     def _get_or_create_key(self, obj):
+        """ Return the key associated with `obj`, creating a new one if `obj`
+        doesn't have one yet."""
         return self._cache.setdefault(obj, uuid4())
