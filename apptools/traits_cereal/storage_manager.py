@@ -88,7 +88,7 @@ class WeakRefCache(collections.MutableMapping):
         """ DANGER!!! Clear everything out of the cache.
 
         This is mainly for testing purposes, but can be useful to force
-        reloading valueects from cold storage.
+        reloading values from cold storage.
         """
         self._value_to_key.clear()
         self._key_to_value.clear()
