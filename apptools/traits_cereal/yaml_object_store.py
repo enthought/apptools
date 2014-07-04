@@ -33,10 +33,12 @@ UUID_REGEX = pattern = re.compile(
 
 # Functions for representing special classes as YAML
 def _represent_uuid(dumper, data):
+    """ Represent a UUID as YAML. """
     return dumper.represent_scalar(YAML_TAG_UUID, data.urn)
 
 
 def _represent_blob(dumper, blob):
+    """ Represent a Blob as YAML. """
     node = dumper.represent_object(blob)
     node.tag = YAML_TAG_BLOB
     # Throw away the __traits_version__ that comes from Blob.__getstate__()
@@ -47,11 +49,13 @@ def _represent_blob(dumper, blob):
 
 # Functions for constructing special classes from YAML
 def _construct_uuid(loader, node):
+    """ Instantiate a UUID from YAML. """
     value = loader.construct_scalar(node)
     return UUID(value)
 
 
 def _construct_blob(loader, node):
+    """ Instantiate a Blob from YAML. """
     blob_attrs = loader.construct_mapping(node, deep=True)
     blob = Blob(**blob_attrs)
     return blob
@@ -129,13 +133,15 @@ class YAMLObjectStore(HasTraits):
     def __decode_default(self):
         return yaml_decoder_factory()
 
-    def set(self, key, val):
-        self._disk_mirror[key] = val
+    def set(self, key, value):
+        """ Associate `value` with `key` and update the YAML file. """
+        self._disk_mirror[key] = value
         with open(self.filename, 'w') as fp:
             fp.write(self._encode(self._disk_mirror))
         return
 
     def get(self, key):
+        """ Retrieve the value associated with `key`. """
         with open(self.filename, 'r') as fp:
             data = fp.read()
         self._disk_mirror = self._decode(data)
