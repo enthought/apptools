@@ -6,6 +6,9 @@ from traits.api import Interface
 
 class IObjectStore(Interface):
 
+    """ The interface required by StorageManager.store. It represents a dumb
+    key-value store that knows its keys."""
+
     def set(key, val):
         pass
 
