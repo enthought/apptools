@@ -39,21 +39,36 @@ class HDF5ObjectStore(HasTraits):
     #: The filename of the YAML storage on disk
     filename = File(os.path.join(tempfile.gettempdir(), 'object_store.h5'))
 
+    ### Traits defaults #######################################################
+
     def __encode_default(self):
         return yaml_encoder_factory(default_flow_style=True, width=int(1e4))
 
     def __decode_default(self):
         return yaml_decoder_factory()
 
-    def set(self, key, blob):
+    ### IObjectStore interface ################################################
+
+    def set(self, key, val):
+        """ Store the `value` under the path `key`, opening and closing the
+        H5File. """
         with self._open():
-            return self._set(key, blob)
+            return self._set(key, val)
 
     def get(self, key):
+        """ Return the value stored under the path `key`, opening and closing
+        the H5File. """
         with self._open():
             return self._get(key)
 
+    ### Private methods #######################################################
+
     def _get(self, key):
+        """ Return the value stored under path `key`, potentially recursing to
+        retrieve children.
+
+        The H5File is assumed to be open.
+        """
         key = self._normalize_key(key)
         group = self._file[key]
 
@@ -73,6 +88,7 @@ class HDF5ObjectStore(HasTraits):
                     raise ValueError("{} from {!r}".format(e, val))
             obj_attrs[attr] = val
 
+        #
         for subgroup in group.subgroup_names:
             subgroup_path = self._file.join_path(key, subgroup)
             obj_attrs[subgroup] = self._get(subgroup_path)
@@ -86,6 +102,8 @@ class HDF5ObjectStore(HasTraits):
         return obj
 
     def _normalize_key(self, key):
+        """ Ensure that `key` is formatted correctly for HDF5 files and
+        prepended with "/objects". """
         if isinstance(key, UUID):
             # UUID.urn contains ':' which makes pytables raise a warning
             key = "UUID__" + key.hex
@@ -100,6 +118,7 @@ class HDF5ObjectStore(HasTraits):
 
     @contextlib.contextmanager
     def _open(self):
+        """ Open and yield our H5File. Close it when the context ends. """
         try:
             fn = H5File(filename=self.filename,
                         mode='a',
@@ -112,10 +131,14 @@ class HDF5ObjectStore(HasTraits):
         finally:
             self._file = None
 
-    def _set(self, key, blob):
+    def _set(self, key, value):
+        """ Store the `value` under path `key`.
+
+        The H5File is assumed to be open.
+        """
         key = self._normalize_key(key)
 
-        if not isinstance(blob, Blob):
+        if not isinstance(value, Blob):
             raise TypeError("All Blobs, all the time.")
 
         #FIXME: add this to H5File api for creating groups, perhaps?
@@ -125,26 +148,28 @@ class HDF5ObjectStore(HasTraits):
         self._file.create_group(key)
         group = self._file[key]
 
-        blob_attrs = blob.__getstate__()
-        blob_attrs.pop('__traits_version__')
+        value_attrs = value.__getstate__()
+        value_attrs.pop('__traits_version__')
 
-        group.attrs[PROTOCOL_TAG] = class_qualname(blob)
+        group.attrs[PROTOCOL_TAG] = class_qualname(value)
         group.attrs[VERSION_TAG] = 1
 
-        for attr, val in blob_attrs.items():
+        for attr, val in value_attrs.items():
             self._store_obj_in_group(group, attr, val)
 
     def _store_obj_in_group(self, group, key, val):
-            if isinstance(val, collections.Mapping):
-                mapping = val
-                path = group._h5_group._v_pathname
-                path = self._file.join_path(path, key)
-                self._file.create_group(path)
-                subgroup = self._file[path]
-                subgroup.attrs[PROTOCOL_TAG] = class_qualname(mapping)
-                subgroup.attrs[VERSION_TAG] = 1
-                for k, v in mapping.items():
-                    self._store_obj_in_group(subgroup, k, v)
-            else:
-                # Store encoded values as strings to avoid pickle.
-                group.attrs[key] = self._encode(val)
+        """ Store the `value` under attribute `key` on the `group`.
+        If `value` is a `Mapping`, create a subgroup and recurse. """
+        if isinstance(val, collections.Mapping):
+            mapping = val
+            path = group._h5_group._v_pathname
+            path = self._file.join_path(path, key)
+            self._file.create_group(path)
+            subgroup = self._file[path]
+            subgroup.attrs[PROTOCOL_TAG] = class_qualname(mapping)
+            subgroup.attrs[VERSION_TAG] = 1
+            for k, v in mapping.items():
+                self._store_obj_in_group(subgroup, k, v)
+        else:
+            # Store encoded values as strings to avoid pickle.
+            group.attrs[key] = self._encode(val)
