@@ -127,11 +127,15 @@ class YAMLObjectStore(HasTraits):
     #: A python representation of the YAML file
     _disk_mirror = Dict
 
+    ### Traits defaults #######################################################
+
     def __encode_default(self):
         return yaml_encoder_factory()
 
     def __decode_default(self):
         return yaml_decoder_factory()
+
+    ### IObjectStore interface ################################################
 
     def set(self, key, value):
         """ Associate `value` with `key` and update the YAML file. """
