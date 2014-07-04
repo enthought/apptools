@@ -6,7 +6,7 @@ from __future__ import division, print_function
 from functools import partial
 import uuid
 
-from traits.api import HasTraits, Instance, provides
+from traits.api import HasTraits, Instance, Constant
 from traits.adaptation.adapter import Adapter
 
 from .blob import Blob, blob_skeleton
@@ -14,19 +14,25 @@ from .interfaces import IDeflatable, IInflatable
 from .utils import get_obj_of_type
 
 
-@provides(IDeflatable)
-class DefaultDeflator(Adapter):
+class DefaultDeflator(Adapter, IDeflatable):
 
     """ The default implementation of the IDeflatable protocol. """
 
     #: The version of the deflation algorithm used
-    version = 1
+    version = Constant(1)
 
     #: The object that is being adapted to IDeflatable
     adaptee = Instance(HasTraits)
 
-    def deflate(self, get_or_create_key):
-        """ Return the Blob that represents the deflated adaptee. """
+    def deflate(self, get_key):
+        """ Return the `Blob` that represents the deflated adaptee.
+
+        Params:
+
+        get_key(obj) : Callable
+            A callable which returns the appropriate key for its argument.
+        """
+
         children = set()
         obj_attrs = {}
 
@@ -35,19 +41,18 @@ class DefaultDeflator(Adapter):
             obj_attrs.pop('__traits_version__')
             # Go through the attr dict and replace objects with keys as needed
             for attr, val in obj_attrs.items():
-                obj_attrs[attr], more_children = deflate(
-                    val, get_or_create_key)
+                obj_attrs[attr], more_children = deflate(val, get_key)
                 children |= more_children
 
         return blob_skeleton(
             self.adaptee,
-            get_or_create_key,
+            get_key,
             obj_attrs=obj_attrs,
             children=children)
 
 
-@provides(IInflatable)
-class DefaultInflator(Adapter):
+class DefaultInflator(Adapter, IInflatable):
+
     """ The default implementation of the IInflatable protocol. """
 
     #: The version of the deflation algorithm that this inflator expects
@@ -57,11 +62,25 @@ class DefaultInflator(Adapter):
     adaptee = Instance(Blob)
 
     def inflate(self, get_obj_by_key, reify=True):
-        """ If reify is True, return the fully instantiated object that the
-        adaptee Blob represents.
+        """ Inflate this intermediate object into an instance of its original
+        type.
 
-        Otherwise, return the Blob itself with the set
-        of children populated with the necessary child Blobs.
+        In general, `reify` should only be False when using inflate as an
+        intermediate step (possibly due to subclassing), otherwise assumptions
+        about object identity when retrieving from storage may not hold.
+
+        Params:
+
+        get_obj_by_key(key, reify=reify) : callable
+            A callable which returns the object associated with `key` from the
+            data store.
+
+        reify : bool
+            If reify is True, return the fully instantiated object that the
+            adaptee Blob represents.
+            Otherwise, return a `Blob` with the set of children populated with
+            the necessary child Blobs.
+
         """
 
         blob = self.adaptee
@@ -73,6 +92,8 @@ class DefaultInflator(Adapter):
         return blob if not reify else reify_blob(blob)
 
 
+### Object deflation/inflation helpers ########################################
+
 def reify_blob(blob):
     """ Return an instance of the same class as the object that was deflated
     to create this blob. """
@@ -82,60 +103,7 @@ def reify_blob(blob):
     return klass(**blob.obj_attrs)
 
 
-def is_deflatable(obj):
-    # FIXME: We can put whatever we want here to detect deflatables.
-    return isinstance(obj, HasTraits)
-
-
-def is_inflatable(obj):
-    return isinstance(obj, uuid.UUID)
-
-
-def _deflate_collection(collection, get_or_create_key):
-    collection = get_obj_of_type(collection)
-    new = []
-    children = set()
-    for o in collection:
-        res, more_children = deflate(o, get_or_create_key)
-        new.append(res)
-        children |= more_children
-    ret = type(collection)(new)
-    return ret, children
-
-
-def _inflate_collection(collection, get_obj_by_key):
-    collection = get_obj_of_type(collection)
-    new = [inflate(obj, get_obj_by_key) for obj in collection]
-    ret = type(collection)(new)
-    return ret
-
-
-def _deflate_mapping(mapping, get_or_create_key):
-    if mapping:
-        mapping = get_obj_of_type(mapping)
-        keys, values = zip(*mapping.items())
-        keys, children = _deflate_collection(keys, get_or_create_key)
-        values, more_children = _deflate_collection(values, get_or_create_key)
-        children |= more_children
-        ret = type(mapping)(zip(keys, values))
-        return ret, children
-    else:
-        return mapping, set()
-
-
-def _inflate_mapping(mapping, get_obj_by_key):
-    mapping = get_obj_of_type(mapping)
-    if mapping:
-        keys, values = zip(*mapping.items())
-        keys = _inflate_collection(keys, get_obj_by_key)
-        values = _inflate_collection(values, get_obj_by_key)
-        ret = type(mapping)(zip(keys, values))
-        return ret
-    else:
-        return mapping
-
-
-def deflate(obj, get_or_create_key):
+def deflate(obj, get_key):
     """ Return a Tuple(Any, Set) representing the deflated version of
     this object or container and a set of chlid objects which must also
     be deflated.
@@ -155,16 +123,16 @@ def deflate(obj, get_or_create_key):
     # Poor man's pattern matching...
     # Not a container
     if is_deflatable(obj):
-        ret = get_or_create_key(obj)
+        ret = get_key(obj)
         children.add(obj)
 
     # Normal iterable containers
     elif isinstance(obj, (set, tuple, list)):
-        return _deflate_collection(obj, get_or_create_key)
+        return _deflate_iterable(obj, get_key)
 
     # Mapping style containers
     elif isinstance(obj, dict):
-        return _deflate_mapping(obj, get_or_create_key)
+        return _deflate_mapping(obj, get_key)
 
     return ret, children
 
@@ -187,10 +155,73 @@ def inflate(obj, get_obj_by_key):
 
     # Normal iterable containers
     elif isinstance(obj, (set, tuple, list)):
-        ret = _inflate_collection(obj, get_obj_by_key)
+        ret = _inflate_iterable(obj, get_obj_by_key)
 
     # Mapping style containers
     elif isinstance(obj, dict):
         ret = _inflate_mapping(obj, get_obj_by_key)
 
     return ret
+
+
+def is_deflatable(obj):
+    """ Return true if we should attempt to deflate `obj`. """
+    # FIXME: We can put whatever we want here to detect deflatables.
+    return isinstance(obj, HasTraits)
+
+
+def is_inflatable(obj):
+    """ Return true if we should attempt to inflate `obj`. """
+    return isinstance(obj, uuid.UUID)
+
+
+def _deflate_iterable(iterable, get_key):
+    """ Replace deflatable objects in `iterable` with their deflated versions.
+    """
+    iterable = get_obj_of_type(iterable)
+    new = []
+    children = set()
+    for o in iterable:
+        res, more_children = deflate(o, get_key)
+        new.append(res)
+        children |= more_children
+    ret = type(iterable)(new)
+    return ret, children
+
+
+def _inflate_iterable(iterable, get_obj_by_key):
+    """ Replace inflatable objects in `iterable` with their inflated versions.
+    """
+    iterable = get_obj_of_type(iterable)
+    new = [inflate(obj, get_obj_by_key) for obj in iterable]
+    ret = type(iterable)(new)
+    return ret
+
+
+def _deflate_mapping(mapping, get_key):
+    """ Replace deflatable keys and values in `mapping` with their deflated
+    versions. """
+    if mapping:
+        mapping = get_obj_of_type(mapping)
+        keys, values = zip(*mapping.items())
+        keys, children = _deflate_iterable(keys, get_key)
+        values, more_children = _deflate_iterable(values, get_key)
+        children |= more_children
+        ret = type(mapping)(zip(keys, values))
+        return ret, children
+    else:
+        return mapping, set()
+
+
+def _inflate_mapping(mapping, get_obj_by_key):
+    """ Replace inflatable keys and values in `mapping` with their inflated
+    versions. """
+    mapping = get_obj_of_type(mapping)
+    if mapping:
+        keys, values = zip(*mapping.items())
+        keys = _inflate_iterable(keys, get_obj_by_key)
+        values = _inflate_iterable(values, get_obj_by_key)
+        ret = type(mapping)(zip(keys, values))
+        return ret
+    else:
+        return mapping
