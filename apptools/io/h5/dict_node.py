@@ -31,9 +31,6 @@ class H5DictNode(object):
         Otherwise, call `flush()` explicitly to write data to disk.
     """
 
-    #: Label added to H5 group's 'enth_type' attribute to identify node type.
-    _enth_type = 'h5_dict_node'
-
     #: Name of filenode where dict data is stored.
     _pyobject_data_node = '_pyobject_data'
 
@@ -106,7 +103,6 @@ class H5DictNode(object):
         """
         h5.create_group(node_path)
         group = h5[node_path]
-        group.attrs['enth_type'] = cls._enth_type
 
         cls._create_pyobject_node(h5._h5, node_path, data=data)
         return cls(group, **kwargs)
@@ -126,8 +122,8 @@ class H5DictNode(object):
 
         if not isinstance(pytables_node, PyTablesGroup):
             return False
-        attrs = pytables_node._v_attrs
-        return 'enth_type' in attrs and attrs['enth_type'] == cls._enth_type
+
+        return cls._pyobject_data_node in pytables_node._v_children
 
     #--------------------------------------------------------------------------
     #  Private interface
