@@ -7,23 +7,10 @@ from .dict_node import H5DictNode
 from .table_node import H5TableNode
 
 
-TABLES_DTYPE = {'float64': tables.Float64Atom,
-                'float32': tables.Float32Atom,
-                'int64': tables.Int64Atom,
-                'int32': tables.Int32Atom,
-                'int16': tables.Int16Atom,
-                'int8': tables.Int8Atom,
-                'uint64': tables.UInt64Atom,
-                'uint32': tables.UInt32Atom,
-                'uint16': tables.UInt16Atom,
-                'uint8': tables.UInt8Atom,
-                'bool': tables.BoolAtom}
-
-
-def get_pytables_dtype(dtype):
-    if isinstance(dtype, np.dtype):
-        dtype = dtype.name
-    return TABLES_DTYPE[dtype]
+def get_atom(dtype):
+    """ Return a PyTables Atom for the given dtype or dtype string.
+    """
+    return tables.Atom.from_dtype(np.dtype(dtype))
 
 
 class H5File(object):
@@ -143,14 +130,14 @@ class H5File(object):
         path, name = self.split_path(node_path)
         if extendable:
             shape = (0,) + shape[1:]
-            pyt_dtype = get_pytables_dtype(dtype)
-            node = h5.createEArray(path, name, pyt_dtype(), shape,
+            atom = get_atom(dtype)
+            node = h5.createEArray(path, name, atom, shape,
                                    filters=self.h5filters, **kwargs)
             if array is not None:
                 node.append(array)
         elif chunked:
-            pyt_dtype = get_pytables_dtype(dtype)
-            node = h5.createCArray(path, name, pyt_dtype(), shape,
+            atom = get_atom(dtype)
+            node = h5.createCArray(path, name, atom, shape,
                                    filters=self.h5filters, **kwargs)
             if array is not None:
                 node[:] = array
