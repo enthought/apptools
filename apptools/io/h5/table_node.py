@@ -50,7 +50,7 @@ class H5TableNode(object):
             record array dtype. For more information, see the documentation for
             `Table` in PyTables.
         **kwargs : dict
-            Additional keyword arguments to pass to pytables.File.createTable
+            Additional keyword arguments to pass to pytables.File.create_table
         """
         if isinstance(description, (tuple, list)):
             description = np.dtype(description)
@@ -143,4 +143,4 @@ class H5TableNode(object):
     def _create_pytables_node(cls, h5, node_path, description, **kwargs):
         path, name = h5.split_path(node_path)
         pyt_file = h5._h5
-        pyt_file.createTable(path, name, description, **kwargs)
+        pyt_file.create_table(path, name, description, **kwargs)
