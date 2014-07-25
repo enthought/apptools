@@ -43,7 +43,7 @@ class H5DictNode(object):
 
         # Load dict data from the file node.
         dict_node = getattr(h5_group, self._pyobject_data_node)
-        with closing(filenode.openNode(dict_node)) as f:
+        with closing(filenode.open_node(dict_node)) as f:
             self._pyobject_data = json.load(f, object_hook=self._object_hook)
 
     #--------------------------------------------------------------------------
@@ -171,7 +171,7 @@ class H5DictNode(object):
         out_data = cls._handle_array_values(pyt_file, node_path, data)
 
         kwargs = dict(where=node_path, name=cls._pyobject_data_node)
-        with closing(filenode.newNode(pyt_file, **kwargs)) as f:
+        with closing(filenode.new_node(pyt_file, **kwargs)) as f:
             json.dump(out_data, f)
 
     @classmethod
@@ -192,13 +192,13 @@ class H5DictNode(object):
 
         """
         if key in group:
-            pyt_file.removeNode(group, key)
-        pyt_file.createArray(group, key, array)
+            pyt_file.remove_node(group, key)
+        pyt_file.create_array(group, key, array)
         return {ARRAY_PROXY_KEY: True, NODE_KEY: key}
 
     @classmethod
     def _handle_array_values(cls, pyt_file, group_path, data):
-        group = pyt_file.getNode(group_path)
+        group = pyt_file.get_node(group_path)
 
         # Convert numpy array values to H5 array nodes.
         out_data = {}
@@ -213,6 +213,6 @@ class H5DictNode(object):
         pyt_children = group._v_children
         for key in pyt_children.keys():
             if key not in data:
-                pyt_file.removeNode(group, key)
+                pyt_file.remove_node(group, key)
 
         return out_data

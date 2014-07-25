@@ -38,7 +38,7 @@ class H5File(object):
         If True, `create_array` will automatically create parent groups.
     chunked : bool
         If True, the default behavior of `create_array` will be a chunked
-        array (see PyTables `createCArray`).
+        array (see PyTables `create_carray`).
 
     """
     exists_error = ("'{}' exists in '{}'; set `delete_existing` attribute "
@@ -52,7 +52,7 @@ class H5File(object):
         self.chunked_default = chunked
         self.extendable_default = extendable
         self.auto_groups = auto_groups
-        self._h5 = tables.openFile(filename, mode=mode)
+        self._h5 = tables.open_file(filename, mode=mode)
         if h5filters is None:
             self.h5filters = tables.Filters(complib='blosc', complevel=5,
                                             shuffle=True)
@@ -73,7 +73,7 @@ class H5File(object):
 
     def __getitem__(self, node_path):
         try:
-            node = self._h5.getNode(node_path)
+            node = self._h5.get_node(node_path)
         except tables.NoSuchNodeError:
             msg = "Node {!r} not found in {!r}"
             raise NameError(msg.format(node_path, self.filename))
@@ -81,7 +81,7 @@ class H5File(object):
 
     def iteritems(self, path='/'):
         """ Iterate over node paths and nodes of the h5 file. """
-        for node in self._h5.walkNodes(where=path):
+        for node in self._h5.walk_nodes(where=path):
             node_path = node._v_pathname
             yield node_path, _wrap_node(node)
 
@@ -131,20 +131,20 @@ class H5File(object):
         if extendable:
             shape = (0,) + shape[1:]
             atom = get_atom(dtype)
-            node = h5.createEArray(path, name, atom, shape,
+            node = h5.create_earray(path, name, atom, shape,
                                    filters=self.h5filters, **kwargs)
             if array is not None:
                 node.append(array)
         elif chunked:
             atom = get_atom(dtype)
-            node = h5.createCArray(path, name, atom, shape,
+            node = h5.create_carray(path, name, atom, shape,
                                    filters=self.h5filters, **kwargs)
             if array is not None:
                 node[:] = array
         else:
             if array is None:
                 array = np.zeros(shape, dtype=dtype)
-            node = h5.createArray(path, name, array, **kwargs)
+            node = h5.create_array(path, name, array, **kwargs)
         return node
 
     def create_group(self, group_path, **kwargs):
@@ -155,12 +155,12 @@ class H5File(object):
         group_path : str
             PyTable group path; e.g. '/path/to/group'.
         kwargs : key/value pairs
-            Keyword args passed to PyTables `File.createGroup`.
+            Keyword args passed to PyTables `File.create_group`.
         """
         self._check_node(group_path)
         self._assert_valid_path(group_path)
         path, name = self.split_path(group_path)
-        self._h5.createGroup(path, name, **kwargs)
+        self._h5.create_group(path, name, **kwargs)
 
     def create_dict(self, node_path, data=None, **kwargs):
         """ Create dict node at the specified path.
