@@ -32,8 +32,8 @@ class H5File(object):
             'r+': Read and write to file; must already exist
 
     delete_existing : bool
-        If True, an existing array node will be deleted when `create_array`
-        is called. Otherwise, a ValueError will be raise.
+        If True, an existing node will be deleted when a `create_*` method is
+        called. Otherwise, a ValueError will be raise.
     auto_groups : bool
         If True, `create_array` will automatically create parent groups.
     chunked : bool
@@ -45,12 +45,9 @@ class H5File(object):
                     "to True to overwrite existing calculations.")
 
     def __init__(self, filename, mode='r+', delete_existing=False,
-                 auto_groups=True, chunked=False, extendable=False,
-                 h5filters=None):
+                 auto_groups=True, h5filters=None):
         self.delete_existing = delete_existing
         self.filename = filename
-        self.chunked_default = chunked
-        self.extendable_default = extendable
         self.auto_groups = auto_groups
         self._h5 = tables.open_file(filename, mode=mode)
         if h5filters is None:
@@ -85,8 +82,8 @@ class H5File(object):
             node_path = node._v_pathname
             yield node_path, _wrap_node(node)
 
-    def create_array(self, node_path, array_or_shape, chunked=None,
-                     dtype=None, extendable=None, **kwargs):
+    def create_array(self, node_path, array_or_shape, dtype=None,
+                     chunked=False, extendable=False, **kwargs):
         """Create node to store an array.
 
         Parameters
@@ -96,23 +93,18 @@ class H5File(object):
         array_or_shape : array or shape tuple
             Array or shape tuple for an array. If given a shape tuple, the
             `dtype` parameter must also specified.
-        chunked : {None | bool}
-            Controls whether the array is chunked. If None, use
-            `chunked_default` attribute.
         dtype : str or numpy.dtype
             Data type of array. Only necessary if `array_or_shape` is a shape.
+        chunked : bool
+            Controls whether the array is chunked.
         extendable : {None | bool}
-            Controls whether the array is extendable. If None, use the
-            `extendable_default` attribute.
+            Controls whether the array is extendable.
         kwargs : key/value pairs
-            Keyword args passed to PyTables `File.create(C)Array`.
+            Keyword args passed to PyTables `File.create_(c|e)array`.
         """
         self._check_node(node_path)
         self._assert_valid_path(node_path)
 
-        pick_value = lambda x, default: default if x is None else x
-        chunked = pick_value(chunked, self.chunked_default)
-        extendable = pick_value(extendable, self.extendable_default)
         h5 = self._h5
 
         if isinstance(array_or_shape, tuple):
