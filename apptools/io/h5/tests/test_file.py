@@ -264,6 +264,31 @@ def test_group_properties():
         assert sub_names == ['group2']
 
 
+def test_mapping_interface_for_file():
+    with open_h5file(H5_TEST_FILE, mode='w', auto_groups=True) as h5:
+        array = h5.create_array('/array', np.arange(3))
+        h5.create_array('/group/deep_array', np.arange(3))
+        # `deep_array` isn't a direct descendent and isn't counted.
+        assert len(h5) == 2
+        assert '/group' in h5
+        assert '/array' in h5
+        testing.assert_allclose(h5['/array'], array)
+        assert set(n.name for n in h5) == set(['array', 'group'])
+
+
+def test_mapping_interface_for_group():
+    with open_h5file(H5_TEST_FILE, mode='w', auto_groups=True) as h5:
+        array = h5.create_array('/group1/array', np.arange(3))
+        h5.create_array('/group1/subgroup/deep_array', np.arange(3))
+        group = h5['/group1']
+        # `deep_array` isn't a direct descendent and isn't counted.
+        assert len(group) == 2
+        assert 'subgroup' in group
+        assert 'array' in group
+        testing.assert_allclose(group['array'], array)
+        assert set(n.name for n in group) == set(['array', 'subgroup'])
+
+
 def test_group_str_and_repr():
     with open_h5file(H5_TEST_FILE, mode='w') as h5:
         group = h5['/']
