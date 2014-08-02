@@ -45,14 +45,21 @@ class H5File(object):
                     "to True to overwrite existing calculations.")
 
     def __init__(self, filename, mode='r+', delete_existing=False,
-                 auto_groups=True, h5filters=None):
-        self.delete_existing = delete_existing
+                 auto_groups=True, auto_open=True, h5filters=None):
         self.filename = filename
+        self.mode = mode
+        self.delete_existing = delete_existing
         self.auto_groups = auto_groups
-        self._h5 = tables.open_file(filename, mode=mode)
         if h5filters is None:
             self.h5filters = tables.Filters(complib='blosc', complevel=5,
                                             shuffle=True)
+        self._h5 = None
+        if auto_open:
+            self.open()
+
+    def open(self):
+        if not self._h5:
+            self._h5 = tables.open_file(self.filename, mode=self.mode)
 
     def close(self):
         if self._h5:
