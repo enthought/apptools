@@ -20,6 +20,16 @@ def teardown():
         pass
 
 
+def test_reopen():
+    h5 = H5File(H5_TEST_FILE, mode='w')
+    assert h5.is_open
+    h5.close()
+    assert not h5.is_open
+    h5.open()
+    assert h5.is_open
+    h5.close()
+
+
 def test_create_array():
     array = np.arange(3)
     with open_h5file(H5_TEST_FILE, mode='w') as h5:

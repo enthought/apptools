@@ -58,13 +58,17 @@ class H5File(object):
             self.open()
 
     def open(self):
-        if not self._h5:
+        if not self.is_open:
             self._h5 = tables.open_file(self.filename, mode=self.mode)
 
     def close(self):
-        if self._h5:
+        if self.is_open:
             self._h5.close()
         self._h5 = None
+
+    @property
+    def is_open(self):
+        return self._h5 is not None
 
     def __str__(self):
         return str(self._h5)
