@@ -264,6 +264,14 @@ def test_group_properties():
         assert sub_names == ['group2']
 
 
+def test_iter_groups():
+    with open_h5file(H5_TEST_FILE, mode='w', auto_groups=True) as h5:
+        h5.create_array('/group1/array', np.arange(3))
+        h5.create_array('/group1/subgroup/deep_array', np.arange(3))
+        group = h5['/group1']
+        assert set(n.name for n in group.iter_groups()) == set(['subgroup'])
+
+
 def test_mapping_interface_for_file():
     with open_h5file(H5_TEST_FILE, mode='w', auto_groups=True) as h5:
         array = h5.create_array('/array', np.arange(3))
