@@ -1,4 +1,4 @@
-from collections import MutableMapping
+from collections import Mapping, MutableMapping
 
 import numpy as np
 import tables
@@ -13,7 +13,11 @@ def get_atom(dtype):
     return tables.Atom.from_dtype(np.dtype(dtype))
 
 
-class H5File(object):
+def iterator_length(iterator):
+    return sum(1 for _ in iterator)
+
+
+class H5File(Mapping):
     """File object for HDF5 files.
 
     This class wraps PyTables to provide a cleaner, but only implements an
@@ -75,6 +79,12 @@ class H5File(object):
             msg = "Node {!r} not found in {!r}"
             raise NameError(msg.format(node_path, self.filename))
         return _wrap_node(node)
+
+    def __iter__(self):
+        return (_wrap_node(n) for n in self._h5.iter_nodes(where='/'))
+
+    def __len__(self):
+        return iterator_length(self)
 
     def iteritems(self, path='/'):
         """ Iterate over node paths and nodes of the h5 file. """
@@ -312,7 +322,7 @@ class H5Attrs(MutableMapping):
         return [(k, self[k]) for k in self.keys()]
 
 
-class H5Group(object):
+class H5Group(Mapping):
     """ A group node in an H5File.
 
     This is a thin wrapper around PyTables' Group object to expose attributes
@@ -342,6 +352,12 @@ class H5Group(object):
         else:
             return node['/'.join(parts[1:])]
 
+    def __iter__(self):
+        return (_wrap_node(c) for c in self._h5_group)
+
+    def __len__(self):
+        return iterator_length(self)
+
     @property
     def name(self):
         return self._h5_group._v_name
@@ -353,6 +369,10 @@ class H5Group(object):
     @property
     def subgroup_names(self):
         return self._h5_group._v_groups.keys()
+
+    def iter_groups(self):
+        """ Iterate over `H5Group` nodes that are children of this group. """
+        return (_wrap_node(g) for g in self._h5_group._v_groups.itervalues())
 
 
 def _wrap_node(node):
