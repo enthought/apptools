@@ -25,8 +25,8 @@ class H5File(Mapping):
 
     Parameters
     ----------
-    filename : str
-        HDF5 file name.
+    filename : str or a `tables.File` instance
+        Filename for an HDF5 file, or a PyTables `File` object.
     mode : str
         Mode to open the file:
 
@@ -40,6 +40,9 @@ class H5File(Mapping):
         called. Otherwise, a ValueError will be raise.
     auto_groups : bool
         If True, `create_array` will automatically create parent groups.
+    auto_open : bool
+        If True, open the file automatically on initialization. Otherwise,
+        you can call `H5File.open()` explicitly after initialization.
     chunked : bool
         If True, the default behavior of `create_array` will be a chunked
         array (see PyTables `create_carray`).
@@ -49,19 +52,37 @@ class H5File(Mapping):
                     "to True to overwrite existing calculations.")
 
     def __init__(self, filename, mode='r+', delete_existing=False,
-                 auto_groups=True, h5filters=None):
+                 auto_groups=True, auto_open=True, h5filters=None):
+        self.mode = mode
         self.delete_existing = delete_existing
-        self.filename = filename
         self.auto_groups = auto_groups
-        self._h5 = tables.open_file(filename, mode=mode)
         if h5filters is None:
             self.h5filters = tables.Filters(complib='blosc', complevel=5,
                                             shuffle=True)
+        self._h5 = None
+
+        if isinstance(filename, tables.File):
+            pyt_file = filename
+            filename = pyt_file.filename
+            if pyt_file.isopen:
+                self._h5 = pyt_file
+
+        self.filename = filename
+        if auto_open:
+            self.open()
+
+    def open(self):
+        if not self.is_open:
+            self._h5 = tables.open_file(self.filename, mode=self.mode)
 
     def close(self):
-        if self._h5:
+        if self.is_open:
             self._h5.close()
         self._h5 = None
+
+    @property
+    def is_open(self):
+        return self._h5 is not None
 
     def __str__(self):
         return str(self._h5)
