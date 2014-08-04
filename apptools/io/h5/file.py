@@ -36,6 +36,9 @@ class H5File(object):
         called. Otherwise, a ValueError will be raise.
     auto_groups : bool
         If True, `create_array` will automatically create parent groups.
+    auto_open : bool
+        If True, open the file automatically on initialization. Otherwise,
+        you can call `H5File.open()` explicitly after initialization.
     chunked : bool
         If True, the default behavior of `create_array` will be a chunked
         array (see PyTables `create_carray`).
@@ -59,7 +62,6 @@ class H5File(object):
             filename = pyt_file.filename
             if pyt_file.isopen:
                 self._h5 = pyt_file
-                auto_open = False
 
         self.filename = filename
         if auto_open:
