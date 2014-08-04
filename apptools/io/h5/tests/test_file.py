@@ -1,4 +1,5 @@
 import os
+from contextlib import closing
 
 import numpy as np
 from numpy import testing
@@ -28,6 +29,21 @@ def test_reopen():
     h5.open()
     assert h5.is_open
     h5.close()
+
+
+def test_open_from_pytables_object():
+    with closing(tables.File(H5_TEST_FILE, 'w')) as pyt_file:
+        pyt_file.create_group('/', 'my_group')
+        with open_h5file(pyt_file) as h5:
+            assert '/my_group' in h5
+
+
+def test_open_from_closed_pytables_object():
+    with closing(tables.File(H5_TEST_FILE, 'w')) as pyt_file:
+        pyt_file.create_group('/', 'my_group')
+        pyt_file.close()
+        with open_h5file(pyt_file) as h5:
+            assert '/my_group' in h5
 
 
 def test_create_array():

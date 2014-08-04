@@ -21,8 +21,8 @@ class H5File(object):
 
     Parameters
     ----------
-    filename : str
-        HDF5 file name.
+    filename : str or a `tables.File` instance
+        Filename for an HDF5 file, or a PyTables `File` object.
     mode : str
         Mode to open the file:
 
@@ -46,7 +46,6 @@ class H5File(object):
 
     def __init__(self, filename, mode='r+', delete_existing=False,
                  auto_groups=True, auto_open=True, h5filters=None):
-        self.filename = filename
         self.mode = mode
         self.delete_existing = delete_existing
         self.auto_groups = auto_groups
@@ -54,6 +53,15 @@ class H5File(object):
             self.h5filters = tables.Filters(complib='blosc', complevel=5,
                                             shuffle=True)
         self._h5 = None
+
+        if isinstance(filename, tables.File):
+            pyt_file = filename
+            filename = pyt_file.filename
+            if pyt_file.isopen:
+                self._h5 = pyt_file
+                auto_open = False
+
+        self.filename = filename
         if auto_open:
             self.open()
 
