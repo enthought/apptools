@@ -413,12 +413,14 @@ class H5Group(Mapping):
         ----------
         group_subpath : str
             PyTable group path; e.g. 'path/to/subgroup'.
+        delete_existing : Bool
+            If True, an existing node will be deleted when a `create_*` method
+            is called. Otherwise, a ValueError will be raise.
         kwargs : key/value pairs
             Keyword args passed to `H5File.create_group`.
         """
-        h5 = H5File(self._h5_group._v_file)
-        group_path = h5.join_path(self.path_name, group_subpath)
-        return h5.create_group(group_path, **kwargs)
+        return self._delegate_to_h5file('create_group', group_subpath,
+                                        **kwargs)
 
     def remove_group(self, group_subpath, **kwargs):
         """Remove a sub group
@@ -428,15 +430,12 @@ class H5Group(Mapping):
         group_subpath : str
             PyTable group path relative to this group; e.g. 'path/to/subgroup'.
         """
-        h5 = H5File(self._h5_group._v_file)
-        group_path = h5.join_path(self.path_name, group_subpath)
-        return h5.remove_group(group_path, *kwargs)
+        return self._delegate_to_h5file('remove_group', group_subpath,
+                                        **kwargs)
 
     def create_array(self, node_subpath, *args, **kwargs):
-        h5 = H5File(self._h5_group._v_file)
-        node_path = h5.join_path(self.path_name, node_subpath)
-        node = h5.create_array(node_path, *args, **kwargs)
-        return node
+        return self._delegate_to_h5file('create_array', node_subpath,
+                                        *args, **kwargs)
 
     def create_table(self, node_subpath, *args, **kwargs):
         """ Create table node at the specified subpath.
@@ -450,10 +449,8 @@ class H5Group(Mapping):
             of column name -> dtype items or a numpy record array dtype. For
             more information, see the documentation for Table in pytables.
         """
-        h5 = H5File(self._h5_group._v_file)
-        node_path = h5.join_path(self.path_name, node_subpath)
-        node = h5.create_table(node_path, *args, **kwargs)
-        return node
+        return self._delegate_to_h5file('create_table', node_subpath,
+                                        *args, **kwargs)
 
     def create_dict(self, node_subpath, *args, **kwargs):
         """ Create dict node at the specified subpath.
@@ -465,10 +462,8 @@ class H5Group(Mapping):
         data : dict
             Data for initialization, if desired.
         """
-        h5 = H5File(self._h5_group._v_file)
-        node_path = h5.join_path(self.path_name, node_subpath)
-        node = h5.create_dict(node_path, *args, **kwargs)
-        return node
+        return self._delegate_to_h5file('create_dict', node_subpath,
+                                        *args, **kwargs)
 
     def remove_node(self, node_subpath, **kwargs):
         """Remove a node beneath this group.
@@ -478,9 +473,15 @@ class H5Group(Mapping):
         node_subpath : str
             PyTable group path relative to this group; e.g. 'path/to/node'.
         """
-        h5 = H5File(self._h5_group._v_file)
+        return self._delegate_to_h5file('remove_node', node_subpath, **kwargs)
+
+    def _delegate_to_h5file(self, function_name, node_subpath,
+                            *args, **kwargs):
+        delete_existing = kwargs.pop('delete_existing', False)
+        h5 = H5File(self._h5_group._v_file, delete_existing=delete_existing)
         group_path = h5.join_path(self.path_name, node_subpath)
-        return h5.remove_node(group_path, *kwargs)
+        func = getattr(h5, function_name)
+        return func(group_path, *args, **kwargs)
 
 
 def _wrap_node(node):
