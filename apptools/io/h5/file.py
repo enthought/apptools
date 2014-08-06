@@ -183,7 +183,8 @@ class H5File(Mapping):
         self._check_node(group_path)
         self._assert_valid_path(group_path)
         path, name = self.split_path(group_path)
-        self._h5.create_group(path, name, **kwargs)
+        group = self._h5.create_group(path, name, **kwargs)
+        return group
 
     def create_dict(self, node_path, data=None, **kwargs):
         """ Create dict node at the specified path.
@@ -198,6 +199,7 @@ class H5File(Mapping):
         self._check_node(node_path)
         self._assert_valid_path(node_path)
         H5DictNode.add_to_h5file(self, node_path, data=data, **kwargs)
+        return self[node_path]
 
     def create_table(self, node_path, description, **kwargs):
         """ Create table node at the specified path.
@@ -214,6 +216,7 @@ class H5File(Mapping):
         self._check_node(node_path)
         self._assert_valid_path(node_path)
         H5TableNode.add_to_h5file(self, node_path, description, **kwargs)
+        return self[node_path]
 
     def _check_node(self, node_path):
         """Check if node exists and create parent groups if necessary.
