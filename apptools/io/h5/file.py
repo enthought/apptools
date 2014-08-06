@@ -420,6 +420,7 @@ class H5Group(Mapping):
             Keyword args passed to `H5File.create_group`.
         """
         return self._delegate_to_h5file('create_group', group_subpath,
+                                        delete_existing=delete_existing,
                                         **kwargs)
 
     def remove_group(self, group_subpath, **kwargs):
