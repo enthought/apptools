@@ -402,7 +402,7 @@ class H5Group(Mapping):
         """ Iterate over `H5Group` nodes that are children of this group. """
         return (_wrap_node(g) for g in self._h5_group._v_groups.itervalues())
 
-    def create_group(self, sub_path_name, delete_existing=False, **kwargs):
+    def create_group(self, group_subpath, delete_existing=False, **kwargs):
         """Create a sub group.
 
         Parameters
@@ -413,7 +413,7 @@ class H5Group(Mapping):
             Keyword args passed to `H5File.create_group`.
         """
         h5 = H5File(self._h5_group._v_file)
-        group_path = h5.join_path(self.path_name, sub_path_name)
+        group_path = h5.join_path(self.path_name, group_subpath)
         return h5.create_group(group_path, **kwargs)
 
     def remove_group(self, group_subpath, **kwargs):
