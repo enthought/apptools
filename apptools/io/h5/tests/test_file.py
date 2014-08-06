@@ -141,7 +141,7 @@ def test_create_extendable_array_with_H5Group():
 def test_str_and_repr():
     array = np.arange(3)
     with open_h5file(H5_TEST_FILE, mode='w') as h5:
-        h5array = h5.create_array('/array', array)
+        h5.create_array('/array', array)
 
         assert repr(h5) == repr(h5._h5)
         assert str(h5) == str(h5._h5)
