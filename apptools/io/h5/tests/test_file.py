@@ -170,7 +170,7 @@ def test_create_duplicate_array_raises():
         testing.assert_raises(ValueError, h5.create_array, '/array', array)
 
 
-def test_delete_existing_array():
+def test_delete_existing_array_with_H5File():
     old_array = np.arange(3)
     new_array = np.ones(5)
     with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
@@ -180,7 +180,17 @@ def test_delete_existing_array():
         testing.assert_allclose(h5['/array'], new_array)
 
 
-def test_delete_existing_dict():
+def test_delete_existing_array_with_H5Group():
+    old_array = np.arange(3)
+    new_array = np.ones(5)
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5.create_array('/array', old_array)
+        # New array with the same node name should delete old array
+        h5.root.create_array('/array', new_array, delete_existing=True)
+        testing.assert_allclose(h5['/array'], new_array)
+
+
+def test_delete_existing_dict_with_H5File():
     old_dict = {'a': 'Goose'}
     new_dict = {'b': 'Quail'}
     with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
@@ -190,7 +200,17 @@ def test_delete_existing_dict():
         assert h5['/dict'].data == new_dict
 
 
-def test_delete_existing_table():
+def test_delete_existing_dict_with_H5Group():
+    old_dict = {'a': 'Goose'}
+    new_dict = {'b': 'Quail'}
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5.create_dict('/dict', old_dict)
+        # New dict with the same node name should delete old dict
+        h5.root.create_dict('/dict', new_dict, delete_existing=True)
+        assert h5['/dict'].data == new_dict
+
+
+def test_delete_existing_table_with_H5File():
     old_description = [('Honk', 'int'), ('Wink', 'float')]
     new_description = [('Toot', 'float'), ('Pop', 'int')]
     with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
@@ -202,7 +222,19 @@ def test_delete_existing_table():
         assert tab.ix[0][0] == np.pi
 
 
-def test_delete_existing_group():
+def test_delete_existing_table_with_H5Group():
+    old_description = [('Honk', 'int'), ('Wink', 'float')]
+    new_description = [('Toot', 'float'), ('Pop', 'int')]
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5.create_table('/table', old_description)
+        # New table with the same node name should delete old table
+        h5.root.create_table('/table', new_description, delete_existing=True)
+        tab = h5['/table']
+        tab.append({'Pop': (1,), 'Toot': (np.pi,)})
+        assert tab.ix[0][0] == np.pi
+
+
+def test_delete_existing_group_with_H5File():
     with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
         h5.create_group('/group')
         grp = h5['/group']
@@ -211,6 +243,21 @@ def test_delete_existing_group():
         assert grp.attrs['test'] == 4
 
         h5.create_group('/group')
+        grp = h5['/group']
+        grp.attrs['test'] = 6
+
+        assert grp.attrs['test'] == 6
+
+
+def test_delete_existing_group_with_H5Group():
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5.create_group('/group')
+        grp = h5['/group']
+        grp.attrs['test'] = 4
+
+        assert grp.attrs['test'] == 4
+
+        h5.root.create_group('/group', delete_existing=True)
         grp = h5['/group']
         grp.attrs['test'] = 6
 
