@@ -155,13 +155,13 @@ class H5File(Mapping):
             shape = (0,) + shape[1:]
             atom = get_atom(dtype)
             node = h5.create_earray(path, name, atom, shape,
-                                   filters=self.h5filters, **kwargs)
+                                    filters=self.h5filters, **kwargs)
             if array is not None:
                 node.append(array)
         elif chunked:
             atom = get_atom(dtype)
             node = h5.create_carray(path, name, atom, shape,
-                                   filters=self.h5filters, **kwargs)
+                                    filters=self.h5filters, **kwargs)
             if array is not None:
                 node[:] = array
         else:
