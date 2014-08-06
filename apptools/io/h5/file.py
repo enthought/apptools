@@ -399,6 +399,32 @@ class H5Group(Mapping):
         """ Iterate over `H5Group` nodes that are children of this group. """
         return (_wrap_node(g) for g in self._h5_group._v_groups.itervalues())
 
+    def create_group(self, sub_path_name, delete_existing=False, **kwargs):
+        """Create a sub group.
+
+        Parameters
+        ----------
+        group_subpath : str
+            PyTable group path; e.g. 'path/to/subgroup'.
+        kwargs : key/value pairs
+            Keyword args passed to `H5File.create_group`.
+        """
+        h5 = H5File(self._h5_group._v_file)
+        group_path = h5.join_path(self.path_name, sub_path_name)
+        return h5.create_group(group_path, **kwargs)
+
+    def remove_group(self, group_subpath, **kwargs):
+        """Remove a sub group
+
+        Parameters
+        ----------
+        group_subpath : str
+            PyTable group path relative to this group; e.g. 'path/to/subgroup'.
+        """
+        h5 = H5File(self._h5_group._v_file)
+        group_path = h5.join_path(self.path_name, group_subpath)
+        return h5.remove_group(group_path, *kwargs)
+
 
 def _wrap_node(node):
     """ Wrap PyTables node object, if necessary. """
