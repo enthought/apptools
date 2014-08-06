@@ -380,6 +380,10 @@ class H5Group(Mapping):
         return iterator_length(self)
 
     @property
+    def path_name(self):
+        return self._h5_group._v_pathname
+
+    @property
     def name(self):
         return self._h5_group._v_name
 
