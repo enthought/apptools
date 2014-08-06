@@ -81,6 +81,10 @@ class H5File(Mapping):
         self._h5 = None
 
     @property
+    def root(self):
+        return self['/']
+
+    @property
     def is_open(self):
         return self._h5 is not None
 
