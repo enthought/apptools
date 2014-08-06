@@ -187,7 +187,7 @@ class H5File(Mapping):
         self._check_node(group_path)
         self._assert_valid_path(group_path)
         path, name = self.split_path(group_path)
-        group = self._h5.create_group(path, name, **kwargs)
+        self._h5.create_group(path, name, **kwargs)
         return self[group_path]
 
     def create_dict(self, node_path, data=None, **kwargs):
