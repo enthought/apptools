@@ -428,6 +428,56 @@ class H5Group(Mapping):
         group_path = h5.join_path(self.path_name, group_subpath)
         return h5.remove_group(group_path, *kwargs)
 
+    def create_array(self, node_subpath, *args, **kwargs):
+        h5 = H5File(self._h5_group._v_file)
+        node_path = h5.join_path(self.path_name, node_subpath)
+        node = h5.create_array(node_path, *args, **kwargs)
+        return node
+
+    def create_table(self, node_subpath, *args, **kwargs):
+        """ Create table node at the specified subpath.
+
+        Parameters
+        ----------
+        node_subpath : str
+            Path to node where data is stored (e.g. 'path/to/my_dict')
+        description : dict or numpy dtype object
+            The description of the columns in the table. This is either a dict
+            of column name -> dtype items or a numpy record array dtype. For
+            more information, see the documentation for Table in pytables.
+        """
+        h5 = H5File(self._h5_group._v_file)
+        node_path = h5.join_path(self.path_name, node_subpath)
+        node = h5.create_table(node_path, *args, **kwargs)
+        return node
+
+    def create_dict(self, node_subpath, *args, **kwargs):
+        """ Create dict node at the specified subpath.
+
+        Parameters
+        ----------
+        node_subpath : str
+            Path to node where data is stored (e.g. 'path/to/my_dict')
+        data : dict
+            Data for initialization, if desired.
+        """
+        h5 = H5File(self._h5_group._v_file)
+        node_path = h5.join_path(self.path_name, node_subpath)
+        node = h5.create_dict(node_path, *args, **kwargs)
+        return node
+
+    def remove_node(self, node_subpath, **kwargs):
+        """Remove a node beneath this group.
+
+        Parameters
+        ----------
+        node_subpath : str
+            PyTable group path relative to this group; e.g. 'path/to/node'.
+        """
+        h5 = H5File(self._h5_group._v_file)
+        group_path = h5.join_path(self.path_name, node_subpath)
+        return h5.remove_node(group_path, *kwargs)
+
 
 def _wrap_node(node):
     """ Wrap PyTables node object, if necessary. """
