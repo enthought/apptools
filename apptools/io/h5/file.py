@@ -434,11 +434,32 @@ class H5Group(Mapping):
         return self._delegate_to_h5file('remove_group', group_subpath,
                                         **kwargs)
 
-    def create_array(self, node_subpath, *args, **kwargs):
-        return self._delegate_to_h5file('create_array', node_subpath,
-                                        *args, **kwargs)
+    def create_array(self, node_subpath, array_or_shape, dtype=None,
+                     chunked=False, extendable=False, **kwargs):
+        """Create node to store an array.
 
-    def create_table(self, node_subpath, *args, **kwargs):
+        Parameters
+        ----------
+        node_subpath : str
+            PyTable node path; e.g. 'path/to/node'.
+        array_or_shape : array or shape tuple
+            Array or shape tuple for an array. If given a shape tuple, the
+            `dtype` parameter must also specified.
+        dtype : str or numpy.dtype
+            Data type of array. Only necessary if `array_or_shape` is a shape.
+        chunked : bool
+            Controls whether the array is chunked.
+        extendable : {None | bool}
+            Controls whether the array is extendable.
+        kwargs : key/value pairs
+            Keyword args passed to PyTables `File.create_(c|e)array`.
+        """
+        return self._delegate_to_h5file('create_array', node_subpath,
+                                        array_or_shape, dtype=dtype,
+                                        chunked=chunked, extendable=extendable,
+                                        **kwargs)
+
+    def create_table(self, node_subpath, description, *args, **kwargs):
         """ Create table node at the specified subpath.
 
         Parameters
@@ -451,9 +472,9 @@ class H5Group(Mapping):
             more information, see the documentation for Table in pytables.
         """
         return self._delegate_to_h5file('create_table', node_subpath,
-                                        *args, **kwargs)
+                                        description, *args, **kwargs)
 
-    def create_dict(self, node_subpath, *args, **kwargs):
+    def create_dict(self, node_subpath, data, *args, **kwargs):
         """ Create dict node at the specified subpath.
 
         Parameters
@@ -463,7 +484,7 @@ class H5Group(Mapping):
         data : dict
             Data for initialization, if desired.
         """
-        return self._delegate_to_h5file('create_dict', node_subpath,
+        return self._delegate_to_h5file('create_dict', node_subpath, data,
                                         *args, **kwargs)
 
     def remove_node(self, node_subpath, **kwargs):
