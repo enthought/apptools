@@ -1,4 +1,5 @@
 from collections import Mapping, MutableMapping
+from functools import partial
 
 import numpy as np
 import tables
@@ -15,6 +16,21 @@ def get_atom(dtype):
 
 def iterator_length(iterator):
     return sum(1 for _ in iterator)
+
+
+def _update_wrapped_docstring(wrapped, original=None):
+    PREAMBLE = """\
+** H5Group wrapper for H5File.{func_name}: **
+Note that the first argument is a nodepath relative to the group, rather than
+an absolute path. Below is the original docstring:
+
+    """.format(func_name=wrapped.__name__)
+    wrapped.__doc__ = PREAMBLE + original.__doc__
+    return wrapped
+
+
+def h5_group_wrapper(original):
+    return partial(_update_wrapped_docstring, original=original)
 
 
 class H5File(Mapping):
@@ -406,95 +422,37 @@ class H5Group(Mapping):
         """ Iterate over `H5Group` nodes that are children of this group. """
         return (_wrap_node(g) for g in self._h5_group._v_groups.itervalues())
 
+    @h5_group_wrapper(H5File.create_group)
     def create_group(self, group_subpath, delete_existing=False, **kwargs):
-        """Create a sub group.
-
-        Parameters
-        ----------
-        group_subpath : str
-            PyTable group path; e.g. 'path/to/subgroup'.
-        delete_existing : Bool
-            If True, an existing node will be deleted when a `create_*` method
-            is called. Otherwise, a ValueError will be raise.
-        kwargs : key/value pairs
-            Keyword args passed to `H5File.create_group`.
-        """
         return self._delegate_to_h5file('create_group', group_subpath,
                                         delete_existing=delete_existing,
                                         **kwargs)
 
+    @h5_group_wrapper(H5File.remove_group)
     def remove_group(self, group_subpath, **kwargs):
-        """Remove a sub group
-
-        Parameters
-        ----------
-        group_subpath : str
-            PyTable group path relative to this group; e.g. 'path/to/subgroup'.
-        """
         return self._delegate_to_h5file('remove_group', group_subpath,
                                         **kwargs)
 
+    @h5_group_wrapper(H5File.create_array)
     def create_array(self, node_subpath, array_or_shape, dtype=None,
                      chunked=False, extendable=False, **kwargs):
-        """Create node to store an array.
-
-        Parameters
-        ----------
-        node_subpath : str
-            PyTable node path; e.g. 'path/to/node'.
-        array_or_shape : array or shape tuple
-            Array or shape tuple for an array. If given a shape tuple, the
-            `dtype` parameter must also specified.
-        dtype : str or numpy.dtype
-            Data type of array. Only necessary if `array_or_shape` is a shape.
-        chunked : bool
-            Controls whether the array is chunked.
-        extendable : {None | bool}
-            Controls whether the array is extendable.
-        kwargs : key/value pairs
-            Keyword args passed to PyTables `File.create_(c|e)array`.
-        """
         return self._delegate_to_h5file('create_array', node_subpath,
                                         array_or_shape, dtype=dtype,
                                         chunked=chunked, extendable=extendable,
                                         **kwargs)
 
+    @h5_group_wrapper(H5File.create_table)
     def create_table(self, node_subpath, description, *args, **kwargs):
-        """ Create table node at the specified subpath.
-
-        Parameters
-        ----------
-        node_subpath : str
-            Path to node where data is stored (e.g. 'path/to/my_dict')
-        description : dict or numpy dtype object
-            The description of the columns in the table. This is either a dict
-            of column name -> dtype items or a numpy record array dtype. For
-            more information, see the documentation for Table in pytables.
-        """
         return self._delegate_to_h5file('create_table', node_subpath,
                                         description, *args, **kwargs)
 
+    @h5_group_wrapper(H5File.create_dict)
     def create_dict(self, node_subpath, data, *args, **kwargs):
-        """ Create dict node at the specified subpath.
-
-        Parameters
-        ----------
-        node_subpath : str
-            Path to node where data is stored (e.g. 'path/to/my_dict')
-        data : dict
-            Data for initialization, if desired.
-        """
         return self._delegate_to_h5file('create_dict', node_subpath, data,
                                         *args, **kwargs)
 
+    @h5_group_wrapper(H5File.remove_node)
     def remove_node(self, node_subpath, **kwargs):
-        """Remove a node beneath this group.
-
-        Parameters
-        ----------
-        node_subpath : str
-            PyTable group path relative to this group; e.g. 'path/to/node'.
-        """
         return self._delegate_to_h5file('remove_node', node_subpath, **kwargs)
 
     def _delegate_to_h5file(self, function_name, node_subpath,
