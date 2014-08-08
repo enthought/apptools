@@ -1,4 +1,5 @@
 from collections import Mapping, MutableMapping
+from functools import partial
 
 import numpy as np
 import tables
@@ -15,6 +16,21 @@ def get_atom(dtype):
 
 def iterator_length(iterator):
     return sum(1 for _ in iterator)
+
+
+def _update_wrapped_docstring(wrapped, original=None):
+    PREAMBLE = """\
+** H5Group wrapper for H5File.{func_name}: **
+Note that the first argument is a nodepath relative to the group, rather than
+an absolute path. Below is the original docstring:
+
+    """.format(func_name=wrapped.__name__)
+    wrapped.__doc__ = PREAMBLE + original.__doc__
+    return wrapped
+
+
+def h5_group_wrapper(original):
+    return partial(_update_wrapped_docstring, original=original)
 
 
 class H5File(Mapping):
@@ -79,6 +95,10 @@ class H5File(Mapping):
         if self.is_open:
             self._h5.close()
         self._h5 = None
+
+    @property
+    def root(self):
+        return self['/']
 
     @property
     def is_open(self):
@@ -155,13 +175,13 @@ class H5File(Mapping):
             shape = (0,) + shape[1:]
             atom = get_atom(dtype)
             node = h5.create_earray(path, name, atom, shape,
-                                   filters=self.h5filters, **kwargs)
+                                    filters=self.h5filters, **kwargs)
             if array is not None:
                 node.append(array)
         elif chunked:
             atom = get_atom(dtype)
             node = h5.create_carray(path, name, atom, shape,
-                                   filters=self.h5filters, **kwargs)
+                                    filters=self.h5filters, **kwargs)
             if array is not None:
                 node[:] = array
         else:
@@ -184,6 +204,7 @@ class H5File(Mapping):
         self._assert_valid_path(group_path)
         path, name = self.split_path(group_path)
         self._h5.create_group(path, name, **kwargs)
+        return self[group_path]
 
     def create_dict(self, node_path, data=None, **kwargs):
         """ Create dict node at the specified path.
@@ -198,6 +219,7 @@ class H5File(Mapping):
         self._check_node(node_path)
         self._assert_valid_path(node_path)
         H5DictNode.add_to_h5file(self, node_path, data=data, **kwargs)
+        return self[node_path]
 
     def create_table(self, node_path, description, **kwargs):
         """ Create table node at the specified path.
@@ -214,6 +236,7 @@ class H5File(Mapping):
         self._check_node(node_path)
         self._assert_valid_path(node_path)
         H5TableNode.add_to_h5file(self, node_path, description, **kwargs)
+        return self[node_path]
 
     def _check_node(self, node_path):
         """Check if node exists and create parent groups if necessary.
@@ -380,8 +403,16 @@ class H5Group(Mapping):
         return iterator_length(self)
 
     @property
+    def pathname(self):
+        return self._h5_group._v_pathname
+
+    @property
     def name(self):
         return self._h5_group._v_name
+
+    @property
+    def filename(self):
+        return self._h5_group._v_file.filename
 
     @property
     def children_names(self):
@@ -394,6 +425,47 @@ class H5Group(Mapping):
     def iter_groups(self):
         """ Iterate over `H5Group` nodes that are children of this group. """
         return (_wrap_node(g) for g in self._h5_group._v_groups.itervalues())
+
+    @h5_group_wrapper(H5File.create_group)
+    def create_group(self, group_subpath, delete_existing=False, **kwargs):
+        return self._delegate_to_h5file('create_group', group_subpath,
+                                        delete_existing=delete_existing,
+                                        **kwargs)
+
+    @h5_group_wrapper(H5File.remove_group)
+    def remove_group(self, group_subpath, **kwargs):
+        return self._delegate_to_h5file('remove_group', group_subpath,
+                                        **kwargs)
+
+    @h5_group_wrapper(H5File.create_array)
+    def create_array(self, node_subpath, array_or_shape, dtype=None,
+                     chunked=False, extendable=False, **kwargs):
+        return self._delegate_to_h5file('create_array', node_subpath,
+                                        array_or_shape, dtype=dtype,
+                                        chunked=chunked, extendable=extendable,
+                                        **kwargs)
+
+    @h5_group_wrapper(H5File.create_table)
+    def create_table(self, node_subpath, description, *args, **kwargs):
+        return self._delegate_to_h5file('create_table', node_subpath,
+                                        description, *args, **kwargs)
+
+    @h5_group_wrapper(H5File.create_dict)
+    def create_dict(self, node_subpath, data=None, **kwargs):
+        return self._delegate_to_h5file('create_dict', node_subpath, data=data,
+                                        **kwargs)
+
+    @h5_group_wrapper(H5File.remove_node)
+    def remove_node(self, node_subpath, **kwargs):
+        return self._delegate_to_h5file('remove_node', node_subpath, **kwargs)
+
+    def _delegate_to_h5file(self, function_name, node_subpath,
+                            *args, **kwargs):
+        delete_existing = kwargs.pop('delete_existing', False)
+        h5 = H5File(self._h5_group._v_file, delete_existing=delete_existing)
+        group_path = h5.join_path(self.pathname, node_subpath)
+        func = getattr(h5, function_name)
+        return func(group_path, *args, **kwargs)
 
 
 def _wrap_node(node):
