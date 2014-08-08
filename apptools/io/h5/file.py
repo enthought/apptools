@@ -451,9 +451,9 @@ class H5Group(Mapping):
                                         description, *args, **kwargs)
 
     @h5_group_wrapper(H5File.create_dict)
-    def create_dict(self, node_subpath, data, *args, **kwargs):
-        return self._delegate_to_h5file('create_dict', node_subpath, data,
-                                        *args, **kwargs)
+    def create_dict(self, node_subpath, data=None, **kwargs):
+        return self._delegate_to_h5file('create_dict', node_subpath, data=data,
+                                        **kwargs)
 
     @h5_group_wrapper(H5File.remove_node)
     def remove_node(self, node_subpath, **kwargs):
