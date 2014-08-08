@@ -403,7 +403,7 @@ class H5Group(Mapping):
         return iterator_length(self)
 
     @property
-    def path_name(self):
+    def pathname(self):
         return self._h5_group._v_pathname
 
     @property
@@ -463,7 +463,7 @@ class H5Group(Mapping):
                             *args, **kwargs):
         delete_existing = kwargs.pop('delete_existing', False)
         h5 = H5File(self._h5_group._v_file, delete_existing=delete_existing)
-        group_path = h5.join_path(self.path_name, node_subpath)
+        group_path = h5.join_path(self.pathname, node_subpath)
         func = getattr(h5, function_name)
         return func(group_path, *args, **kwargs)
 
