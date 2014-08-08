@@ -411,6 +411,10 @@ class H5Group(Mapping):
         return self._h5_group._v_name
 
     @property
+    def filename(self):
+        return self._h5_group._v_file.filename
+
+    @property
     def children_names(self):
         return self._h5_group._v_children.keys()
 
