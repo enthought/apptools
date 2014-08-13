@@ -18,6 +18,19 @@ def test_create():
         assert h5dict['b'] == 2
 
 
+def test_is_dict_node():
+    with temp_h5_file() as h5:
+        node = h5.create_dict(NODE, {})
+        assert H5DictNode.is_dict_node(node._h5_group)
+
+
+def test_is_not_dict_node():
+    with temp_h5_file() as h5:
+        node = h5.create_group(NODE)
+        assert not H5DictNode.is_dict_node(node)
+        assert not H5DictNode.is_dict_node(node._h5_group)
+
+
 def test_create_with_data():
     with temp_h5_file() as h5:
         data = {'a': 10}

@@ -273,6 +273,9 @@ class H5File(Mapping):
             PyTable node path; e.g. '/path/to/node'.
         """
         node = self[node_path]
+        if isinstance(node, H5Group):
+            msg = "{!r} is a group. Use `remove_group` to remove group nodes."
+            raise ValueError(msg.format(node.pathname))
         node._f_remove()
 
     def remove_group(self, group_path, **kwargs):
