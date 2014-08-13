@@ -477,6 +477,17 @@ def test_get_attribute_default():
         assert h5['/'].attrs.get('missing', 'null') == 'null'
 
 
+def test_attribute_update():
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        attrs = h5['/'].attrs
+        attrs.update({'a': 1, 'b': 2})
+        assert attrs['a'] == 1
+        assert attrs['b'] == 2
+        attrs.update({'b': 20, 'c': 30})
+        assert attrs['b'] == 20
+        assert attrs['c'] == 30
+
+
 def test_attribute_iteration_methods():
     with open_h5file(H5_TEST_FILE, mode='w') as h5:
         attrs = h5['/'].attrs
