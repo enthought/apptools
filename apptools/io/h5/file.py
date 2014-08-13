@@ -365,11 +365,6 @@ class H5Attrs(MutableMapping):
     def items(self):
         return [(k, self[k]) for k in self.keys()]
 
-    def update(self, other):
-        """ Update keys and values based on some other dict-like mapping. """
-        for key, value in other.items():
-            self[key] = value
-
 
 class H5Group(Mapping):
     """ A group node in an H5File.
