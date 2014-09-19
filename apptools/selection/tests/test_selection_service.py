@@ -237,7 +237,7 @@ class TestSelectionService(unittest.TestCase):
 
         # We can't assume that the order of the items in the selection we set
         # remains stable.
-        self.assertItemsEqual(selection.items, new_selection)
+        self.assertEqual(selection.items, new_selection)
         self.assertEqual(selection.indices, selection.items)
 
     def test_selection_id_not_registered(self):
@@ -262,7 +262,7 @@ class TestSelectionService(unittest.TestCase):
 
         selection = service.get_selection(provider_id)
         self.assertFalse(selection.is_empty())
-        self.assertItemsEqual(selection.items, [0, 1])
+        self.assertEqual(selection.items, [0, 1])
 
         new_selection = [0, 11, 1]
         with self.assertRaises(ValueError):

@@ -14,16 +14,17 @@
 
 
 # Enthought library imports.
-from traits.api import Any, HasTraits, implements, Str
+from traits.api import Any, HasTraits, provides, Str
 
 # Local imports.
 from i_bind_event import IBindEvent
 
 
+@provides(IBindEvent)
 class BindEvent(HasTraits):
     """The default implementation of the bind event interface."""
 
-    implements(IBindEvent)
+
 
     #### 'IBindEvent' interface ###############################################
 

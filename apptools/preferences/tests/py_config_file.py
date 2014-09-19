@@ -122,7 +122,7 @@ class PyConfigFile(dict):
         """
 
         if isinstance(file_or_filename, basestring):
-            f = file(file_or_filename, mode)
+            f = open(file_or_filename, mode)
 
         else:
             f = file_or_filename

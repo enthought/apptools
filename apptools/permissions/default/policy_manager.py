@@ -16,7 +16,7 @@
 # Enthought library imports.
 from pyface.api import error
 from pyface.action.api import Action
-from traits.api import Dict, HasTraits, implements, Instance, List
+from traits.api import Dict, HasTraits, provides, Instance, List
 
 # Local imports.
 from apptools.permissions.i_policy_manager import IPolicyManager
@@ -27,12 +27,13 @@ from role_assignment import role_assignment
 from role_definition import role_definition
 
 
+@provides(IPolicyManager)
 class PolicyManager(HasTraits):
     """The default policy manager implementation.  This policy enforces the use
     of roles.  Permissions are associated with roles rather than directly with
     users.  Users are then associated with one or more roles."""
 
-    implements(IPolicyManager)
+
 
     #### 'IPolicyManager' interface ###########################################
 

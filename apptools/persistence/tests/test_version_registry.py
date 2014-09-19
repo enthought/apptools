@@ -6,6 +6,7 @@
 # License: BSD Style.
 
 # Standard library imports.
+from imp import reload
 import unittest
 
 # Enthought library imports.
@@ -77,7 +78,7 @@ class TestVersionRegistry(unittest.TestCase):
         registry = version_registry.registry
         self.assertEqual(registry.handlers.get(('A', __name__)), h)
         del registry.handlers[('A', __name__)]
-        self.assertEqual(registry.handlers.has_key(('A', __name__)), False)
+        self.assertNotIn(('A', __name__), registry.handlers)
 
     def test_update(self):
         """Test if update method calls the handlers in order."""

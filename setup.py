@@ -1,11 +1,13 @@
 # Copyright (c) 2008-2012 by Enthought, Inc.
 # All rights reserved.
+import sys
 from os.path import join
 from setuptools import setup, find_packages
 
 
 info = {}
-execfile(join('apptools', '__init__.py'), info)
+apptools_init = join('apptools', '__init__.py')
+exec(compile(open(apptools_init).read(), apptools_init, 'exec'), info)
 
 
 setup(
@@ -37,15 +39,17 @@ setup(
     long_description = open('README.rst').read(),
     include_package_data = True,
     package_data = dict(apptools=[
-            'help/help_plugin/*.ini',
-            'help/help_plugin/action/images/*.png',
-            'logger/plugin/*.ini',
-            'logger/plugin/view/images/*.png',
-            'naming/ui/images/*.png',
+        'help/help_plugin/*.ini',
+        'help/help_plugin/action/images/*.png',
+        'logger/plugin/*.ini',
+        'logger/plugin/view/images/*.png',
+        'naming/ui/images/*.png',
+        'preferences/tests/*ini'
     ]),
     install_requires = info['__requires__'],
     license = 'BSD',
     packages = find_packages(),
     platforms = ["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
     zip_safe = False,
+    use_2to3 = True
 )

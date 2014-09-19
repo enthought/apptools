@@ -24,7 +24,7 @@
 #-------------------------------------------------------------------------------
 
 from traits.api \
-    import HasPrivateTraits, Instance, Property, implements, on_trait_change
+    import HasPrivateTraits, Instance, Property, provides, on_trait_change
 
 from apptools.template.itemplate_data_context \
     import ITemplateDataContext

@@ -24,7 +24,7 @@
 #-------------------------------------------------------------------------------
 
 from traits.api\
-    import HasPrivateTraits, Dict, Str, Any, Property, implements, \
+    import HasPrivateTraits, Dict, Str, Any, Property, provides, \
            cached_property
 
 from apptools.template.itemplate_data_context \

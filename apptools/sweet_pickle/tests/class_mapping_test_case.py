@@ -67,12 +67,9 @@ class ClassMappingTestCase(unittest.TestCase):
             loops of class mappings.
         """
         # Add mappings to the registry
-        self.registry.add_mapping_to_class(Foo.__module__, Foo.__name__,
-            Bar)
-        self.registry.add_mapping_to_class(Bar.__module__, Bar.__name__,
-            Baz)
-        self.registry.add_mapping_to_class(Baz.__module__, Baz.__name__,
-            Foo)
+        self.registry.add_mapping_to_class(Foo.__module__, Foo.__name__, Bar)
+        self.registry.add_mapping_to_class(Bar.__module__, Bar.__name__, Baz)
+        self.registry.add_mapping_to_class(Baz.__module__, Baz.__name__, Foo)
 
         # Validate that an exception is raised when trying to unpickle an
         # instance anywhere within the circular definition.
@@ -86,10 +83,8 @@ class ClassMappingTestCase(unittest.TestCase):
     def test_unpickled_class_mapping(self):
 
         # Add the mappings to the registry
-        self.registry.add_mapping_to_class(Foo.__module__, Foo.__name__,
-            Bar)
-        self.registry.add_mapping_to_class(Bar.__module__, Bar.__name__,
-            Baz)
+        self.registry.add_mapping_to_class(Foo.__module__, Foo.__name__, Bar)
+        self.registry.add_mapping_to_class(Bar.__module__, Bar.__name__, Baz)
 
         # Validate that unpickling the first class gives us an instance of
         # the third class.

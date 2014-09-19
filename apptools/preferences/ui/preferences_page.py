@@ -3,16 +3,17 @@
 
 # Enthought library imports.
 from apptools.preferences.api import PreferencesHelper
-from traits.api import Any, Dict, Str, implements
+from traits.api import Any, Dict, Str, provides
 
 # Local imports.
 from i_preferences_page import IPreferencesPage
 
 
+@provides(IPreferencesPage)
 class PreferencesPage(PreferencesHelper):
     """ A page in a preferences dialog. """
 
-    implements(IPreferencesPage)
+
 
     #### 'IPreferencesPage' interface #########################################
 
