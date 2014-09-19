@@ -282,6 +282,14 @@ def test_remove_group_with_H5Group():
         assert node_path not in h5
 
 
+@testing.raises(ValueError)
+def test_remove_group_with_remove_node():
+    node_path = '/group'
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5.create_group(node_path)
+        h5.remove_node(node_path)  # Groups should be removed w/ `remove_group`
+
+
 def test_remove_node_with_H5File():
     with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
         h5.create_array('/array', np.arange(3))
