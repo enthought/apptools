@@ -414,6 +414,9 @@ def test_group_properties():
         sub_names = h5['/group1'].subgroup_names
         assert sub_names == ['group2']
 
+        assert h5['/group1'].root.name == '/'
+        assert h5['/group1/group2'].root.name == '/'
+
 
 def test_iter_groups():
     with open_h5file(H5_TEST_FILE, mode='w', auto_groups=True) as h5:
