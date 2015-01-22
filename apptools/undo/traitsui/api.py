@@ -8,5 +8,6 @@
 
 from __future__ import absolute_import
 
+from .actions import UndoAction, RedoAction
 from .trait_set_command import TraitSetCommand
 from .undo_handler import UndoHandler
