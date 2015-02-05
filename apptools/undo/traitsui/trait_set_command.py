@@ -18,7 +18,7 @@ commands on the same attribute on the same object.
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 # Enthought library imports
-from traits.api import Any, Str
+from traits.api import Any, Bool, Str
 
 # Local library imports
 from apptools.undo.api import AbstractCommand
@@ -41,6 +41,9 @@ class TraitSetCommand(AbstractCommand):
 
     #: The name of the data trait we are acting on.
     trait_name = Str
+
+    #: whether additional commands can be merged together.
+    mergeable = Bool
 
     #: The new value that the trait is being set to
     value = Any
@@ -67,11 +70,31 @@ class TraitSetCommand(AbstractCommand):
         setattr(self.data, self.trait_name, self._old_value)
 
     def merge(self, other):
-        if (isinstance(other, self.__class__) and self.data is other.data and
-                self.trait_name == other.trait_name):
+        if self.mergeable and self._same_trait(other) and \
+                self._trait_mergeable():
             self.value = other.value
+            self.mergeable = other.mergeable
             return True
         return super(TraitSetCommand, self).merge(other)
+
+    #-------------------------------------------------------------------------
+    # Private interface
+    #-------------------------------------------------------------------------
+
+    def _same_trait(self, other):
+        same_trait = (isinstance(other, self.__class__) and
+                      self.data is other.data and
+                      self.trait_name == other.trait_name)
+        return same_trait
+
+    def _trait_mergeable(self):
+        """ Check trait metadata for mergeability preferences """
+        trait = self.data.trait(self.trait_name)
+        if trait.mergeable is not None:
+            return trait.mergeable
+
+        # if no preference given, then don't block merging
+        return True
 
     # Traits default handlers
 
