@@ -25,7 +25,7 @@ with the ``apply`` and ``revert`` methods.
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 # Enthought library imports
-from traits.api import Instance
+from traits.api import Instance, TraitError
 from traitsui.api import Handler
 
 # Local library imports
@@ -59,8 +59,18 @@ class UndoHandler(Handler):
 
     def setattr(self, info, object, name, value):
         """ Create an undoable command that sets the appropriate trait """
+        # special-case events (and buttons, in particular)
+        if object.trait(name).type == 'event':
+            super(UndoHandler, self).setattr(info, object, name, value)
+            return
+
         command = TraitSetCommand(data=object, trait_name=name, value=value)
-        self.command_stack.push(command)
+
+        try:
+            self.command_stack.push(command)
+        except TraitError:
+            # the most likely cause is a write-only property, try normal set
+            super(UndoHandler, self).setattr(info, object, name, value)
 
     # 'Handler' private methods
 

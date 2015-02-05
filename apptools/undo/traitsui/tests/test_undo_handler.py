@@ -8,7 +8,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 # Enthought library imports
-from traits.api import HasTraits, Str
+from traits.api import Event, HasTraits, Property, Str
 from traits.testing.unittest_tools import UnittestTools, unittest
 
 # Local library imports
@@ -22,6 +22,24 @@ class DummyHasTraits(HasTraits):
 
     #: dummy attribute to set
     dummy_trait = Str
+
+    #: dummy event to set
+    dummy_event = Event
+
+    #: regular property
+    dummy_property = Property
+
+    #: write-only property
+    dummy_write_only = Property
+
+    def _get_dummy_property(self):
+        return self.dummy_trait
+
+    def _set_dummy_property(self, value):
+        self.dummy_trait = value
+
+    def _set_dummy_write_only(self, value):
+        self.dummy_trait = value
 
 
 class TestUndoHandler(UnittestTools, unittest.TestCase):
@@ -47,6 +65,40 @@ class TestUndoHandler(UnittestTools, unittest.TestCase):
         self.assertEquals(command.data, self.object)
         self.assertEquals(command.trait_name, 'dummy_trait')
         self.assertEquals(command.value, 'new value')
+
+    def test_setattr_event(self):
+        info = None
+
+        with self.assertTraitChanges(self.object, 'dummy_event', count=1), \
+                self.assertTraitDoesNotChange(self.command_stack, '_stack_items'):
+            self.handler.setattr(info, self.object, 'dummy_event', 'new value')
+
+        self.assertEquals(len(self.command_stack._stack), 0)
+
+    def test_setattr_property(self):
+        info = None
+
+        with self.assertTraitChanges(self.object, 'dummy_trait', count=1), \
+                self.assertTraitChanges(self.command_stack, '_stack_items'):
+            self.handler.setattr(info, self.object, 'dummy_property', 'new value')
+
+        self.assertEquals(self.object.dummy_trait, 'new value')
+        self.assertEquals(len(self.command_stack._stack), 1)
+
+        command = self.command_stack._stack[0].command
+        self.assertIsInstance(command, TraitSetCommand)
+        self.assertEquals(command.data, self.object)
+        self.assertEquals(command.trait_name, 'dummy_property')
+        self.assertEquals(command.value, 'new value')
+
+    def test_setattr_write_only(self):
+        info = None
+
+        with self.assertTraitDoesNotChange(self.command_stack, '_stack_items'):
+            self.handler.setattr(info, self.object, 'dummy_write_only', 'new value')
+
+        self.assertEquals(self.object.dummy_trait, 'new value')
+        self.assertEquals(len(self.command_stack._stack), 0)
 
     def test_on_undo(self):
         info = None
