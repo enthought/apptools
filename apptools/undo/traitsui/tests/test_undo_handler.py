@@ -8,7 +8,7 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 # Enthought library imports
-from traits.api import Event, HasTraits, Property, Str
+from traits.api import Event, HasTraits, Property, Str, TraitError
 from traits.testing.unittest_tools import UnittestTools, unittest
 
 # Local library imports
@@ -82,7 +82,6 @@ class TestUndoHandler(UnittestTools, unittest.TestCase):
                 self.assertTraitChanges(self.command_stack, '_stack_items'):
             self.handler.setattr(info, self.object, 'dummy_property', 'new value')
 
-        self.assertEquals(self.object.dummy_trait, 'new value')
         self.assertEquals(len(self.command_stack._stack), 1)
 
         command = self.command_stack._stack[0].command
@@ -98,6 +97,16 @@ class TestUndoHandler(UnittestTools, unittest.TestCase):
             self.handler.setattr(info, self.object, 'dummy_write_only', 'new value')
 
         self.assertEquals(self.object.dummy_trait, 'new value')
+        self.assertEquals(len(self.command_stack._stack), 0)
+
+    def test_setattr_bad(self):
+        info = None
+
+        with self.assertTraitDoesNotChange(self.object, 'dummy_trait', count=1), \
+                self.assertTraitDoesNotChange(self.command_stack, '_stack_items'):
+            with self.assertRaises(TraitError):
+                self.handler.setattr(info, self.object, 'dummy_trait', 1)
+
         self.assertEquals(len(self.command_stack._stack), 0)
 
     def test_on_undo(self):
