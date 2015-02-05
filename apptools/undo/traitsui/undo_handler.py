@@ -64,7 +64,9 @@ class UndoHandler(Handler):
             super(UndoHandler, self).setattr(info, object, name, value)
             return
 
-        command = TraitSetCommand(data=object, trait_name=name, value=value)
+        mergeable = self._editor_mergeable(info, object, name)
+        command = TraitSetCommand(data=object, trait_name=name, value=value,
+                                  mergeable=mergeable)
 
         try:
             self.command_stack.push(command)
@@ -72,7 +74,9 @@ class UndoHandler(Handler):
             # the most likely cause is a write-only property, try normal set
             super(UndoHandler, self).setattr(info, object, name, value)
 
-    # 'Handler' private methods
+    #-------------------------------------------------------------------------
+    # 'UndoHandler' private methods
+    #-------------------------------------------------------------------------
 
     def _on_undo(self, info):
         if self.command_stack is not None:
@@ -81,3 +85,30 @@ class UndoHandler(Handler):
     def _on_redo(self, info):
         if self.command_stack is not None:
             self.command_stack.redo()
+
+    def _editor_mergeable(self, info, object, name):
+        """ Work out whether to use merging behaviour for this command """
+        editors = info.ui.get_editors(name)
+        if len(editors) == 0:
+            # get full name
+            object_names = [trait_name for trait_name in info.traits()
+                           if getattr(info, trait_name, None) is object]
+            if len(object_names) == 0:
+                return False
+            full_name = object_names[0] + '.' + name
+            editors = info.ui.get_editors(full_name)
+
+        if len(editors) == 0:
+            return False
+
+        editor = editors[0]
+
+        if hasattr(editor, 'undo_mergeable'):
+            return editor.undo_mergeable
+
+        # some rough heuristics for mergeability
+        from traitsui.api import TextEditor, RangeEditor
+
+        if isinstance(editor.factory, (TextEditor, RangeEditor)):
+            return True
+        return False
