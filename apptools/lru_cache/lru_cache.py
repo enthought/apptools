@@ -65,13 +65,6 @@ class LRUCache(HasStrictTraits):
             self._root[:] = [self._root, self._root, None, None]
 
     # -------------------------------------------------------------------------
-    # Traits change handlers
-    # -------------------------------------------------------------------------
-
-    def _cache_drop_callback_changed(self, callback):
-        self._cache.callback = callback
-
-    # -------------------------------------------------------------------------
     # LRUCache interface
     # -------------------------------------------------------------------------
 
