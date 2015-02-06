@@ -78,21 +78,18 @@ class LRUCache(HasStrictTraits):
     def __getitem__(self, key):
         PREV, NEXT = 0, 1   # names for the link fields
         # Size limited caching that tracks accesses by recency
-        try:
-            with self._lock:
-                link = self._cache[key]
-                if link is not None:
-                    # Move the link to the front of the circular queue
-                    link_prev, link_next, _key, result = link
-                    link_prev[NEXT] = link_next
-                    link_next[PREV] = link_prev
-                    last = self._root[PREV]
-                    last[NEXT] = self._root[PREV] = link
-                    link[PREV] = last
-                    link[NEXT] = self._root
-                    return result
-        finally:
-            self.updated = self.keys()
+        with self._lock:
+            link = self._cache[key]
+            if link is not None:
+                # Move the link to the front of the circular queue
+                link_prev, link_next, _key, result = link
+                link_prev[NEXT] = link_next
+                link_next[PREV] = link_prev
+                last = self._root[PREV]
+                last[NEXT] = self._root[PREV] = link
+                link[PREV] = last
+                link[NEXT] = self._root
+                return result
 
     def __setitem__(self, key, result):
         PREV, NEXT, KEY, RESULT = 0, 1, 2, 3   # names for the link fields
@@ -142,11 +139,11 @@ class LRUCache(HasStrictTraits):
 
     def keys(self):
         items = self.items()
-        return zip(*items)[0] if items else []
+        return [k for k, v in items]
 
     def values(self):
         items = self.items()
-        return zip(*items)[1] if items else []
+        return [v for k, v in items]
 
     def clear(self):
         with self._lock:

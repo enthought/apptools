@@ -3,7 +3,7 @@
 
 from __future__ import division, print_function
 
-from numpy.testing import assert_equal
+from nose.tools import assert_equal
 
 from ..lru_cache import LRUCache
 
@@ -111,3 +111,28 @@ def test_cache_get():
         c[i] = i
     assert_equal(0, c.get(0))
     assert_equal(None, c.get(c.size))
+
+
+def test_updated_event():
+    c = LRUCache(2)
+    events = []
+
+    # Traits can't handle builtins as handlers
+    c.on_trait_change(lambda x: events.append(x), 'updated')
+
+    c[0] = 0
+    print(c.keys())
+    assert_equal(sorted(events), [[0]])
+
+    c[1] = 1
+    assert_equal(sorted(events), [[0], [0, 1]])
+
+    c[2] = 2
+    assert_equal(sorted(events), [[0], [0, 1], [1, 2]])
+
+    # Getting items doesn't fire anything
+    c[1]
+    assert_equal(sorted(events), [[0], [0, 1], [1, 2]])
+
+    c.get(3)
+    assert_equal(sorted(events), [[0], [0, 1], [1, 2]])
