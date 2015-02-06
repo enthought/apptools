@@ -53,25 +53,16 @@ class LRUCache(HasStrictTraits):
 
     def __init__(self, size, **traits):
         self.size = size
-        self._cache = {}
-        self._root = []  # root of the circular doubly linked list
-        # initialize by pointing to self
-        self._root[:] = [self._root, self._root, None, None]
+        self._initialize_cache()
         super(LRUCache, self).__init__(**traits)
 
-    # -------------------------------------------------------------------------
-    # Traits defaults
-    # -------------------------------------------------------------------------
-
-    def _cache_drop_callback_default(self):
-        def callback(key, value):
-            msg = "Tag: {!r} cache drop {{{}: {}}}"
-            logger.debug(msg.format(self._tag, key, value))
-        return callback
-
-    # -------------------------------------------------------------------------
-    # Traits change properties
-    # -------------------------------------------------------------------------
+    def _initialize_cache(self):
+        with self._lock:
+            self._cache = {}
+            # root of the circular doubly linked list
+            self._root = []
+            # initialize by pointing to self
+            self._root[:] = [self._root, self._root, None, None]
 
     # -------------------------------------------------------------------------
     # Traits change handlers
@@ -129,7 +120,7 @@ class LRUCache(HasStrictTraits):
                     self._root[KEY] = self._root[RESULT] = None
                     # Now update the cache dictionary.
                     del self._cache[oldkey]
-                    if oldkey != key:
+                    if self.cache_drop_callback is not None and oldkey != key:
                         self.cache_drop_callback(oldkey, oldresult)
                     # Save the potentially reentrant cache[key] assignment
                     # for last, after the root and links have been put in
@@ -163,10 +154,5 @@ class LRUCache(HasStrictTraits):
         return [v for k, v in items]
 
     def clear(self):
-        with self._lock:
-            self._cache = {}
-            self._root = []  # root of the circular doubly linked list
-            # initialize by pointing to self
-            self._root[:] = [self._root, self._root, None, None]
+        self._initialize_cache()
         self.updated = []
-        return
