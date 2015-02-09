@@ -12,7 +12,7 @@
 #
 # The circular buffer implementation was backported from Python 3.4 and is
 # provided under the PSF License available at
-# https://docs.python.org/3.4/license.html.
+# https://docs.python.org/3.4/license.html
 #
 # Author: Enthought, Inc.
 #------------------------------------------------------------------------------
