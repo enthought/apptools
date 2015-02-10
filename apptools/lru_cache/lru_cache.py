@@ -10,10 +10,6 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 #
-# The circular buffer implementation was backported from Python 3.4 and is
-# provided under the PSF License available at
-# https://docs.python.org/3.4/license.html
-#
 # Author: Enthought, Inc.
 #------------------------------------------------------------------------------
 
