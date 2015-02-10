@@ -16,11 +16,8 @@
 
 from threading import RLock
 from collections import OrderedDict
-import logging
 
 from traits.api import Callable, Event, HasStrictTraits, Instance, Int
-
-logger = logging.getLogger(__name__)
 
 
 class LRUCache(HasStrictTraits):
