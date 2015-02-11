@@ -25,8 +25,6 @@ class LRUCache(HasStrictTraits):
 
     Items older than `size()` accesses are dropped from the cache.
 
-    This is ported from python 3's functools.lru_cache.
-
     """
 
     size = Int
@@ -46,7 +44,7 @@ class LRUCache(HasStrictTraits):
         self._initialize_cache()
         super(LRUCache, self).__init__(**traits)
 
-    def _initialize_cache(self, force=False):
+    def _initialize_cache(self):
         with self._lock:
             if self._cache is None:
                 self._cache = OrderedDict()
@@ -54,8 +52,9 @@ class LRUCache(HasStrictTraits):
                 self._cache.clear()
 
     def _renew(self, key):
-        r = self._cache.pop(key)
-        self._cache[key] = r
+        with self._lock:
+            r = self._cache.pop(key)
+            self._cache[key] = r
         return r
 
     # -------------------------------------------------------------------------
@@ -76,12 +75,13 @@ class LRUCache(HasStrictTraits):
 
     def __setitem__(self, key, result):
         try:
-            self._cache[key] = result
-            self._renew(key)
-            if self.size < len(self._cache):
-                dropped = self._cache.popitem(last=False)
-                if self.cache_drop_callback is not None:
-                    self.cache_drop_callback(*dropped)
+            with self._lock:
+                self._cache[key] = result
+                self._renew(key)
+                if self.size < len(self._cache):
+                    dropped = self._cache.popitem(last=False)
+                    if self.cache_drop_callback is not None:
+                        self.cache_drop_callback(*dropped)
         finally:
             self.updated = self.keys()
 
@@ -92,14 +92,18 @@ class LRUCache(HasStrictTraits):
             return default
 
     def items(self):
-        return self._cache.items()
+        with self._lock:
+            return self._cache.items()
 
     def keys(self):
-        return self._cache.keys()
+        with self._lock:
+            return self._cache.keys()
 
     def values(self):
-        return self._cache.values()
+        with self._lock:
+            return self._cache.values()
 
     def clear(self):
-        self._initialize_cache()
-        self.updated = []
+        with self._lock:
+            self._initialize_cache()
+            self.updated = []
