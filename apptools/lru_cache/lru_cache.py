@@ -10,29 +10,20 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 #
-# The circular buffer implementation was backported from Python 3.4 and is
-# provided under the PSF License available at
-# https://docs.python.org/3.4/license.html
-#
 # Author: Enthought, Inc.
 #------------------------------------------------------------------------------
 
 
 from threading import RLock
-import logging
+from collections import OrderedDict
 
-from traits.api import Callable, Dict, Event, HasStrictTraits, Instance, Int, \
-    List, Str
-
-logger = logging.getLogger(__name__)
+from traits.api import Callable, Event, HasStrictTraits, Instance, Int
 
 
 class LRUCache(HasStrictTraits):
     """ A least-recently used cache.
 
     Items older than `size()` accesses are dropped from the cache.
-
-    This is ported from python 3's functools.lru_cache.
 
     """
 
@@ -46,10 +37,7 @@ class LRUCache(HasStrictTraits):
 
     _lock = Instance(RLock, args=())
 
-    _cache = Dict
-    _root = List
-
-    _tag = Str("LRUCache")
+    _cache = Instance(OrderedDict)
 
     def __init__(self, size, **traits):
         self.size = size
@@ -58,11 +46,16 @@ class LRUCache(HasStrictTraits):
 
     def _initialize_cache(self):
         with self._lock:
-            self._cache = {}
-            # root of the circular doubly linked list
-            self._root = []
-            # initialize by pointing to self
-            self._root[:] = [self._root, self._root, None, None]
+            if self._cache is None:
+                self._cache = OrderedDict()
+            else:
+                self._cache.clear()
+
+    def _renew(self, key):
+        with self._lock:
+            r = self._cache.pop(key)
+            self._cache[key] = r
+        return r
 
     # -------------------------------------------------------------------------
     # LRUCache interface
@@ -77,54 +70,19 @@ class LRUCache(HasStrictTraits):
             return len(self._cache)
 
     def __getitem__(self, key):
-        PREV, NEXT = 0, 1   # names for the link fields
-        # Size limited caching that tracks accesses by recency
         with self._lock:
-            link = self._cache[key]
-            if link is not None:
-                # Move the link to the front of the circular queue
-                link_prev, link_next, _key, result = link
-                link_prev[NEXT] = link_next
-                link_next[PREV] = link_prev
-                last = self._root[PREV]
-                last[NEXT] = self._root[PREV] = link
-                link[PREV] = last
-                link[NEXT] = self._root
-                return result
+            return self._renew(key)
 
     def __setitem__(self, key, result):
-        PREV, NEXT, KEY, RESULT = 0, 1, 2, 3   # names for the link fields
         try:
+            dropped = None
             with self._lock:
-                if len(self) == self.size:
-                    # Use the old root to store the new key and result.
-                    oldroot = self._root
-                    oldroot[KEY] = key
-                    oldroot[RESULT] = result
-                    # Empty the oldest link and make it the new root.
-                    # Keep a reference to the old key and old result to
-                    # prevent their ref counts from going to zero during the
-                    # update. That will prevent potentially arbitrary object
-                    # clean-up code (i.e. __del__) from running while we're
-                    # still adjusting the links.
-                    self._root = oldroot[NEXT]
-                    oldkey = self._root[KEY]
-                    oldresult = self._root[RESULT]
-                    self._root[KEY] = self._root[RESULT] = None
-                    # Now update the cache dictionary.
-                    del self._cache[oldkey]
-                    if self.cache_drop_callback is not None and oldkey != key:
-                        self.cache_drop_callback(oldkey, oldresult)
-                    # Save the potentially reentrant cache[key] assignment
-                    # for last, after the root and links have been put in
-                    # a consistent state.
-                    self._cache[key] = oldroot
-                else:
-                    # Put result in a new link at the front of the queue.
-                    last = self._root[PREV]
-                    link = [last, self._root, key, result]
-                    last[NEXT] = self._root[PREV] = self._cache[key] = link
-            return None
+                self._cache[key] = result
+                self._renew(key)
+                if self.size < len(self._cache):
+                    dropped = self._cache.popitem(last=False)
+            if dropped and self.cache_drop_callback is not None:
+                self.cache_drop_callback(*dropped)
         finally:
             self.updated = self.keys()
 
@@ -136,16 +94,17 @@ class LRUCache(HasStrictTraits):
 
     def items(self):
         with self._lock:
-            return [(key, link[3]) for key, link in self._cache.items()]
+            return self._cache.items()
 
     def keys(self):
-        items = self.items()
-        return [k for k, v in items]
+        with self._lock:
+            return self._cache.keys()
 
     def values(self):
-        items = self.items()
-        return [v for k, v in items]
+        with self._lock:
+            return self._cache.values()
 
     def clear(self):
-        self._initialize_cache()
+        with self._lock:
+            self._initialize_cache()
         self.updated = []

@@ -83,6 +83,26 @@ def test_cache_items():
     assert_equal(expected, sorted(c.items()))
 
 
+def test_cache_idempotency():
+    c = LRUCache(2)
+    c[1] = 1
+    assert_equal(1, len(c))
+    c[1] = 1
+    assert_equal(1, len(c))
+
+    c[2] = 2
+    assert_equal(2, len(c))
+    c[1] = 1
+    assert_equal(2, len(c))
+    c[2] = 2
+    assert_equal(2, len(c))
+
+    c[3] = 3
+    assert_equal(2, len(c))
+    c[3] = 3
+    assert_equal(2, len(c))
+
+
 def test_cache_keys_values():
     c = LRUCache(2)
     assert_equal([], c.items())
