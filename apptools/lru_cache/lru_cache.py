@@ -75,13 +75,14 @@ class LRUCache(HasStrictTraits):
 
     def __setitem__(self, key, result):
         try:
+            dropped = None
             with self._lock:
                 self._cache[key] = result
                 self._renew(key)
                 if self.size < len(self._cache):
                     dropped = self._cache.popitem(last=False)
-                    if self.cache_drop_callback is not None:
-                        self.cache_drop_callback(*dropped)
+            if dropped and self.cache_drop_callback is not None:
+                self.cache_drop_callback(*dropped)
         finally:
             self.updated = self.keys()
 
@@ -106,4 +107,4 @@ class LRUCache(HasStrictTraits):
     def clear(self):
         with self._lock:
             self._initialize_cache()
-            self.updated = []
+        self.updated = []
