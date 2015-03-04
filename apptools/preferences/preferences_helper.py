@@ -135,7 +135,7 @@ class PreferencesHelper(HasTraits):
         # If the trait type is 'Unicode' then we convert the raw value.
         elif isinstance(handler, Unicode):
             # The unicode values have been serialized as utf-8 strings
-            value = value.decode('utf-8')
+            value = unicode(value) 
 
         # Otherwise, we eval it!
         else:

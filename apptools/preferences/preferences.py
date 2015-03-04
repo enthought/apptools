@@ -542,12 +542,6 @@ class Preferences(HasTraits):
     def _set(self, key, value):
         """ Set the value of a preference in this node. """
 
-        # Preferences are *always* stored as utf-8 strings.
-        if isinstance(value, unicode):
-            value = value.encode('utf-8')
-        else:
-            value = str(value)
-
         self._lk.acquire()
         old = self._preferences.get(key)
         self._preferences[key] = value

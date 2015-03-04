@@ -220,7 +220,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         helper.description = u'caf\xe9'
         self.assertEqual(u'caf\xe9', helper.description)
-        self.assertEqual('caf\xc3\xa9', p.get('acme.ui.description'))
+        self.assertEqual(u'caf\xe9', p.get('acme.ui.description'))
 
     def test_no_preferences_path(self):
         """ no preferences path """
@@ -475,11 +475,11 @@ class PreferencesHelperTestCase(unittest.TestCase):
         # ratio to get set via the static trait change handler on the helper.
         p.set('acme.ui.width', 42)
         self.assertEqual(42, helper.width)
-        self.assertEqual('42', p.get('acme.ui.width'))
+        self.assertEqual(42, p.get('acme.ui.width'))
 
         # Did the ratio get changed?
         self.assertEqual(3.0, helper.ratio)
-        self.assertEqual('3.0', p.get('acme.ui.ratio'))
+        self.assertEqual(3.0, p.get('acme.ui.ratio'))
 
         return
 
