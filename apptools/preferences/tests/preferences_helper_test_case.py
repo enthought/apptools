@@ -212,10 +212,18 @@ class PreferencesHelperTestCase(unittest.TestCase):
             preferences_path = 'acme.ui'
 
             # The traits that we want to initialize from preferences.
-            description = Unicode(u'FreeU\xdc\xf2ser')
+            description = Unicode(u'U\xdc\xf2ser')
 
         helper = AcmeUIPreferencesHelper()
-        self.assertEqualu'FreeU\xdc\xf2ser', helper.description)
+        self.assertEqual(u'U\xdc\xf2ser', helper.description)
+
+
+        p = Preferences()
+        p.load(self.example)
+        p.set('acme.ui.description', u'caf\xe9')
+
+        self.assertEqual(u'caf\xe9', helper.description)
+
 
     def test_no_preferences_path(self):
         """ no preferences path """
