@@ -200,7 +200,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         return
 
-   def test_real_unicode_values(self):
+    def test_real_unicode_values(self):
         """ default values """
 
         p = self.preferences
@@ -218,12 +218,9 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(u'U\xdc\xf2ser', helper.description)
 
 
-        p = Preferences()
-        p.load(self.example)
-        p.set('acme.ui.description', u'caf\xe9')
-
+        helper.description = u'caf\xe9'
         self.assertEqual(u'caf\xe9', helper.description)
-
+        self.assertEqual('caf\xc3\xa9', p.get('acme.ui.description'))
 
     def test_no_preferences_path(self):
         """ no preferences path """
