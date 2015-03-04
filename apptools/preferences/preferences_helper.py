@@ -68,6 +68,12 @@ class PreferencesHelper(HasTraits):
         # If we were the one that set the trait (because the underlying
         # preferences node changed) then do nothing.
         if self.preferences and self._is_preference_trait(trait_name):
+            if isinstance(new, unicode):
+                # the underlying Preference class can only save strings to the
+                # file and not unicode. We make the assumpation that storing
+                # unicode objects as utf-8 string should cover us in most
+                # cases.
+                new = new.encode('utf-8')
             self.preferences.set('%s.%s' % (self._get_path(), trait_name), new)
 
         return
@@ -134,7 +140,8 @@ class PreferencesHelper(HasTraits):
 
         # If the trait type is 'Unicode' then we convert the raw value.
         elif isinstance(handler, Unicode):
-            value = unicode(value)
+            # The unicode values have been serialized as utf-8 strings
+            value = value.decode('utf-8')
 
         # Otherwise, we eval it!
         else:

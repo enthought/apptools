@@ -200,6 +200,23 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         return
 
+   def test_real_unicode_values(self):
+        """ default values """
+
+        p = self.preferences
+
+        class AcmeUIPreferencesHelper(PreferencesHelper):
+            """ A helper! """
+
+            # The path to the preferences node that contains our preferences.
+            preferences_path = 'acme.ui'
+
+            # The traits that we want to initialize from preferences.
+            description = Unicode(u'FreeU\xdc\xf2ser')
+
+        helper = AcmeUIPreferencesHelper()
+        self.assertEqualu'FreeU\xdc\xf2ser', helper.description)
+
     def test_no_preferences_path(self):
         """ no preferences path """
 
