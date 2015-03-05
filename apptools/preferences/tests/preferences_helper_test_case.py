@@ -204,6 +204,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         """ default values """
 
         p = self.preferences
+        p.load(self.example)
 
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
@@ -221,6 +222,9 @@ class PreferencesHelperTestCase(unittest.TestCase):
             names       = List(Str, ['joe', 'fred', 'jane'])
 
         helper = AcmeUIPreferencesHelper()
+
+        original_description = helper.description
+        helper.description = u'U\xdc\xf2ser'
         self.assertEqual(u'U\xdc\xf2ser', helper.description)
 
 
@@ -232,6 +236,12 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         p.load(self.example)
         self.assertEqual(u'caf\xe9', p.get('acme.ui.description'))
+        self.assertEqual(u'True', p.get('acme.ui.visible'))
+        self.assertEqual(True, helper.visible)
+
+        # reset the original description and save the example file
+        helper.description = original_description
+        p.save(self.example)
 
     def test_no_preferences_path(self):
         """ no preferences path """
