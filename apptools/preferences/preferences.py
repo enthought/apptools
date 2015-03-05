@@ -398,7 +398,7 @@ class Preferences(HasTraits):
 
             logger.debug('saving preferences to <%s>', file_or_filename)
 
-            config_obj = ConfigObj(file_or_filename)
+            config_obj = ConfigObj(file_or_filename, encoding='utf-8')
             self._add_node_to_dictionary(self, config_obj)
             config_obj.write()
 
