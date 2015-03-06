@@ -362,7 +362,7 @@ class Preferences(HasTraits):
         # use a different persistence mechanism).
         from configobj import ConfigObj
 
-        config_obj = ConfigObj(file_or_filename)
+        config_obj = ConfigObj(file_or_filename, encoding='utf-8')
 
         # 'name' is the section name, 'value' is a dictionary containing the
         # name/value pairs in the section (the actual preferences ;^).
@@ -398,7 +398,7 @@ class Preferences(HasTraits):
 
             logger.debug('saving preferences to <%s>', file_or_filename)
 
-            config_obj = ConfigObj(file_or_filename)
+            config_obj = ConfigObj(file_or_filename, encoding='utf-8')
             self._add_node_to_dictionary(self, config_obj)
             config_obj.write()
 
@@ -541,9 +541,6 @@ class Preferences(HasTraits):
 
     def _set(self, key, value):
         """ Set the value of a preference in this node. """
-
-        # Preferences are *always* stored as strings.
-        value = str(value)
 
         self._lk.acquire()
         old = self._preferences.get(key)

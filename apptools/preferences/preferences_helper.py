@@ -132,9 +132,10 @@ class PreferencesHelper(HasTraits):
         if isinstance(handler, Str) or trait.is_str:
             pass
 
-        # If the trait type is 'Unicode' then we convert the raw value.
         elif isinstance(handler, Unicode):
-            value = unicode(value)
+            # Just in case we get back an ASCII `str` object, convert it to a
+            # `unicode` object.     
+            value = unicode(value) 
 
         # Otherwise, we eval it!
         else:

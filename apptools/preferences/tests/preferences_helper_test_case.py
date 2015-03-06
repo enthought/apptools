@@ -200,6 +200,49 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         return
 
+    def test_real_unicode_values(self):
+        """ default values """
+
+        p = self.preferences
+        p.load(self.example)
+
+        class AcmeUIPreferencesHelper(PreferencesHelper):
+            """ A helper! """
+
+            # The path to the preferences node that contains our preferences.
+            preferences_path = 'acme.ui'
+
+            # The traits that we want to initialize from preferences.
+            bgcolor     = Str('blue')
+            width       = Int(50)
+            ratio       = Float(1.0)
+            visible     = Bool(True)
+            description = Unicode(u'U\xdc\xf2ser')
+            offsets     = List(Int, [1, 2, 3, 4])
+            names       = List(Str, ['joe', 'fred', 'jane'])
+
+        helper = AcmeUIPreferencesHelper()
+
+        original_description = helper.description
+        helper.description = u'U\xdc\xf2ser'
+        self.assertEqual(u'U\xdc\xf2ser', helper.description)
+
+
+        helper.description = u'caf\xe9'
+        self.assertEqual(u'caf\xe9', helper.description)
+        self.assertEqual(u'caf\xe9', p.get('acme.ui.description'))
+
+        p.save(self.example)
+
+        p.load(self.example)
+        self.assertEqual(u'caf\xe9', p.get('acme.ui.description'))
+        self.assertEqual(u'True', p.get('acme.ui.visible'))
+        self.assertEqual(True, helper.visible)
+
+        # reset the original description and save the example file
+        helper.description = original_description
+        p.save(self.example)
+
     def test_no_preferences_path(self):
         """ no preferences path """
 
@@ -453,11 +496,11 @@ class PreferencesHelperTestCase(unittest.TestCase):
         # ratio to get set via the static trait change handler on the helper.
         p.set('acme.ui.width', 42)
         self.assertEqual(42, helper.width)
-        self.assertEqual('42', p.get('acme.ui.width'))
+        self.assertEqual(42, p.get('acme.ui.width'))
 
         # Did the ratio get changed?
         self.assertEqual(3.0, helper.ratio)
-        self.assertEqual('3.0', p.get('acme.ui.ratio'))
+        self.assertEqual(3.0, p.get('acme.ui.ratio'))
 
         return
 
