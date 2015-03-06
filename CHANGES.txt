@@ -1,0 +1,20 @@
+Apptools CHANGELOG
+==================
+
+Change summary since 4.2.0
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Enhancements
+
+ * Apptools now have a changelog!
+ * Preferences system defaults to utf-8 encoded string with ConfigObj providing
+   better support for unicode in the PreferenceHelper (#41).
+
+Changes
+
+ * 
+
+Fixes
+
+ * 
+
