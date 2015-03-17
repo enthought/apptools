@@ -1,5 +1,6 @@
-# Copyright (c) 2008-2012 by Enthought, Inc.
+# Copyright (c) 2008-2015 by Enthought, Inc.
 # All rights reserved.
+
 import os
 import re
 import subprocess
@@ -104,9 +105,8 @@ if __name__ == "__main__":
           author_email='info@enthought.com',
           maintainer='ETS Developers',
           maintainer_email='enthought-dev@enthought.com',
-          url='https://github.com/enthought/apptools',
-          download_url=('http://www.enthought.com/repo/ets/'
-                        'apptools-%s.tar.gz' % __version__),
+          url='https://docs.enthought.com/apptools',
+          download_url=('https://www.github.com/enthought/apptools'),
           classifiers=[c.strip() for c in """\
                 Development Status :: 5 - Production/Stable
                 Intended Audience :: Developers

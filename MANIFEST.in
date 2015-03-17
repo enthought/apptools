@@ -1,0 +1,17 @@
+include README.rst
+include CHANGES.txt
+include LICENSE.txt
+include MANIFEST.in
+include TODO.txt
+include image_LICENSE.txt
+include image_LICENSE_OOo.txt
+graft docs
+prune docs/build
+recursive-exclude docs *.pyc
+graft examples
+recursive-exclude examples *.pyc
+graft integrationtests
+recursive-exclude integrationtests *.pyc
+recursive-include apptools *.py
+recursive-include apptools *.ini
+recursive-include apptools *.png
