@@ -1,19 +1,20 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Application Scripting Framework &mdash; AppTools v3.0.0b1 documentation</title>
+    <title>Application Scripting Framework &mdash; apptools 4.3.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '3.0.0b1',
+        VERSION:     '4.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +24,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="AppTools v3.0.0b1 documentation" href="../index.html" />
+    <link rel="top" title="apptools 4.3.0 documentation" href="../index.html" />
     <link rel="next" title="Permissions Framework - Introduction" href="../permissions/Introduction.html" />
     <link rel="prev" title="AppTools Documentation" href="../index.html" /> 
   </head>
@@ -35,12 +36,15 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="../permissions/Introduction.html" title="Permissions Framework - Introduction"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../index.html" title="AppTools Documentation"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">AppTools v3.0.0b1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -270,8 +274,8 @@ is.</p>
 <h3>Static Specification<a class="headerlink" href="#static-specification" title="Permalink to this headline">¶</a></h3>
 <p>A scripting API is specified statically by the explicit use of the
 <tt class="docutils literal"><span class="pre">scriptable</span></tt> decorator and the <tt class="docutils literal"><span class="pre">Scriptable</span></tt> trait wrapper.  For example:</p>
-<div class="highlight-python"><pre>from enthought.appscripting.api import scriptable, Scriptable
-from enthought.traits.api import HasTraits, Int, Str
+<div class="highlight-python"><div class="highlight"><pre>from apptools.appscripting.api import scriptable, Scriptable
+from traits.api import HasTraits, Int, Str
 
 class DataModel(HasTraits):
 
@@ -286,24 +290,25 @@ class DataModel(HasTraits):
     def weeble(self)
         pass
 
-# Create the scriptable object.  It's creation won't be recorded because
-# __init__() isn't decorated.
+# Create the scriptable object.  It&#39;s creation won&#39;t be recorded because
+# __init__() isn&#39;t decorated.
 obj = DataModel()
 
 # These will be recorded.
-obj.foo = ''
+obj.foo = &#39;&#39;
 obj.bar = 10
 obj.baz()
 
 # This will not be recorded.
 obj.weeble()
 
-# This won't be recorded unless 'f' is passed to something that is
+# This won&#39;t be recorded unless &#39;f&#39; is passed to something that is
 # recorded.
 f = obj.foo
 
-# This will be recorded because we set 'has_side_effects'.
-b = obj.bar</pre>
+# This will be recorded because we set &#39;has_side_effects&#39;.
+b = obj.bar
+</pre></div>
 </div>
 </div>
 <div class="section" id="dynamic-specification">
@@ -311,8 +316,8 @@ b = obj.bar</pre>
 <p>A scripting API can also be specified dynamically.  The following example
 produces a scriptable object with the same scriptable API as above (with the
 exception that <tt class="docutils literal"><span class="pre">has_side_effects</span></tt> cannot be specified dynamically):</p>
-<div class="highlight-python"><pre>from enthought.appscripting.api import create_scriptable_type
-from enthought.traits.api import HasTraits, Int, Str
+<div class="highlight-python"><div class="highlight"><pre>from apptools.appscripting.api import create_scriptable_type
+from traits.api import HasTraits, Int, Str
 
 class DataModel(HasTraits):
 
@@ -327,17 +332,18 @@ class DataModel(HasTraits):
         pass
 
 # Create a scriptable type based on the above.
-ScriptableDataModel = create_scriptable_type(DataModel, excludes=['weeble'])
+ScriptableDataModel = create_scriptable_type(DataModel, excludes=[&#39;weeble&#39;])
 
 # Now create scriptable objects from the scriptable type.  Note that each
 # object has the same type.
 obj1 = ScriptableDataModel()
-obj2 = ScriptableDataModel()</pre>
+obj2 = ScriptableDataModel()
+</pre></div>
 </div>
 <p>Instead we could bypass the type and make the objects themselves scriptable as
 follows:</p>
-<div class="highlight-python"><pre>from enthought.appscripting.api import make_object_scriptable
-from enthought.traits.api import HasTraits, Int, Str
+<div class="highlight-python"><div class="highlight"><pre>from apptools.appscripting.api import make_object_scriptable
+from traits.api import HasTraits, Int, Str
 
 class DataModel(HasTraits):
 
@@ -356,14 +362,15 @@ obj1 = DataModel()
 obj2 = DataModel()
 
 # Now make the objects scriptable.  Note that each object has a different
-# type, each a sub-type of 'DataModel'.
-make_object_scriptable(obj1, excludes=['weeble'])
-make_object_scriptable(obj2, excludes=['weeble'])</pre>
+# type, each a sub-type of &#39;DataModel&#39;.
+make_object_scriptable(obj1, excludes=[&#39;weeble&#39;])
+make_object_scriptable(obj2, excludes=[&#39;weeble&#39;])
+</pre></div>
 </div>
 <p>With a more sophisticated design we may choose to specify the scriptable API as
 an interface as follows:</p>
-<div class="highlight-python"><pre>from enthought.appscripting.api import make_object_scriptable
-from enthought.traits.api import HasTraits, Int, Interface, Str
+<div class="highlight-python"><div class="highlight"><pre>from apptools.appscripting.api import make_object_scriptable
+from traits.api import HasTraits, Int, Interface, Str
 
 class DataModel(HasTraits):
 
@@ -390,7 +397,8 @@ class IScriptableDataModel(Interface):
 obj = DataModel()
 
 # Now make the object scriptable.
-make_object_scriptable(obj, api=IScriptableDataModel)</pre>
+make_object_scriptable(obj, api=IScriptableDataModel)
+</pre></div>
 </div>
 </div>
 <div class="section" id="scripting-init">
@@ -454,7 +462,7 @@ better to have the application create and bind the scriptable objects itself.</p
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -475,18 +483,21 @@ better to have the application create and bind the scriptable objects itself.</p
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="../permissions/Introduction.html" title="Permissions Framework - Introduction"
              >next</a> |</li>
         <li class="right" >
           <a href="../index.html" title="AppTools Documentation"
              >previous</a> |</li>
-        <li><a href="../index.html">AppTools v3.0.0b1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+        &copy; Copyright 2008-2015, Enthought.
+      Last updated on Mar 17, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

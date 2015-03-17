@@ -1,19 +1,20 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Preferences &mdash; AppTools v3.0.0b1 documentation</title>
+    <title>Preferences &mdash; apptools 4.3.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '3.0.0b1',
+        VERSION:     '4.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +24,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="AppTools v3.0.0b1 documentation" href="../index.html" />
+    <link rel="top" title="apptools 4.3.0 documentation" href="../index.html" />
     <link rel="next" title="Preferences in Envisage" href="PreferencesInEnvisage.html" />
     <link rel="prev" title="Default User Manager Data API" href="../permissions/DefaultUserManagerDataAPI.html" /> 
   </head>
@@ -35,12 +36,15 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="PreferencesInEnvisage.html" title="Preferences in Envisage"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../permissions/DefaultUserManagerDataAPI.html" title="Default User Manager Data API"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">AppTools v3.0.0b1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -82,7 +86,7 @@ a file &#8216;example.ini&#8217;:</p>
 </pre></div>
 </div>
 <p>I can create a preferences hierarchy from this file by:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">enthought.preferences.api</span> <span class="kn">import</span> <span class="n">Preferences</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">apptools.preferences.api</span> <span class="kn">import</span> <span class="n">Preferences</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span> <span class="o">=</span> <span class="n">Preferences</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s">&#39;example.ini&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
 
@@ -201,28 +205,29 @@ class comes in.</p>
 </div>
 <p>Say, I am interested in the preferences in the &#8216;acme.ui&#8217; section. I can use a
 preferences helper as follows:</p>
-<div class="highlight-python"><pre>from enthought.preferences.api import PreferencesHelper
+<div class="highlight-python"><div class="highlight"><pre>from apptools.preferences.api import PreferencesHelper
 
 class SplashScreenPreferences(PreferencesHelper):
-    """ A preferences helper for the splash screen. """
+    &quot;&quot;&quot; A preferences helper for the splash screen. &quot;&quot;&quot;
 
-    PREFERENCES_PATH = 'acme.ui'
+    PREFERENCES_PATH = &#39;acme.ui&#39;
 
     bgcolor = Str
     width   = Int
     ratio   = Float
     visible = Bool
 
-&gt;&gt;&gt; preferences = Preferences(filename='example.ini')
+&gt;&gt;&gt; preferences = Preferences(filename=&#39;example.ini&#39;)
 &gt;&gt;&gt; helper = SplashScreenPreferences(preferences=preferences)
 &gt;&gt;&gt; helper.bgcolor
-'blue'
+&#39;blue&#39;
 &gt;&gt;&gt; helper.width
 100
 &gt;&gt;&gt; helper.ratio
 1.0
 &gt;&gt;&gt; helper.visible
-True</pre>
+True
+</pre></div>
 </div>
 <p>And, obviously, I can set the value of the preferences via the helper too:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">helper</span><span class="o">.</span><span class="n">ratio</span> <span class="o">=</span> <span class="mf">0.5</span>
@@ -236,14 +241,15 @@ True</pre>
 <p>Using a preferences helper you also get notified via the usual trait
 mechanism when the preferences are changed (either via the helper or via the
 preferences node directly:</p>
-<div class="highlight-python"><pre>def listener(obj, trait_name, old, new):
+<div class="highlight-python"><div class="highlight"><pre>def listener(obj, trait_name, old, new):
     print trait_name, old, new
 
 &gt;&gt;&gt; helper.on_trait_change(listener)
 &gt;&gt;&gt; helper.ratio = 0.75
 ratio 0.5 0.75
-&gt;&gt;&gt; preferences.set('acme.ui.ratio', 0.33)
-ratio 0.75 0.33</pre>
+&gt;&gt;&gt; preferences.set(&#39;acme.ui.ratio&#39;, 0.33)
+ratio 0.75 0.33
+</pre></div>
 </div>
 <p>If you always use the same preference node as the root of your preferences you
 can also set the class attribute &#8216;PreferencesHelper.preferences&#8217; to be that
@@ -282,7 +288,7 @@ is generally used to load any predefined default values into the preferences
 system.</p>
 <p>If you are happy with the default arrangement, then using the scoped
 preferences is just like using the plain old non-scoped version:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">enthought.preferences.api</span> <span class="kn">import</span> <span class="n">ScopedPreferences</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">apptools.preferences.api</span> <span class="kn">import</span> <span class="n">ScopedPreferences</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span> <span class="o">=</span> <span class="n">ScopedPreferences</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s">&#39;example.ini&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s">&#39;example.ini&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
@@ -405,7 +411,7 @@ interested in the <a class="reference external" href="PreferencesInEnvisage.html
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -426,18 +432,21 @@ interested in the <a class="reference external" href="PreferencesInEnvisage.html
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="PreferencesInEnvisage.html" title="Preferences in Envisage"
              >next</a> |</li>
         <li class="right" >
           <a href="../permissions/DefaultUserManagerDataAPI.html" title="Default User Manager Data API"
              >previous</a> |</li>
-        <li><a href="../index.html">AppTools v3.0.0b1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+        &copy; Copyright 2008-2015, Enthought.
+      Last updated on Mar 17, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

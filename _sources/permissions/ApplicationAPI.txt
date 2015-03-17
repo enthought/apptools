@@ -34,7 +34,7 @@ Conventionally all an applications permissions are defined in a single
 ``permissions.py`` module.  The following is an extract of the example's
 ``permissions.py`` module::
 
-    from enthought.permissions.api import Permission
+    from apptools.permissions.api import Permission
 
     # Add a new person.
     NewPersonPerm = Permission(id='ets.permissions.example.person.new',
@@ -82,9 +82,9 @@ object that enables the ``age`` item when the user has the
 ``UpdatePersonAgePerm`` permission and shows the ``salary`` item when the user
 has the ``PersonSalaryPerm`` permission::
 
-    from enthought.permissions.api import SecureHandler
-    from enthought.traits.api import HasTraits, Int, Unicode
-    from enthought.traits.ui.api import Item, View
+    from apptools.permissions.api import SecureHandler
+    from traits.api import HasTraits, Int, Unicode
+    from traitsui.api import Item, View
 
     from permissions import UpdatePersonAgePerm, PersonSalaryPerm
 
@@ -135,7 +135,7 @@ for other types of objects.
 The following extract from the example shows the wrapping of a standard PyFace
 action and the application of the ``NewPersonPerm`` permission::
 
-    from enthought.permissions.api import SecureProxy
+    from apptools.permissions.api import SecureProxy
 
     from permissions import NewPersonPerm
 
@@ -163,7 +163,7 @@ required).
 
 The code fragment to authenticate the current user is::
 
-    from enthought.permissions.api import get_permissions_manager
+    from apptools.permissions.api import get_permissions_manager
 
     get_permissions_Manager().user_manager.authenticate_user()
 
@@ -178,7 +178,7 @@ provided that contains all the user and management actions (see below) in the
 permissions framework.  This is used by the example.
 
 The user menu, login and logout actions can be imported from
-``enthought.permissions.action.api``.
+``apptools.permissions.action.api``.
 
 
 Getting and Setting User Data

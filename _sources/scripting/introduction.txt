@@ -29,7 +29,7 @@ The scripting API primarily allows you to record UI actions for objects
 that have Traits.  Technically the framework listens to all trait
 changes so will work outside a UI.  We do not document the full API
 here, the best place to look for that is the
-``enthought.scripting.recorder`` module which is reasonably well
+``apptools.scripting.recorder`` module which is reasonably well
 documented.  We provide a high level overview of the library. 
 
 The quickest way to get started is to look at a small example.
@@ -43,10 +43,10 @@ A tour by example
 The following example is taken from the test suite.  Consider a set of
 simple objects organized in a hierarchy::
 
-    from enthought.traits.api import (HasTraits, Float, Instance, 
+    from traits.api import (HasTraits, Float, Instance, 
             Str, List, Bool, HasStrictTraits, Tuple, Range, TraitPrefixMap,
             Trait)
-    from enthought.scripting.api import (Recorder, recordable,
+    from apptools.scripting.api import (Recorder, recordable,
         set_recorder)
 
     class Property(HasStrictTraits):
@@ -93,7 +93,7 @@ follows::
 Given this hierarchy, we'd like to be able to record a script.  To do
 this we setup the recording infrastructure::
 
-    from enthought.mayavi.core.recorder import Recorder, set_recorder
+    from mayavi.core.recorder import Recorder, set_recorder
     # Create a recorder.
     r = Recorder()
     # Set the global recorder so the decorator works.

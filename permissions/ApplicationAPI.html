@@ -1,19 +1,20 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Application API &mdash; AppTools v3.0.0b1 documentation</title>
+    <title>Application API &mdash; apptools 4.3.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '3.0.0b1',
+        VERSION:     '4.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +24,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="AppTools v3.0.0b1 documentation" href="../index.html" />
+    <link rel="top" title="apptools 4.3.0 documentation" href="../index.html" />
     <link rel="next" title="Default Policy Manager Data API" href="DefaultPolicyManagerDataAPI.html" />
     <link rel="prev" title="Permissions Framework - Introduction" href="Introduction.html" /> 
   </head>
@@ -35,12 +36,15 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="DefaultPolicyManagerDataAPI.html" title="Default Policy Manager Data API"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="Introduction.html" title="Permissions Framework - Introduction"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">AppTools v3.0.0b1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -75,7 +79,7 @@ specific prefix to ensure their uniqueness.</p>
 <p>Conventionally all an applications permissions are defined in a single
 <tt class="docutils literal"><span class="pre">permissions.py</span></tt> module.  The following is an extract of the example&#8217;s
 <tt class="docutils literal"><span class="pre">permissions.py</span></tt> module:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">enthought.permissions.api</span> <span class="kn">import</span> <span class="n">Permission</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">apptools.permissions.api</span> <span class="kn">import</span> <span class="n">Permission</span>
 
 <span class="c"># Add a new person.</span>
 <span class="n">NewPersonPerm</span> <span class="o">=</span> <span class="n">Permission</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">&#39;ets.permissions.example.person.new&#39;</span><span class="p">,</span>
@@ -116,9 +120,9 @@ Traits <tt class="docutils literal"><span class="pre">Handler</span></tt> class.
 object that enables the <tt class="docutils literal"><span class="pre">age</span></tt> item when the user has the
 <tt class="docutils literal"><span class="pre">UpdatePersonAgePerm</span></tt> permission and shows the <tt class="docutils literal"><span class="pre">salary</span></tt> item when the user
 has the <tt class="docutils literal"><span class="pre">PersonSalaryPerm</span></tt> permission:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">enthought.permissions.api</span> <span class="kn">import</span> <span class="n">SecureHandler</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Unicode</span>
-<span class="kn">from</span> <span class="nn">enthought.traits.ui.api</span> <span class="kn">import</span> <span class="n">Item</span><span class="p">,</span> <span class="n">View</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">apptools.permissions.api</span> <span class="kn">import</span> <span class="n">SecureHandler</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Unicode</span>
+<span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">Item</span><span class="p">,</span> <span class="n">View</span>
 
 <span class="kn">from</span> <span class="nn">permissions</span> <span class="kn">import</span> <span class="n">UpdatePersonAgePerm</span><span class="p">,</span> <span class="n">PersonSalaryPerm</span>
 
@@ -163,23 +167,24 @@ proxy behaves just like the object being proxied.</p>
 for other types of objects.</p>
 <p>The following extract from the example shows the wrapping of a standard PyFace
 action and the application of the <tt class="docutils literal"><span class="pre">NewPersonPerm</span></tt> permission:</p>
-<div class="highlight-python"><pre>from enthought.permissions.api import SecureProxy
+<div class="highlight-python"><div class="highlight"><pre>from apptools.permissions.api import SecureProxy
 
 from permissions import NewPersonPerm
 
 ...
 
     def _new_person_action_default(self):
-        """Trait initializer."""
+        &quot;&quot;&quot;Trait initializer.&quot;&quot;&quot;
 
         # Create the action and secure it with the appropriate permission.
-        act = Action(name='New Person', on_perform=self._new_person)
+        act = Action(name=&#39;New Person&#39;, on_perform=self._new_person)
         act = SecureProxy(act, permissions=[NewPersonPerm])
 
-        return act</pre>
+        return act
+</pre></div>
 </div>
 <p>A <tt class="docutils literal"><span class="pre">SecureProxy</span></tt> also accepts a <tt class="docutils literal"><span class="pre">show</span></tt> argument that, when set to
-<tt class="xref docutils literal"><span class="pre">False</span></tt>, hides the object when it becomes disabled.</p>
+<tt class="docutils literal"><span class="pre">False</span></tt>, hides the object when it becomes disabled.</p>
 </div>
 </div>
 <div class="section" id="authenticating-the-user">
@@ -188,7 +193,7 @@ from permissions import NewPersonPerm
 for authenticating the user (and subsequently unauthorising the user if
 required).</p>
 <p>The code fragment to authenticate the current user is:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">enthought.permissions.api</span> <span class="kn">import</span> <span class="n">get_permissions_manager</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">apptools.permissions.api</span> <span class="kn">import</span> <span class="n">get_permissions_manager</span>
 
 <span class="n">get_permissions_Manager</span><span class="p">()</span><span class="o">.</span><span class="n">user_manager</span><span class="o">.</span><span class="n">authenticate_user</span><span class="p">()</span>
 </pre></div>
@@ -201,7 +206,7 @@ method.</p>
 provided that contains all the user and management actions (see below) in the
 permissions framework.  This is used by the example.</p>
 <p>The user menu, login and logout actions can be imported from
-<tt class="docutils literal"><span class="pre">enthought.permissions.action.api</span></tt>.</p>
+<tt class="docutils literal"><span class="pre">apptools.permissions.action.api</span></tt>.</p>
 </div>
 <div class="section" id="getting-and-setting-user-data">
 <h2>Getting and Setting User Data<a class="headerlink" href="#getting-and-setting-user-data" title="Permalink to this headline">¶</a></h2>
@@ -324,7 +329,7 @@ permissions.</dd>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -345,18 +350,21 @@ permissions.</dd>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="DefaultPolicyManagerDataAPI.html" title="Default Policy Manager Data API"
              >next</a> |</li>
         <li class="right" >
           <a href="Introduction.html" title="Permissions Framework - Introduction"
              >previous</a> |</li>
-        <li><a href="../index.html">AppTools v3.0.0b1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+        &copy; Copyright 2008-2015, Enthought.
+      Last updated on Mar 17, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>
