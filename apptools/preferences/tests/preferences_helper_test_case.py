@@ -201,7 +201,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         return
 
     def test_real_unicode_values(self):
-        """ default values """
+        """ Test with real life unicode values """
 
         p = self.preferences
         p.load(self.example)
@@ -217,25 +217,30 @@ class PreferencesHelperTestCase(unittest.TestCase):
             width       = Int(50)
             ratio       = Float(1.0)
             visible     = Bool(True)
-            description = Unicode(u'U\xdc\xf2ser')
+            description = Unicode(u'')
             offsets     = List(Int, [1, 2, 3, 4])
             names       = List(Str, ['joe', 'fred', 'jane'])
 
         helper = AcmeUIPreferencesHelper()
 
+        first_unicode_str = u'U\xdc\xf2ser'
+        first_utf8_str = 'U\xc3\x9c\xc3\xb2ser'
+
         original_description = helper.description
-        helper.description = u'U\xdc\xf2ser'
-        self.assertEqual(u'U\xdc\xf2ser', helper.description)
+        helper.description = first_unicode_str
+        self.assertEqual(first_unicode_str, helper.description)
 
 
-        helper.description = u'caf\xe9'
-        self.assertEqual(u'caf\xe9', helper.description)
-        self.assertEqual(u'caf\xe9', p.get('acme.ui.description'))
+        second_unicode_str = u'caf\xe9'
+        second_utf8_str = 'caf\xc3\xa9'
+        helper.description = second_unicode_str
+        self.assertEqual(second_unicode_str, helper.description)
+        self.assertEqual(second_unicode_str, p.get('acme.ui.description'))
 
         p.save(self.example)
 
         p.load(self.example)
-        self.assertEqual(u'caf\xe9', p.get('acme.ui.description'))
+        self.assertEqual(second_unicode_str, p.get('acme.ui.description'))
         self.assertEqual(u'True', p.get('acme.ui.visible'))
         self.assertEqual(True, helper.visible)
 
@@ -496,11 +501,11 @@ class PreferencesHelperTestCase(unittest.TestCase):
         # ratio to get set via the static trait change handler on the helper.
         p.set('acme.ui.width', 42)
         self.assertEqual(42, helper.width)
-        self.assertEqual(42, p.get('acme.ui.width'))
+        self.assertEqual('42', p.get('acme.ui.width'))
 
         # Did the ratio get changed?
         self.assertEqual(3.0, helper.ratio)
-        self.assertEqual(3.0, p.get('acme.ui.ratio'))
+        self.assertEqual('3.0', p.get('acme.ui.ratio'))
 
         return
 

@@ -541,6 +541,11 @@ class Preferences(HasTraits):
 
     def _set(self, key, value):
         """ Set the value of a preference in this node. """
+        
+        # everything must be unicode encoded so that ConfigObj configuration
+        # can properly serialize the data. Python str are supposed to be ASCII
+        # encoded.
+        value = unicode(value)
 
         self._lk.acquire()
         old = self._preferences.get(key)
