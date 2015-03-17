@@ -2,7 +2,9 @@
 apptools: application tools
 ===========================
 
-http://github.enthought.com/apptools
+Documentation: http://docs.enthought.com/apptools
+
+Source Code: http://www.github.com/enthought/apptools
 
 The apptools project includes a set of packages that Enthought has found
 useful in creating a number of applications.  They implement functionality
