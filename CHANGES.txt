@@ -1,20 +1,15 @@
 Apptools CHANGELOG
 ==================
 
-Change summary since 4.2.0
+Change summary since 4.2.1
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Enhancements
 
- * Apptools now have a changelog!
- * Preferences system defaults to utf-8 encoded string with ConfigObj providing
-   better support for unicode in the PreferenceHelper (#41).
-
-Changes
-
- * 
-
-Fixes
-
- * 
-
+* Apptools now have a changelog!
+* Preferences system defaults to utf-8 encoded string with ConfigObj providing
+  better support for unicode in the PreferenceHelper (#41).
+* Added a traitsified backport of Python 3's lru_cache (#39).
+* Added PyTables support to the io submodule (#19, #20, and #24 through #34).
+* Added a SelectionService for managing selections within an application (#15, #16, #17,
+  #23).
