@@ -1,19 +1,20 @@
-
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Automatic script recording &mdash; AppTools v3.0.0b1 documentation</title>
+    <title>Automatic script recording &mdash; apptools 4.3.0 documentation</title>
+    
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '3.0.0b1',
+        VERSION:     '4.3.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +24,7 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="AppTools v3.0.0b1 documentation" href="../index.html" />
+    <link rel="top" title="apptools 4.3.0 documentation" href="../index.html" />
     <link rel="next" title="Undo Framework" href="../undo/Introduction.html" />
     <link rel="prev" title="Preferences in Envisage" href="../preferences/PreferencesInEnvisage.html" /> 
   </head>
@@ -35,12 +36,15 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="../undo/Introduction.html" title="Undo Framework"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../preferences/PreferencesInEnvisage.html" title="Preferences in Envisage"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">AppTools v3.0.0b1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -54,13 +58,13 @@
 <p>This package provides a very handy and powerful Python script recording
 facility.  This can be used to:</p>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li>record all actions performed on a traits based UI into a <em>human
 readable</em>, Python script that should be able to recreate your UI
 actions.</li>
 <li>easily learn the scripting API of an application.</li>
 </ul>
-</blockquote>
+</div></blockquote>
 <p>This package is not just a toy framework and is powerful enough to
 provide full script recording to the <a class="reference external" href="http://code.enthought.com/projects/mayavi">Mayavi</a> application.  Mayavi is a
 powerful 3D visualization tool that is part of <a class="reference external" href="http://code.enthought.com/projects/tool-suite.php">ETS</a>.</p>
@@ -70,17 +74,17 @@ powerful 3D visualization tool that is part of <a class="reference external" hre
 that have Traits.  Technically the framework listens to all trait
 changes so will work outside a UI.  We do not document the full API
 here, the best place to look for that is the
-<tt class="docutils literal"><span class="pre">enthought.scripting.recorder</span></tt> module which is reasonably well
+<tt class="docutils literal"><span class="pre">apptools.scripting.recorder</span></tt> module which is reasonably well
 documented.  We provide a high level overview of the library.</p>
 <p>The quickest way to get started is to look at a small example.</p>
 <div class="section" id="a-tour-by-example">
 <span id="scripting-api-example"></span><h3>A tour by example<a class="headerlink" href="#a-tour-by-example" title="Permalink to this headline">¶</a></h3>
 <p>The following example is taken from the test suite.  Consider a set of
 simple objects organized in a hierarchy:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">enthought.traits.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span>
         <span class="n">Str</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">HasStrictTraits</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span> <span class="n">TraitPrefixMap</span><span class="p">,</span>
         <span class="n">Trait</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">enthought.scripting.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Recorder</span><span class="p">,</span> <span class="n">recordable</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">apptools.scripting.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Recorder</span><span class="p">,</span> <span class="n">recordable</span><span class="p">,</span>
     <span class="n">set_recorder</span><span class="p">)</span>
 
 <span class="k">class</span> <span class="nc">Property</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
@@ -127,7 +131,7 @@ follows:</p>
 </div>
 <p>Given this hierarchy, we&#8217;d like to be able to record a script.  To do
 this we setup the recording infrastructure:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">enthought.mayavi.core.recorder</span> <span class="kn">import</span> <span class="n">Recorder</span><span class="p">,</span> <span class="n">set_recorder</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">mayavi.core.recorder</span> <span class="kn">import</span> <span class="n">Recorder</span><span class="p">,</span> <span class="n">set_recorder</span>
 <span class="c"># Create a recorder.</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">Recorder</span><span class="p">()</span>
 <span class="c"># Set the global recorder so the decorator works.</span>
@@ -203,7 +207,7 @@ unregisters all nested objects as well.</p>
 <span id="recorder-advanced-uses"></span><h3>Advanced use cases<a class="headerlink" href="#advanced-use-cases" title="Permalink to this headline">¶</a></h3>
 <p>Here are a few advanced use cases.</p>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li>The API also provides a <tt class="docutils literal"><span class="pre">RecorderWithUI</span></tt> class that provides a
 simple user interface that prints the recorded script and allows the
 user to save the script.</li>
@@ -218,7 +222,7 @@ metadata to the trait definition or specify a list of strings to the
 <li>If you want to use a specific name for an object on the script you
 can pass the <tt class="docutils literal"><span class="pre">script_id</span></tt> parameter to the register function.</li>
 </ul>
-</blockquote>
+</div></blockquote>
 <p>For more details on the recorder itself we suggest reading the module
 source code.  It is fairly well documented and with the above background
 should be enough to get you going.</p>
@@ -261,7 +265,7 @@ should be enough to get you going.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -282,18 +286,21 @@ should be enough to get you going.</p>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
           <a href="../undo/Introduction.html" title="Undo Framework"
              >next</a> |</li>
         <li class="right" >
           <a href="../preferences/PreferencesInEnvisage.html" title="Preferences in Envisage"
              >previous</a> |</li>
-        <li><a href="../index.html">AppTools v3.0.0b1 documentation</a> &raquo;</li> 
+        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2008, Enthought.
-      Last updated on Jan 28, 2011.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.5.
+        &copy; Copyright 2008-2015, Enthought.
+      Last updated on Mar 17, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

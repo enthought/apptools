@@ -39,7 +39,7 @@ e.g. To contribute a preference file for my plugin I might use::
   class MyPlugin(Plugin):
       ...
 
-      @contributes_to('enthought.envisage.preferences')
+      @contributes_to('envisage.preferences')
       def get_preferences(self, application):
           return ['pkgfile://mypackage:preferences.ini']
 

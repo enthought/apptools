@@ -35,7 +35,7 @@ a file 'example.ini'::
 
 I can create a preferences hierarchy from this file by::
 
-  >>> from enthought.preferences.api import Preferences
+  >>> from apptools.preferences.api import Preferences
   >>> preferences = Preferences(filename='example.ini')
   >>> preferences.dump()
 
@@ -157,7 +157,7 @@ Let's take another look at 'example.ini'::
 Say, I am interested in the preferences in the 'acme.ui' section. I can use a
 preferences helper as follows::
 
-  from enthought.preferences.api import PreferencesHelper
+  from apptools.preferences.api import PreferencesHelper
 
   class SplashScreenPreferences(PreferencesHelper):
       """ A preferences helper for the splash screen. """
@@ -242,7 +242,7 @@ system.
 If you are happy with the default arrangement, then using the scoped
 preferences is just like using the plain old non-scoped version::
 
-  >>> from enthought.preferences.api import ScopedPreferences
+  >>> from apptools.preferences.api import ScopedPreferences
   >>> preferences = ScopedPreferences(filename='example.ini')
   >>> preferences.load('example.ini')
   >>> p.dump()
