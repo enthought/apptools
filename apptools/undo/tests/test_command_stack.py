@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #
 #  Copyright (c) 2015, Enthought, Inc.
 #  All rights reserved.
@@ -10,7 +10,7 @@
 #
 #  Thanks for using Enthought open source!
 #
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 from unittest import TestCase
 
@@ -86,7 +86,6 @@ class TestCommandStack(TestCase):
         self.assertEqual(len(self.stack._stack), 1)
         self.assertEqual(self.stack._index, 0)
         self.assertFalse(self.stack.clean)
-
 
     def test_define_macro(self):
         self.stack.begin_macro('Increment twice')
