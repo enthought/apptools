@@ -73,6 +73,7 @@ class TestCommandStack(TestCase):
         self.assertEqual(self.stack.undo_name, "")
         self.stack.undo()
 
+        self.assertEqual(len(self.stack._stack), 1)
         self.assertEqual(self.stack._index, 0)
         self.assertFalse(self.stack.clean)
 
@@ -85,3 +86,32 @@ class TestCommandStack(TestCase):
         self.assertEqual(len(self.stack._stack), 1)
         self.assertEqual(self.stack._index, 0)
         self.assertFalse(self.stack.clean)
+
+
+    def test_define_macro(self):
+        self.stack.begin_macro('Increment twice')
+        try:
+            self.stack.push(self.command)
+            self.stack.push(self.command)
+        finally:
+            self.stack.end_macro()
+
+        # The 2 pushes are viewed as 1 command
+        self.assertEqual(len(self.stack._stack), 1)
+        self.assertEqual(self.stack._index, 0)
+        self.assertFalse(self.stack.clean)
+
+    def test_undo_macro(self):
+        self.stack.begin_macro('Increment twice')
+        try:
+            self.stack.push(self.command)
+            self.stack.push(self.command)
+        finally:
+            self.stack.end_macro()
+
+        self.stack.undo()
+
+        # The 2 pushes are viewed as 1 command
+        self.assertEqual(len(self.stack._stack), 1)
+        self.assertEqual(self.stack._index, -1)
+        self.assertTrue(self.stack.clean)
