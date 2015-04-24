@@ -2,7 +2,9 @@
 apptools: application tools
 ===========================
 
-http://github.enthought.com/apptools
+Documentation: http://docs.enthought.com/apptools
+
+Source Code: http://www.github.com/enthought/apptools
 
 The apptools project includes a set of packages that Enthought has found
 useful in creating a number of applications.  They implement functionality
@@ -23,8 +25,6 @@ that is commonly needed by many applications
   to a dictionary, which can then be flexibly applied in restoring the state of
   the object.
 - **apptools.preferences**: Manages application preferences.
-- **pyface.resource**: Manages application resources such as images and
-  sounds.
 - **apptools.selection**: Manages the communication between providers and
   listener of selected items in an application.
 - **apptools.scripting**: A framework for automatic recording of Python
@@ -40,5 +40,18 @@ that is commonly needed by many applications
 Prerequisites
 -------------
 
-* `configobj <http://pypi.python.org/pypi/configobj>`_
+All packages in apptools require:
+
 * `traits <https://github.com/enthought/traits>`_
+
+The `apptools.preferences` package requires:
+
+* `configobj <http://pypi.python.org/pypi/configobj>`_
+
+Many of the packages provide optional user interfaces using Pyface and
+Traitsui. In additon, many of the packages are designed to work with the
+Envisage plug-in system, althought most can be used independently:
+
+* `envisage <https://github.com/enthought/envisage>`_
+* `pyface <https://github.com/enthought/pyface>`_
+* `traitsui <https://github.com/enthought/traitsui>`_
