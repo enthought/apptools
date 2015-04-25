@@ -12,19 +12,34 @@
 #
 # -----------------------------------------------------------------------------
 
-from unittest import TestCase
+from traits.testing.unittest_tools import unittest
 
 from apptools.undo.api import CommandStack, UndoManager
 from testing_commands import SimpleCommand, UnnamedCommand
 
 
-class TestCommandStack(TestCase):
+class TestCommandStack(unittest.TestCase):
     def setUp(self):
         self.stack = CommandStack()
         undo_manager = UndoManager()
         self.stack.undo_manager = undo_manager
 
         self.command = SimpleCommand()
+
+    # Assertion helpers -------------------------------------------------------
+
+    def assert_n_commands_pushed(self, n):
+        self.assertEqual(len(self.stack._stack), n)
+        self.assertEqual(self.stack._index, n-1)
+        self.assertFalse(self.stack.clean)
+
+    def assert_n_commands_pushed_and_undone(self, n):
+        # N commands have been pushed
+        self.assertEqual(len(self.stack._stack), n)
+        self.assertEqual(self.stack._index, -1)
+        self.assertTrue(self.stack.clean)
+
+    # Tests -------------------------------------------------------------------
 
     def test_empty_command_stack(self):
         self.assertEqual(self.stack._stack, [])
@@ -33,21 +48,14 @@ class TestCommandStack(TestCase):
 
     def test_1_command_pushed(self):
         self.stack.push(self.command)
-
-        # Everything has been shifted forward
-        self.assertEqual(len(self.stack._stack), 1)
-        self.assertEqual(self.stack._index, 0)
-        self.assertFalse(self.stack.clean)
+        self.assert_n_commands_pushed(1)
 
     def test_n_command_pushed(self):
         n = 4
         for i in range(n):
             self.stack.push(self.command)
 
-        # Everything has been shifted forward by n commands
-        self.assertEqual(len(self.stack._stack), n)
-        self.assertEqual(self.stack._index, n-1)
-        self.assertFalse(self.stack.clean)
+        self.assert_n_commands_pushed(n)
 
     def test_undo_1_command(self):
         self.stack.push(self.command)
@@ -55,62 +63,57 @@ class TestCommandStack(TestCase):
         self.assertEqual(self.stack.undo_name, self.command.name)
         self.stack.undo()
 
-        # The stack still contains the command but the index is back to start
-        self.assertEqual(len(self.stack._stack), 1)
-        self.assertEqual(self.stack._index, -1)
-        self.assertTrue(self.stack.clean)
+        self.assert_n_commands_pushed_and_undone(1)
 
     def test_undo_unnamed_command(self):
         unnamed_command = UnnamedCommand()
         self.stack.push(unnamed_command)
 
-        # Everything has been shifted forward
-        self.assertEqual(len(self.stack._stack), 1)
-        self.assertEqual(self.stack._index, 0)
-        self.assertFalse(self.stack.clean)
+        self.assert_n_commands_pushed(1)
 
         # But the command cannot be undone because it has no name
         self.assertEqual(self.stack.undo_name, "")
         self.stack.undo()
 
-        self.assertEqual(len(self.stack._stack), 1)
-        self.assertEqual(self.stack._index, 0)
-        self.assertFalse(self.stack.clean)
+        self.assert_n_commands_pushed(1)
 
     def test_undo_redo_1_command(self):
         self.stack.push(self.command)
         self.stack.undo()
         self.stack.redo()
-
-        # Everything has been shifted forward by 1 command
-        self.assertEqual(len(self.stack._stack), 1)
-        self.assertEqual(self.stack._index, 0)
-        self.assertFalse(self.stack.clean)
+        self.assert_n_commands_pushed(1)
 
     def test_define_macro(self):
-        self.stack.begin_macro('Increment twice')
-        try:
-            self.stack.push(self.command)
-            self.stack.push(self.command)
-        finally:
-            self.stack.end_macro()
-
-        # The 2 pushes are viewed as 1 command
-        self.assertEqual(len(self.stack._stack), 1)
-        self.assertEqual(self.stack._index, 0)
-        self.assertFalse(self.stack.clean)
+        add_macro(self.stack, num_commands=2)
+        self.assert_n_commands_pushed(1)
 
     def test_undo_macro(self):
-        self.stack.begin_macro('Increment twice')
-        try:
-            self.stack.push(self.command)
-            self.stack.push(self.command)
-        finally:
-            self.stack.end_macro()
-
+        add_macro(self.stack, num_commands=2)
         self.stack.undo()
-
         # The 2 pushes are viewed as 1 command
-        self.assertEqual(len(self.stack._stack), 1)
-        self.assertEqual(self.stack._index, -1)
+        self.assert_n_commands_pushed_and_undone(1)
+
+    def test_make_clean(self):
+        self.stack.push(self.command)
+        self.assertFalse(self.stack.clean)
+
+        self.stack.clean = True
         self.assertTrue(self.stack.clean)
+
+    def test_make_dirty(self):
+        self.stack.push(self.command)
+        self.stack.clean = True
+        self.assertTrue(self.stack.clean)
+
+        self.stack.clean = False
+        self.assertFalse(self.stack.clean)
+
+
+def add_macro(stack, num_commands=2):
+    command = SimpleCommand()
+    stack.begin_macro('Increment n times')
+    try:
+        for i in range(num_commands):
+            stack.push(command)
+    finally:
+        stack.end_macro()
