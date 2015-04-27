@@ -26,101 +26,79 @@ class TestCommandStack(unittest.TestCase):
 
         self.command = SimpleCommand()
 
-    # Assertion helpers -------------------------------------------------------
-
-    def assert_n_commands_pushed(self, n):
-        # Starting from an empty command stack, N commands have been pushed and
-        # then reverted. The stack contains the commands...
-        self.assertEqual(len(self.stack._stack), n)
-        # ... and the state is at the tip of the stack...
-        self.assertEqual(self.stack._index, n-1)
-        # ... which is dirty unless nothing was pushed.
-        if n > 0:
-            self.assertFalse(self.stack.clean)
-        else:
-            self.assertTrue(self.stack.clean)
-
-    def assert_n_commands_pushed_and_undone(self, n):
-        # Starting from an empty command stack, N commands have been pushed and
-        # then reverted. The stack still contains the commands...
-        self.assertEqual(len(self.stack._stack), n)
-        # ... but we are back to the initial (clean) state
-        self.assertEqual(self.stack._index, -1)
-        self.assertTrue(self.stack.clean)
-
-    # Tests -------------------------------------------------------------------
-
     def test_empty_command_stack(self):
-        self.assert_n_commands_pushed(0)
+        with assert_n_commands_pushed(self.stack, 0):
+            pass
 
     def test_1_command_pushed(self):
-        self.stack.push(self.command)
-        self.assert_n_commands_pushed(1)
+        with assert_n_commands_pushed(self.stack, 1):
+            self.stack.push(self.command)
 
     def test_n_command_pushed(self):
         n = 4
-        for i in range(n):
-            self.stack.push(self.command)
-
-        self.assert_n_commands_pushed(n)
+        with assert_n_commands_pushed(self.stack, n):
+            for i in range(n):
+                self.stack.push(self.command)
 
     def test_undo_1_command(self):
-        self.stack.push(self.command)
-
-        self.assertEqual(self.stack.undo_name, self.command.name)
-        self.stack.undo()
-
-        self.assert_n_commands_pushed_and_undone(1)
+        with assert_n_commands_pushed_and_undone(self.stack, 1):
+            self.stack.push(self.command)
+            self.assertEqual(self.stack.undo_name, self.command.name)
+            self.stack.undo()
 
     def test_undo_n_command(self):
         n = 4
-        for i in range(n):
-            self.stack.push(self.command)
+        with assert_n_commands_pushed_and_undone(self.stack, n):
+            for i in range(n):
+                self.stack.push(self.command)
 
-        for i in range(n):
-            self.stack.undo()
-
-        self.assert_n_commands_pushed_and_undone(n)
+            for i in range(n):
+                self.stack.undo()
 
     def test_undo_unnamed_command(self):
         unnamed_command = UnnamedCommand()
-        self.stack.push(unnamed_command)
+        with assert_n_commands_pushed(self.stack, 1):
+            self.stack.push(unnamed_command)
 
-        self.assert_n_commands_pushed(1)
-
-        # But the command cannot be undone because it has no name
-        self.assertEqual(self.stack.undo_name, "")
-        self.stack.undo()
-
-        self.assert_n_commands_pushed(1)
+            # But the command cannot be undone because it has no name
+            self.assertEqual(self.stack.undo_name, "")
+            # This is a no-op
+            self.stack.undo()
 
     def test_undo_redo_1_command(self):
-        self.stack.push(self.command)
-        self.stack.undo()
-        self.stack.redo()
-        self.assert_n_commands_pushed(1)
+        with assert_n_commands_pushed(self.stack, 1):
+            self.stack.push(self.command)
+            self.stack.undo()
+            self.stack.redo()
 
     def test_define_macro(self):
-        add_macro(self.stack, num_commands=2)
-        self.assert_n_commands_pushed(1)
+        with assert_n_commands_pushed(self.stack, 1):
+            add_macro(self.stack, num_commands=2)
 
     def test_undo_macro(self):
-        add_macro(self.stack, num_commands=2)
-        self.stack.undo()
-        # The 2 pushes are viewed as 1 command
-        self.assert_n_commands_pushed_and_undone(1)
+        with assert_n_commands_pushed_and_undone(self.stack, 1):
+            # The 2 pushes are viewed as 1 command
+            add_macro(self.stack, num_commands=2)
+            self.stack.undo()
 
-    def test_make_clean(self):
+    def test_empty_stack_is_clean(self):
+        self.assertTrue(self.stack.clean)
+
+    def test_non_empty_stack_is_dirty(self):
         self.stack.push(self.command)
         self.assertFalse(self.stack.clean)
 
+    def test_make_clean(self):
+        # This makes it dirty by default
+        self.stack.push(self.command)
+        # Make the current tip of the stack clean
         self.stack.clean = True
         self.assertTrue(self.stack.clean)
 
     def test_make_dirty(self):
+        # Start from a clean state:
         self.stack.push(self.command)
         self.stack.clean = True
-        self.assertTrue(self.stack.clean)
 
         self.stack.clean = False
         self.assertFalse(self.stack.clean)
@@ -134,3 +112,32 @@ def add_macro(stack, num_commands=2):
             stack.push(command)
     finally:
         stack.end_macro()
+
+
+    # Assertion helpers -------------------------------------------------------
+from contextlib import contextmanager
+from nose.tools import assert_equal
+
+@contextmanager
+def assert_n_commands_pushed(stack, n):
+    current_length = len(stack._stack)
+    try:
+        yield
+    finally:
+        # N commands have been pushed...
+        assert_equal(len(stack._stack), current_length+n)
+        # ... and the state is at the tip of the stack...
+        assert_equal(stack._index, current_length+n-1)
+
+
+@contextmanager
+def assert_n_commands_pushed_and_undone(stack, n):
+    current_length = len(stack._stack)
+    try:
+        yield
+    finally:
+        # N commands have been pushed and then reverted. The stack still
+        # contains the commands...
+        assert_equal(len(stack._stack), n)
+        # ... but we are back to the initial (clean) state
+        assert_equal(stack._index, current_length-1)
