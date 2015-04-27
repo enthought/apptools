@@ -51,7 +51,7 @@ class TestCommandStack(unittest.TestCase):
     # Tests -------------------------------------------------------------------
 
     def test_empty_command_stack(self):
-        self.assert_n_commands_pushed(self, 0)
+        self.assert_n_commands_pushed(0)
 
     def test_1_command_pushed(self):
         self.stack.push(self.command)
@@ -71,6 +71,16 @@ class TestCommandStack(unittest.TestCase):
         self.stack.undo()
 
         self.assert_n_commands_pushed_and_undone(1)
+
+    def test_undo_n_command(self):
+        n = 4
+        for i in range(n):
+            self.stack.push(self.command)
+
+        for i in range(n):
+            self.stack.undo()
+
+        self.assert_n_commands_pushed_and_undone(n)
 
     def test_undo_unnamed_command(self):
         unnamed_command = UnnamedCommand()
