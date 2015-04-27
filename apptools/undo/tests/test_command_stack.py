@@ -15,7 +15,7 @@
 from traits.testing.unittest_tools import unittest
 
 from apptools.undo.api import CommandStack, UndoManager
-from testing_commands import SimpleCommand, UnnamedCommand
+from apptools.undo.tests.testing_commands import SimpleCommand, UnnamedCommand
 
 
 class TestCommandStack(unittest.TestCase):
