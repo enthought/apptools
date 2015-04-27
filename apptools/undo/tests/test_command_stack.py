@@ -31,20 +31,23 @@ class TestCommandStack(unittest.TestCase):
     def assert_n_commands_pushed(self, n):
         self.assertEqual(len(self.stack._stack), n)
         self.assertEqual(self.stack._index, n-1)
-        self.assertFalse(self.stack.clean)
+        if n > 0:
+            self.assertFalse(self.stack.clean)
+        else:
+            self.assertTrue(self.stack.clean)
 
     def assert_n_commands_pushed_and_undone(self, n):
-        # N commands have been pushed
+        # Starting from an empty command stack, N commands have been pushed and
+        # then reverted. The stack still contains the commands...
         self.assertEqual(len(self.stack._stack), n)
+        # ... but we are back to the initial (clean) state
         self.assertEqual(self.stack._index, -1)
         self.assertTrue(self.stack.clean)
 
     # Tests -------------------------------------------------------------------
 
     def test_empty_command_stack(self):
-        self.assertEqual(self.stack._stack, [])
-        self.assertEqual(self.stack._index, -1)
-        self.assertTrue(self.stack.clean)
+        self.assert_n_commands_pushed(self, 0)
 
     def test_1_command_pushed(self):
         self.stack.push(self.command)
