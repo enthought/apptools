@@ -29,8 +29,12 @@ class TestCommandStack(unittest.TestCase):
     # Assertion helpers -------------------------------------------------------
 
     def assert_n_commands_pushed(self, n):
+        # Starting from an empty command stack, N commands have been pushed and
+        # then reverted. The stack contains the commands...
         self.assertEqual(len(self.stack._stack), n)
+        # ... and the state is at the tip of the stack...
         self.assertEqual(self.stack._index, n-1)
+        # ... which is dirty unless nothing was pushed.
         if n > 0:
             self.assertFalse(self.stack.clean)
         else:
