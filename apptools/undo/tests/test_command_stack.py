@@ -13,6 +13,8 @@
 # -----------------------------------------------------------------------------
 
 from traits.testing.unittest_tools import unittest
+from contextlib import contextmanager
+from nose.tools import assert_equal
 
 from apptools.undo.api import CommandStack, UndoManager
 from apptools.undo.tests.testing_commands import SimpleCommand, UnnamedCommand
@@ -114,30 +116,24 @@ def add_macro(stack, num_commands=2):
         stack.end_macro()
 
 
-    # Assertion helpers -------------------------------------------------------
-from contextlib import contextmanager
-from nose.tools import assert_equal
+# Assertion helpers -----------------------------------------------------------
 
 @contextmanager
 def assert_n_commands_pushed(stack, n):
     current_length = len(stack._stack)
-    try:
-        yield
-    finally:
-        # N commands have been pushed...
-        assert_equal(len(stack._stack), current_length+n)
-        # ... and the state is at the tip of the stack...
-        assert_equal(stack._index, current_length+n-1)
+    yield
+    # N commands have been pushed...
+    assert_equal(len(stack._stack), current_length+n)
+    # ... and the state is at the tip of the stack...
+    assert_equal(stack._index, current_length+n-1)
 
 
 @contextmanager
 def assert_n_commands_pushed_and_undone(stack, n):
     current_length = len(stack._stack)
-    try:
-        yield
-    finally:
-        # N commands have been pushed and then reverted. The stack still
-        # contains the commands...
-        assert_equal(len(stack._stack), n)
-        # ... but we are back to the initial (clean) state
-        assert_equal(stack._index, current_length-1)
+    yield
+    # N commands have been pushed and then reverted. The stack still
+    # contains the commands...
+    assert_equal(len(stack._stack), n)
+    # ... but we are back to the initial (clean) state
+    assert_equal(stack._index, current_length-1)
