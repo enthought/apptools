@@ -28,6 +28,8 @@ class TestCommandStack(unittest.TestCase):
 
         self.command = SimpleCommand()
 
+    # Command pushing tests ---------------------------------------------------
+
     def test_empty_command_stack(self):
         with assert_n_commands_pushed(self.stack, 0):
             pass
@@ -41,6 +43,8 @@ class TestCommandStack(unittest.TestCase):
         with assert_n_commands_pushed(self.stack, n):
             for i in range(n):
                 self.stack.push(self.command)
+
+    # Undo/Redo tests ---------------------------------------------------------
 
     def test_undo_1_command(self):
         with assert_n_commands_pushed_and_undone(self.stack, 1):
@@ -73,6 +77,8 @@ class TestCommandStack(unittest.TestCase):
             self.stack.undo()
             self.stack.redo()
 
+    # Macro tests -------------------------------------------------------------
+
     def test_define_macro(self):
         with assert_n_commands_pushed(self.stack, 1):
             add_macro(self.stack, num_commands=2)
@@ -82,6 +88,8 @@ class TestCommandStack(unittest.TestCase):
             # The 2 pushes are viewed as 1 command
             add_macro(self.stack, num_commands=2)
             self.stack.undo()
+
+    # Cleanliness tests -------------------------------------------------------
 
     def test_empty_stack_is_clean(self):
         self.assertTrue(self.stack.clean)
@@ -103,6 +111,30 @@ class TestCommandStack(unittest.TestCase):
         self.stack.clean = True
 
         self.stack.clean = False
+        self.assertFalse(self.stack.clean)
+
+    def test_save_push_undo_is_clean(self):
+        self.stack.push(self.command)
+
+        self.stack.clean = True
+        self.stack.push(self.command)
+        self.stack.undo()
+        self.assertTrue(self.stack.clean)
+
+    def test_save_push_save_undo_is_clean(self):
+        self.stack.push(self.command)
+
+        self.stack.clean = True
+        self.stack.push(self.command)
+        self.stack.clean = True
+        self.stack.undo()
+        self.assertTrue(self.stack.clean)
+
+    def test_push_undo_save_redo_is_dirty(self):
+        self.stack.push(self.command)
+        self.stack.undo()
+        self.stack.clean = True
+        self.stack.redo()
         self.assertFalse(self.stack.clean)
 
 
