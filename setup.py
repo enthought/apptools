@@ -4,7 +4,6 @@
 import os
 import re
 import subprocess
-import sys
 from setuptools import setup, find_packages
 
 MAJOR = 4
@@ -138,5 +137,5 @@ if __name__ == "__main__":
           packages=find_packages(),
           platforms=["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
           zip_safe=False,
-          use_2to3 = sys.version_info[0] > 2
+          use_2to3=True
           )
