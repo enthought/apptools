@@ -10,7 +10,7 @@ import unittest
 import os
 import sys
 from os.path import abspath, dirname, basename, join
-import StringIO
+from io import BytesIO
 
 # Enthought library imports.
 from apptools.persistence import state_pickler
@@ -76,7 +76,7 @@ class TestFilePath(unittest.TestCase):
         curdir = basename(cwd)
 
         # Create a dummy file in the parent dir.
-        s = StringIO.StringIO()
+        s = BytesIO()
         # Spoof its location.
         s.name = abspath(join(cwd, os.pardir, 't.mv2'))
         # Dump into it
@@ -92,7 +92,7 @@ class TestFilePath(unittest.TestCase):
 
 
         # Create a dummy file in a subdir.
-        s = StringIO.StringIO()
+        s = BytesIO()
         # Spoof its location.
         s.name = abspath(join(cwd, 'data', 't.mv2'))
         # Dump into it.

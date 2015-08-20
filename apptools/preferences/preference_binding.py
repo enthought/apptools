@@ -6,8 +6,8 @@ from traits.api import Any, HasTraits, Instance, Str, Undefined
 from traits.api import Unicode
 
 # Local imports.
-from i_preferences import IPreferences
-from package_globals import get_default_preferences
+from .i_preferences import IPreferences
+from .package_globals import get_default_preferences
 
 
 class PreferenceBinding(HasTraits):

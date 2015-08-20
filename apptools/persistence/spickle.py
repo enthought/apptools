@@ -19,10 +19,10 @@ import warnings
 import pickle
 import struct
 from pickle import Pickler, Unpickler, dumps, BUILD, NEWOBJ, REDUCE, \
-     MARK, OBJ, INST, BUILD, TupleType, PicklingError, GLOBAL, \
+     MARK, OBJ, INST, BUILD, PicklingError, GLOBAL, \
      EXT1, EXT2, EXT4, _extension_registry, _keep_alive
 
-from cStringIO import StringIO
+from io import StringIO
 
 
 ######################################################################
@@ -122,7 +122,7 @@ class StatePickler(Pickler):
         # This API is called by some subclasses
 
         # Assert that args is a tuple or None
-        if not isinstance(args, TupleType):
+        if not isinstance(args, tuple):
             if args is None:
                 # A hack for Jim Fulton's ExtensionClass, now deprecated.
                 # See load_reduce()
@@ -298,5 +298,3 @@ def loads_state(string):
     """Loads the state from a string object.  This does not import any
     modules."""
     return StateUnpickler(StringIO(string)).load()
-
-

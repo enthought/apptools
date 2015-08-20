@@ -8,8 +8,8 @@ import logging
 from traits.api import HasTraits, Instance, Str, Unicode
 
 # Local imports.
-from i_preferences import IPreferences
-from package_globals import get_default_preferences
+from .i_preferences import IPreferences
+from .package_globals import get_default_preferences
 
 
 # Logging.

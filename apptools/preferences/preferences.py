@@ -1,5 +1,6 @@
 """ The default implementation of a node in a preferences hierarchy. """
 
+from __future__ import print_function
 
 # Standard library imports.
 import logging, threading
@@ -9,7 +10,7 @@ from traits.api import Any, Callable, Dict, HasTraits, Instance, List
 from traits.api import Property, Str, Undefined, provides
 
 # Local imports.
-from i_preferences import IPreferences
+from .i_preferences import IPreferences
 
 
 # Logging.
@@ -572,9 +573,9 @@ class Preferences(HasTraits):
         """ Dump the preferences hierarchy to stdout. """
 
         if indent == '':
-            print
+            print()
 
-        print indent, 'Node(%s)' % self.name, self._preferences
+        print(indent, 'Node(%s)' % self.name, self._preferences)
         indent += '  '
 
         for child in self._children.values():
@@ -583,7 +584,3 @@ class Preferences(HasTraits):
         return
 
 #### EOF ######################################################################
-
-
-
-

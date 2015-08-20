@@ -2,9 +2,10 @@
 
 """
 # Author: Prabhu Ramachandran <prabhu_r@users.sf.net>
-# Copyright (c) 2005, Enthought, Inc.
+# Copyright (c) 2005-2015, Enthought, Inc.
 # License: BSD Style.
 
+import base64
 import unittest
 import math
 
@@ -36,7 +37,7 @@ class TestClassic:
         self.inst = A()
         self.tuple = (1,2,'a', A())
         self.list = [1, 1.1, 'a', 1j, self.inst]
-        self.pure_list = range(5)
+        self.pure_list = list(range(5))
         self.dict = {'a': 1, 'b': 2, 'ref': self.inst}
         self.numeric = numpy.ones((2,2,2), 'f')
         self.ref = self.numeric
@@ -47,7 +48,7 @@ class TestClassic:
 class TestTraits(HasTraits):
     b = Bool(False)
     i = Int(7)
-    l = Long(1234567890123456789L)
+    l = Long(12345678901234567890)
     f = Float(math.pi)
     c = Complex(complex(1.01234, 2.3))
     n = Any
@@ -56,7 +57,7 @@ class TestTraits(HasTraits):
     inst = Instance(A)
     tuple = Tuple
     list = List
-    pure_list = List(range(5))
+    pure_list = List(list(range(5)))
     dict = Dict
     numeric = Array(value=numpy.ones((2,2,2), 'f'))
     ref = Array
@@ -84,6 +85,21 @@ class TestDictPickler(unittest.TestCase):
         obj._tvtk.set(point_size=3, specular_color=(1, 0, 0),
                       representation='w')
 
+    def _check_instance_and_references(self, obj, data):
+        """Asserts that there is one instance and two references in the state.
+        We need this as there isn't a guarantee as to which will be the
+        reference and which will be the instance.
+        """
+        inst = data['inst']
+        list_end = data['list']['data'][-1]
+        dict_ref = data['dict']['data']['ref']
+        all_inst = [inst, list_end, dict_ref]
+        types = [x['type'] for x in all_inst]
+        self.assertEqual(types.count('instance'), 1)
+        self.assertEqual(types.count('reference'), 2)
+        inst_state = all_inst[types.index('instance')]
+        self.assertEqual(inst_state['data']['data']['a'], 'b')
+
     def verify(self, obj, state):
         data = state['data']
         self.assertEqual(state['class_name'], obj.__class__.__name__)
@@ -96,33 +112,32 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(data['n'], obj.n)
         self.assertEqual(data['s'], obj.s)
         self.assertEqual(data['u'], obj.u)
-        if isinstance(obj, HasTraits):
-            self.assertEqual(data['inst']['type'], 'reference')
-        else:
-            self.assertEqual(data['inst']['type'], 'reference')
         tup = data['tuple']['data']
         self.assertEqual(tup[:-1], obj.tuple[:-1])
         self.assertEqual(tup[-1]['data']['data']['a'], 't')
         lst = data['list']['data']
         self.assertEqual(lst[:-1], obj.list[:-1])
 
-        if isinstance(obj, HasTraits):
-            self.assertEqual(lst[-1]['type'], 'instance')
-        else:
-            self.assertEqual(lst[-1]['data']['data']['a'], 'b')
-
         pure_lst = data['pure_list']['data']
         self.assertEqual(pure_lst, obj.pure_list)
         dct = data['dict']['data']
         self.assertEqual(dct['a'], obj.dict['a'])
         self.assertEqual(dct['b'], obj.dict['b'])
-        self.assertEqual(dct['ref']['type'], 'reference')
 
-        junk = state_pickler.gunzip_string(data['numeric']['data'].decode('base64'))
+        self._check_instance_and_references(obj, data)
+
+        num_attr = 'numeric' if data['numeric']['type'] == 'numeric' else 'ref'
+        junk = state_pickler.gunzip_string(
+            base64.decodestring(data[num_attr]['data'])
+        )
         num = numpy.loads(junk)
         self.assertEqual(numpy.alltrue(numpy.ravel(num == obj.numeric)), 1)
 
-        self.assertEqual(data['ref']['type'], 'reference')
+        self.assertTrue(data['ref']['type'] in ['reference', 'numeric'])
+        if data['ref']['type'] == 'numeric':
+            self.assertEqual(data['numeric']['type'], 'reference')
+        else:
+            self.assertEqual(data['numeric']['type'], 'numeric')
         self.assertEqual(data['ref']['id'], data['numeric']['id'])
 
     def verify_unpickled(self, obj, state):
@@ -180,6 +195,15 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(state.n, state1.n)
         self.assertEqual(state.s, state1.s)
         self.assertEqual(state.u, state1.u)
+        # The ID's need not be identical so we equate them here so the
+        # tests pass.  Note that the ID's only need be consistent not
+        # identical!
+        for attr in ('inst', '_tvtk'):
+            getattr(state1, attr).__metadata__['id'] = \
+                getattr(state, attr).__metadata__['id']
+
+        state1.tuple[-1].__metadata__['id'] = \
+            state.tuple[-1].__metadata__['id']
         self.assertEqual(state.inst.__metadata__, state1.inst.__metadata__)
 
         self.assertEqual(state.tuple, state1.tuple)
@@ -196,10 +220,6 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(id(state.ref), id(state.numeric))
         self.assertEqual(id(state1.ref), id(state1.numeric))
 
-        # The ID's need not be identical so we equate them here so the
-        # tests pass.  Note that the ID's only need be consistent not
-        # identical!
-        state1._tvtk.__metadata__['id'] = state._tvtk.__metadata__['id']
         self.assertEqual(state1._tvtk, state._tvtk)
 
     def test_has_instance(self):
@@ -236,8 +256,7 @@ class TestDictPickler(unittest.TestCase):
         state = state_pickler.StatePickler().dump_state(t)
 
         # First check if all the attributes are handled.
-        keys = state['data']['data'].keys()
-        keys.sort()
+        keys = sorted(state['data']['data'].keys())
         expect = [x for x in t.__dict__.keys() if '__' not in x]
         expect.sort()
         self.assertEqual(keys, expect)
@@ -311,8 +330,7 @@ class TestDictPickler(unittest.TestCase):
         state = state_pickler.StatePickler().dump_state(t)
 
         # First check if all the attributes are handled.
-        keys = state['data']['data'].keys()
-        keys.sort()
+        keys = sorted(state['data']['data'].keys())
         expect = [x for x in t.__dict__.keys() if '__' not in x]
         expect.sort()
         self.assertEqual(keys, expect)

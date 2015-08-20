@@ -9,7 +9,7 @@ from traits.api import Code, Button, Int, on_trait_change, Any
 from traitsui.api import (View, Item, Group, HGroup, CodeEditor,
                                      spring, Handler)
 
-from recorder import Recorder
+from .recorder import Recorder
 
 ######################################################################
 # `CloseHandler` class.
@@ -88,5 +88,3 @@ class RecorderWithUI(Recorder):
 
     def _save_script_fired(self):
         self.ui_save()
-
-

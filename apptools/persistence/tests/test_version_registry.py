@@ -6,6 +6,7 @@
 # License: BSD Style.
 
 # Standard library imports.
+import sys
 from imp import reload
 import unittest
 
@@ -42,23 +43,27 @@ class Handler:
 class TestVersionRegistry(unittest.TestCase):
     def test_get_version(self):
         """Test the get_version function."""
+        if sys.version_info[0] > 2:
+            extra = [(('object', 'builtins'), -1)]
+        else:
+            extra = []
         c = Classic()
         v = version_registry.get_version(c)
-        res = [(('Classic', __name__), 0)]
+        res = extra + [(('Classic', __name__), 0)]
         self.assertEqual(v, res)
         state = state_pickler.get_state(c)
         self.assertEqual(state.__metadata__['version'], res)
 
         n = New()
         v = version_registry.get_version(n)
-        res = [(('New', __name__), 0)]
+        res = extra + [(('New', __name__), 0)]
         self.assertEqual(v, res)
         state = state_pickler.get_state(n)
         self.assertEqual(state.__metadata__['version'], res)
 
         t = TraitClass()
         v = version_registry.get_version(t)
-        res = [(('CHasTraits', 'traits.ctraits'), -1),
+        res = extra + [(('CHasTraits', 'traits.ctraits'), -1),
                (('HasTraits', 'traits.has_traits'), -1),
                (('TraitClass', __name__), 0)]
         self.assertEqual(v, res)
