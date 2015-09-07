@@ -82,8 +82,10 @@ class TestDictPickler(unittest.TestCase):
         obj.list[0] = 2
         obj.tuple[-1].a = 't'
         obj.dict['a'] = 10
-        obj._tvtk.set(point_size=3, specular_color=(1, 0, 0),
-                      representation='w')
+        obj._tvtk.trait_set(
+            point_size=3, specular_color=(1, 0, 0),
+            representation='w'
+        )
 
     def _check_instance_and_references(self, obj, data):
         """Asserts that there is one instance and two references in the state.
@@ -127,8 +129,9 @@ class TestDictPickler(unittest.TestCase):
         self._check_instance_and_references(obj, data)
 
         num_attr = 'numeric' if data['numeric']['type'] == 'numeric' else 'ref'
+        decodestring = getattr(base64, 'decodebytes', base64.decodestring)
         junk = state_pickler.gunzip_string(
-            base64.decodestring(data[num_attr]['data'])
+            decodestring(data[num_attr]['data'])
         )
         num = numpy.loads(junk)
         self.assertEqual(numpy.alltrue(numpy.ravel(num == obj.numeric)), 1)
@@ -374,6 +377,15 @@ class TestDictPickler(unittest.TestCase):
         z.a = B()
         z.a.b = z
         state_pickler.set_state(z, state)
+
+    def test_get_state_on_tuple_with_numeric_references(self):
+        num = numpy.zeros(10, float)
+        data = (num, num)
+        # If this just completes without error, we are good.
+        state = state_pickler.get_state(data)
+        # The two should be the same object.
+        self.assertTrue(state[0] is state[1])
+        numpy.testing.assert_allclose(state[0], num)
 
     def test_state_is_saveable(self):
         """Test if the state can be saved like the object itself."""

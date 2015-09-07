@@ -550,13 +550,23 @@ class StateUnpickler:
         # Setup all the Numeric arrays.  Do this first since
         # references use this.
         for key, (path, val) in self._numeric.items():
-            exec('result%s = val'%path)
+            if isinstance(result, StateTuple):
+                result = list(result)
+                exec('result%s = val'%path)
+                result = StateTuple(result)
+            else:
+                exec('result%s = val'%path)
 
         # Setup the references so they really are references.
         for key, paths in self._refs.items():
             for path in paths:
                 x = self._obj_cache[key]
-                exec('result%s = x'%path)
+                if isinstance(result, StateTuple):
+                    result = list(result)
+                    exec('result%s = x'%path)
+                    result = StateTuple(result)
+                else:
+                    exec('result%s = x'%path)
                 # if the reference is to an instance append its path.
                 if isinstance(x, State):
                     self._instances.append(path)
