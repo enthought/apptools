@@ -3,3 +3,5 @@ configobj
 coverage
 tables
 pandas
+unittest2 ; python_version <= "2.6"
+ordereddict ; python_version <= "2.6"
