@@ -1,5 +1,5 @@
 git+http://github.com/enthought/traitsui.git#egg=traitsui
 configobj
 coverage
-pytables
+tables
 pandas
