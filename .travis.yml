@@ -9,6 +9,7 @@ addons:
     packages:
     - ccache
     - swig
+    - libhdf5-serial-dev
 matrix:
  allow_failures:
     - python: 3.4
