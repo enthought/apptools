@@ -18,12 +18,14 @@ from apptools.persistence import state_pickler
 
 
 # A simple class to test instances.
-class A:
+class A(object):
+
     def __init__(self):
         self.a = 'a'
 
 # A classic class for testing the pickler.
 class TestClassic:
+
     def __init__(self):
         self.b = False
         self.i = 7
@@ -34,11 +36,11 @@ class TestClassic:
         self.s = 'String'
         self.u = u'Unicode'
         self.inst = A()
-        self.tuple = (1,2,'a', A())
+        self.tuple = (1, 2, 'a', A())
         self.list = [1, 1.1, 'a', 1j, self.inst]
         self.pure_list = range(5)
         self.dict = {'a': 1, 'b': 2, 'ref': self.inst}
-        self.numeric = numpy.ones((2,2,2), 'f')
+        self.numeric = numpy.ones((2, 2, 2), 'f')
         self.ref = self.numeric
         self._tvtk = tvtk.Property()
 
@@ -58,12 +60,12 @@ class TestTraits(HasTraits):
     list = List
     pure_list = List(range(5))
     dict = Dict
-    numeric = Array(value=numpy.ones((2,2,2), 'f'))
+    numeric = Array(value=numpy.ones((2, 2, 2), 'f'))
     ref = Array
     _tvtk = Instance(tvtk.Property, ())
     def __init__(self):
         self.inst = A()
-        self.tuple = (1,2,'a', A())
+        self.tuple = (1, 2, 'a', A())
         self.list = [1, 1.1, 'a', 1j, self.inst]
         self.dict = {'a': 1, 'b': 2, 'ref': self.inst}
         self.ref = self.numeric
@@ -118,7 +120,8 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(dct['b'], obj.dict['b'])
         self.assertEqual(dct['ref']['type'], 'reference')
 
-        junk = state_pickler.gunzip_string(data['numeric']['data'].decode('base64'))
+        junk = state_pickler.gunzip_string(
+            data['numeric']['data'].decode('base64'))
         num = numpy.loads(junk)
         self.assertEqual(numpy.alltrue(numpy.ravel(num == obj.numeric)), 1)
 
@@ -183,16 +186,13 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(state.inst.__metadata__, state1.inst.__metadata__)
 
         self.assertEqual(state.tuple, state1.tuple)
-        lst = state.list
         self.assertEqual(state.list, state1.list)
 
         self.assertEqual(state.pure_list, state1.pure_list)
 
-        dct = state.dict
         self.assertEqual(state.dict, state1.dict)
 
-        num = state.numeric
-        self.assertEqual((state1.numeric ==state.numeric).all(), True)
+        self.assertEqual((state1.numeric == state.numeric).all(), True)
         self.assertEqual(id(state.ref), id(state.numeric))
         self.assertEqual(id(state1.ref), id(state1.numeric))
 
@@ -211,13 +211,14 @@ class TestDictPickler(unittest.TestCase):
         r = state_pickler.get_state(l)
         self.assertEqual(r.has_instance, True)
         self.assertEqual(r[1].__metadata__['has_instance'], True)
-        d = {'a': l, 'b':1}
+        d = {'a': l, 'b': 1}
         r = state_pickler.get_state(d)
         self.assertEqual(r.has_instance, True)
         self.assertEqual(r['a'].has_instance, True)
         self.assertEqual(r['a'][1].__metadata__['has_instance'], True)
 
         class B:
+
             def __init__(self):
                 self.a = [1, A()]
 
@@ -226,7 +227,6 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(r.__metadata__['has_instance'], True)
         self.assertEqual(r.a.has_instance, True)
         self.assertEqual(r.a[1].__metadata__['has_instance'], True)
-
 
     def test_pickle_classic(self):
         """Test if classic classes can be pickled."""
@@ -345,8 +345,11 @@ class TestDictPickler(unittest.TestCase):
 
     def test_reference_cycle(self):
         """Test if reference cycles are handled when setting the state."""
-        class A: pass
-        class B: pass
+        class A:
+            pass
+
+        class B:
+            pass
         a = A()
         b = B()
         a.a = b
@@ -377,12 +380,15 @@ class TestDictPickler(unittest.TestCase):
     def test_get_pure_state(self):
         """Test if get_pure_state is called first."""
         class B:
+
             def __init__(self):
                 self.a = 'dict'
+
             def __get_pure_state__(self):
-                return {'a':'get_pure_state'}
+                return {'a': 'get_pure_state'}
+
             def __getstate__(self):
-                return {'a':'getstate'}
+                return {'a': 'getstate'}
         b = B()
         s = state_pickler.get_state(b)
         self.assertEqual(s.a, 'get_pure_state')
