@@ -103,14 +103,14 @@ def test_load_saved_dict_node_with_array():
 def test_keys():
     with temp_h5_file() as h5:
         keys = set(('hello', 'world', 'baz1'))
-        data = {n: 1 for n in keys}
+        data = dict((n, 1) for n in keys)
         h5dict = H5DictNode.add_to_h5file(h5, NODE, data)
         assert set(h5dict.keys()) == keys
 
 
 def test_delete_item():
     with temp_h5_file() as h5:
-        data = {'a': 10}
+        data = dict(a=10)
         h5dict = H5DictNode.add_to_h5file(h5, NODE, data)
         del h5dict['a']
         assert 'a' not in h5dict
@@ -118,7 +118,7 @@ def test_delete_item():
 
 def test_delete_array():
     with temp_h5_file() as h5:
-        data = {'a': np.arange(10)}
+        data = dict(a=np.arange(10))
         h5dict = H5DictNode.add_to_h5file(h5, NODE, data)
         del h5dict['a']
         assert 'a' not in h5dict
@@ -127,10 +127,10 @@ def test_delete_array():
 
 def test_auto_flush():
     with temp_h5_file() as h5:
-        data = {'a': 1}
+        data = dict(a=1)
         h5dict = H5DictNode.add_to_h5file(h5, NODE, data)
         # Overwrite existing data, which should get written to disk.
-        new_data = {'b': 2}
+        new_data = dict(b=2)
         h5dict.data = new_data
         # Load data from disk to check that data was automatically flushed.
         h5dict_from_disk = h5[NODE]
@@ -140,10 +140,10 @@ def test_auto_flush():
 
 def test_auto_flush_off():
     with temp_h5_file() as h5:
-        data = {'a': 1}
+        data = dict(a=1)
         h5dict = H5DictNode.add_to_h5file(h5, NODE, data, auto_flush=False)
         # Overwrite existing data, but don't write to disk.
-        new_data = {'b': 2}
+        new_data = dict(b=2)
         h5dict.data = new_data
         # Load data from disk to check that it's unchanged.
         h5dict_from_disk = h5[NODE]
@@ -159,14 +159,14 @@ def test_auto_flush_off():
 @raises(KeyError)
 def test_undefined_key():
     with temp_h5_file() as h5:
-        data = {'a': 'int'}
+        data = dict(a='int')
         h5dict = H5DictNode.add_to_h5file(h5, NODE, data)
         del h5dict['b']
 
 
 def test_basic_dtypes():
     with temp_h5_file() as h5:
-        data = {'a_int': 1, 'a_float': 1.0, 'a_str': 'abc'}
+        data = dict(a_int=1, a_float=1.0, a_str='abc')
         h5dict = H5DictNode.add_to_h5file(h5, NODE, data)
         assert isinstance(h5dict['a_int'], int)
         assert isinstance(h5dict['a_float'], float)
@@ -175,7 +175,7 @@ def test_basic_dtypes():
 
 def test_mixed_type_list():
     with temp_h5_file() as h5:
-        data = {'a': [1, 1.0, 'abc']}
+        data = dict(a=[1, 1.0, 'abc'])
         h5dict = H5DictNode.add_to_h5file(h5, NODE, data)
         for value, dtype in zip(h5dict['a'], (int, float, basestring)):
             assert isinstance(value, dtype)
@@ -183,7 +183,7 @@ def test_mixed_type_list():
 
 def test_dict():
     with temp_h5_file() as h5:
-        data = {'a': {'b': 1, 'c': 2}}
+        data = dict(a=dict(b=1, c=2))
         h5dict = H5DictNode.add_to_h5file(h5, NODE, data)
         sub_dict = h5dict['a']
         assert sub_dict['b'] == 1
