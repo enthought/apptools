@@ -32,5 +32,5 @@ before_script:
 script:
   - coverage run -m nose.core apptools -v
 after_success:
-  - pip instal codecov
+  - pip install codecov
   - codecov
