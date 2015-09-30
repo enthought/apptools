@@ -94,7 +94,7 @@ Notes
 
 """
 # Author: Prabhu Ramachandran <prabhu_r@users.sf.net>
-# Copyright (c) 2005, Enthought, Inc.
+# Copyright (c) 2005-2015, Enthought, Inc.
 # License: BSD Style.
 
 # Standard library imports.
@@ -130,7 +130,7 @@ def gunzip_string(data):
     """Given a gzipped string (`data`) this unzips the string and
     returns it.
     """
-    if bytes is not str and type(data) is bytes:
+    if PY_VER== 2 or (bytes is not str and type(data) is bytes):
         s = BytesIO(data)
     else:
         s = StringIO(data)
@@ -270,6 +270,7 @@ class StatePickler:
                     }
         if PY_VER == 2:
             type_map[long] = self._do_basic_type
+            type_map[unicode] = self._do_basic_type
         self.type_map = type_map
 
     def dump(self, value, file):

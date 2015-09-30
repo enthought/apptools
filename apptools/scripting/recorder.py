@@ -10,12 +10,9 @@ TODO:
 # License: BSD Style.
 
 import warnings
-try:
-    import __builtin__
-    PY_VER = 2
-except ImportError:
-    import builtins as __builtin__
-    PY_VER = 3
+import sys
+PY_VER = sys.version_info[0]
+import __builtin__
 
 from traits.api import (HasTraits, List, Str, Dict, Bool,
         Unicode, Property, Int, Instance)
@@ -376,7 +373,10 @@ class Recorder(HasTraits):
         """Save the recorded lines to the given file.  It does not close
         the file.
         """
-        file.write(self.get_code())
+        if PY_VER == 3:
+            file.write(self.get_code())
+        else:
+            file.write(unicode(self.get_code(), encoding='utf-8'))
         file.flush()
 
     def record_function(self, func, args, kw):
@@ -691,8 +691,8 @@ class Recorder(HasTraits):
         """Return a string given a returned object from a function.
         """
         result = ''
-        long = long if PY_VER == 2 else int
-        ignore = (float, complex, bool, int, long, str)
+        long_type = long if PY_VER == 2 else int
+        ignore = (float, complex, bool, int, long_type, str)
         if object is not None and type(object) not in ignore:
             # If object is not know, register it.
             registry = self._registry
