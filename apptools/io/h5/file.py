@@ -117,7 +117,7 @@ class H5File(Mapping):
         try:
             node = self._h5.get_node(node_path)
         except tables.NoSuchNodeError:
-            msg = "Node {!r} not found in {!r}"
+            msg = "Node {0!r} not found in {1!r}"
             raise NameError(msg.format(node_path, self.filename))
         return _wrap_node(node)
 
