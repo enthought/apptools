@@ -44,7 +44,9 @@ class H5DictNode(object):
         # Load dict data from the file node.
         dict_node = getattr(h5_group, self._pyobject_data_node)
         with closing(filenode.open_node(dict_node)) as f:
-            self._pyobject_data = json.load(f, object_hook=self._object_hook)
+            self._pyobject_data = json.loads(
+                f.read().decode('ascii'), object_hook=self._object_hook
+            )
 
     #--------------------------------------------------------------------------
     #  Dictionary interface
@@ -172,7 +174,7 @@ class H5DictNode(object):
 
         kwargs = dict(where=node_path, name=cls._pyobject_data_node)
         with closing(filenode.new_node(pyt_file, **kwargs)) as f:
-            json.dump(out_data, f)
+            f.write(json.dumps(out_data).encode('ascii'))
 
     @classmethod
     def _get_pyt_group(self, group):

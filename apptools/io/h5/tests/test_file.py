@@ -86,7 +86,10 @@ def test_iteritems():
         node_paths.append('/')
         iter_paths = []
 
-        for path, node in h5.iteritems():
+        # 2to3 converts the iteritems blindly to items which is incorrect,
+        # so we resort to this ugliness.
+        items = getattr(h5, 'iteritems')()
+        for path, node in items:
             iter_paths.append(path)
 
     assert set(node_paths) == set(iter_paths)
