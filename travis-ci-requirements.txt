@@ -5,3 +5,4 @@ tables
 pandas
 unittest2 ; python_version <= "2.6"
 ordereddict ; python_version <= "2.6"
+git+http://github.com/enthought/pyface.git#egg=pyface ; python_version >= "3.0"
