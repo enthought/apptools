@@ -223,6 +223,8 @@ class TestDictPickler(unittest.TestCase):
                 getattr(state1, attr).__metadata__['id'] = \
                     getattr(state, attr).__metadata__['id']
 
+            self.assertEqual(state1._tvtk, state._tvtk)
+
         state1.tuple[-1].__metadata__['id'] = \
             state.tuple[-1].__metadata__['id']
         self.assertEqual(state.inst.__metadata__, state1.inst.__metadata__)
@@ -238,7 +240,6 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(id(state.ref), id(state.numeric))
         self.assertEqual(id(state1.ref), id(state1.numeric))
 
-        self.assertEqual(state1._tvtk, state._tvtk)
 
     def test_has_instance(self):
         """Test to check has_instance correctness."""
