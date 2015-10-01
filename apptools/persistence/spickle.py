@@ -12,8 +12,12 @@ NOTE: This module is not likely to work for very complex pickles but
 
 """
 # Author: Prabhu Ramachandran <prabhu@aero.iitb.ac.in>
-# Copyright (c) 2006-2007, Prabhu Ramachandran
+# Copyright (c) 2006-2015, Prabhu Ramachandran
 # License: BSD Style.
+
+import sys
+if sys.version_info[0] > 2:
+    raise ImportError("This module does not work with Python 3.x")
 
 import warnings
 import pickle
