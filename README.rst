@@ -2,9 +2,18 @@
 apptools: application tools
 ===========================
 
+.. image:: https://api.travis-ci.org/enthought/apptools.png?branch=master
+   :target: https://travis-ci.org/enthought/apptools
+   :alt: Build status
+
+.. image:: http://codecov.io/github/enthought/apptools/coverage.svg?branch=master
+   :target: http://codecov.io/github/enthought/apptools?branch=master
+   :alt: Coverage report
+
 Documentation: http://docs.enthought.com/apptools
 
 Source Code: http://www.github.com/enthought/apptools
+
 
 The apptools project includes a set of packages that Enthought has found
 useful in creating a number of applications.  They implement functionality

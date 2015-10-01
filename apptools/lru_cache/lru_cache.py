@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Copyright (c) 2015, Enthought, Inc.
 # All rights reserved.
 #
@@ -11,11 +11,15 @@
 # Thanks for using Enthought open source!
 #
 # Author: Enthought, Inc.
-#------------------------------------------------------------------------------
-
+# -----------------------------------------------------------------------------
 
 from threading import RLock
-from collections import OrderedDict
+
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ordereddict import OrderedDict
+
 
 from traits.api import Callable, Event, HasStrictTraits, Instance, Int
 
