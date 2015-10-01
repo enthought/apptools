@@ -511,7 +511,7 @@ class ContextTestCase(unittest.TestCase):
         context.bind('sub/sub sub/one',1)
         names = context.search( 1 )
         self.assertEqual( len(names), 2)
-        self.assertEqual( names, ['one', 'sub/sub sub/one'] )
+        self.assertEqual( sorted(names), sorted(['one', 'sub/sub sub/one']) )
 
         names = sub.search(None)
         self.assertEqual( len(names), 0)
