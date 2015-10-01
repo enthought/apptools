@@ -10,9 +10,6 @@ addons:
     - ccache
     - swig
     - libhdf5-serial-dev
-matrix:
- allow_failures:
-    - python: 3.4
 cache:
   apt: true
   directories:
