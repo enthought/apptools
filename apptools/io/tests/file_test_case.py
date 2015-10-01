@@ -113,7 +113,7 @@ class FileTestCase(unittest.TestCase):
         # Create the file.
         f.create_file(content)
         self.assertEqual(f.exists, True)
-        self.failUnlessRaises(ValueError, f.create_file, content)
+        self.assertRaises(ValueError, f.create_file, content)
 
         self.assertEqual(f.children, None)
         self.assertEqual(f.ext, '.txt')
@@ -161,10 +161,10 @@ class FileTestCase(unittest.TestCase):
         # Create the file.
         f.create_file(content)
         self.assertEqual(f.exists, True)
-        self.assertEqual(file(f.path).read(), content)
+        self.assertEqual(open(f.path).read(), content)
 
         # Try to create it again.
-        self.failUnlessRaises(ValueError, f.create_file, content)
+        self.assertRaises(ValueError, f.create_file, content)
 
         return
 
@@ -179,7 +179,7 @@ class FileTestCase(unittest.TestCase):
         # Create the file.
         f.create_file(content)
         self.assertEqual(f.exists, True)
-        self.failUnlessRaises(ValueError, f.create_file, content)
+        self.assertRaises(ValueError, f.create_file, content)
 
         self.assertEqual(f.children, None)
         self.assertEqual(f.ext, '.txt')

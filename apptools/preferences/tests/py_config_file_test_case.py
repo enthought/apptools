@@ -63,7 +63,7 @@ class PyConfigFileTestCase(unittest.TestCase):
     def test_load_from_file(self):
         """ load from file """
 
-        config = PyConfigFile(file(self.example))
+        config = PyConfigFile(open(self.example))
 
         self.assertEqual('blue', config['acme.ui']['bgcolor'])
         self.assertEqual(50, config['acme.ui']['width'])
@@ -82,7 +82,7 @@ class PyConfigFileTestCase(unittest.TestCase):
     def test_save(self):
         """ save """
 
-        config = PyConfigFile(file(self.example))
+        config = PyConfigFile(open(self.example))
 
         self.assertEqual('blue', config['acme.ui']['bgcolor'])
         self.assertEqual(50, config['acme.ui']['width'])
@@ -105,7 +105,7 @@ class PyConfigFileTestCase(unittest.TestCase):
 
             # Make sure we can read the file back in and that we get the same
             # values!
-            config = PyConfigFile(file(tmp))
+            config = PyConfigFile(open(tmp))
 
             self.assertEqual('blue', config['acme.ui']['bgcolor'])
             self.assertEqual(50, config['acme.ui']['width'])

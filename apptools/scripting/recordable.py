@@ -5,7 +5,7 @@ Decorator to mark functions and methods as recordable.
 # Copyright (c) 2008, Prabhu Ramachandran and Enthought, Inc.
 # License: BSD Style.
 
-from package_globals import get_recorder
+from .package_globals import get_recorder
 
 
 # Guard to ensure that only the outermost recordable call is recorded
@@ -52,4 +52,3 @@ def recordable(func):
     _wrapper.__dict__.update(func.__dict__)
 
     return _wrapper
-

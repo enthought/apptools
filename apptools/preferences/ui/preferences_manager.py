@@ -231,7 +231,7 @@ class PreferencesManager(HasTraits):
         # Sort the pages by the length of their category path. This makes it
         # easy for us to create the preference hierarchy as we know that all of
         # a node's ancestors will have already been created.
-        def sort(a, b):
+        def sort_key(a):
             # We have the guard because if the category is the empty string
             # then split will still return a list containing one item (and not
             # the empty list).
@@ -241,15 +241,9 @@ class PreferencesManager(HasTraits):
             else:
                 len_a = len(a.category.split('/'))
 
-            if len(b.category) == 0:
-                len_b = 0
+            return len_a
 
-            else:
-                len_b = len(b.category.split('/'))
-
-            return cmp(len_a, len_b)
-
-        self.pages.sort(sort)
+        self.pages.sort(key=sort_key)
 
         # Create a corresponding preference node hierarchy (the root of the
         # hierachy is NOT displayed in the preference dialog).

@@ -17,12 +17,17 @@ state of other objects in the same pickle.
 """
 
 # Standard library imports.
-import logging
-import new
-from os import path
-from pickle import Unpickler, UnpicklingError, BUILD
 import sys
-from types import DictionaryType, GeneratorType
+import logging
+from os import path
+from types import GeneratorType
+
+if sys.version_info[0] >= 3:
+    from pickle import _Unpickler as Unpickler
+else:
+    from pickle import Unpickler
+
+from pickle import UnpicklingError, BUILD
 
 # Enthought library imports
 from traits.api import HasTraits, Instance
@@ -79,7 +84,7 @@ def load_build_with_meta_data(self):
     # a tuple, which is used for other unpickling build operations).  Proceed to
     # the standard load_build() if the state obj is not a dict.
     state = self.stack[-1]
-    if type(state) == DictionaryType:
+    if type(state) == dict:
 
         # If a file object is used, reference the file name
         if hasattr(self._file, 'name'):
@@ -114,7 +119,7 @@ class NewUnpickler(Unpickler):
 
         # We overload the load_build method.
         dispatch = self.dispatch
-        dispatch[BUILD] = NewUnpickler.load_build
+        dispatch[BUILD[0]] = NewUnpickler.load_build
 
         # call the super class' method.
         ret = Unpickler.load(self)
@@ -122,7 +127,7 @@ class NewUnpickler(Unpickler):
         self.objects = []
 
         # Reset the Unpickler's dispatch table.
-        dispatch[BUILD] = Unpickler.load_build
+        dispatch[BUILD[0]] = Unpickler.load_build
         return ret
 
     def initialize(self, max_pass):
@@ -166,12 +171,12 @@ class NewUnpickler(Unpickler):
     # point, we would have the dispatch still pointing to
     # NewPickler.load_build whereas the object being passed in will be an
     # Unpickler instance, causing a TypeError.
+    @classmethod
     def load_build(cls, obj):
         # Just save the instance in the list of objects.
         if isinstance(obj, NewUnpickler):
             obj.objects.append(obj.stack[-2])
         Unpickler.load_build(obj)
-    load_build = classmethod(load_build)
 
 
 ##############################################################################
@@ -225,7 +230,7 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
         # ...not sure how this happens since only a VersionedUnpickler has
         # the BUILD instruction replaced with one that uses _file, and it
         # should have _file defined.
-        #self.dispatch[BUILD] = load_build_with_meta_data
+        #self.dispatch[BUILD[0]] = load_build_with_meta_data
 
 
     ##########################################################################
@@ -387,7 +392,7 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
 
         # Replace the existing setstate method with ours.
         self._backup_setstate(klass)
-        m = new.instancemethod(__replacement_setstate__, None, klass)
+        m = __replacement_setstate__.__get__(None, klass)
         setattr(klass, _SETSTATE_NAME, m)
 
         # Add the information necessary to allow this unpickler to run
@@ -402,7 +407,7 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
         if method is not None:
             logger.debug('Backing up method [%s] to [%s] on [%s]',
                 _SETSTATE_NAME, _BACKUP_NAME, klass)
-            m = new.instancemethod(method, None, klass)
+            m = method.__get__(None, klass)
             setattr(klass, _BACKUP_NAME, m)
 
 
@@ -494,7 +499,7 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
             logger.debug('Restoring method [%s] to [%s] on [%s]',
                 _BACKUP_NAME, _SETSTATE_NAME, klass)
             delattr(klass, _BACKUP_NAME)
-            m = new.instancemethod(method, None, klass)
+            m = method.__get__(None, klass)
             setattr(klass, _SETSTATE_NAME, m)
 
         # Otherwise, we simply remove our setstate.

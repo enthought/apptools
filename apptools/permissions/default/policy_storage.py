@@ -14,18 +14,19 @@
 
 
 # Enthought library imports.
-from traits.api import HasTraits, Instance, implements
+from traits.api import HasTraits, Instance, provides
 
 # Local imports.
 from i_policy_storage import IPolicyStorage, PolicyStorageError
 from persistent import Persistent, PersistentError
 
 
+@provides(IPolicyStorage)
 class PolicyStorage(HasTraits):
     """This implements a policy database that pickles its data in a local file.
     """
 
-    implements(IPolicyStorage)
+
 
     #### Private interface ####################################################
 

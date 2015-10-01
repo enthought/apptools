@@ -16,16 +16,17 @@
 # Enthought library imports.
 from apptools.permissions.default.api import IPolicyStorage, \
         PolicyStorageError
-from traits.api import HasTraits, implements
+from traits.api import HasTraits, provides
 
 # Local imports.
 from proxy_server import ProxyServer
 
 
+@provides(IPolicyStorage)
 class PolicyStorage(HasTraits):
     """This implements a policy database accessed via XML RPC."""
 
-    implements(IPolicyStorage)
+
 
     ###########################################################################
     # 'IPolicyStorage' interface.

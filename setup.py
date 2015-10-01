@@ -4,7 +4,6 @@
 import os
 import re
 import subprocess
-
 from setuptools import setup, find_packages
 
 MAJOR = 4
@@ -130,6 +129,7 @@ if __name__ == "__main__":
                                      'logger/plugin/*.ini',
                                      'logger/plugin/view/images/*.png',
                                      'naming/ui/images/*.png',
+                                     'preferences/tests/*.ini'
                                      ]
                         },
           install_requires=__requires__,
@@ -137,5 +137,5 @@ if __name__ == "__main__":
           packages=find_packages(),
           platforms=["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
           zip_safe=False,
-          use2to3=True,
+          use_2to3=True
           )

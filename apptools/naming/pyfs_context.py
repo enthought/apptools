@@ -508,7 +508,7 @@ class PyFSContext(DirContext, Referenceable):
 
         path = join(self.path, self.ATTRIBUTES_FILE)
 
-        f = file(path, 'wb')
+        f = open(path, 'wb')
         cPickle.dump(self._attributes, f, 1)
         f.close()
 
@@ -552,7 +552,7 @@ class PyFSContext(DirContext, Referenceable):
 
         attributes_file = File(join(self.path, self.ATTRIBUTES_FILE))
         if attributes_file.is_file:
-            f = file(attributes_file.path, 'rb')
+            f = open(attributes_file.path, 'rb')
             attributes = cPickle.load(f)
             f.close()
 

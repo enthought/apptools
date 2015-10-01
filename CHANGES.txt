@@ -1,6 +1,13 @@
 Apptools CHANGELOG
 ==================
 
+Version 4.4.0
+~~~~~~~~~~~~~
+
+* Apptools now works with Python-3.x. (#54)
+* Travis-ci support with testing on Python 2.6, 2.7 and 3.4. (#55)
+
+
 Change summary since 4.2.1
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -10,7 +10,12 @@ import unittest
 import numpy
 from pickle import dumps
 
-from apptools.persistence import spickle
+try:
+    from apptools.persistence import spickle
+except ImportError:
+    import nose
+    raise nose.SkipTest('spickle is not supported with Python3')
+
 from traits.api import HasTraits, Float, Int
 
 class A:

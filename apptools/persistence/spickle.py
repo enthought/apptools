@@ -12,17 +12,21 @@ NOTE: This module is not likely to work for very complex pickles but
 
 """
 # Author: Prabhu Ramachandran <prabhu@aero.iitb.ac.in>
-# Copyright (c) 2006-2007, Prabhu Ramachandran
+# Copyright (c) 2006-2015, Prabhu Ramachandran
 # License: BSD Style.
+
+import sys
+if sys.version_info[0] > 2:
+    raise ImportError("This module does not work with Python 3.x")
 
 import warnings
 import pickle
 import struct
 from pickle import Pickler, Unpickler, dumps, BUILD, NEWOBJ, REDUCE, \
-     MARK, OBJ, INST, BUILD, TupleType, PicklingError, GLOBAL, \
+     MARK, OBJ, INST, BUILD, PicklingError, GLOBAL, \
      EXT1, EXT2, EXT4, _extension_registry, _keep_alive
 
-from cStringIO import StringIO
+from io import BytesIO
 
 
 ######################################################################
@@ -122,7 +126,7 @@ class StatePickler(Pickler):
         # This API is called by some subclasses
 
         # Assert that args is a tuple or None
-        if not isinstance(args, TupleType):
+        if not isinstance(args, tuple):
             if args is None:
                 # A hack for Jim Fulton's ExtensionClass, now deprecated.
                 # See load_reduce()
@@ -271,7 +275,7 @@ class StateUnpickler(Unpickler):
 def get_state(obj):
     """Return a State object given an object.  Useful for testing."""
     str = dumps(obj)
-    return StateUnpickler(StringIO(str)).load()
+    return StateUnpickler(BytesIO(str)).load()
 
 def dump_state(state, file, protocol=None, bin=None):
     """Dump the state (potentially modified) to given file."""
@@ -280,7 +284,7 @@ def dump_state(state, file, protocol=None, bin=None):
 def dumps_state(state, protocol=None, bin=None):
     """Dump the state (potentially modified) to a string and return
     the string."""
-    file = StringIO()
+    file = BytesIO()
     StatePickler(file, protocol, bin).dump(state)
     return file.getvalue()
 
@@ -297,6 +301,4 @@ def load_state(file):
 def loads_state(string):
     """Loads the state from a string object.  This does not import any
     modules."""
-    return StateUnpickler(StringIO(string)).load()
-
-
+    return StateUnpickler(BytesIO(string)).load()

@@ -2,6 +2,7 @@
 
 
 # Standard library imports.
+import time
 import unittest
 
 # Major package imports.
@@ -11,20 +12,27 @@ from pkg_resources import resource_filename
 from apptools.preferences.api import Preferences, PreferencesHelper
 from apptools.preferences.api import ScopedPreferences
 from apptools.preferences.api import set_default_preferences
-from traits.api import Any, Bool, HasTraits, Int, Float, List, Str
-from traits.api import Unicode
+from traits.api import Any, Bool, HasTraits, Int, Float, List, Str, Unicode
 
 
-def listener(obj, trait_name, old, new):
-    """ A useful trait change handler for testing! """
+def width_listener(obj, trait_name, old, new):
 
-    listener.obj = obj
-    listener.trait_name = trait_name
-    listener.old = old
-    listener.new = new
+    width_listener.obj = obj
+    width_listener.trait_name = trait_name
+    width_listener.old = old
+    width_listener.new = new
 
     return
 
+
+def bgcolor_listener(obj, trait_name, old, new):
+
+    bgcolor_listener.obj = obj
+    bgcolor_listener.trait_name = trait_name
+    bgcolor_listener.old = old
+    bgcolor_listener.new = new
+
+    return
 
 # This module's package.
 PKG = 'apptools.preferences.tests'
@@ -78,7 +86,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             names       = List(Str)
 
         helper = AcmeUIPreferencesHelper()
-        helper.on_trait_change(listener)
+        helper.on_trait_change(bgcolor_listener)
 
         # Make sure the helper was initialized properly.
         self.assertEqual('blue', helper.bgcolor)
@@ -95,10 +103,10 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('yellow', helper.bgcolor)
 
         # ... and that the correct trait change event was fired.
-        self.assertEqual(helper, listener.obj)
-        self.assertEqual('bgcolor', listener.trait_name)
-        self.assertEqual('blue', listener.old)
-        self.assertEqual('yellow', listener.new)
+        self.assertEqual(helper, bgcolor_listener.obj)
+        self.assertEqual('bgcolor', bgcolor_listener.trait_name)
+        self.assertEqual('blue', bgcolor_listener.old)
+        self.assertEqual('yellow', bgcolor_listener.new)
 
         # Make sure we can set the preference via the preferences node...
         p.set('acme.ui.bgcolor', 'red')
@@ -106,10 +114,10 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('red', helper.bgcolor)
 
         # ... and that the correct trait change event was fired.
-        self.assertEqual(helper, listener.obj)
-        self.assertEqual('bgcolor', listener.trait_name)
-        self.assertEqual('yellow', listener.old)
-        self.assertEqual('red', listener.new)
+        self.assertEqual(helper, bgcolor_listener.obj)
+        self.assertEqual('bgcolor', bgcolor_listener.trait_name)
+        self.assertEqual('yellow', bgcolor_listener.old)
+        self.assertEqual('red', bgcolor_listener.new)
 
         return
 
@@ -132,7 +140,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             names       = List(Str)
 
         helper = AcmeUIPreferencesHelper(preferences_path='acme.ui')
-        helper.on_trait_change(listener)
+        helper.on_trait_change(bgcolor_listener)
 
         # Make sure the helper was initialized properly.
         self.assertEqual('blue', helper.bgcolor)
@@ -149,10 +157,10 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('yellow', helper.bgcolor)
 
         # ... and that the correct trait change event was fired.
-        self.assertEqual(helper, listener.obj)
-        self.assertEqual('bgcolor', listener.trait_name)
-        self.assertEqual('blue', listener.old)
-        self.assertEqual('yellow', listener.new)
+        self.assertEqual(helper, bgcolor_listener.obj)
+        self.assertEqual('bgcolor', bgcolor_listener.trait_name)
+        self.assertEqual('blue', bgcolor_listener.old)
+        self.assertEqual('yellow', bgcolor_listener.new)
 
         # Make sure we can set the preference via the preferences node...
         p.set('acme.ui.bgcolor', 'red')
@@ -160,10 +168,10 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('red', helper.bgcolor)
 
         # ... and that the correct trait change event was fired.
-        self.assertEqual(helper, listener.obj)
-        self.assertEqual('bgcolor', listener.trait_name)
-        self.assertEqual('yellow', listener.old)
-        self.assertEqual('red', listener.new)
+        self.assertEqual(helper, bgcolor_listener.obj)
+        self.assertEqual('bgcolor', bgcolor_listener.trait_name)
+        self.assertEqual('yellow', bgcolor_listener.old)
+        self.assertEqual('red', bgcolor_listener.new)
 
         return
 
@@ -267,7 +275,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             names       = List(Str)
 
         # Cannot create a helper with a preferences path.
-        self.failUnlessRaises(SystemError, AcmeUIPreferencesHelper)
+        self.assertRaises(SystemError, AcmeUIPreferencesHelper)
 
         return
 
@@ -280,7 +288,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             background_color = Str
 
         w = Widget()
-        w.on_trait_change(listener)
+        w.on_trait_change(bgcolor_listener)
 
         p = self.preferences
         p.load(self.example)
@@ -322,10 +330,10 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('yellow', w.background_color)
 
         # ... and that the correct trait change event was fired.
-        self.assertEqual(w, listener.obj)
-        self.assertEqual('background_color', listener.trait_name)
-        self.assertEqual('blue', listener.old)
-        self.assertEqual('yellow', listener.new)
+        self.assertEqual(w, bgcolor_listener.obj)
+        self.assertEqual('background_color', bgcolor_listener.trait_name)
+        self.assertEqual('blue', bgcolor_listener.old)
+        self.assertEqual('yellow', bgcolor_listener.new)
 
         # Make sure we can set the preference via the preferences node...
         p.set('acme.ui.bgcolor', 'red')
@@ -335,10 +343,10 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('red', w.background_color)
 
         # ... and that the correct trait change event was fired.
-        self.assertEqual(w, listener.obj)
-        self.assertEqual('background_color', listener.trait_name)
-        self.assertEqual('yellow', listener.old)
-        self.assertEqual('red', listener.new)
+        self.assertEqual(w, bgcolor_listener.obj)
+        self.assertEqual('background_color', bgcolor_listener.trait_name)
+        self.assertEqual('yellow', bgcolor_listener.old)
+        self.assertEqual('red', bgcolor_listener.new)
 
         return
 
@@ -422,11 +430,13 @@ class PreferencesHelperTestCase(unittest.TestCase):
         helper = AcmeUIPreferencesHelper()
 
         # We only listen to some of the traits so the testing is easier.
-        helper.on_trait_change(listener, ['bgcolor', 'width'])
+        helper.on_trait_change(width_listener, ['width'])
+        helper.on_trait_change(bgcolor_listener, ['bgcolor'])
 
         # Create a new preference node.
         p1 = Preferences()
         p1.load(self.example)
+
         p1.set('acme.ui.bgcolor', 'red')
         p1.set('acme.ui.width', 40)
 
@@ -434,10 +444,15 @@ class PreferencesHelperTestCase(unittest.TestCase):
         helper.preferences = p1
 
         # Test event handling.
-        self.assertEqual(helper, listener.obj)
-        self.assertEqual('width', listener.trait_name)
-        self.assertEqual(50, listener.old)
-        self.assertEqual(40, listener.new)
+        self.assertEqual(helper, width_listener.obj)
+        self.assertEqual('width', width_listener.trait_name)
+        self.assertEqual(50, width_listener.old)
+        self.assertEqual(40, width_listener.new)
+
+        self.assertEqual(helper, bgcolor_listener.obj)
+        self.assertEqual('bgcolor', bgcolor_listener.trait_name)
+        self.assertEqual('blue', bgcolor_listener.old)
+        self.assertEqual('red', bgcolor_listener.new)
 
         # Test re-initialization.
         self.assertEqual(helper.bgcolor, 'red')
@@ -445,18 +460,18 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         # Test event handling.
         p1.set('acme.ui.bgcolor', 'black')
-        self.assertEqual(helper, listener.obj)
-        self.assertEqual('bgcolor', listener.trait_name)
-        self.assertEqual('red', listener.old)
-        self.assertEqual('black', listener.new)
+        self.assertEqual(helper, bgcolor_listener.obj)
+        self.assertEqual('bgcolor', bgcolor_listener.trait_name)
+        self.assertEqual('red', bgcolor_listener.old)
+        self.assertEqual('black', bgcolor_listener.new)
 
         # This should not trigger any new changes since we are setting values
         # on the old preferences node.
         p.set('acme.ui.bgcolor', 'white')
-        self.assertEqual(helper, listener.obj)
-        self.assertEqual('bgcolor', listener.trait_name)
-        self.assertEqual('red', listener.old)
-        self.assertEqual('black', listener.new)
+        self.assertEqual(helper, bgcolor_listener.obj)
+        self.assertEqual('bgcolor', bgcolor_listener.trait_name)
+        self.assertEqual('red', bgcolor_listener.old)
+        self.assertEqual('black', bgcolor_listener.new)
 
         return
 

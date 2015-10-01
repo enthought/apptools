@@ -1,5 +1,6 @@
 """ A preferences node that adds the notion of preferences scopes. """
 
+from __future__ import print_function
 
 # Standard library imports.
 from os.path import join
@@ -9,8 +10,8 @@ from traits.etsconfig.api import ETSConfig
 from traits.api import List, Str, Undefined
 
 # Local imports.
-from i_preferences import IPreferences
-from preferences import Preferences
+from .i_preferences import IPreferences
+from .preferences import Preferences
 
 
 class ScopedPreferences(Preferences):
@@ -450,9 +451,9 @@ class ScopedPreferences(Preferences):
         """ Dump the preferences hierarchy to stdout. """
 
         if indent == '':
-            print
+            print()
 
-        print indent, 'Node(%s)' % self.name, self._preferences
+        print(indent, 'Node(%s)' % self.name, self._preferences)
         indent += '  '
 
         for child in self.scopes:
