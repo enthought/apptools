@@ -219,10 +219,15 @@ class TestDictPickler(unittest.TestCase):
         # tests pass.  Note that the ID's only need be consistent not
         # identical!
         if TVTK_AVAILABLE:
-            for attr in ('inst', '_tvtk'):
-                getattr(state1, attr).__metadata__['id'] = \
-                    getattr(state, attr).__metadata__['id']
+            instances = ('inst', '_tvtk')
+        else:
+            instances = ('inst',)
 
+        for attr in instances:
+            getattr(state1, attr).__metadata__['id'] = \
+                getattr(state, attr).__metadata__['id']
+
+        if TVTK_AVAILABLE:
             self.assertEqual(state1._tvtk, state._tvtk)
 
         state1.tuple[-1].__metadata__['id'] = \
