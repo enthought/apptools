@@ -83,7 +83,7 @@ class TestVersionRegistry(unittest.TestCase):
         registry = version_registry.registry
         self.assertEqual(registry.handlers.get(('A', __name__)), h)
         del registry.handlers[('A', __name__)]
-        self.assertNotIn(('A', __name__), registry.handlers)
+        self.assertFalse(('A', __name__) in registry.handlers)
 
     def test_update(self):
         """Test if update method calls the handlers in order."""
