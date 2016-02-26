@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Application API &mdash; apptools 4.3.0 documentation</title>
+    <title>Application API &mdash; apptools 4.4.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.3.0',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,34 +24,20 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="apptools 4.3.0 documentation" href="../index.html" />
+    <link rel="top" title="apptools 4.4.0 documentation" href="../index.html" />
     <link rel="next" title="Default Policy Manager Data API" href="DefaultPolicyManagerDataAPI.html" />
-    <link rel="prev" title="Permissions Framework - Introduction" href="Introduction.html" /> 
+    <link rel="prev" title="Permissions Framework - Introduction" href="Introduction.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
   </head>
-  <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="DefaultPolicyManagerDataAPI.html" title="Default Policy Manager Data API"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="Introduction.html" title="Permissions Framework - Introduction"
-             accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
-      </ul>
-    </div>  
+  <body role="document">  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="application-api">
 <h1>Application API<a class="headerlink" href="#application-api" title="Permalink to this headline">¶</a></h1>
@@ -77,21 +63,21 @@ must be unique.  By convention a dotted notation is used for ids to give
 them a structure.  Ids should at least be given an application or plugin
 specific prefix to ensure their uniqueness.</p>
 <p>Conventionally all an applications permissions are defined in a single
-<tt class="docutils literal"><span class="pre">permissions.py</span></tt> module.  The following is an extract of the example&#8217;s
-<tt class="docutils literal"><span class="pre">permissions.py</span></tt> module:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">apptools.permissions.api</span> <span class="kn">import</span> <span class="n">Permission</span>
+<code class="docutils literal"><span class="pre">permissions.py</span></code> module.  The following is an extract of the example&#8217;s
+<code class="docutils literal"><span class="pre">permissions.py</span></code> module:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">apptools.permissions.api</span> <span class="kn">import</span> <span class="n">Permission</span>
 
-<span class="c"># Add a new person.</span>
-<span class="n">NewPersonPerm</span> <span class="o">=</span> <span class="n">Permission</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">&#39;ets.permissions.example.person.new&#39;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s">u&quot;Add a new person&quot;</span><span class="p">)</span>
+<span class="c1"># Add a new person.</span>
+<span class="n">NewPersonPerm</span> <span class="o">=</span> <span class="n">Permission</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;ets.permissions.example.person.new&#39;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">u&quot;Add a new person&quot;</span><span class="p">)</span>
 
-<span class="c"># Update a person&#39;s age.</span>
-<span class="n">UpdatePersonAgePerm</span> <span class="o">=</span> <span class="n">Permission</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">&#39;ets.permissions.example.person.age.update&#39;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s">u&quot;Update a person&#39;s age&quot;</span><span class="p">)</span>
+<span class="c1"># Update a person&#39;s age.</span>
+<span class="n">UpdatePersonAgePerm</span> <span class="o">=</span> <span class="n">Permission</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;ets.permissions.example.person.age.update&#39;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">u&quot;Update a person&#39;s age&quot;</span><span class="p">)</span>
 
-<span class="c"># View or update a person&#39;s salary.</span>
-<span class="n">PersonSalaryPerm</span> <span class="o">=</span> <span class="n">Permission</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">&#39;ets.permissions.example.person.salary&#39;</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s">u&quot;View or update a person&#39;s salary&quot;</span><span class="p">)</span>
+<span class="c1"># View or update a person&#39;s salary.</span>
+<span class="n">PersonSalaryPerm</span> <span class="o">=</span> <span class="n">Permission</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s1">&#39;ets.permissions.example.person.salary&#39;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">u&quot;View or update a person&#39;s salary&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -102,25 +88,25 @@ user has been granted a permission then the corresponding part of the GUI is
 displayed normally.  When the user is denied a permission then the
 corresponding part of the GUI is disabled or completely hidden.</p>
 <p>Permissions can be applied to TraitsUI view items and to any object which can
-be wrapped in a <tt class="docutils literal"><span class="pre">SecureProxy</span></tt>.</p>
+be wrapped in a <code class="docutils literal"><span class="pre">SecureProxy</span></code>.</p>
 <div class="section" id="traitsui-view-items">
 <h3>TraitsUI View Items<a class="headerlink" href="#traitsui-view-items" title="Permalink to this headline">¶</a></h3>
-<p>Items in TraitsUI views have <tt class="docutils literal"><span class="pre">enabled_when</span></tt> and <tt class="docutils literal"><span class="pre">visible_when</span></tt> traits that
+<p>Items in TraitsUI views have <code class="docutils literal"><span class="pre">enabled_when</span></code> and <code class="docutils literal"><span class="pre">visible_when</span></code> traits that
 are evaluated to determine if the item should be enabled or visible
 respectively.  These are used to apply permissions by storing the relevant
 permissions in the model so that they are available to the view.  The
-<tt class="docutils literal"><span class="pre">enabled_when</span></tt> and <tt class="docutils literal"><span class="pre">visible_when</span></tt> traits then simply reference the
-permission&#8217;s <tt class="docutils literal"><span class="pre">granted</span></tt> trait.  The <tt class="docutils literal"><span class="pre">granted</span></tt> trait automatically reflects
+<code class="docutils literal"><span class="pre">enabled_when</span></code> and <code class="docutils literal"><span class="pre">visible_when</span></code> traits then simply reference the
+permission&#8217;s <code class="docutils literal"><span class="pre">granted</span></code> trait.  The <code class="docutils literal"><span class="pre">granted</span></code> trait automatically reflects
 whether or not the user currently has the corresponding permission.</p>
 <p>In order for the view to be correctly updated when the user&#8217;s permissions
 change (ie. when they become authenticated) the view must use the
-<tt class="docutils literal"><span class="pre">SecureHandler</span></tt> handler.  This handler is a simple sub-class of the standard
-Traits <tt class="docutils literal"><span class="pre">Handler</span></tt> class.</p>
-<p>The following extract from the example shows a default view of the <tt class="docutils literal"><span class="pre">Person</span></tt>
-object that enables the <tt class="docutils literal"><span class="pre">age</span></tt> item when the user has the
-<tt class="docutils literal"><span class="pre">UpdatePersonAgePerm</span></tt> permission and shows the <tt class="docutils literal"><span class="pre">salary</span></tt> item when the user
-has the <tt class="docutils literal"><span class="pre">PersonSalaryPerm</span></tt> permission:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">apptools.permissions.api</span> <span class="kn">import</span> <span class="n">SecureHandler</span>
+<code class="docutils literal"><span class="pre">SecureHandler</span></code> handler.  This handler is a simple sub-class of the standard
+Traits <code class="docutils literal"><span class="pre">Handler</span></code> class.</p>
+<p>The following extract from the example shows a default view of the <code class="docutils literal"><span class="pre">Person</span></code>
+object that enables the <code class="docutils literal"><span class="pre">age</span></code> item when the user has the
+<code class="docutils literal"><span class="pre">UpdatePersonAgePerm</span></code> permission and shows the <code class="docutils literal"><span class="pre">salary</span></code> item when the user
+has the <code class="docutils literal"><span class="pre">PersonSalaryPerm</span></code> permission:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">apptools.permissions.api</span> <span class="kn">import</span> <span class="n">SecureHandler</span>
 <span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Unicode</span>
 <span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="kn">import</span> <span class="n">Item</span><span class="p">,</span> <span class="n">View</span>
 
@@ -129,30 +115,30 @@ has the <tt class="docutils literal"><span class="pre">PersonSalaryPerm</span></
 <span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A simple example of an object model&quot;&quot;&quot;</span>
 
-    <span class="c"># Name.</span>
+    <span class="c1"># Name.</span>
     <span class="n">name</span> <span class="o">=</span> <span class="n">Unicode</span>
 
-    <span class="c"># Age in years.</span>
+    <span class="c1"># Age in years.</span>
     <span class="n">age</span> <span class="o">=</span> <span class="n">Int</span>
 
-    <span class="c"># Salary.</span>
+    <span class="c1"># Salary.</span>
     <span class="n">salary</span> <span class="o">=</span> <span class="n">Int</span>
 
-    <span class="c"># Define the default view with permissions attached.</span>
+    <span class="c1"># Define the default view with permissions attached.</span>
     <span class="n">age_perm</span> <span class="o">=</span> <span class="n">UpdatePersonAgePerm</span>
     <span class="n">salary_perm</span> <span class="o">=</span> <span class="n">PersonSalaryPerm</span>
 
     <span class="n">traits_view</span> <span class="o">=</span> <span class="n">View</span><span class="p">(</span>
-            <span class="n">Item</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;name&#39;</span><span class="p">),</span>
-            <span class="n">Item</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;age&#39;</span><span class="p">,</span> <span class="n">enabled_when</span><span class="o">=</span><span class="s">&#39;object.age_perm.granted&#39;</span><span class="p">),</span>
-            <span class="n">Item</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;salary&#39;</span><span class="p">,</span> <span class="n">visible_when</span><span class="o">=</span><span class="s">&#39;object.salary_perm.granted&#39;</span><span class="p">),</span>
+            <span class="n">Item</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">),</span>
+            <span class="n">Item</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;age&#39;</span><span class="p">,</span> <span class="n">enabled_when</span><span class="o">=</span><span class="s1">&#39;object.age_perm.granted&#39;</span><span class="p">),</span>
+            <span class="n">Item</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;salary&#39;</span><span class="p">,</span> <span class="n">visible_when</span><span class="o">=</span><span class="s1">&#39;object.salary_perm.granted&#39;</span><span class="p">),</span>
             <span class="n">handler</span><span class="o">=</span><span class="n">SecureHandler</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="wrapping-in-a-secureproxy">
 <h3>Wrapping in a SecureProxy<a class="headerlink" href="#wrapping-in-a-secureproxy" title="Permalink to this headline">¶</a></h3>
-<p>Any object can have permissions applied by wrapping it in a <tt class="docutils literal"><span class="pre">SecureProxy</span></tt>
+<p>Any object can have permissions applied by wrapping it in a <code class="docutils literal"><span class="pre">SecureProxy</span></code>
 object.  An adapter is used that manages the enabled and visible states of the
 proxied object according to the current user&#8217;s permissions.  Otherwise the
 proxy behaves just like the object being proxied.</p>
@@ -166,8 +152,8 @@ proxy behaves just like the object being proxied.</p>
 <p>See <a class="reference internal" href="#writing-secureproxy-adapters">Writing SecureProxy Adapters</a> for a description of how to write adapters
 for other types of objects.</p>
 <p>The following extract from the example shows the wrapping of a standard PyFace
-action and the application of the <tt class="docutils literal"><span class="pre">NewPersonPerm</span></tt> permission:</p>
-<div class="highlight-python"><div class="highlight"><pre>from apptools.permissions.api import SecureProxy
+action and the application of the <code class="docutils literal"><span class="pre">NewPersonPerm</span></code> permission:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>from apptools.permissions.api import SecureProxy
 
 from permissions import NewPersonPerm
 
@@ -183,8 +169,8 @@ from permissions import NewPersonPerm
         return act
 </pre></div>
 </div>
-<p>A <tt class="docutils literal"><span class="pre">SecureProxy</span></tt> also accepts a <tt class="docutils literal"><span class="pre">show</span></tt> argument that, when set to
-<tt class="docutils literal"><span class="pre">False</span></tt>, hides the object when it becomes disabled.</p>
+<p>A <code class="docutils literal"><span class="pre">SecureProxy</span></code> also accepts a <code class="docutils literal"><span class="pre">show</span></code> argument that, when set to
+<code class="docutils literal"><span class="pre">False</span></code>, hides the object when it becomes disabled.</p>
 </div>
 </div>
 <div class="section" id="authenticating-the-user">
@@ -193,36 +179,36 @@ from permissions import NewPersonPerm
 for authenticating the user (and subsequently unauthorising the user if
 required).</p>
 <p>The code fragment to authenticate the current user is:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">apptools.permissions.api</span> <span class="kn">import</span> <span class="n">get_permissions_manager</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">apptools.permissions.api</span> <span class="kn">import</span> <span class="n">get_permissions_manager</span>
 
 <span class="n">get_permissions_Manager</span><span class="p">()</span><span class="o">.</span><span class="n">user_manager</span><span class="o">.</span><span class="n">authenticate_user</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Unauthorising the current user is done using the <tt class="docutils literal"><span class="pre">unauthenticate_user()</span></tt>
+<p>Unauthorising the current user is done using the <code class="docutils literal"><span class="pre">unauthenticate_user()</span></code>
 method.</p>
-<p>As a convenience two PyFace actions, called <tt class="docutils literal"><span class="pre">LoginAction</span></tt> and
-<tt class="docutils literal"><span class="pre">LogoutAction</span></tt>, are provided that wrap these two methods.</p>
-<p>As a further convenience a PyFace menu manager, called <tt class="docutils literal"><span class="pre">UserMenuManager</span></tt>, is
+<p>As a convenience two PyFace actions, called <code class="docutils literal"><span class="pre">LoginAction</span></code> and
+<code class="docutils literal"><span class="pre">LogoutAction</span></code>, are provided that wrap these two methods.</p>
+<p>As a further convenience a PyFace menu manager, called <code class="docutils literal"><span class="pre">UserMenuManager</span></code>, is
 provided that contains all the user and management actions (see below) in the
 permissions framework.  This is used by the example.</p>
 <p>The user menu, login and logout actions can be imported from
-<tt class="docutils literal"><span class="pre">apptools.permissions.action.api</span></tt>.</p>
+<code class="docutils literal"><span class="pre">apptools.permissions.action.api</span></code>.</p>
 </div>
 <div class="section" id="getting-and-setting-user-data">
 <h2>Getting and Setting User Data<a class="headerlink" href="#getting-and-setting-user-data" title="Permalink to this headline">¶</a></h2>
-<p>The user manager has a <tt class="docutils literal"><span class="pre">user</span></tt> trait that is an object that implements the
-<tt class="docutils literal"><span class="pre">IUser</span></tt> interface.  It is only valid once the user has been authenticated.</p>
-<p>The <tt class="docutils literal"><span class="pre">IUser</span></tt> interface has a <tt class="docutils literal"><span class="pre">blob</span></tt> trait that holds any binary data (as a
+<p>The user manager has a <code class="docutils literal"><span class="pre">user</span></code> trait that is an object that implements the
+<code class="docutils literal"><span class="pre">IUser</span></code> interface.  It is only valid once the user has been authenticated.</p>
+<p>The <code class="docutils literal"><span class="pre">IUser</span></code> interface has a <code class="docutils literal"><span class="pre">blob</span></code> trait that holds any binary data (as a
 Python string).  The data will be read when the user is authenticated.  The
 data will be written whenever it is changed.</p>
 </div>
 <div class="section" id="integrating-management-actions">
 <h2>Integrating Management Actions<a class="headerlink" href="#integrating-management-actions" title="Permalink to this headline">¶</a></h2>
 <p>Both policy and user managers can provide actions that provide access to
-various management functions.  Both have a <tt class="docutils literal"><span class="pre">management_actions</span></tt> trait that is
+various management functions.  Both have a <code class="docutils literal"><span class="pre">management_actions</span></code> trait that is
 a list of PyFace actions that invoke appropriate dialogs that allow the user to
 manage the policy and the user population appropriately.</p>
-<p>User managers also have a <tt class="docutils literal"><span class="pre">user_actions</span></tt> trait that is a list of PyFace
+<p>User managers also have a <code class="docutils literal"><span class="pre">user_actions</span></code> trait that is a list of PyFace
 actions that invoke appropriate dialogs that allow the user to manage
 themselves.  For example, the default user manager provides an action that
 allows a user to change their password.</p>
@@ -236,10 +222,10 @@ secure directory service may not provide any management actions.</p>
 </div>
 <div class="section" id="writing-secureproxy-adapters">
 <h2>Writing SecureProxy Adapters<a class="headerlink" href="#writing-secureproxy-adapters" title="Permalink to this headline">¶</a></h2>
-<p><tt class="docutils literal"><span class="pre">SecureProxy</span></tt> will automatically handle most of the object types you will
+<p><code class="docutils literal"><span class="pre">SecureProxy</span></code> will automatically handle most of the object types you will
 want to apply permissions to.  However it is possible to implement additional
 adapters to support other object types.  To do this you need to implement a
-sub-class of <tt class="docutils literal"><span class="pre">AdapterBase</span></tt> and register it.</p>
+sub-class of <code class="docutils literal"><span class="pre">AdapterBase</span></code> and register it.</p>
 <p>Adapters tend to be one of two styles according to how the object&#8217;s enabled
 and visible states are changed.  If the states are changed via attributes
 (typically Traits based objects) then the adapter will cause a proxy to be
@@ -247,43 +233,43 @@ created for the object.  If the states are changed via methods (typically
 toolkit widgets) then the adapter will probably modify the object itself.  We
 will refer to these two styles as wrapping adapters and patching adapters
 respectively.</p>
-<p>The following gives a brief overview of the <tt class="docutils literal"><span class="pre">AdapterBase</span></tt> class:</p>
+<p>The following gives a brief overview of the <code class="docutils literal"><span class="pre">AdapterBase</span></code> class:</p>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">proxied</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">proxied</span></code></dt>
 <dd>This instance attribute is a reference to the original object.</dd>
-<dt><tt class="docutils literal"><span class="pre">register_adapter(adapter,</span> <span class="pre">type,</span> <span class="pre">type,</span> <span class="pre">...)</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">register_adapter(adapter,</span> <span class="pre">type,</span> <span class="pre">type,</span> <span class="pre">...)</span></code></dt>
 <dd>This is a class method that is used to register your adapter and one or
 more object types that it handles.</dd>
-<dt><tt class="docutils literal"><span class="pre">adapt()</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">adapt()</span></code></dt>
 <dd>This is a method that should be reimplemented by patching adapters.  (The
 default implementation will cause a proxy to be created for wrapping
-adapters.)  This is where any patching of the <tt class="docutils literal"><span class="pre">proxied</span></tt> attribute is
-done.  The object returned will be returned by <tt class="docutils literal"><span class="pre">SecureProxy()</span></tt> and would
+adapters.)  This is where any patching of the <code class="docutils literal"><span class="pre">proxied</span></code> attribute is
+done.  The object returned will be returned by <code class="docutils literal"><span class="pre">SecureProxy()</span></code> and would
 normally be the patched object - but can be any object.</dd>
-<dt><tt class="docutils literal"><span class="pre">setattr(name,</span> <span class="pre">value)</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">setattr(name,</span> <span class="pre">value)</span></code></dt>
 <dd>This method should be reimplemented by wrapping adapters to intercept the
-setting of relevant attributes of the <tt class="docutils literal"><span class="pre">proxied</span></tt> object.  The default
+setting of relevant attributes of the <code class="docutils literal"><span class="pre">proxied</span></code> object.  The default
 implementation should be used as the fallback for irrelevant attributes.</dd>
-<dt><tt class="docutils literal"><span class="pre">get_enabled()</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">get_enabled()</span></code></dt>
 <dd>This method must be reimplemented to return the current enabled state.</dd>
-<dt><tt class="docutils literal"><span class="pre">set_enabled(value)</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">set_enabled(value)</span></code></dt>
 <dd>This method must be reimplemented to set the enabled state to the given
 value.</dd>
-<dt><tt class="docutils literal"><span class="pre">update_enabled(value)</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">update_enabled(value)</span></code></dt>
 <dd>This method is called by your adapter to set the desired value of the
 enabled state.  The actual state set will depend on the current user&#8217;s
 permissions.</dd>
-<dt><tt class="docutils literal"><span class="pre">get_visible()</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">get_visible()</span></code></dt>
 <dd>This method must be reimplemented to return the current visible state.</dd>
-<dt><tt class="docutils literal"><span class="pre">set_visible(value)</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">set_visible(value)</span></code></dt>
 <dd>This method must be reimplemented to set the visible state to the given
 value.</dd>
-<dt><tt class="docutils literal"><span class="pre">update_visible(value)</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">update_visible(value)</span></code></dt>
 <dd>This method is called by your adapter to set the desired value of the
 visible state.  The actual state set will depend on the current user&#8217;s
 permissions.</dd>
 </dl>
-<p>The <tt class="docutils literal"><span class="pre">AdapterBase</span></tt> class is defined in <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/adapter_base.py">adapter_base.py</a>.</p>
+<p>The <code class="docutils literal"><span class="pre">AdapterBase</span></code> class is defined in <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/adapter_base.py">adapter_base.py</a>.</p>
 <p>The <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/adapters/pyface_action.py">PyFace action adapter</a> is an example of a wrapping adapter.</p>
 <p>The <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/adapters/qt4_widget.py">PyQt widget adapter</a> is an example of a patching adapter.</p>
 </div>
@@ -293,7 +279,7 @@ permissions.</dd>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
@@ -314,19 +300,23 @@ permissions.</dd>
 </ul>
 </li>
 </ul>
-
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="Introduction.html"
-                        title="previous chapter">Permissions Framework - Introduction</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="DefaultPolicyManagerDataAPI.html"
-                        title="next chapter">Default Policy Manager Data API</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/permissions/ApplicationAPI.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="Introduction.html" title="previous chapter">Permissions Framework - Introduction</a></li>
+      <li>Next: <a href="DefaultPolicyManagerDataAPI.html" title="next chapter">Default Policy Manager Data API</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/permissions/ApplicationAPI.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -343,28 +333,20 @@ permissions.</dd>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="DefaultPolicyManagerDataAPI.html" title="Default Policy Manager Data API"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="Introduction.html" title="Permissions Framework - Introduction"
-             >previous</a> |</li>
-        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
-      </ul>
-    </div>
     <div class="footer">
-        &copy; Copyright 2008-2015, Enthought.
-      Last updated on Mar 17, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      &copy;2008-2016, Enthought.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/permissions/ApplicationAPI.txt"
+          rel="nofollow">Page source</a>
     </div>
+
+    
+
+    
   </body>
 </html>
