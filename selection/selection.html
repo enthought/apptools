@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>The selection service &mdash; apptools 4.3.0 documentation</title>
+    <title>The selection service &mdash; apptools 4.4.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.3.0',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,11 +24,11 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="apptools 4.3.0 documentation" href="../index.html" />
+    <link rel="top" title="apptools 4.4.0 documentation" href="../index.html" />
     <link rel="prev" title="Undo Framework" href="../undo/Introduction.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -40,14 +40,14 @@
         <li class="right" >
           <a href="../undo/Introduction.html" title="Undo Framework"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">apptools 4.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="the-selection-service">
 <span id="selection-service"></span><h1>The selection service<a class="headerlink" href="#the-selection-service" title="Permalink to this headline">¶</a></h1>
@@ -62,52 +62,52 @@ expose the internal organization of the application to external developers.</p>
 <p>This package defines a selection service that manages the communication
 between providers and listener.</p>
 <div class="section" id="the-selectionservice-object">
-<h2>The <a class="reference internal" href="#apptools.selection.selection_service.SelectionService" title="apptools.selection.selection_service.SelectionService"><tt class="xref py py-class docutils literal"><span class="pre">SelectionService</span></tt></a> object<a class="headerlink" href="#the-selectionservice-object" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference internal" href="#apptools.selection.selection_service.SelectionService" title="apptools.selection.selection_service.SelectionService"><tt class="xref py py-class docutils literal"><span class="pre">SelectionService</span></tt></a> object is the central manager that handles
+<h2>The <a class="reference internal" href="#apptools.selection.selection_service.SelectionService" title="apptools.selection.selection_service.SelectionService"><code class="xref py py-class docutils literal"><span class="pre">SelectionService</span></code></a> object<a class="headerlink" href="#the-selectionservice-object" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="#apptools.selection.selection_service.SelectionService" title="apptools.selection.selection_service.SelectionService"><code class="xref py py-class docutils literal"><span class="pre">SelectionService</span></code></a> object is the central manager that handles
 the communication between selection providers and listener.</p>
-<p><a class="reference internal" href="#selection-providers"><em>Selection providers</em></a> are components that wish to
+<p><a class="reference internal" href="#selection-providers"><span>Selection providers</span></a> are components that wish to
 publish information about their current selection for public consumption.
 They register to a selection
 service instance when they first have a selection available (e.g., when the
 UI showing a list of selectable items is initialized), and un-register as soon
 as the selection is not available anymore (e.g., the UI is destroyed when the
 windows is closed).</p>
-<p><a class="reference internal" href="#selection-listeners"><em>Selection listeners</em></a> can query the selection
+<p><a class="reference internal" href="#selection-listeners"><span>Selection listeners</span></a> can query the selection
 service to get the current selection published by a provider, using the
 provider unique ID.</p>
 <p>The service acts as a broker between providers and listeners, making sure that
 they are notified when the
-<a class="reference internal" href="#apptools.selection.i_selection_provider.ISelectionProvider.selection" title="apptools.selection.i_selection_provider.ISelectionProvider.selection"><tt class="xref py py-attr docutils literal"><span class="pre">selection</span></tt></a>
+<a class="reference internal" href="#apptools.selection.i_selection_provider.ISelectionProvider.selection" title="apptools.selection.i_selection_provider.ISelectionProvider.selection"><code class="xref py py-attr docutils literal"><span class="pre">selection</span></code></a>
 event is fired.</p>
 </div>
 <div class="section" id="selection-providers">
 <span id="id1"></span><h2>Selection providers<a class="headerlink" href="#selection-providers" title="Permalink to this headline">¶</a></h2>
 <p>Any object can become a selection provider by implementing the
-<a class="reference internal" href="#apptools.selection.i_selection_provider.ISelectionProvider" title="apptools.selection.i_selection_provider.ISelectionProvider"><tt class="xref py py-class docutils literal"><span class="pre">ISelectionProvider</span></tt></a>
+<a class="reference internal" href="#apptools.selection.i_selection_provider.ISelectionProvider" title="apptools.selection.i_selection_provider.ISelectionProvider"><code class="xref py py-class docutils literal"><span class="pre">ISelectionProvider</span></code></a>
 interface, and registering to the selection service.</p>
 <p>Selection providers must provide a unique ID
-<a class="reference internal" href="#apptools.selection.i_selection_provider.ISelectionProvider.provider_id" title="apptools.selection.i_selection_provider.ISelectionProvider.provider_id"><tt class="xref py py-attr docutils literal"><span class="pre">provider_id</span></tt></a>,
+<a class="reference internal" href="#apptools.selection.i_selection_provider.ISelectionProvider.provider_id" title="apptools.selection.i_selection_provider.ISelectionProvider.provider_id"><code class="xref py py-attr docutils literal"><span class="pre">provider_id</span></code></a>,
 which is used by listeners to request its current selection.</p>
 <p>Whenever its selection changes, providers fire a
-<a class="reference internal" href="#apptools.selection.i_selection_provider.ISelectionProvider.selection" title="apptools.selection.i_selection_provider.ISelectionProvider.selection"><tt class="xref py py-attr docutils literal"><span class="pre">selection</span></tt></a>
+<a class="reference internal" href="#apptools.selection.i_selection_provider.ISelectionProvider.selection" title="apptools.selection.i_selection_provider.ISelectionProvider.selection"><code class="xref py py-attr docutils literal"><span class="pre">selection</span></code></a>
 event. The content of the event is an instance implementing
-<a class="reference internal" href="#apptools.selection.i_selection.ISelection" title="apptools.selection.i_selection.ISelection"><tt class="xref py py-class docutils literal"><span class="pre">ISelection</span></tt></a> that contains information about the selected items.
-For example, a <a class="reference internal" href="#apptools.selection.list_selection.ListSelection" title="apptools.selection.list_selection.ListSelection"><tt class="xref py py-class docutils literal"><span class="pre">ListSelection</span></tt></a> object contains a list of selected
+<a class="reference internal" href="#apptools.selection.i_selection.ISelection" title="apptools.selection.i_selection.ISelection"><code class="xref py py-class docutils literal"><span class="pre">ISelection</span></code></a> that contains information about the selected items.
+For example, a <a class="reference internal" href="#apptools.selection.list_selection.ListSelection" title="apptools.selection.list_selection.ListSelection"><code class="xref py py-class docutils literal"><span class="pre">ListSelection</span></code></a> object contains a list of selected
 items, and their indices.</p>
 <p>Selection providers can also be queried directly about their current selection
 using the
-<a class="reference internal" href="#apptools.selection.i_selection_provider.ISelectionProvider.get_selection" title="apptools.selection.i_selection_provider.ISelectionProvider.get_selection"><tt class="xref py py-attr docutils literal"><span class="pre">get_selection</span></tt></a>
+<a class="reference internal" href="#apptools.selection.i_selection_provider.ISelectionProvider.get_selection" title="apptools.selection.i_selection_provider.ISelectionProvider.get_selection"><code class="xref py py-attr docutils literal"><span class="pre">get_selection</span></code></a>
 method, and can be requested to change their selection to a new one with the
-<a class="reference internal" href="#apptools.selection.i_selection_provider.ISelectionProvider.set_selection" title="apptools.selection.i_selection_provider.ISelectionProvider.set_selection"><tt class="xref py py-attr docutils literal"><span class="pre">set_selection</span></tt></a>
+<a class="reference internal" href="#apptools.selection.i_selection_provider.ISelectionProvider.set_selection" title="apptools.selection.i_selection_provider.ISelectionProvider.set_selection"><code class="xref py py-attr docutils literal"><span class="pre">set_selection</span></code></a>
 method.</p>
 <div class="section" id="registration">
 <h3>Registration<a class="headerlink" href="#registration" title="Permalink to this headline">¶</a></h3>
 <p>Selection providers publish their selection by registering to the selection
 service using the
-<a class="reference internal" href="#apptools.selection.selection_service.SelectionService.add_selection_provider" title="apptools.selection.selection_service.SelectionService.add_selection_provider"><tt class="xref py py-attr docutils literal"><span class="pre">add_selection_provider</span></tt></a>
+<a class="reference internal" href="#apptools.selection.selection_service.SelectionService.add_selection_provider" title="apptools.selection.selection_service.SelectionService.add_selection_provider"><code class="xref py py-attr docutils literal"><span class="pre">add_selection_provider</span></code></a>
 method. When the selection is no longer available, selection providers
 should un-register through
-<a class="reference internal" href="#apptools.selection.selection_service.SelectionService.remove_selection_provider" title="apptools.selection.selection_service.SelectionService.remove_selection_provider"><tt class="xref py py-attr docutils literal"><span class="pre">remove_selection_provider</span></tt></a>.</p>
+<a class="reference internal" href="#apptools.selection.selection_service.SelectionService.remove_selection_provider" title="apptools.selection.selection_service.SelectionService.remove_selection_provider"><code class="xref py py-attr docutils literal"><span class="pre">remove_selection_provider</span></code></a>.</p>
 <p>Typically, selection providers are UI objects showing a list or tree of items,
 they register as soon as the UI component is initialized, and un-register
 when the UI component disappears (e.g., because their window has been closed).
@@ -118,7 +118,7 @@ object instead.</p>
 <div class="section" id="selection-listeners">
 <span id="id2"></span><h2>Selection listeners<a class="headerlink" href="#selection-listeners" title="Permalink to this headline">¶</a></h2>
 <p>Selection listeners request information regarding the current selection
-of a selection provider given their provider ID. The <a class="reference internal" href="#apptools.selection.selection_service.SelectionService" title="apptools.selection.selection_service.SelectionService"><tt class="xref py py-class docutils literal"><span class="pre">SelectionService</span></tt></a>
+of a selection provider given their provider ID. The <a class="reference internal" href="#apptools.selection.selection_service.SelectionService" title="apptools.selection.selection_service.SelectionService"><code class="xref py py-class docutils literal"><span class="pre">SelectionService</span></code></a>
 supports two distinct use cases:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -131,16 +131,16 @@ service can be used to query a provider using its unique ID.</li>
 <div class="section" id="passive-listening">
 <h3>Passive listening<a class="headerlink" href="#passive-listening" title="Permalink to this headline">¶</a></h3>
 <p>Listeners connect to the selection events for a given provider using the
-<a class="reference internal" href="#apptools.selection.selection_service.SelectionService.connect_selection_listener" title="apptools.selection.selection_service.SelectionService.connect_selection_listener"><tt class="xref py py-attr docutils literal"><span class="pre">connect_selection_listener</span></tt></a>
+<a class="reference internal" href="#apptools.selection.selection_service.SelectionService.connect_selection_listener" title="apptools.selection.selection_service.SelectionService.connect_selection_listener"><code class="xref py py-attr docutils literal"><span class="pre">connect_selection_listener</span></code></a>
 method. They need to provide the unique ID of the provider, and a function
 (or callable) that is called to send the event. This callback function takes
-one argument, an implementation of the <a class="reference internal" href="#apptools.selection.i_selection.ISelection" title="apptools.selection.i_selection.ISelection"><tt class="xref py py-class docutils literal"><span class="pre">ISelection</span></tt></a> that represents
+one argument, an implementation of the <a class="reference internal" href="#apptools.selection.i_selection.ISelection" title="apptools.selection.i_selection.ISelection"><code class="xref py py-class docutils literal"><span class="pre">ISelection</span></code></a> that represents
 the selection.</p>
 <p>It is possible for a listener to connect to a provider ID before it is
 registered. As soon as the provider is registered, the listener will receive
 a notification containing the provider&#8217;s initial selection.</p>
 <p>To disconnect a listener use the methods
-<a class="reference internal" href="#apptools.selection.selection_service.SelectionService.disconnect_selection_listener" title="apptools.selection.selection_service.SelectionService.disconnect_selection_listener"><tt class="xref py py-attr docutils literal"><span class="pre">disconnect_selection_listener</span></tt></a>.</p>
+<a class="reference internal" href="#apptools.selection.selection_service.SelectionService.disconnect_selection_listener" title="apptools.selection.selection_service.SelectionService.disconnect_selection_listener"><code class="xref py py-attr docutils literal"><span class="pre">disconnect_selection_listener</span></code></a>.</p>
 </div>
 <div class="section" id="active-querying">
 <h3>Active querying<a class="headerlink" href="#active-querying" title="Permalink to this headline">¶</a></h3>
@@ -149,46 +149,46 @@ selection at a specific time. For example, a toolbar button could open dialog
 representing a user action based on what is currently selected in the active
 editor.</p>
 <p>The
-<a class="reference internal" href="#apptools.selection.selection_service.SelectionService.get_selection" title="apptools.selection.selection_service.SelectionService.get_selection"><tt class="xref py py-attr docutils literal"><span class="pre">get_selection</span></tt></a>
+<a class="reference internal" href="#apptools.selection.selection_service.SelectionService.get_selection" title="apptools.selection.selection_service.SelectionService.get_selection"><code class="xref py py-attr docutils literal"><span class="pre">get_selection</span></code></a>
 method calls the corresponding method on the provider with the given ID and
-returns an <a class="reference internal" href="#apptools.selection.i_selection.ISelection" title="apptools.selection.i_selection.ISelection"><tt class="xref py py-class docutils literal"><span class="pre">ISelection</span></tt></a> instance.</p>
+returns an <a class="reference internal" href="#apptools.selection.i_selection.ISelection" title="apptools.selection.i_selection.ISelection"><code class="xref py py-class docutils literal"><span class="pre">ISelection</span></code></a> instance.</p>
 </div>
 <div class="section" id="setting-a-selection">
 <h3>Setting a selection<a class="headerlink" href="#setting-a-selection" title="Permalink to this headline">¶</a></h3>
 <p>Finally, it is possible to request a provider to set its selection to a given
 set of objects with
-<a class="reference internal" href="#apptools.selection.selection_service.SelectionService.set_selection" title="apptools.selection.selection_service.SelectionService.set_selection"><tt class="xref py py-attr docutils literal"><span class="pre">set_selection</span></tt></a>.
+<a class="reference internal" href="#apptools.selection.selection_service.SelectionService.set_selection" title="apptools.selection.selection_service.SelectionService.set_selection"><code class="xref py py-attr docutils literal"><span class="pre">set_selection</span></code></a>.
 The main use case for this method is multiple views of the same list of
 objects, which need to keep their selection synchronized.</p>
 <p>If the items specified in the arguments are not available in the provider,
-a <a class="reference internal" href="#apptools.selection.errors.ProviderNotRegisteredError" title="apptools.selection.errors.ProviderNotRegisteredError"><tt class="xref py py-class docutils literal"><span class="pre">ProviderNotRegisteredError</span></tt></a> is raised,
-unless the optional keyword argument <tt class="xref py py-attr docutils literal"><span class="pre">ignore_missing</span></tt> is set to <tt class="docutils literal"><span class="pre">True</span></tt>.</p>
+a <a class="reference internal" href="#apptools.selection.errors.ProviderNotRegisteredError" title="apptools.selection.errors.ProviderNotRegisteredError"><code class="xref py py-class docutils literal"><span class="pre">ProviderNotRegisteredError</span></code></a> is raised,
+unless the optional keyword argument <code class="xref py py-attr docutils literal"><span class="pre">ignore_missing</span></code> is set to <code class="docutils literal"><span class="pre">True</span></code>.</p>
 </div>
 </div>
 <div class="section" id="api-reference">
 <h2>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="apptools-selection-package">
-<h3><tt class="xref py py-mod docutils literal"><span class="pre">apptools.selection</span></tt> Package<a class="headerlink" href="#apptools-selection-package" title="Permalink to this headline">¶</a></h3>
-<p>Users of the <tt class="xref py py-mod docutils literal"><span class="pre">apptools.selection</span></tt> package can access the objects that are
-part of the public API through the convenience <tt class="xref py py-mod docutils literal"><span class="pre">apptools.selection.api</span></tt>.</p>
+<h3><code class="xref py py-mod docutils literal"><span class="pre">apptools.selection</span></code> Package<a class="headerlink" href="#apptools-selection-package" title="Permalink to this headline">¶</a></h3>
+<p>Users of the <code class="xref py py-mod docutils literal"><span class="pre">apptools.selection</span></code> package can access the objects that are
+part of the public API through the convenience <code class="xref py py-mod docutils literal"><span class="pre">apptools.selection.api</span></code>.</p>
 <div class="section" id="module-apptools.selection.selection_service">
-<span id="selection-service-module"></span><h4><a class="reference internal" href="#module-apptools.selection.selection_service" title="apptools.selection.selection_service"><tt class="xref py py-mod docutils literal"><span class="pre">selection_service</span></tt></a> Module<a class="headerlink" href="#module-apptools.selection.selection_service" title="Permalink to this headline">¶</a></h4>
+<span id="selection-service-module"></span><h4><a class="reference internal" href="#module-apptools.selection.selection_service" title="apptools.selection.selection_service"><code class="xref py py-mod docutils literal"><span class="pre">selection_service</span></code></a> Module<a class="headerlink" href="#module-apptools.selection.selection_service" title="Permalink to this headline">¶</a></h4>
 <dl class="class">
 <dt id="apptools.selection.selection_service.SelectionService">
-<em class="property">class </em><tt class="descclassname">apptools.selection.selection_service.</tt><tt class="descname">SelectionService</tt><a class="headerlink" href="#apptools.selection.selection_service.SelectionService" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">traits.has_traits.HasTraits</span></tt></p>
+<em class="property">class </em><code class="descclassname">apptools.selection.selection_service.</code><code class="descname">SelectionService</code><a class="headerlink" href="#apptools.selection.selection_service.SelectionService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">traits.has_traits.HasTraits</span></code></p>
 <p>The selection service connects selection providers and listeners.</p>
 <p>The selection service is a register of selection providers, i.e., objects
 that publish their current selection.</p>
 <p>Selections can be requested actively, by explicitly requesting the current
-selection in a provider (<tt class="xref py py-meth docutils literal"><span class="pre">get_selection(id)()</span></tt>), or passively by
+selection in a provider (<code class="xref py py-meth docutils literal"><span class="pre">get_selection(id)()</span></code>), or passively by
 connecting selection listeners.</p>
 <dl class="method">
 <dt id="apptools.selection.selection_service.SelectionService.add_selection_provider">
-<tt class="descname">add_selection_provider</tt><big>(</big><em>provider</em><big>)</big><a class="headerlink" href="#apptools.selection.selection_service.SelectionService.add_selection_provider" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_selection_provider</code><span class="sig-paren">(</span><em>provider</em><span class="sig-paren">)</span><a class="headerlink" href="#apptools.selection.selection_service.SelectionService.add_selection_provider" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a selection provider.</p>
 <p>The provider is identified by its ID. If a provider with the same
-ID has been already registered, an <a class="reference internal" href="#apptools.selection.errors.IDConflictError" title="apptools.selection.errors.IDConflictError"><tt class="xref py py-class docutils literal"><span class="pre">IDConflictError</span></tt></a>
+ID has been already registered, an <a class="reference internal" href="#apptools.selection.errors.IDConflictError" title="apptools.selection.errors.IDConflictError"><code class="xref py py-class docutils literal"><span class="pre">IDConflictError</span></code></a>
 is raised.</p>
 <dl class="docutils">
 <dt>Arguments:</dt>
@@ -202,9 +202,9 @@ is raised.</p>
 
 <dl class="method">
 <dt id="apptools.selection.selection_service.SelectionService.connect_selection_listener">
-<tt class="descname">connect_selection_listener</tt><big>(</big><em>provider_id</em>, <em>func</em><big>)</big><a class="headerlink" href="#apptools.selection.selection_service.SelectionService.connect_selection_listener" title="Permalink to this definition">¶</a></dt>
+<code class="descname">connect_selection_listener</code><span class="sig-paren">(</span><em>provider_id</em>, <em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#apptools.selection.selection_service.SelectionService.connect_selection_listener" title="Permalink to this definition">¶</a></dt>
 <dd><p>Connect a listener to selection events from a specific provider.</p>
-<p>The signature if the listener callback is <tt class="docutils literal"><span class="pre">func(i_selection)</span></tt>.
+<p>The signature if the listener callback is <code class="docutils literal"><span class="pre">func(i_selection)</span></code>.
 The listener is called:</p>
 <ol class="arabic simple">
 <li>When a provider with the given ID is registered, with its initial
@@ -228,7 +228,7 @@ the provider is repeatedly connected and disconnected.</p>
 
 <dl class="method">
 <dt id="apptools.selection.selection_service.SelectionService.disconnect_selection_listener">
-<tt class="descname">disconnect_selection_listener</tt><big>(</big><em>provider_id</em>, <em>func</em><big>)</big><a class="headerlink" href="#apptools.selection.selection_service.SelectionService.disconnect_selection_listener" title="Permalink to this definition">¶</a></dt>
+<code class="descname">disconnect_selection_listener</code><span class="sig-paren">(</span><em>provider_id</em>, <em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#apptools.selection.selection_service.SelectionService.disconnect_selection_listener" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disconnect a listener from a specific provider.</p>
 <dl class="docutils">
 <dt>Arguments:</dt>
@@ -244,10 +244,10 @@ the provider is repeatedly connected and disconnected.</p>
 
 <dl class="method">
 <dt id="apptools.selection.selection_service.SelectionService.get_selection">
-<tt class="descname">get_selection</tt><big>(</big><em>provider_id</em><big>)</big><a class="headerlink" href="#apptools.selection.selection_service.SelectionService.get_selection" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_selection</code><span class="sig-paren">(</span><em>provider_id</em><span class="sig-paren">)</span><a class="headerlink" href="#apptools.selection.selection_service.SelectionService.get_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the current selection of the provider with the given ID.</p>
 <p>If a provider with that ID has not been registered, a
-<a class="reference internal" href="#apptools.selection.errors.ProviderNotRegisteredError" title="apptools.selection.errors.ProviderNotRegisteredError"><tt class="xref py py-class docutils literal"><span class="pre">ProviderNotRegisteredError</span></tt></a> is raised.</p>
+<a class="reference internal" href="#apptools.selection.errors.ProviderNotRegisteredError" title="apptools.selection.errors.ProviderNotRegisteredError"><code class="xref py py-class docutils literal"><span class="pre">ProviderNotRegisteredError</span></code></a> is raised.</p>
 <dl class="docutils">
 <dt>Arguments:</dt>
 <dd><dl class="first last docutils">
@@ -266,16 +266,16 @@ the provider is repeatedly connected and disconnected.</p>
 
 <dl class="method">
 <dt id="apptools.selection.selection_service.SelectionService.has_selection_provider">
-<tt class="descname">has_selection_provider</tt><big>(</big><em>provider_id</em><big>)</big><a class="headerlink" href="#apptools.selection.selection_service.SelectionService.has_selection_provider" title="Permalink to this definition">¶</a></dt>
+<code class="descname">has_selection_provider</code><span class="sig-paren">(</span><em>provider_id</em><span class="sig-paren">)</span><a class="headerlink" href="#apptools.selection.selection_service.SelectionService.has_selection_provider" title="Permalink to this definition">¶</a></dt>
 <dd><p>Has a provider with the given ID been registered?</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="apptools.selection.selection_service.SelectionService.remove_selection_provider">
-<tt class="descname">remove_selection_provider</tt><big>(</big><em>provider</em><big>)</big><a class="headerlink" href="#apptools.selection.selection_service.SelectionService.remove_selection_provider" title="Permalink to this definition">¶</a></dt>
+<code class="descname">remove_selection_provider</code><span class="sig-paren">(</span><em>provider</em><span class="sig-paren">)</span><a class="headerlink" href="#apptools.selection.selection_service.SelectionService.remove_selection_provider" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a selection provider.</p>
 <p>If the provider has not been registered, a
-<a class="reference internal" href="#apptools.selection.errors.ProviderNotRegisteredError" title="apptools.selection.errors.ProviderNotRegisteredError"><tt class="xref py py-class docutils literal"><span class="pre">ProviderNotRegisteredError</span></tt></a> is raised.</p>
+<a class="reference internal" href="#apptools.selection.errors.ProviderNotRegisteredError" title="apptools.selection.errors.ProviderNotRegisteredError"><code class="xref py py-class docutils literal"><span class="pre">ProviderNotRegisteredError</span></code></a> is raised.</p>
 <dl class="docutils">
 <dt>Arguments:</dt>
 <dd><dl class="first last docutils">
@@ -288,13 +288,13 @@ the provider is repeatedly connected and disconnected.</p>
 
 <dl class="method">
 <dt id="apptools.selection.selection_service.SelectionService.set_selection">
-<tt class="descname">set_selection</tt><big>(</big><em>provider_id</em>, <em>items</em>, <em>ignore_missing=False</em><big>)</big><a class="headerlink" href="#apptools.selection.selection_service.SelectionService.set_selection" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_selection</code><span class="sig-paren">(</span><em>provider_id</em>, <em>items</em>, <em>ignore_missing=False</em><span class="sig-paren">)</span><a class="headerlink" href="#apptools.selection.selection_service.SelectionService.set_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the current selection in a provider to the given items.</p>
 <p>If a provider with the given ID has not been registered, a
-<a class="reference internal" href="#apptools.selection.errors.ProviderNotRegisteredError" title="apptools.selection.errors.ProviderNotRegisteredError"><tt class="xref py py-class docutils literal"><span class="pre">ProviderNotRegisteredError</span></tt></a> is raised.</p>
-<p>If <tt class="docutils literal"><span class="pre">ignore_missing</span></tt> is <tt class="docutils literal"><span class="pre">True</span></tt>, items that are not available in the
-selection provider are silently ignored. If it is <tt class="docutils literal"><span class="pre">False</span></tt> (default),
-a <tt class="xref py py-class docutils literal"><span class="pre">ValueError</span></tt> should be raised.</p>
+<a class="reference internal" href="#apptools.selection.errors.ProviderNotRegisteredError" title="apptools.selection.errors.ProviderNotRegisteredError"><code class="xref py py-class docutils literal"><span class="pre">ProviderNotRegisteredError</span></code></a> is raised.</p>
+<p>If <code class="docutils literal"><span class="pre">ignore_missing</span></code> is <code class="docutils literal"><span class="pre">True</span></code>, items that are not available in the
+selection provider are silently ignored. If it is <code class="docutils literal"><span class="pre">False</span></code> (default),
+a <code class="xref py py-class docutils literal"><span class="pre">ValueError</span></code> should be raised.</p>
 <dl class="docutils">
 <dt>Arguments:</dt>
 <dd><dl class="first last docutils">
@@ -303,8 +303,8 @@ a <tt class="xref py py-class docutils literal"><span class="pre">ValueError</sp
 <dt>items &#8211; list</dt>
 <dd>List of items to be selected.</dd>
 <dt>ignore_missing &#8211; bool</dt>
-<dd>If <tt class="docutils literal"><span class="pre">False</span></tt> (default), the provider raises an exception if any
-of the items in <tt class="docutils literal"><span class="pre">items</span></tt> is not available to be selected.
+<dd>If <code class="docutils literal"><span class="pre">False</span></code> (default), the provider raises an exception if any
+of the items in <code class="docutils literal"><span class="pre">items</span></code> is not available to be selected.
 Otherwise, missing elements are silently ignored, and the rest
 is selected.</dd>
 </dl>
@@ -316,15 +316,15 @@ is selected.</dd>
 
 </div>
 <div class="section" id="module-apptools.selection.i_selection_provider">
-<span id="i-selection-provider-module"></span><h4><a class="reference internal" href="#module-apptools.selection.i_selection_provider" title="apptools.selection.i_selection_provider"><tt class="xref py py-mod docutils literal"><span class="pre">i_selection_provider</span></tt></a> Module<a class="headerlink" href="#module-apptools.selection.i_selection_provider" title="Permalink to this headline">¶</a></h4>
+<span id="i-selection-provider-module"></span><h4><a class="reference internal" href="#module-apptools.selection.i_selection_provider" title="apptools.selection.i_selection_provider"><code class="xref py py-mod docutils literal"><span class="pre">i_selection_provider</span></code></a> Module<a class="headerlink" href="#module-apptools.selection.i_selection_provider" title="Permalink to this headline">¶</a></h4>
 <dl class="class">
 <dt id="apptools.selection.i_selection_provider.ISelectionProvider">
-<em class="property">class </em><tt class="descclassname">apptools.selection.i_selection_provider.</tt><tt class="descname">ISelectionProvider</tt><a class="headerlink" href="#apptools.selection.i_selection_provider.ISelectionProvider" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">traits.has_traits.Interface</span></tt></p>
+<em class="property">class </em><code class="descclassname">apptools.selection.i_selection_provider.</code><code class="descname">ISelectionProvider</code><a class="headerlink" href="#apptools.selection.i_selection_provider.ISelectionProvider" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">traits.has_traits.Interface</span></code></p>
 <p>Source of selections.</p>
 <dl class="method">
 <dt id="apptools.selection.i_selection_provider.ISelectionProvider.get_selection">
-<tt class="descname">get_selection</tt><big>(</big><big>)</big><a class="headerlink" href="#apptools.selection.i_selection_provider.ISelectionProvider.get_selection" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_selection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#apptools.selection.i_selection_provider.ISelectionProvider.get_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the current selection.</p>
 <dl class="docutils">
 <dt>Returns:</dt>
@@ -338,32 +338,32 @@ is selected.</dd>
 
 <dl class="attribute">
 <dt id="apptools.selection.i_selection_provider.ISelectionProvider.provider_id">
-<tt class="descname">provider_id</tt><em class="property"> = Str()</em><a class="headerlink" href="#apptools.selection.i_selection_provider.ISelectionProvider.provider_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">provider_id</code><em class="property"> = Str()</em><a class="headerlink" href="#apptools.selection.i_selection_provider.ISelectionProvider.provider_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Unique ID identifying the provider.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="apptools.selection.i_selection_provider.ISelectionProvider.selection">
-<tt class="descname">selection</tt><em class="property"> = Event</em><a class="headerlink" href="#apptools.selection.i_selection_provider.ISelectionProvider.selection" title="Permalink to this definition">¶</a></dt>
+<code class="descname">selection</code><em class="property"> = Event</em><a class="headerlink" href="#apptools.selection.i_selection_provider.ISelectionProvider.selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Event triggered when the selection changes.
-The content of the event is an <a class="reference internal" href="#apptools.selection.i_selection.ISelection" title="apptools.selection.i_selection.ISelection"><tt class="xref py py-class docutils literal"><span class="pre">ISelection</span></tt></a> instance.</p>
+The content of the event is an <a class="reference internal" href="#apptools.selection.i_selection.ISelection" title="apptools.selection.i_selection.ISelection"><code class="xref py py-class docutils literal"><span class="pre">ISelection</span></code></a> instance.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="apptools.selection.i_selection_provider.ISelectionProvider.set_selection">
-<tt class="descname">set_selection</tt><big>(</big><em>items</em>, <em>ignore_missing=False</em><big>)</big><a class="headerlink" href="#apptools.selection.i_selection_provider.ISelectionProvider.set_selection" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_selection</code><span class="sig-paren">(</span><em>items</em>, <em>ignore_missing=False</em><span class="sig-paren">)</span><a class="headerlink" href="#apptools.selection.i_selection_provider.ISelectionProvider.set_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the current selection to the given items.</p>
-<p>If <tt class="docutils literal"><span class="pre">ignore_missing</span></tt> is <tt class="docutils literal"><span class="pre">True</span></tt>, items that are not available in the
-selection provider are silently ignored. If it is <tt class="docutils literal"><span class="pre">False</span></tt> (default),
-an <tt class="xref py py-class docutils literal"><span class="pre">ValueError</span></tt> should be raised.</p>
+<p>If <code class="docutils literal"><span class="pre">ignore_missing</span></code> is <code class="docutils literal"><span class="pre">True</span></code>, items that are not available in the
+selection provider are silently ignored. If it is <code class="docutils literal"><span class="pre">False</span></code> (default),
+an <code class="xref py py-class docutils literal"><span class="pre">ValueError</span></code> should be raised.</p>
 <dl class="docutils">
 <dt>Arguments:</dt>
 <dd><dl class="first last docutils">
 <dt>items &#8211; list</dt>
 <dd>List of items to be selected.</dd>
 <dt>ignore_missing &#8211; bool</dt>
-<dd>If <tt class="docutils literal"><span class="pre">False</span></tt> (default), the provider raises an exception if any
-of the items in <tt class="docutils literal"><span class="pre">items</span></tt> is not available to be selected.
+<dd>If <code class="docutils literal"><span class="pre">False</span></code> (default), the provider raises an exception if any
+of the items in <code class="docutils literal"><span class="pre">items</span></code> is not available to be selected.
 Otherwise, missing elements are silently ignored, and the rest
 is selected.</dd>
 </dl>
@@ -375,21 +375,21 @@ is selected.</dd>
 
 </div>
 <div class="section" id="module-apptools.selection.i_selection">
-<span id="is-selection-module"></span><h4><tt class="xref py py-mod docutils literal"><span class="pre">is_selection</span></tt> Module<a class="headerlink" href="#module-apptools.selection.i_selection" title="Permalink to this headline">¶</a></h4>
+<span id="is-selection-module"></span><h4><code class="xref py py-mod docutils literal"><span class="pre">is_selection</span></code> Module<a class="headerlink" href="#module-apptools.selection.i_selection" title="Permalink to this headline">¶</a></h4>
 <dl class="class">
 <dt id="apptools.selection.i_selection.IListSelection">
-<em class="property">class </em><tt class="descclassname">apptools.selection.i_selection.</tt><tt class="descname">IListSelection</tt><a class="headerlink" href="#apptools.selection.i_selection.IListSelection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#apptools.selection.i_selection.ISelection" title="apptools.selection.i_selection.ISelection"><tt class="xref py py-class docutils literal"><span class="pre">apptools.selection.i_selection.ISelection</span></tt></a></p>
+<em class="property">class </em><code class="descclassname">apptools.selection.i_selection.</code><code class="descname">IListSelection</code><a class="headerlink" href="#apptools.selection.i_selection.IListSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apptools.selection.i_selection.ISelection" title="apptools.selection.i_selection.ISelection"><code class="xref py py-class docutils literal"><span class="pre">apptools.selection.i_selection.ISelection</span></code></a></p>
 <p>Selection for ordered sequences of items.</p>
 <dl class="attribute">
 <dt id="apptools.selection.i_selection.IListSelection.indices">
-<tt class="descname">indices</tt><em class="property"> = List</em><a class="headerlink" href="#apptools.selection.i_selection.IListSelection.indices" title="Permalink to this definition">¶</a></dt>
+<code class="descname">indices</code><em class="property"> = List</em><a class="headerlink" href="#apptools.selection.i_selection.IListSelection.indices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indices of the selected objects in the selection provider.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="apptools.selection.i_selection.IListSelection.items">
-<tt class="descname">items</tt><em class="property"> = List</em><a class="headerlink" href="#apptools.selection.i_selection.IListSelection.items" title="Permalink to this definition">¶</a></dt>
+<code class="descname">items</code><em class="property"> = List</em><a class="headerlink" href="#apptools.selection.i_selection.IListSelection.items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Selected objects.</p>
 </dd></dl>
 
@@ -397,18 +397,18 @@ is selected.</dd>
 
 <dl class="class">
 <dt id="apptools.selection.i_selection.ISelection">
-<em class="property">class </em><tt class="descclassname">apptools.selection.i_selection.</tt><tt class="descname">ISelection</tt><a class="headerlink" href="#apptools.selection.i_selection.ISelection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">traits.has_traits.Interface</span></tt></p>
+<em class="property">class </em><code class="descclassname">apptools.selection.i_selection.</code><code class="descname">ISelection</code><a class="headerlink" href="#apptools.selection.i_selection.ISelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">traits.has_traits.Interface</span></code></p>
 <p>Collection of selected items.</p>
 <dl class="method">
 <dt id="apptools.selection.i_selection.ISelection.is_empty">
-<tt class="descname">is_empty</tt><big>(</big><big>)</big><a class="headerlink" href="#apptools.selection.i_selection.ISelection.is_empty" title="Permalink to this definition">¶</a></dt>
+<code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#apptools.selection.i_selection.ISelection.is_empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the selection empty?</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="apptools.selection.i_selection.ISelection.provider_id">
-<tt class="descname">provider_id</tt><em class="property"> = Str</em><a class="headerlink" href="#apptools.selection.i_selection.ISelection.provider_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">provider_id</code><em class="property"> = Str</em><a class="headerlink" href="#apptools.selection.i_selection.ISelection.provider_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>ID of the selection provider that created this selection object.</p>
 </dd></dl>
 
@@ -416,17 +416,17 @@ is selected.</dd>
 
 </div>
 <div class="section" id="module-apptools.selection.list_selection">
-<span id="list-selection-module"></span><h4><a class="reference internal" href="#module-apptools.selection.list_selection" title="apptools.selection.list_selection"><tt class="xref py py-mod docutils literal"><span class="pre">list_selection</span></tt></a> Module<a class="headerlink" href="#module-apptools.selection.list_selection" title="Permalink to this headline">¶</a></h4>
+<span id="list-selection-module"></span><h4><a class="reference internal" href="#module-apptools.selection.list_selection" title="apptools.selection.list_selection"><code class="xref py py-mod docutils literal"><span class="pre">list_selection</span></code></a> Module<a class="headerlink" href="#module-apptools.selection.list_selection" title="Permalink to this headline">¶</a></h4>
 <dl class="class">
 <dt id="apptools.selection.list_selection.ListSelection">
-<em class="property">class </em><tt class="descclassname">apptools.selection.list_selection.</tt><tt class="descname">ListSelection</tt><a class="headerlink" href="#apptools.selection.list_selection.ListSelection" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">traits.has_traits.HasTraits</span></tt></p>
+<em class="property">class </em><code class="descclassname">apptools.selection.list_selection.</code><code class="descname">ListSelection</code><a class="headerlink" href="#apptools.selection.list_selection.ListSelection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">traits.has_traits.HasTraits</span></code></p>
 <p>Selection for ordered sequences of items.</p>
-<p>This is the default implementation of the <a class="reference internal" href="#apptools.selection.i_selection.IListSelection" title="apptools.selection.i_selection.IListSelection"><tt class="xref py py-class docutils literal"><span class="pre">IListSelection</span></tt></a>
+<p>This is the default implementation of the <a class="reference internal" href="#apptools.selection.i_selection.IListSelection" title="apptools.selection.i_selection.IListSelection"><code class="xref py py-class docutils literal"><span class="pre">IListSelection</span></code></a>
 interface.</p>
 <dl class="classmethod">
 <dt id="apptools.selection.list_selection.ListSelection.from_available_items">
-<em class="property">classmethod </em><tt class="descname">from_available_items</tt><big>(</big><em>provider_id</em>, <em>selected</em>, <em>all_items</em><big>)</big><a class="headerlink" href="#apptools.selection.list_selection.ListSelection.from_available_items" title="Permalink to this definition">¶</a></dt>
+<em class="property">classmethod </em><code class="descname">from_available_items</code><span class="sig-paren">(</span><em>provider_id</em>, <em>selected</em>, <em>all_items</em><span class="sig-paren">)</span><a class="headerlink" href="#apptools.selection.list_selection.ListSelection.from_available_items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a list selection given a list of all available items.</p>
 <p>Fills in the required information (in particular, the indices) based
 on a list of selected items and a list of all available items.</p>
@@ -434,33 +434,33 @@ on a list of selected items and a list of all available items.</p>
 <p class="first admonition-title">Note</p>
 <ul class="last simple">
 <li>The list of available items must not contain any duplicate items.</li>
-<li>It is expected that <tt class="docutils literal"><span class="pre">selected</span></tt> is populated by items in
-<tt class="docutils literal"><span class="pre">all_items</span></tt>.</li>
+<li>It is expected that <code class="docutils literal"><span class="pre">selected</span></code> is populated by items in
+<code class="docutils literal"><span class="pre">all_items</span></code>.</li>
 </ul>
 </div>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="apptools.selection.list_selection.ListSelection.indices">
-<tt class="descname">indices</tt><em class="property"> = List</em><a class="headerlink" href="#apptools.selection.list_selection.ListSelection.indices" title="Permalink to this definition">¶</a></dt>
+<code class="descname">indices</code><em class="property"> = List</em><a class="headerlink" href="#apptools.selection.list_selection.ListSelection.indices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Indices of the selected objects in the selection provider.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="apptools.selection.list_selection.ListSelection.is_empty">
-<tt class="descname">is_empty</tt><big>(</big><big>)</big><a class="headerlink" href="#apptools.selection.list_selection.ListSelection.is_empty" title="Permalink to this definition">¶</a></dt>
+<code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#apptools.selection.list_selection.ListSelection.is_empty" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is the selection empty?</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="apptools.selection.list_selection.ListSelection.items">
-<tt class="descname">items</tt><em class="property"> = List</em><a class="headerlink" href="#apptools.selection.list_selection.ListSelection.items" title="Permalink to this definition">¶</a></dt>
+<code class="descname">items</code><em class="property"> = List</em><a class="headerlink" href="#apptools.selection.list_selection.ListSelection.items" title="Permalink to this definition">¶</a></dt>
 <dd><p>Selected objects.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="apptools.selection.list_selection.ListSelection.provider_id">
-<tt class="descname">provider_id</tt><em class="property"> = Str</em><a class="headerlink" href="#apptools.selection.list_selection.ListSelection.provider_id" title="Permalink to this definition">¶</a></dt>
+<code class="descname">provider_id</code><em class="property"> = Str</em><a class="headerlink" href="#apptools.selection.list_selection.ListSelection.provider_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>ID of the selection provider that created this selection object.</p>
 </dd></dl>
 
@@ -468,25 +468,25 @@ on a list of selected items and a list of all available items.</p>
 
 </div>
 <div class="section" id="module-apptools.selection.errors">
-<span id="errors-module"></span><h4><a class="reference internal" href="#module-apptools.selection.errors" title="apptools.selection.errors"><tt class="xref py py-mod docutils literal"><span class="pre">errors</span></tt></a> Module<a class="headerlink" href="#module-apptools.selection.errors" title="Permalink to this headline">¶</a></h4>
+<span id="errors-module"></span><h4><a class="reference internal" href="#module-apptools.selection.errors" title="apptools.selection.errors"><code class="xref py py-mod docutils literal"><span class="pre">errors</span></code></a> Module<a class="headerlink" href="#module-apptools.selection.errors" title="Permalink to this headline">¶</a></h4>
 <dl class="exception">
 <dt id="apptools.selection.errors.IDConflictError">
-<em class="property">exception </em><tt class="descclassname">apptools.selection.errors.</tt><tt class="descname">IDConflictError</tt><big>(</big><em>provider_id</em><big>)</big><a class="headerlink" href="#apptools.selection.errors.IDConflictError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<em class="property">exception </em><code class="descclassname">apptools.selection.errors.</code><code class="descname">IDConflictError</code><span class="sig-paren">(</span><em>provider_id</em><span class="sig-paren">)</span><a class="headerlink" href="#apptools.selection.errors.IDConflictError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Raised when a provider is added and its ID is already registered.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="apptools.selection.errors.ListenerNotConnectedError">
-<em class="property">exception </em><tt class="descclassname">apptools.selection.errors.</tt><tt class="descname">ListenerNotConnectedError</tt><big>(</big><em>provider_id</em>, <em>listener</em><big>)</big><a class="headerlink" href="#apptools.selection.errors.ListenerNotConnectedError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<em class="property">exception </em><code class="descclassname">apptools.selection.errors.</code><code class="descname">ListenerNotConnectedError</code><span class="sig-paren">(</span><em>provider_id</em>, <em>listener</em><span class="sig-paren">)</span><a class="headerlink" href="#apptools.selection.errors.ListenerNotConnectedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Raised when a listener that was never connected is disconnected.</p>
 </dd></dl>
 
 <dl class="exception">
 <dt id="apptools.selection.errors.ProviderNotRegisteredError">
-<em class="property">exception </em><tt class="descclassname">apptools.selection.errors.</tt><tt class="descname">ProviderNotRegisteredError</tt><big>(</big><em>provider_id</em><big>)</big><a class="headerlink" href="#apptools.selection.errors.ProviderNotRegisteredError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></tt></p>
+<em class="property">exception </em><code class="descclassname">apptools.selection.errors.</code><code class="descname">ProviderNotRegisteredError</code><span class="sig-paren">(</span><em>provider_id</em><span class="sig-paren">)</span><a class="headerlink" href="#apptools.selection.errors.ProviderNotRegisteredError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
 <p>Raised when a provider is requested by ID and not found.</p>
 </dd></dl>
 
@@ -499,7 +499,7 @@ on a list of selected items and a list of all available items.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
@@ -507,7 +507,7 @@ on a list of selected items and a list of all available items.</p>
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">The selection service</a><ul>
-<li><a class="reference internal" href="#the-selectionservice-object">The <tt class="docutils literal"><span class="pre">SelectionService</span></tt> object</a></li>
+<li><a class="reference internal" href="#the-selectionservice-object">The <code class="docutils literal"><span class="pre">SelectionService</span></code> object</a></li>
 <li><a class="reference internal" href="#selection-providers">Selection providers</a><ul>
 <li><a class="reference internal" href="#registration">Registration</a></li>
 </ul>
@@ -519,12 +519,12 @@ on a list of selected items and a list of all available items.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#api-reference">API Reference</a><ul>
-<li><a class="reference internal" href="#apptools-selection-package"><tt class="docutils literal"><span class="pre">apptools.selection</span></tt> Package</a><ul>
-<li><a class="reference internal" href="#module-apptools.selection.selection_service"><tt class="docutils literal"><span class="pre">selection_service</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-apptools.selection.i_selection_provider"><tt class="docutils literal"><span class="pre">i_selection_provider</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-apptools.selection.i_selection"><tt class="docutils literal"><span class="pre">is_selection</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-apptools.selection.list_selection"><tt class="docutils literal"><span class="pre">list_selection</span></tt> Module</a></li>
-<li><a class="reference internal" href="#module-apptools.selection.errors"><tt class="docutils literal"><span class="pre">errors</span></tt> Module</a></li>
+<li><a class="reference internal" href="#apptools-selection-package"><code class="docutils literal"><span class="pre">apptools.selection</span></code> Package</a><ul>
+<li><a class="reference internal" href="#module-apptools.selection.selection_service"><code class="docutils literal"><span class="pre">selection_service</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-apptools.selection.i_selection_provider"><code class="docutils literal"><span class="pre">i_selection_provider</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-apptools.selection.i_selection"><code class="docutils literal"><span class="pre">is_selection</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-apptools.selection.list_selection"><code class="docutils literal"><span class="pre">list_selection</span></code> Module</a></li>
+<li><a class="reference internal" href="#module-apptools.selection.errors"><code class="docutils literal"><span class="pre">errors</span></code> Module</a></li>
 </ul>
 </li>
 </ul>
@@ -536,12 +536,14 @@ on a list of selected items and a list of all available items.</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="../undo/Introduction.html"
                         title="previous chapter">Undo Framework</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/selection/selection.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/selection/selection.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -558,7 +560,7 @@ on a list of selected items and a list of all available items.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -570,13 +572,13 @@ on a list of selected items and a list of all available items.</p>
         <li class="right" >
           <a href="../undo/Introduction.html" title="Undo Framework"
              >previous</a> |</li>
-        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">apptools 4.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2008-2015, Enthought.
-      Last updated on Mar 17, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2008-2016, Enthought.
+      Last updated on Feb 26, 2016.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
     </div>
   </body>
 </html>

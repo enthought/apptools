@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Application Scripting Framework &mdash; apptools 4.3.0 documentation</title>
+    <title>Application Scripting Framework &mdash; apptools 4.4.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.3.0',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,12 +24,12 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="apptools 4.3.0 documentation" href="../index.html" />
+    <link rel="top" title="apptools 4.4.0 documentation" href="../index.html" />
     <link rel="next" title="Permissions Framework - Introduction" href="../permissions/Introduction.html" />
     <link rel="prev" title="AppTools Documentation" href="../index.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -44,14 +44,14 @@
         <li class="right" >
           <a href="../index.html" title="AppTools Documentation"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">apptools 4.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="application-scripting-framework">
 <h1>Application Scripting Framework<a class="headerlink" href="#application-scripting-framework" title="Permalink to this headline">¶</a></h1>
@@ -66,20 +66,20 @@ major components can be provided if necessary.</p>
 <p>The following are the concepts supported by the framework.</p>
 <ul>
 <li><p class="first">Scriptable Type</p>
-<p>A scriptable type is a sub-type of <tt class="docutils literal"><span class="pre">HasTraits</span></tt> that has scriptable methods
+<p>A scriptable type is a sub-type of <code class="docutils literal"><span class="pre">HasTraits</span></code> that has scriptable methods
 and scriptable traits.  If a scriptable method is called, or a scriptable
 trait is set, then that action can be recorded in a script and subsequently
 replayed.</p>
-<p>If the <tt class="docutils literal"><span class="pre">__init__()</span></tt> method is scriptable then the creation of an object
+<p>If the <code class="docutils literal"><span class="pre">__init__()</span></code> method is scriptable then the creation of an object
 from the type can be recorded.</p>
 <p>Scriptable types can be explicitly defined or created dynamically from any
-sub-type of <tt class="docutils literal"><span class="pre">HasTraits</span></tt>.</p>
+sub-type of <code class="docutils literal"><span class="pre">HasTraits</span></code>.</p>
 </li>
 <li><p class="first">Scriptable API</p>
 <p>The set of a scriptable type&#8217;s scriptable methods and traits constitutes the
 type&#8217;s scriptable API.</p>
-<p>The API can be defined explicitly using the <tt class="docutils literal"><span class="pre">scriptable</span></tt> decorator (for
-methods) or the <tt class="docutils literal"><span class="pre">Scriptable</span></tt> wrapper (for traits).</p>
+<p>The API can be defined explicitly using the <code class="docutils literal"><span class="pre">scriptable</span></code> decorator (for
+methods) or the <code class="docutils literal"><span class="pre">Scriptable</span></code> wrapper (for traits).</p>
 <p>For scriptable types that are created dynamically then the API can be
 defined in terms of one or more types or interfaces or an explicit list of
 method and trait names.  By default, all public methods and traits (ie.
@@ -103,7 +103,7 @@ refered to in the script.</p>
 <li><p class="first">Binding</p>
 <p>A script runs in a namespace which is, by default, empty.  If the scriptable
 objects refered to in a script are not created by the script (because their
-type&#8217;s <tt class="docutils literal"><span class="pre">__init__()</span></tt> method isn&#8217;t scriptable) then they must be created by
+type&#8217;s <code class="docutils literal"><span class="pre">__init__()</span></code> method isn&#8217;t scriptable) then they must be created by
 the application and added to the namespace.  Adding an object to the
 namespace is called binding.</p>
 <p>Scriptable objects whose creation can be recorded will automatically bind
@@ -112,7 +112,7 @@ themselves when they are created.</p>
 The factory will be called, and the object created, only if the object is
 needed by the script when it is run.  This is typically used by plugins.</p>
 <p>The name that an object is bound to need bear no relation to the object&#8217;s
-name within the application.  Names may be dotted names (eg. <tt class="docutils literal"><span class="pre">aaa.bbb.ccc</span></tt>)
+name within the application.  Names may be dotted names (eg. <code class="docutils literal"><span class="pre">aaa.bbb.ccc</span></code>)
 and appropriate objects representing the intermediate parts of such a name
 will be created automatically.</p>
 <p>An event is fired whenever an object is bound (or when a bound factory is
@@ -140,124 +140,124 @@ complete <a class="reference external" href="api/index.html">API</a> documentati
 <div class="section" id="module-level-objects">
 <h3>Module Level Objects<a class="headerlink" href="#module-level-objects" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">get_script_manager()</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">get_script_manager()</span></code></dt>
 <dd>The application&#8217;s script manager is returned.  One will be created
 automatically if needed.</dd>
-<dt><tt class="docutils literal"><span class="pre">set_script_manager(script_manager)</span></tt></dt>
-<dd>The application&#8217;s script manager will be set to <tt class="docutils literal"><span class="pre">script_manager</span></tt>
+<dt><code class="docutils literal"><span class="pre">set_script_manager(script_manager)</span></code></dt>
+<dd>The application&#8217;s script manager will be set to <code class="docutils literal"><span class="pre">script_manager</span></code>
 replacing any existing script manager.</dd>
-<dt><tt class="docutils literal"><span class="pre">scriptable</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">scriptable</span></code></dt>
 <dd>This is a decorator used to explicitly mark methods as being scriptable.
-Any call to a scriptable method is recorded.  If a type&#8217;s <tt class="docutils literal"><span class="pre">__init__()</span></tt>
+Any call to a scriptable method is recorded.  If a type&#8217;s <code class="docutils literal"><span class="pre">__init__()</span></code>
 method is decorated then the creation of the object will be recorded.</dd>
-<dt><tt class="docutils literal"><span class="pre">Scriptable</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">Scriptable</span></code></dt>
 <dd>This is a wrapper for a trait to explicitly mark it as being scriptable.
 Any change to the value of the trait will be recorded.  Simple reads of the
 trait will not be recorded unless unless the value read is bound to another
 scriptable trait or passed as an argument to a scriptable method.  Passing
-<tt class="docutils literal"><span class="pre">has_side_effects=True</span></tt> when wrapping the trait will ensure that a read
+<code class="docutils literal"><span class="pre">has_side_effects=True</span></code> when wrapping the trait will ensure that a read
 will always be recorded.</dd>
-<dt><tt class="docutils literal"><span class="pre">create_scriptable_type(script_type,</span> <span class="pre">name=None,</span> <span class="pre">bind_policy='auto',</span> <span class="pre">api=None,</span> <span class="pre">includes=None,</span> <span class="pre">excludes=None,</span> <span class="pre">script_init=True)</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">create_scriptable_type(script_type,</span> <span class="pre">name=None,</span> <span class="pre">bind_policy='auto',</span> <span class="pre">api=None,</span> <span class="pre">includes=None,</span> <span class="pre">excludes=None,</span> <span class="pre">script_init=True)</span></code></dt>
 <dd><p class="first">This creates a new type based on an existing type but with certain methods
 and traits marked as being scriptable.  Scriptable objects can then be
 created by calling the type.</p>
-<p><tt class="docutils literal"><span class="pre">script_type</span></tt> is the existing, non-scriptable, type.  The new type will
-be a sub-type of it.  The <tt class="docutils literal"><span class="pre">api</span></tt>, <tt class="docutils literal"><span class="pre">includes</span></tt> and <tt class="docutils literal"><span class="pre">excludes</span></tt> arguments
+<p><code class="docutils literal"><span class="pre">script_type</span></code> is the existing, non-scriptable, type.  The new type will
+be a sub-type of it.  The <code class="docutils literal"><span class="pre">api</span></code>, <code class="docutils literal"><span class="pre">includes</span></code> and <code class="docutils literal"><span class="pre">excludes</span></code> arguments
 determine which methods and traits are made scriptable.  By default, all
 public methods and traits (ie. those whose name does not begin with an
 underscore) are made scriptable.</p>
-<p>The <tt class="docutils literal"><span class="pre">name</span></tt> and <tt class="docutils literal"><span class="pre">bind_policy</span></tt> arguments determine how scriptable
-objects are bound when they are created.  <tt class="docutils literal"><span class="pre">name</span></tt> is the name that an
-object will be bound to.  It defaults to the name of <tt class="docutils literal"><span class="pre">script_type</span></tt> with
-the first character forced to lower case.  <tt class="docutils literal"><span class="pre">name</span></tt> may be a dotted name,
-eg. <tt class="docutils literal"><span class="pre">aaa.bb.c</span></tt>.</p>
-<p><tt class="docutils literal"><span class="pre">bind_policy</span></tt> determines what happens if an object is already bound to
-the name.  If it is <tt class="docutils literal"><span class="pre">auto</span></tt> then a numerical suffix will be added to the
-name of the new object.  If it is <tt class="docutils literal"><span class="pre">unique</span></tt> then an exception will be
-raised.  If it is <tt class="docutils literal"><span class="pre">rebind</span></tt> then the object currently bound to the name
+<p>The <code class="docutils literal"><span class="pre">name</span></code> and <code class="docutils literal"><span class="pre">bind_policy</span></code> arguments determine how scriptable
+objects are bound when they are created.  <code class="docutils literal"><span class="pre">name</span></code> is the name that an
+object will be bound to.  It defaults to the name of <code class="docutils literal"><span class="pre">script_type</span></code> with
+the first character forced to lower case.  <code class="docutils literal"><span class="pre">name</span></code> may be a dotted name,
+eg. <code class="docutils literal"><span class="pre">aaa.bb.c</span></code>.</p>
+<p><code class="docutils literal"><span class="pre">bind_policy</span></code> determines what happens if an object is already bound to
+the name.  If it is <code class="docutils literal"><span class="pre">auto</span></code> then a numerical suffix will be added to the
+name of the new object.  If it is <code class="docutils literal"><span class="pre">unique</span></code> then an exception will be
+raised.  If it is <code class="docutils literal"><span class="pre">rebind</span></code> then the object currently bound to the name
 will be unbound.</p>
-<p><tt class="docutils literal"><span class="pre">api</span></tt> is a class or interface (or a list of classes or interfaces) that
+<p><code class="docutils literal"><span class="pre">api</span></code> is a class or interface (or a list of classes or interfaces) that
 is used to provide the names of the methods and traits to be made
 scriptable.  The class or interface effectively defines the scripting API.</p>
-<p>If <tt class="docutils literal"><span class="pre">api</span></tt> is not specified then <tt class="docutils literal"><span class="pre">includes</span></tt> is a list of method and
+<p>If <code class="docutils literal"><span class="pre">api</span></code> is not specified then <code class="docutils literal"><span class="pre">includes</span></code> is a list of method and
 trait names that are made scriptable.</p>
-<p>If <tt class="docutils literal"><span class="pre">api</span></tt> and <tt class="docutils literal"><span class="pre">includes</span></tt> are not specified then <tt class="docutils literal"><span class="pre">excludes</span></tt> is a list
+<p>If <code class="docutils literal"><span class="pre">api</span></code> and <code class="docutils literal"><span class="pre">includes</span></code> are not specified then <code class="docutils literal"><span class="pre">excludes</span></code> is a list
 of method and trait names that are <em>not</em> made scriptable.</p>
-<p>If <tt class="docutils literal"><span class="pre">script_init</span></tt> is set then the <tt class="docutils literal"><span class="pre">__init__()</span></tt> method is made scriptable
-irrespective of the <tt class="docutils literal"><span class="pre">api</span></tt>, <tt class="docutils literal"><span class="pre">includes</span></tt> and <tt class="docutils literal"><span class="pre">excludes</span></tt> arguments.</p>
-<p class="last">If <tt class="docutils literal"><span class="pre">script_init</span></tt> is not set then objects must be explicitly bound and
-<tt class="docutils literal"><span class="pre">name</span></tt> and <tt class="docutils literal"><span class="pre">bind_policy</span></tt> are ignored.</p>
+<p>If <code class="docutils literal"><span class="pre">script_init</span></code> is set then the <code class="docutils literal"><span class="pre">__init__()</span></code> method is made scriptable
+irrespective of the <code class="docutils literal"><span class="pre">api</span></code>, <code class="docutils literal"><span class="pre">includes</span></code> and <code class="docutils literal"><span class="pre">excludes</span></code> arguments.</p>
+<p class="last">If <code class="docutils literal"><span class="pre">script_init</span></code> is not set then objects must be explicitly bound and
+<code class="docutils literal"><span class="pre">name</span></code> and <code class="docutils literal"><span class="pre">bind_policy</span></code> are ignored.</p>
 </dd>
-<dt><tt class="docutils literal"><span class="pre">make_object_scriptable(obj,</span> <span class="pre">api=None,</span> <span class="pre">includes=None,</span> <span class="pre">excludes=None)</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">make_object_scriptable(obj,</span> <span class="pre">api=None,</span> <span class="pre">includes=None,</span> <span class="pre">excludes=None)</span></code></dt>
 <dd><p class="first">This takes an existing unscriptable object and makes it scriptable.  It
-works by calling <tt class="docutils literal"><span class="pre">create_scriptable_type()</span></tt> on the the objects existing
+works by calling <code class="docutils literal"><span class="pre">create_scriptable_type()</span></code> on the the objects existing
 type and replacing that existing type with the new scriptable type.</p>
-<p class="last">See the description of <tt class="docutils literal"><span class="pre">create_scriptable_type()</span></tt> for an explanation of
-the <tt class="docutils literal"><span class="pre">api</span></tt>, <tt class="docutils literal"><span class="pre">includes</span></tt> and <tt class="docutils literal"><span class="pre">excludes</span></tt> arguments.</p>
+<p class="last">See the description of <code class="docutils literal"><span class="pre">create_scriptable_type()</span></code> for an explanation of
+the <code class="docutils literal"><span class="pre">api</span></code>, <code class="docutils literal"><span class="pre">includes</span></code> and <code class="docutils literal"><span class="pre">excludes</span></code> arguments.</p>
 </dd>
 </dl>
 </div>
 <div class="section" id="scriptmanager">
 <h3>ScriptManager<a class="headerlink" href="#scriptmanager" title="Permalink to this headline">¶</a></h3>
-<p>The <tt class="docutils literal"><span class="pre">ScriptManager</span></tt> class is the default implementation of the
-<tt class="docutils literal"><span class="pre">IScriptManager</span></tt> interface.</p>
+<p>The <code class="docutils literal"><span class="pre">ScriptManager</span></code> class is the default implementation of the
+<code class="docutils literal"><span class="pre">IScriptManager</span></code> interface.</p>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">bind_event</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">bind_event</span></code></dt>
 <dd>This event is fired whenever an object is bound or unbound.  The event&#8217;s
-argument implements the <tt class="docutils literal"><span class="pre">IBindEvent</span></tt> interface.</dd>
-<dt><tt class="docutils literal"><span class="pre">recording</span></tt></dt>
+argument implements the <code class="docutils literal"><span class="pre">IBindEvent</span></code> interface.</dd>
+<dt><code class="docutils literal"><span class="pre">recording</span></code></dt>
 <dd>This trait is set if a script is currently being recorded.  It is updated
 automatically by the script manager.</dd>
-<dt><tt class="docutils literal"><span class="pre">script</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">script</span></code></dt>
 <dd>This trait contains the text of the script currently being recorded (or
 the last recorded script if one is not being currently recorded).  It is
 updated automatically by the script manager.</dd>
-<dt><tt class="docutils literal"><span class="pre">script_updated</span></tt></dt>
-<dd>This event is fired whenever the <tt class="docutils literal"><span class="pre">script</span></tt> trait is updated.  The event&#8217;s
+<dt><code class="docutils literal"><span class="pre">script_updated</span></code></dt>
+<dd>This event is fired whenever the <code class="docutils literal"><span class="pre">script</span></code> trait is updated.  The event&#8217;s
 argument is the script manager.</dd>
-<dt><tt class="docutils literal"><span class="pre">bind(self,</span> <span class="pre">obj,</span> <span class="pre">name=None,</span> <span class="pre">bind_policy='unique',</span> <span class="pre">api=None,</span> <span class="pre">includes=None,</span> <span class="pre">excludes=None)</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">bind(self,</span> <span class="pre">obj,</span> <span class="pre">name=None,</span> <span class="pre">bind_policy='unique',</span> <span class="pre">api=None,</span> <span class="pre">includes=None,</span> <span class="pre">excludes=None)</span></code></dt>
 <dd>This method makes an object scriptable and binds it to a name.  See the
-description of <tt class="docutils literal"><span class="pre">create_scriptable_type()</span></tt> for an explanation of the
-<tt class="docutils literal"><span class="pre">api</span></tt>, <tt class="docutils literal"><span class="pre">includes</span></tt>, <tt class="docutils literal"><span class="pre">excludes</span></tt>, <tt class="docutils literal"><span class="pre">name</span></tt> and <tt class="docutils literal"><span class="pre">bind_policy</span></tt>
+description of <code class="docutils literal"><span class="pre">create_scriptable_type()</span></code> for an explanation of the
+<code class="docutils literal"><span class="pre">api</span></code>, <code class="docutils literal"><span class="pre">includes</span></code>, <code class="docutils literal"><span class="pre">excludes</span></code>, <code class="docutils literal"><span class="pre">name</span></code> and <code class="docutils literal"><span class="pre">bind_policy</span></code>
 arguments.</dd>
-<dt><tt class="docutils literal"><span class="pre">bind_factory(self,</span> <span class="pre">factory,</span> <span class="pre">name,</span> <span class="pre">bind_policy='unique',</span> <span class="pre">api=None,</span> <span class="pre">includes=None,</span> <span class="pre">excludes=None)</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">bind_factory(self,</span> <span class="pre">factory,</span> <span class="pre">name,</span> <span class="pre">bind_policy='unique',</span> <span class="pre">api=None,</span> <span class="pre">includes=None,</span> <span class="pre">excludes=None)</span></code></dt>
 <dd>This method binds an object factory to a name.  The factory is called to
 create the object (and make it scriptable) only when the object is needed
-by a running script.  See the description of <tt class="docutils literal"><span class="pre">create_scriptable_type()</span></tt>
-for an explanation of the <tt class="docutils literal"><span class="pre">name</span></tt> and <tt class="docutils literal"><span class="pre">bind_policy</span></tt> arguments.</dd>
-<dt><tt class="docutils literal"><span class="pre">run(self,</span> <span class="pre">script)</span></tt></dt>
+by a running script.  See the description of <code class="docutils literal"><span class="pre">create_scriptable_type()</span></code>
+for an explanation of the <code class="docutils literal"><span class="pre">name</span></code> and <code class="docutils literal"><span class="pre">bind_policy</span></code> arguments.</dd>
+<dt><code class="docutils literal"><span class="pre">run(self,</span> <span class="pre">script)</span></code></dt>
 <dd>This method runs a script in a namespace containing all currently bound
-objects.  <tt class="docutils literal"><span class="pre">script</span></tt> is any object that can be used by Python&#8217;s <tt class="docutils literal"><span class="pre">exec</span></tt>
+objects.  <code class="docutils literal"><span class="pre">script</span></code> is any object that can be used by Python&#8217;s <code class="docutils literal"><span class="pre">exec</span></code>
 statement including a string or a file-like object.</dd>
-<dt><tt class="docutils literal"><span class="pre">run_file(self,</span> <span class="pre">file_name)</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">run_file(self,</span> <span class="pre">file_name)</span></code></dt>
 <dd>This method runs a script in a namespace containing all currently bound
-objects.  <tt class="docutils literal"><span class="pre">file_name</span></tt> is the name of a file containing the script.</dd>
-<dt><tt class="docutils literal"><span class="pre">start_recording(self)</span></tt></dt>
+objects.  <code class="docutils literal"><span class="pre">file_name</span></code> is the name of a file containing the script.</dd>
+<dt><code class="docutils literal"><span class="pre">start_recording(self)</span></code></dt>
 <dd>This method starts the recording of a script.</dd>
-<dt><tt class="docutils literal"><span class="pre">stop_recording(self)</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">stop_recording(self)</span></code></dt>
 <dd>This method stops the recording of the current script.</dd>
 </dl>
 </div>
 <div class="section" id="ibindevent">
 <h3>IBindEvent<a class="headerlink" href="#ibindevent" title="Permalink to this headline">¶</a></h3>
-<p>The <tt class="docutils literal"><span class="pre">IBindEvent</span></tt> interface defines the interface that is implemented by the
-object passed when the script manager&#8217;s <tt class="docutils literal"><span class="pre">bind_event</span></tt> is fired.</p>
+<p>The <code class="docutils literal"><span class="pre">IBindEvent</span></code> interface defines the interface that is implemented by the
+object passed when the script manager&#8217;s <code class="docutils literal"><span class="pre">bind_event</span></code> is fired.</p>
 <dl class="docutils">
-<dt><tt class="docutils literal"><span class="pre">name</span></tt></dt>
+<dt><code class="docutils literal"><span class="pre">name</span></code></dt>
 <dd>This trait is the name being bound or unbound.</dd>
-<dt><tt class="docutils literal"><span class="pre">obj</span></tt></dt>
-<dd>This trait is the obj being bound to <tt class="docutils literal"><span class="pre">name</span></tt> or None if <tt class="docutils literal"><span class="pre">name</span></tt> is being
+<dt><code class="docutils literal"><span class="pre">obj</span></code></dt>
+<dd>This trait is the obj being bound to <code class="docutils literal"><span class="pre">name</span></code> or None if <code class="docutils literal"><span class="pre">name</span></code> is being
 unbound.</dd>
 </dl>
 </div>
 <div class="section" id="startrecordingaction">
 <h3>StartRecordingAction<a class="headerlink" href="#startrecordingaction" title="Permalink to this headline">¶</a></h3>
-<p>The <tt class="docutils literal"><span class="pre">StartRecordingAction</span></tt> class is a canned PyFace action that starts the
+<p>The <code class="docutils literal"><span class="pre">StartRecordingAction</span></code> class is a canned PyFace action that starts the
 recording of changes to scriptable objects to a script.</p>
 </div>
 <div class="section" id="stoprecordingaction">
 <h3>StopRecordingAction<a class="headerlink" href="#stoprecordingaction" title="Permalink to this headline">¶</a></h3>
-<p>The <tt class="docutils literal"><span class="pre">StopRecordingAction</span></tt> class is a canned PyFace action that ends the
+<p>The <code class="docutils literal"><span class="pre">StopRecordingAction</span></code> class is a canned PyFace action that ends the
 recording of changes to scriptable objects to a script.</p>
 </div>
 </div>
@@ -273,8 +273,8 @@ is.</p>
 <div class="section" id="static-specification">
 <h3>Static Specification<a class="headerlink" href="#static-specification" title="Permalink to this headline">¶</a></h3>
 <p>A scripting API is specified statically by the explicit use of the
-<tt class="docutils literal"><span class="pre">scriptable</span></tt> decorator and the <tt class="docutils literal"><span class="pre">Scriptable</span></tt> trait wrapper.  For example:</p>
-<div class="highlight-python"><div class="highlight"><pre>from apptools.appscripting.api import scriptable, Scriptable
+<code class="docutils literal"><span class="pre">scriptable</span></code> decorator and the <code class="docutils literal"><span class="pre">Scriptable</span></code> trait wrapper.  For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>from apptools.appscripting.api import scriptable, Scriptable
 from traits.api import HasTraits, Int, Str
 
 class DataModel(HasTraits):
@@ -315,8 +315,8 @@ b = obj.bar
 <h3>Dynamic Specification<a class="headerlink" href="#dynamic-specification" title="Permalink to this headline">¶</a></h3>
 <p>A scripting API can also be specified dynamically.  The following example
 produces a scriptable object with the same scriptable API as above (with the
-exception that <tt class="docutils literal"><span class="pre">has_side_effects</span></tt> cannot be specified dynamically):</p>
-<div class="highlight-python"><div class="highlight"><pre>from apptools.appscripting.api import create_scriptable_type
+exception that <code class="docutils literal"><span class="pre">has_side_effects</span></code> cannot be specified dynamically):</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>from apptools.appscripting.api import create_scriptable_type
 from traits.api import HasTraits, Int, Str
 
 class DataModel(HasTraits):
@@ -342,7 +342,7 @@ obj2 = ScriptableDataModel()
 </div>
 <p>Instead we could bypass the type and make the objects themselves scriptable as
 follows:</p>
-<div class="highlight-python"><div class="highlight"><pre>from apptools.appscripting.api import make_object_scriptable
+<div class="highlight-python"><div class="highlight"><pre><span></span>from apptools.appscripting.api import make_object_scriptable
 from traits.api import HasTraits, Int, Str
 
 class DataModel(HasTraits):
@@ -369,7 +369,7 @@ make_object_scriptable(obj2, excludes=[&#39;weeble&#39;])
 </div>
 <p>With a more sophisticated design we may choose to specify the scriptable API as
 an interface as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre>from apptools.appscripting.api import make_object_scriptable
+<div class="highlight-python"><div class="highlight"><pre><span></span>from apptools.appscripting.api import make_object_scriptable
 from traits.api import HasTraits, Int, Interface, Str
 
 class DataModel(HasTraits):
@@ -403,9 +403,9 @@ make_object_scriptable(obj, api=IScriptableDataModel)
 </div>
 <div class="section" id="scripting-init">
 <h3>Scripting __init__()<a class="headerlink" href="#scripting-init" title="Permalink to this headline">¶</a></h3>
-<p>Making a type&#8217;s <tt class="docutils literal"><span class="pre">__init__()</span></tt> method has advantages and disadvantages.  It
+<p>Making a type&#8217;s <code class="docutils literal"><span class="pre">__init__()</span></code> method has advantages and disadvantages.  It
 means that the creation of scriptable objects will be recorded in a script
-(along with the necessary <tt class="docutils literal"><span class="pre">import</span></tt> statements).  This means that the script
+(along with the necessary <code class="docutils literal"><span class="pre">import</span></code> statements).  This means that the script
 can be run independently of your application by the standard Python
 interpreter.</p>
 <p>The disadvantage is that, if you have a complex data model, with many
@@ -420,7 +420,7 @@ better to have the application create and bind the scriptable objects itself.</p
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
@@ -454,12 +454,14 @@ better to have the application create and bind the scriptable objects itself.</p
   <h4>Next topic</h4>
   <p class="topless"><a href="../permissions/Introduction.html"
                         title="next chapter">Permissions Framework - Introduction</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/appscripting/Introduction.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/appscripting/Introduction.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -476,7 +478,7 @@ better to have the application create and bind the scriptable objects itself.</p
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -491,13 +493,13 @@ better to have the application create and bind the scriptable objects itself.</p
         <li class="right" >
           <a href="../index.html" title="AppTools Documentation"
              >previous</a> |</li>
-        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">apptools 4.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2008-2015, Enthought.
-      Last updated on Mar 17, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2008-2016, Enthought.
+      Last updated on Feb 26, 2016.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
     </div>
   </body>
 </html>

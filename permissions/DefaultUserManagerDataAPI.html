@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Default User Manager Data API &mdash; apptools 4.3.0 documentation</title>
+    <title>Default User Manager Data API &mdash; apptools 4.4.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.3.0',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,12 +24,12 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="apptools 4.3.0 documentation" href="../index.html" />
+    <link rel="top" title="apptools 4.4.0 documentation" href="../index.html" />
     <link rel="next" title="Preferences" href="../preferences/Preferences.html" />
     <link rel="prev" title="Default Policy Manager Data API" href="DefaultPolicyManagerDataAPI.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -44,14 +44,14 @@
         <li class="right" >
           <a href="DefaultPolicyManagerDataAPI.html" title="Default Policy Manager Data API"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">apptools 4.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="default-user-manager-data-api">
 <h1>Default User Manager Data API<a class="headerlink" href="#default-user-manager-data-api" title="Permalink to this headline">¶</a></h1>
@@ -70,7 +70,7 @@ secure storage (eg. a remote RDBMS) then this could be used to store sensitive
 data (eg. passwords for external systems) that shouldn&#8217;t be stored as ordinary
 preferences.</p>
 <p>In most cases there will be no requirement to store additional user related
-data than that defined by <tt class="docutils literal"><span class="pre">IUser</span></tt> so the supplied <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/user_database.py">UserDatabase
+data than that defined by <code class="docutils literal"><span class="pre">IUser</span></code> so the supplied <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/user_database.py">UserDatabase
 implementation</a> (which provides all the GUI code required to implement the
 <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/i_user_database.py">IUserDatabase interface</a>) can be used.  The <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/user_database.py">UserDatabase implementation</a>
 delegates the access to the user database to an object implementing the
@@ -81,30 +81,30 @@ stores the user database as a pickle in a local file.</p>
 <p>The <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/i_user_storage.py">IUserStorage interface</a> defines a number of methods that must be
 implemented to read and write to the user database.  The methods are designed
 to be implemented using simple SQL statements.</p>
-<p>In the event of an error a method must raise the <tt class="docutils literal"><span class="pre">UserStorageError</span></tt>
+<p>In the event of an error a method must raise the <code class="docutils literal"><span class="pre">UserStorageError</span></code>
 exception.  The string representation of the exception is used as an error
 message that is displayed to the user.</p>
 </div>
 <div class="section" id="overview-of-iuserdatabase">
 <h2>Overview of IUserDatabase<a class="headerlink" href="#overview-of-iuserdatabase" title="Permalink to this headline">¶</a></h2>
-<p>The <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/i_user_database.py">IUserDatabase interface</a> defines a set of <tt class="docutils literal"><span class="pre">Bool</span></tt> traits, all beginning
-with <tt class="docutils literal"><span class="pre">can_</span></tt>, that describe the capabilities of a particular implementation.
-For example, the <tt class="docutils literal"><span class="pre">can_add_user</span></tt> trait is set by an implementation if it
+<p>The <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/default/i_user_database.py">IUserDatabase interface</a> defines a set of <code class="docutils literal"><span class="pre">Bool</span></code> traits, all beginning
+with <code class="docutils literal"><span class="pre">can_</span></code>, that describe the capabilities of a particular implementation.
+For example, the <code class="docutils literal"><span class="pre">can_add_user</span></code> trait is set by an implementation if it
 supports the ability to add a new user to the database.</p>
 <p>Each of these capability traits has a corresponding method which has the same
-name except for the <tt class="docutils literal"><span class="pre">can_</span></tt> prefix.  The method only needs to be implemented
-if the corresponding traits is <tt class="docutils literal"><span class="pre">True</span></tt>.  The method, for example
-<tt class="docutils literal"><span class="pre">add_user()</span></tt> is called by the user manager to implement the capability.</p>
+name except for the <code class="docutils literal"><span class="pre">can_</span></code> prefix.  The method only needs to be implemented
+if the corresponding traits is <code class="docutils literal"><span class="pre">True</span></code>.  The method, for example
+<code class="docutils literal"><span class="pre">add_user()</span></code> is called by the user manager to implement the capability.</p>
 <p>The interface has two other methods.</p>
-<p>The <tt class="docutils literal"><span class="pre">bootstrapping()</span></tt> method is called by the user manager to determine if
+<p>The <code class="docutils literal"><span class="pre">bootstrapping()</span></code> method is called by the user manager to determine if
 the database is bootstrapping.  Typically this is when the database is empty
 and no users have yet been defined.  The permissions framework treats this
 situation as a special case and is able to relax the enforcement of permissions
 to allow users and permissions to be initially defined.</p>
-<p>The <tt class="docutils literal"><span class="pre">user_factory()</span></tt> method is called by the user manager to create a new
+<p>The <code class="docutils literal"><span class="pre">user_factory()</span></code> method is called by the user manager to create a new
 user object, ie. an object that implements the <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/i_user.py">IUser interface</a>.  This allows
 an implementation to extend the <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/i_user.py">IUser interface</a> and store additional user
-related data in the object if the <tt class="docutils literal"><span class="pre">blob</span></tt> trait proves insufficient.</p>
+related data in the object if the <code class="docutils literal"><span class="pre">blob</span></code> trait proves insufficient.</p>
 </div>
 </div>
 
@@ -112,7 +112,7 @@ related data in the object if the <tt class="docutils literal"><span class="pre"
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
@@ -132,12 +132,14 @@ related data in the object if the <tt class="docutils literal"><span class="pre"
   <h4>Next topic</h4>
   <p class="topless"><a href="../preferences/Preferences.html"
                         title="next chapter">Preferences</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/permissions/DefaultUserManagerDataAPI.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/permissions/DefaultUserManagerDataAPI.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -154,7 +156,7 @@ related data in the object if the <tt class="docutils literal"><span class="pre"
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -169,13 +171,13 @@ related data in the object if the <tt class="docutils literal"><span class="pre"
         <li class="right" >
           <a href="DefaultPolicyManagerDataAPI.html" title="Default Policy Manager Data API"
              >previous</a> |</li>
-        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">apptools 4.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2008-2015, Enthought.
-      Last updated on Mar 17, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2008-2016, Enthought.
+      Last updated on Feb 26, 2016.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
     </div>
   </body>
 </html>

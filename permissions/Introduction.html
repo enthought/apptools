@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Permissions Framework - Introduction &mdash; apptools 4.3.0 documentation</title>
+    <title>Permissions Framework - Introduction &mdash; apptools 4.4.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.3.0',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,12 +24,12 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="apptools 4.3.0 documentation" href="../index.html" />
+    <link rel="top" title="apptools 4.4.0 documentation" href="../index.html" />
     <link rel="next" title="Application API" href="ApplicationAPI.html" />
     <link rel="prev" title="Application Scripting Framework" href="../appscripting/Introduction.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -44,14 +44,14 @@
         <li class="right" >
           <a href="../appscripting/Introduction.html" title="Application Scripting Framework"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">apptools 4.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="permissions-framework-introduction">
 <h1>Permissions Framework - Introduction<a class="headerlink" href="#permissions-framework-introduction" title="Permalink to this headline">¶</a></h1>
@@ -190,16 +190,16 @@ needs to be reimplemented depending on your environment.</p>
 <div class="section" id="deploying-alternative-managers">
 <h2>Deploying Alternative Managers<a class="headerlink" href="#deploying-alternative-managers" title="Permalink to this headline">¶</a></h2>
 <p>The permissions framework will first try to import the different managers from
-the <tt class="docutils literal"><span class="pre">apptools.permissions.external</span></tt> namespace.  The default managers are
+the <code class="docutils literal"><span class="pre">apptools.permissions.external</span></code> namespace.  The default managers are
 only used if no alternative was found.  Therefore, alternative managers should
 be deployed as an egg containing that namespace.</p>
 <p>Specifically the framework looks for the following classes:</p>
 <blockquote>
-<div><p><tt class="docutils literal"><span class="pre">PolicyManager</span></tt> from <tt class="docutils literal"><span class="pre">apptools.permissions.external.policy_manager</span></tt></p>
-<p><tt class="docutils literal"><span class="pre">PolicyStorage</span></tt> from <tt class="docutils literal"><span class="pre">apptools.permissions.external.policy_storage</span></tt></p>
-<p><tt class="docutils literal"><span class="pre">UserDatabase</span></tt> from <tt class="docutils literal"><span class="pre">apptools.permissions.external.user_database</span></tt></p>
-<p><tt class="docutils literal"><span class="pre">UserManager</span></tt> from <tt class="docutils literal"><span class="pre">apptools.permissions.external.user_manager</span></tt></p>
-<p><tt class="docutils literal"><span class="pre">UserStorage</span></tt> from <tt class="docutils literal"><span class="pre">apptools.permissions.external.user_storage</span></tt></p>
+<div><p><code class="docutils literal"><span class="pre">PolicyManager</span></code> from <code class="docutils literal"><span class="pre">apptools.permissions.external.policy_manager</span></code></p>
+<p><code class="docutils literal"><span class="pre">PolicyStorage</span></code> from <code class="docutils literal"><span class="pre">apptools.permissions.external.policy_storage</span></code></p>
+<p><code class="docutils literal"><span class="pre">UserDatabase</span></code> from <code class="docutils literal"><span class="pre">apptools.permissions.external.user_database</span></code></p>
+<p><code class="docutils literal"><span class="pre">UserManager</span></code> from <code class="docutils literal"><span class="pre">apptools.permissions.external.user_manager</span></code></p>
+<p><code class="docutils literal"><span class="pre">UserStorage</span></code> from <code class="docutils literal"><span class="pre">apptools.permissions.external.user_storage</span></code></p>
 </div></blockquote>
 <p>The example server is such a package that provides PolicyStorage and
 UserStorage implementations that use an XML-RPC based server to provide remote
@@ -208,13 +208,13 @@ UserStorage implementations that use an XML-RPC based server to provide remote
 <div class="section" id="using-the-default-storage-implementations">
 <h2>Using the Default Storage Implementations<a class="headerlink" href="#using-the-default-storage-implementations" title="Permalink to this headline">¶</a></h2>
 <p>The default policy and user managers both (again by default) persist their data
-as pickles in local files called <tt class="docutils literal"><span class="pre">ets_perms_policydb</span></tt> and
-<tt class="docutils literal"><span class="pre">ets_perms_userdb</span></tt> respectively.  By default these are stored in the
+as pickles in local files called <code class="docutils literal"><span class="pre">ets_perms_policydb</span></code> and
+<code class="docutils literal"><span class="pre">ets_perms_userdb</span></code> respectively.  By default these are stored in the
 application&#8217;s home directory (ie. that returned by
-<tt class="docutils literal"><span class="pre">ETSConfig.application_home</span></tt>).</p>
+<code class="docutils literal"><span class="pre">ETSConfig.application_home</span></code>).</p>
 <p>Note that this directory is normally in the user&#8217;s own directory structure
 whereas it needs to be available to all users of the application.</p>
-<p>If the <tt class="docutils literal"><span class="pre">ETS_PERMS_DATA_DIR</span></tt> environment variable is set then its value is
+<p>If the <code class="docutils literal"><span class="pre">ETS_PERMS_DATA_DIR</span></code> environment variable is set then its value is
 used instead.</p>
 <p>The directory must be writeable by all users of the application.</p>
 <p>It should be restated that the default implementations do <em>not</em> provide secure
@@ -227,7 +227,7 @@ environment and as working examples.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
@@ -250,12 +250,14 @@ environment and as working examples.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="ApplicationAPI.html"
                         title="next chapter">Application API</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/permissions/Introduction.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/permissions/Introduction.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -272,7 +274,7 @@ environment and as working examples.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -287,13 +289,13 @@ environment and as working examples.</p>
         <li class="right" >
           <a href="../appscripting/Introduction.html" title="Application Scripting Framework"
              >previous</a> |</li>
-        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">apptools 4.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2008-2015, Enthought.
-      Last updated on Mar 17, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2008-2016, Enthought.
+      Last updated on Feb 26, 2016.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
     </div>
   </body>
 </html>

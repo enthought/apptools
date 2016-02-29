@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Preferences &mdash; apptools 4.3.0 documentation</title>
+    <title>Preferences &mdash; apptools 4.4.0 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.3.0',
+        VERSION:     '4.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,12 +24,12 @@
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="apptools 4.3.0 documentation" href="../index.html" />
+    <link rel="top" title="apptools 4.4.0 documentation" href="../index.html" />
     <link rel="next" title="Preferences in Envisage" href="PreferencesInEnvisage.html" />
     <link rel="prev" title="Default User Manager Data API" href="../permissions/DefaultUserManagerDataAPI.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -44,14 +44,14 @@
         <li class="right" >
           <a href="../permissions/DefaultUserManagerDataAPI.html" title="Default User Manager Data API"
              accesskey="P">previous</a> |</li>
-        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">apptools 4.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="preferences">
 <h1>Preferences<a class="headerlink" href="#preferences" title="Permalink to this headline">¶</a></h1>
@@ -74,7 +74,7 @@ excellent <a class="reference external" href="http://www.voidspace.org.uk/python
 <p>This all sounds a bit complicated but, believe me, it isn&#8217;t! To prove it
 (hopefully) lets look at an example. Say I have the following preferences in
 a file &#8216;example.ini&#8217;:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">acme</span><span class="o">.</span><span class="n">ui</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">acme</span><span class="o">.</span><span class="n">ui</span><span class="p">]</span>
 <span class="n">bgcolor</span> <span class="o">=</span> <span class="n">blue</span>
 <span class="n">width</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">ratio</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -86,8 +86,8 @@ a file &#8216;example.ini&#8217;:</p>
 </pre></div>
 </div>
 <p>I can create a preferences hierarchy from this file by:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">apptools.preferences.api</span> <span class="kn">import</span> <span class="n">Preferences</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span> <span class="o">=</span> <span class="n">Preferences</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s">&#39;example.ini&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">apptools.preferences.api</span> <span class="kn">import</span> <span class="n">Preferences</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span> <span class="o">=</span> <span class="n">Preferences</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;example.ini&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
 
 <span class="go"> Node() {}</span>
@@ -104,59 +104,59 @@ which contains no preferences. The &#8216;acme&#8217; node has one child, &#8216
 contains some preferences (e.g. &#8216;bgcolor&#8217;) and also a child node
 &#8216;splash_screen&#8217; which also contains preferences (e.g. &#8216;image&#8217;).</p>
 <p>To look up a preference we use:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;acme.ui.bgcolor&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.bgcolor&#39;</span><span class="p">)</span>
 <span class="go">&#39;blue&#39;</span>
 </pre></div>
 </div>
 <p>If no such preferences exists then, by default, None is returned:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;acme.ui.bogus&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.bogus&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span>
 <span class="go">True</span>
 </pre></div>
 </div>
 <p>You can also specify an explicit default value:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;acme.ui.bogus&#39;</span><span class="p">,</span> <span class="s">&#39;fred&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.bogus&#39;</span><span class="p">,</span> <span class="s1">&#39;fred&#39;</span><span class="p">)</span>
 <span class="go">&#39;fred&#39;</span>
 </pre></div>
 </div>
 <p>To set a preference we use:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;acme.ui.bgcolor&#39;</span><span class="p">,</span> <span class="s">&#39;red&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;acme.ui.bgcolor&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;acme.ui.bgcolor&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.bgcolor&#39;</span><span class="p">)</span>
 <span class="go">&#39;red&#39;</span>
 </pre></div>
 </div>
 <p>And to make sure the preferences are saved back to disk:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>To add a new preference value we simply set it:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;acme.ui.fgcolor&#39;</span><span class="p">,</span> <span class="s">&#39;black&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;acme.ui.fgcolor&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;acme.ui.fgcolor&#39;</span><span class="p">,</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.fgcolor&#39;</span><span class="p">)</span>
 <span class="go">&#39;black&#39;</span>
 </pre></div>
 </div>
 <p>Any missing nodes in a call to &#8216;set&#8217; are created automatically, hence:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;acme.ui.button.fgcolor&#39;</span><span class="p">,</span> <span class="s">&#39;white&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;acme.ui.button.fgcolor&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;acme.ui.button.fgcolor&#39;</span><span class="p">,</span> <span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.button.fgcolor&#39;</span><span class="p">)</span>
 <span class="go">&#39;white&#39;</span>
 </pre></div>
 </div>
 <p>Preferences can also be &#8216;inherited&#8217;. e.g. Notice that the &#8216;splash_screen&#8217;
 node does not contain a &#8216;bgcolor&#8217; preference, and hence:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;acme.ui.splash_screen.bgcolor&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.splash_screen.bgcolor&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">None</span>
 <span class="go">True</span>
 </pre></div>
 </div>
 <p>But if we allow the &#8216;inheritance&#8217; of preference values then:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;acme.ui.splash_screen.bgcolor&#39;</span><span class="p">,</span> <span class="n">inherit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.splash_screen.bgcolor&#39;</span><span class="p">,</span> <span class="n">inherit</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="go">&#39;red&#39;</span>
 </pre></div>
 </div>
 <p>By using &#8216;inheritance&#8217; here the preferences system will try the following
 preferences:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;acme.ui.splash_screen.bgcolor&#39;</span>
-<span class="s">&#39;acme.ui.bgcolor&#39;</span>
-<span class="s">&#39;acme.bgcolor&#39;</span>
-<span class="s">&#39;bgcolor&#39;</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="s1">&#39;acme.ui.splash_screen.bgcolor&#39;</span>
+<span class="s1">&#39;acme.ui.bgcolor&#39;</span>
+<span class="s1">&#39;acme.bgcolor&#39;</span>
+<span class="s1">&#39;bgcolor&#39;</span>
 </pre></div>
 </div>
 <div class="section" id="strings-glorious-strings">
@@ -168,16 +168,16 @@ start panicking, this doesn&#8217;t mean that all of your preferences have to be
 strings! Currently the preferences system allows, strings(!), booleans, ints,
 longs, floats and complex numbers. When you store a non-string value it gets
 converted to a string for you, but you <em>always</em> get a string back:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;acme.ui.width&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.width&#39;</span><span class="p">)</span>
 <span class="go">&#39;50&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;acme.ui.width&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;acme.ui.width&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;acme.ui.width&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.width&#39;</span><span class="p">)</span>
 <span class="go">&#39;100&#39;</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;acme.ui.visible&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.visible&#39;</span><span class="p">)</span>
 <span class="go">&#39;True&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;acme.ui.visible&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;acme.ui.visible&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;acme.ui.visible&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.visible&#39;</span><span class="p">)</span>
 <span class="go">&#39;False&#39;</span>
 </pre></div>
 </div>
@@ -192,7 +192,7 @@ getting and setting them more natural.</p>
 preferences in a more convenient way. This is where the <a class="reference external" href="../../enthought/preferences/preferences_helper.py">PreferencesHelper</a>
 class comes in.</p>
 <p>Let&#8217;s take another look at &#8216;example.ini&#8217;:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="p">[</span><span class="n">acme</span><span class="o">.</span><span class="n">ui</span><span class="p">]</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">acme</span><span class="o">.</span><span class="n">ui</span><span class="p">]</span>
 <span class="n">bgcolor</span> <span class="o">=</span> <span class="n">blue</span>
 <span class="n">width</span> <span class="o">=</span> <span class="mi">50</span>
 <span class="n">ratio</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -205,7 +205,7 @@ class comes in.</p>
 </div>
 <p>Say, I am interested in the preferences in the &#8216;acme.ui&#8217; section. I can use a
 preferences helper as follows:</p>
-<div class="highlight-python"><div class="highlight"><pre>from apptools.preferences.api import PreferencesHelper
+<div class="highlight-python"><div class="highlight"><pre><span></span>from apptools.preferences.api import PreferencesHelper
 
 class SplashScreenPreferences(PreferencesHelper):
     &quot;&quot;&quot; A preferences helper for the splash screen. &quot;&quot;&quot;
@@ -230,18 +230,18 @@ True
 </pre></div>
 </div>
 <p>And, obviously, I can set the value of the preferences via the helper too:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">helper</span><span class="o">.</span><span class="n">ratio</span> <span class="o">=</span> <span class="mf">0.5</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">helper</span><span class="o">.</span><span class="n">ratio</span> <span class="o">=</span> <span class="mf">0.5</span>
 </pre></div>
 </div>
 <p>And if you want to prove to yourself it really did set the preference:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;acme.ui.ratio&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.ratio&#39;</span><span class="p">)</span>
 <span class="go">&#39;0.5&#39;</span>
 </pre></div>
 </div>
 <p>Using a preferences helper you also get notified via the usual trait
 mechanism when the preferences are changed (either via the helper or via the
 preferences node directly:</p>
-<div class="highlight-python"><div class="highlight"><pre>def listener(obj, trait_name, old, new):
+<div class="highlight-python"><div class="highlight"><pre><span></span>def listener(obj, trait_name, old, new):
     print trait_name, old, new
 
 &gt;&gt;&gt; helper.on_trait_change(listener)
@@ -255,7 +255,7 @@ ratio 0.75 0.33
 can also set the class attribute &#8216;PreferencesHelper.preferences&#8217; to be that
 node and from then on in, you don&#8217;t have to pass a preferences collection in
 each time you create a helper:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">PreferencesHelper</span><span class="o">.</span><span class="n">preferences</span> <span class="o">=</span> <span class="n">Preferences</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s">&#39;example.ini&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">PreferencesHelper</span><span class="o">.</span><span class="n">preferences</span> <span class="o">=</span> <span class="n">Preferences</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;example.ini&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">helper</span> <span class="o">=</span> <span class="n">SplashScreenPreferences</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">helper</span><span class="o">.</span><span class="n">bgcolor</span>
 <span class="go">&#39;blue&#39;</span>
@@ -288,9 +288,9 @@ is generally used to load any predefined default values into the preferences
 system.</p>
 <p>If you are happy with the default arrangement, then using the scoped
 preferences is just like using the plain old non-scoped version:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">apptools.preferences.api</span> <span class="kn">import</span> <span class="n">ScopedPreferences</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span> <span class="o">=</span> <span class="n">ScopedPreferences</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s">&#39;example.ini&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s">&#39;example.ini&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">apptools.preferences.api</span> <span class="kn">import</span> <span class="n">ScopedPreferences</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span> <span class="o">=</span> <span class="n">ScopedPreferences</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;example.ini&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;example.ini&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
 
 <span class="go">  Node() {}</span>
@@ -312,9 +312,9 @@ this means that when we set a preference it will be set in the application
 scope. This is exactly what we want as the application scope is the scope that
 is persistent.</p>
 <p>So usually, we just use the scoped preferences as before:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;acme.ui.bgcolor&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.bgcolor&#39;</span><span class="p">)</span>
 <span class="go">&#39;blue&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;acme.ui.bgcolor&#39;</span><span class="p">,</span> <span class="s">&#39;red&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;acme.ui.bgcolor&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
 
 <span class="go">  Node() {}</span>
@@ -327,7 +327,7 @@ is persistent.</p>
 </div>
 <p>And, conveniently, preference helpers work just the same with scoped
 preferences too:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">PreferencesHelper</span><span class="o">.</span><span class="n">preferences</span> <span class="o">=</span> <span class="n">ScopedPreferences</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s">&#39;example.ini&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">PreferencesHelper</span><span class="o">.</span><span class="n">preferences</span> <span class="o">=</span> <span class="n">ScopedPreferences</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;example.ini&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">helper</span> <span class="o">=</span> <span class="n">SplashScreenPreferences</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">helper</span><span class="o">.</span><span class="n">bgcolor</span>
 <span class="go">&#39;blue&#39;</span>
@@ -343,8 +343,8 @@ preferences too:</p>
 <h2>Accessing a particular scope<a class="headerlink" href="#accessing-a-particular-scope" title="Permalink to this headline">¶</a></h2>
 <p>Should you care about getting or setting a preference in a particular scope
 then you use the following syntax:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s">&#39;default/acme.ui.bgcolor&#39;</span><span class="p">,</span> <span class="s">&#39;red&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;default/acme.ui.bgcolor&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;default/acme.ui.bgcolor&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;default/acme.ui.bgcolor&#39;</span><span class="p">)</span>
 <span class="go">&#39;red&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
 
@@ -359,7 +359,7 @@ then you use the following syntax:</p>
 </pre></div>
 </div>
 <p>You can also get hold of a scope via:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">default</span> <span class="o">=</span> <span class="n">preferences</span><span class="o">.</span><span class="n">get_scope</span><span class="p">(</span><span class="s">&#39;default&#39;</span><span class="p">)</span>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">default</span> <span class="o">=</span> <span class="n">preferences</span><span class="o">.</span><span class="n">get_scope</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And then perform any of the usual operations on it.</p>
@@ -377,7 +377,7 @@ interested in the <a class="reference external" href="PreferencesInEnvisage.html
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
               <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
@@ -403,12 +403,14 @@ interested in the <a class="reference external" href="PreferencesInEnvisage.html
   <h4>Next topic</h4>
   <p class="topless"><a href="PreferencesInEnvisage.html"
                         title="next chapter">Preferences in Envisage</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="../_sources/preferences/Preferences.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/preferences/Preferences.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
@@ -425,7 +427,7 @@ interested in the <a class="reference external" href="PreferencesInEnvisage.html
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -440,13 +442,13 @@ interested in the <a class="reference external" href="PreferencesInEnvisage.html
         <li class="right" >
           <a href="../permissions/DefaultUserManagerDataAPI.html" title="Default User Manager Data API"
              >previous</a> |</li>
-        <li><a href="../index.html">apptools 4.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="../index.html">apptools 4.4.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2008-2015, Enthought.
-      Last updated on Mar 17, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2008-2016, Enthought.
+      Last updated on Feb 26, 2016.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
     </div>
   </body>
 </html>
