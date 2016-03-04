@@ -918,18 +918,14 @@ class StateSetter:
 def _get_file_read(f):
     if hasattr(f, 'read'):
         return f
-    elif isinstance(f, str):
-        return open(f, 'rb')
     else:
-        raise TypeError('Given object is neither a file or String')
+        return open(f, 'rb')
 
 def _get_file_write(f):
     if hasattr(f, 'write'):
         return f
-    elif isinstance(f, str):
-        return open(f, 'wb')
     else:
-        raise TypeError('Given object is neither a file or String')
+        return open(f, 'wb')
 
 
 ######################################################################
