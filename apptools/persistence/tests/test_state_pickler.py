@@ -8,6 +8,8 @@
 import base64
 import unittest
 import math
+import os
+import tempfile
 
 import numpy
 
@@ -449,6 +451,17 @@ class TestDictPickler(unittest.TestCase):
         del B.__getstate__
         s = state_pickler.get_state(b)
         self.assertEqual(s.a, 'dict')
+
+    def test_dump_to_file_str(self):
+        """Test if dump can take a str as file"""
+        obj = A()
+
+        filepath = os.path.join(tempfile.gettempdir(), "tmp.file")
+
+        try:
+            state_pickler.dump(obj, filepath)
+        finally:
+            os.remove(filepath)
 
 
 if __name__ == "__main__":
