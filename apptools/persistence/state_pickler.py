@@ -100,10 +100,10 @@ Notes
 # Standard library imports.
 import base64
 import sys
-import types
 import pickle
 import gzip
 from io import BytesIO, StringIO
+import warnings
 
 import numpy
 
@@ -138,6 +138,23 @@ def gunzip_string(data):
     data = writer.read()
     writer.close()
     return data
+
+
+def base64_encode(data):
+    if PY_VER > 2:
+        base64.encodebytes(data)
+    else:
+        return base64.encodestring(data)
+
+
+def base64_decode(data):
+    if PY_VER > 2:
+        if isinstance(data, str):
+            data = data.encode('utf-8')
+        return base64.decodebytes(data)
+    else:
+        return data.decode('base64')
+
 
 class StatePicklerError(Exception):
     pass
@@ -330,6 +347,8 @@ class StatePickler:
             return self._do_reference(obj)
         elif obj_type in self.type_map:
             return self.type_map[obj_type](obj)
+        elif isinstance(obj, numpy.generic):
+            return self._do_numpy_generic_type(obj)
         elif isinstance(obj, tuple):
             # Takes care of StateTuples.
             return self._do_tuple(obj)
@@ -341,8 +360,19 @@ class StatePickler:
             return self._do_dict(obj)
         elif hasattr(obj, '__dict__'):
             return self._do_instance(obj)
+        else:
+            warnings.warn("Cannot pickle unrecognized type {}. Returning None"
+                          " for backward compatibility.".format(obj_type))
+            return None
 
     def _get_id(self, value):
+        # We consider a special case for numpy scalar values, because
+        # they hash as native types, but they are special because we
+        # want to recover their true type, and the only way of doing so
+        # is to consider them as objects.
+        if isinstance(value, numpy.generic):
+            return id(value)
+
         try:
             key = hash(value)
         except TypeError:
@@ -445,12 +475,13 @@ class StatePickler:
 
     def _do_numeric(self, value):
         idx = self._register(value)
-        if PY_VER > 2:
-            data = base64.encodebytes(gzip_string(numpy.ndarray.dumps(value)))
-        else:
-            data = base64.encodestring(gzip_string(numpy.ndarray.dumps(value)))
+        data = base64_encode(gzip_string(numpy.ndarray.dumps(value)))
         return dict(type='numeric', id=idx, data=data)
 
+    def _do_numpy_generic_type(self, value):
+        idx = self._register(value)
+        data = base64_encode(pickle.dumps(value))
+        return dict(type='numpy', id=idx, data=data)
 
 
 ######################################################################
@@ -502,6 +533,7 @@ class StateUnpickler:
                          'list': self._do_list,
                          'dict': self._do_dict,
                          'numeric': self._do_numeric,
+                         'numpy': self._do_numpy_generic_type,
                          }
 
     def load_state(self, file):
@@ -666,6 +698,10 @@ class StateUnpickler:
         self._obj_cache[value['id']] = result
         return result
 
+    def _do_numpy_generic_type(self, value, path):
+        result = pickle.loads(base64_decode(value["data"]))
+        self._obj_cache[value['id']] = result
+        return result
 
 ######################################################################
 # `StateSetter` class

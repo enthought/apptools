@@ -44,6 +44,7 @@ class TestClassic:
         self.i = 7
         self.l = 1234567890123456789
         self.f = math.pi
+        self.fnumpy = numpy.float64(3.0)
         self.c = complex(1.01234, 2.3)
         self.n = None
         self.s = 'String'
@@ -65,6 +66,7 @@ class TestTraits(HasTraits):
     i = Int(7)
     l = Long(12345678901234567890)
     f = Float(math.pi)
+    fnumpy = Float(numpy.float64(3.0))
     c = Complex(complex(1.01234, 2.3))
     n = Any
     s = Str('String')
@@ -168,6 +170,9 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(state.i, obj.i)
         self.assertEqual(state.l, obj.l)
         self.assertEqual(state.f, obj.f)
+        self.assertEqual(state.fnumpy, obj.fnumpy)
+        self.assertIsInstance(obj.fnumpy, numpy.generic)
+        self.assertEqual(type(state.fnumpy), type(obj.fnumpy))
         self.assertEqual(state.c, obj.c)
         self.assertEqual(state.n, obj.n)
         self.assertEqual(state.s, obj.s)
