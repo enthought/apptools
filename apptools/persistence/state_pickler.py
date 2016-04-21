@@ -142,7 +142,7 @@ def gunzip_string(data):
 
 def base64_encode(data):
     if PY_VER > 2:
-        base64.encodebytes(data)
+        return base64.encodebytes(data)
     else:
         return base64.encodestring(data)
 
