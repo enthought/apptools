@@ -481,7 +481,7 @@ class StatePickler:
     def _do_numpy_generic_type(self, value):
         idx = self._register(value)
         self._misc_cache.append(value)
-        data = base64_encode(pickle.dumps(value))
+        data = base64_encode(value.dumps())
         return dict(type='numpy', id=idx, data=data)
 
 
@@ -700,7 +700,7 @@ class StateUnpickler:
         return result
 
     def _do_numpy_generic_type(self, value, path):
-        result = pickle.loads(base64_decode(value["data"]))
+        result = numpy.loads(base64_decode(value["data"]))
         self._obj_cache[value['id']] = result
         return result
 
