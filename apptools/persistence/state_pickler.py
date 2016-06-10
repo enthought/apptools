@@ -480,6 +480,7 @@ class StatePickler:
 
     def _do_numpy_generic_type(self, value):
         idx = self._register(value)
+        self._misc_cache.append(value)
         data = base64_encode(pickle.dumps(value))
         return dict(type='numpy', id=idx, data=data)
 
