@@ -490,6 +490,11 @@ class TestStatePickler(unittest.TestCase):
              'id': 0,
              'type': 'list'})
 
+    def test_on_numpy_scalars(self):
+        state = self.pickler.dumps(numpy.int32(78))
+        loaded_state = state_pickler.StateUnpickler().loads_state(state)
+        self.assertEqual(loaded_state, 78)
+        self.assertEqual(loaded_state.dtype, numpy.int32)
 
 
 if __name__ == "__main__":
