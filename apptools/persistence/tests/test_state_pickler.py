@@ -469,5 +469,28 @@ class TestDictPickler(unittest.TestCase):
             os.remove(filepath)
 
 
+class TestStatePickler(unittest.TestCase):
+
+    def setUp(self):
+        self.pickler = state_pickler.StatePickler()
+
+    def tearDown(self):
+        self.pickler = None
+
+    def test_on_base_types(self):
+        state = self.pickler.dump_state(1)
+        self.assertEqual(state, 1)
+
+    def test_on_lists(self):
+        l = [1,2.0, None, [1,2,3]]
+        state = self.pickler.dump_state(l)
+        self.assertEqual(
+            state,
+            {'data': [1, 2.0, None, {'data': [1, 2, 3], 'type': 'list', 'id': 1}],
+             'id': 0,
+             'type': 'list'})
+
+
+
 if __name__ == "__main__":
     unittest.main()
