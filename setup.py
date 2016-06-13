@@ -130,7 +130,8 @@ if __name__ == "__main__":
                                      'logger/plugin/view/images/*.png',
                                      'naming/ui/images/*.png',
                                      'preferences/tests/*.ini'
-                                     ]
+                                     'traits_utils/*.png'
+                                     ],
                         },
           install_requires=__requires__,
           license='BSD',
