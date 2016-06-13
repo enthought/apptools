@@ -210,7 +210,7 @@ class NotViewer(HasStrictTraits):
     def start(self):
         """ Start recording Traits notification events.
 
-        While recording, the view is not updated.
+        While recording, the view is updated every ``update_time`` msec.
         """
         self._recording = True
         self._container = MultiThreadRecordContainer()
@@ -224,10 +224,7 @@ class NotViewer(HasStrictTraits):
         self._spin_timer = Timer(self.update_time, self.update_view)
 
     def stop(self):
-        """ Stop recording Traits notification events.
-
-        The recording is stopped, and the view updated.
-        """
+        """ Stop recording Traits notification events. """
         if self._recorder is not None:
             self._spin_timer.Stop()
             self._spin_timer = None
