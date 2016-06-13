@@ -20,10 +20,10 @@ CALLING_TEMPLATE = u"{handler} ({source})"
 
 def change_records_equal(record1, record2):
     """ Return True if the two records are equal. """
-    cond = (record1.name == record2.name
-            and record1.old is record2.old
-            and record1.new is record2.new
-            and record1.class_name == record2.class_name)
+    cond = (record1.name == record2.name and
+            record1.old is record2.old and
+            record1.new is record2.new and
+            record1.class_name == record2.class_name)
     return cond
 
 
@@ -57,8 +57,8 @@ def records_to_tree(records, idx):
                 sub_events.append(event)
             else:
                 # if same indent and equality -> continue
-                if (change_records_equal(next_record, change_msg_record)
-                        and next_record.indent == current_indent):
+                if (change_records_equal(next_record, change_msg_record) and
+                        next_record.indent == current_indent):
                     idx += 1
                 # if same indent but no equality, or smaller indent -> exit
                 # (new event at same level)
