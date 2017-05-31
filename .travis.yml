@@ -1,0 +1,34 @@
+language: python
+sudo: false
+notifications:
+  email: false
+python:
+  - 2.7
+  - 3.4
+addons:
+  apt:
+    packages:
+    - ccache
+    - swig
+    - libhdf5-serial-dev
+cache:
+  apt: true
+  directories:
+    - $HOME/.cache/pip
+    - $HOME/.ccache
+before_install:
+  - ccache -s
+  - pip install --upgrade pip
+  - export PATH=/usr/lib/ccache:${PATH}
+install:
+  - pip install -r travis-ci-requirements.txt
+  - python setup.py develop
+before_script:
+  - mkdir testrun
+  - cp .coveragerc testrun
+  - cd testrun
+script:
+  - coverage run -m nose.core apptools -v
+after_success:
+  - pip install codecov
+  - codecov

@@ -19,7 +19,7 @@ import sys
 # Enthought library imports.
 from envisage.api import IExtensionPointUser, IExtensionRegistry
 from pyface.workbench.action.workbench_action import WorkbenchAction
-from traits.api import Instance, implements, Property
+from traits.api import Instance, provides, Property
 from pyface.api import ImageResource
 from apptools.help.help_plugin.api import HelpCode
 
@@ -32,6 +32,7 @@ PARENT = '.'.join(__name__.split('.')[:-2])
 from util import get_sys_prefix_relative_filename
 
 # Implementation of the ImageResource class to be used for the DocAction class.
+@provides(IExtensionPointUser)
 class DemoImageResource(ImageResource):
     """ Implementation of the ImageResource class to be used for the DemoAction
     class.
@@ -44,7 +45,7 @@ class DemoImageResource(ImageResource):
 class DemoAction(WorkbenchAction):
     """
     """
-    implements(IExtensionPointUser)
+
 
     ### Action interface ##############################################
 

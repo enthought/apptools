@@ -42,7 +42,7 @@ def test_getitem():
 def test_keys():
     description = [('hello', 'int'), ('world', 'int'), ('Qux1', 'bool')]
     with temp_h5_file() as h5:
-        keys = set(zip(*description)[0])
+        keys = set(list(zip(*description))[0])
         h5table = H5TableNode.add_to_h5file(h5, NODE, description)
         assert set(h5table.keys()) == keys
 

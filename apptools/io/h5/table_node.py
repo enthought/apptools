@@ -22,9 +22,6 @@ class H5TableNode(object):
         An H5 node which is a pytables.Table or H5TableNode instance
     """
 
-    #: Label added to H5 group's 'enth_type' attribute to identify node type.
-    _enth_type = 'h5_table_node'
-
     def __init__(self, node):
         # Avoid a circular import
         from .file import H5Attrs
@@ -53,14 +50,13 @@ class H5TableNode(object):
             record array dtype. For more information, see the documentation for
             `Table` in PyTables.
         **kwargs : dict
-            Additional keyword arguments to pass to pytables.File.createTable
+            Additional keyword arguments to pass to pytables.File.create_table
         """
         if isinstance(description, (tuple, list)):
             description = np.dtype(description)
 
         cls._create_pytables_node(h5, node_path, description, **kwargs)
         node = h5[node_path]
-        node.attrs['enth_type'] = cls._enth_type
 
         return cls(node)
 
@@ -147,4 +143,4 @@ class H5TableNode(object):
     def _create_pytables_node(cls, h5, node_path, description, **kwargs):
         path, name = h5.split_path(node_path)
         pyt_file = h5._h5
-        pyt_file.createTable(path, name, description, **kwargs)
+        pyt_file.create_table(path, name, description, **kwargs)

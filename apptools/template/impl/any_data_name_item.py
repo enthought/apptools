@@ -22,7 +22,7 @@
 #-------------------------------------------------------------------------------
 
 from traits.api \
-    import HasPrivateTraits, Instance, Property, implements
+    import HasPrivateTraits, Instance, Property, provides
 
 from apptools.template.template_traits \
     import TBool

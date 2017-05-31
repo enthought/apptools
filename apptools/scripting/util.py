@@ -4,9 +4,9 @@
 # Copyright (c) 2008,  Prabhu Ramachandran
 # License: BSD Style.
 
-from recorder import Recorder
-from recorder_with_ui import RecorderWithUI
-from package_globals import get_recorder, set_recorder
+from .recorder import Recorder
+from .recorder_with_ui import RecorderWithUI
+from .package_globals import get_recorder, set_recorder
 
 
 ################################################################################
@@ -48,4 +48,3 @@ def stop_recording(object, save=True):
     # Save the script.
     if save:
         recorder.ui_save()
-

@@ -133,7 +133,7 @@ class FolderTestCase(unittest.TestCase):
         # Create the folder.
         f.create_folder()
         self.assertEqual(f.exists, True)
-        self.failUnlessRaises(ValueError, f.create_folder)
+        self.assertRaises(ValueError, f.create_folder)
 
         self.assertEqual(len(f.children), 0)
         self.assertEqual(f.ext, '')
@@ -185,7 +185,7 @@ class FolderTestCase(unittest.TestCase):
         self.assertEqual(parent.children[0].path, join('data', 'sub'))
 
         # Try to create it again.
-        self.failUnlessRaises(ValueError, f.create_folder)
+        self.assertRaises(ValueError, f.create_folder)
 
         return
 
@@ -197,7 +197,7 @@ class FolderTestCase(unittest.TestCase):
 
         # Attempt to create the folder with 'create_folder' which requires
         # that all intermediate folders exist.
-        self.failUnlessRaises(OSError, f.create_folder)
+        self.assertRaises(OSError, f.create_folder)
 
         # Create the folder.
         f.create_folders()
@@ -205,7 +205,7 @@ class FolderTestCase(unittest.TestCase):
         self.assertEqual(File('data/sub').exists, True)
 
         # Try to create it again.
-        self.failUnlessRaises(ValueError, f.create_folders)
+        self.assertRaises(ValueError, f.create_folders)
 
         return
 
@@ -218,7 +218,7 @@ class FolderTestCase(unittest.TestCase):
         # Create the folder.
         f.create_folder()
         self.assertEqual(f.exists, True)
-        self.failUnlessRaises(ValueError, f.create_folder)
+        self.assertRaises(ValueError, f.create_folder)
 
         self.assertEqual(len(f.children), 0)
         self.assertEqual(f.ext, '')

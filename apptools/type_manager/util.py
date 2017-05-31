@@ -35,17 +35,10 @@ def sort_by_class_tree(objs):
     # This returns them ordered from least specific to most specific.
     classes = get_classes(hierarchy)
 
-    # Now we can actually do the sort!
-    def by_class_tree(x, y):
-        ix = classes.index(type(x))
-        iy = classes.index(type(y))
-
-        # Note the reverse comparison (i.e., compare y with x). This is
-        # because we want to return the classes ordered from the MOST
-        # specfic to the least specific.
-        return cmp(iy, ix)
-
-    objs.sort(by_class_tree)
+    # Note the reverse comparison (i.e., compare y with x). This is
+    # because we want to return the classes ordered from the MOST
+    # specfic to the least specific.
+    objs.sort(key=lambda x: classes.index(type(x)), reverse=True)
 
     return
 

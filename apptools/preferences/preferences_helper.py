@@ -8,8 +8,8 @@ import logging
 from traits.api import HasTraits, Instance, Str, Unicode
 
 # Local imports.
-from i_preferences import IPreferences
-from package_globals import get_default_preferences
+from .i_preferences import IPreferences
+from .package_globals import get_default_preferences
 
 
 # Logging.
@@ -128,13 +128,9 @@ class PreferencesHelper(HasTraits):
         trait = self.trait(trait_name)
         handler = trait.handler
 
-        # If the trait type is 'Str' then we just take the raw value.
-        if isinstance(handler, Str) or trait.is_str:
+        # If the trait type is 'Str' or Unicode then we just take the raw value.
+        if isinstance(handler, (Str, Unicode)) or trait.is_str:
             pass
-
-        # If the trait type is 'Unicode' then we convert the raw value.
-        elif isinstance(handler, Unicode):
-            value = unicode(value)
 
         # Otherwise, we eval it!
         else:

@@ -31,9 +31,6 @@ class H5DictNode(object):
         Otherwise, call `flush()` explicitly to write data to disk.
     """
 
-    #: Label added to H5 group's 'enth_type' attribute to identify node type.
-    _enth_type = 'h5_dict_node'
-
     #: Name of filenode where dict data is stored.
     _pyobject_data_node = '_pyobject_data'
 
@@ -46,8 +43,10 @@ class H5DictNode(object):
 
         # Load dict data from the file node.
         dict_node = getattr(h5_group, self._pyobject_data_node)
-        with closing(filenode.openNode(dict_node)) as f:
-            self._pyobject_data = json.load(f, object_hook=self._object_hook)
+        with closing(filenode.open_node(dict_node)) as f:
+            self._pyobject_data = json.loads(
+                f.read().decode('ascii'), object_hook=self._object_hook
+            )
 
     #--------------------------------------------------------------------------
     #  Dictionary interface
@@ -106,7 +105,6 @@ class H5DictNode(object):
         """
         h5.create_group(node_path)
         group = h5[node_path]
-        group.attrs['enth_type'] = cls._enth_type
 
         cls._create_pyobject_node(h5._h5, node_path, data=data)
         return cls(group, **kwargs)
@@ -126,8 +124,8 @@ class H5DictNode(object):
 
         if not isinstance(pytables_node, PyTablesGroup):
             return False
-        attrs = pytables_node._v_attrs
-        return 'enth_type' in attrs and attrs['enth_type'] == cls._enth_type
+
+        return cls._pyobject_data_node in pytables_node._v_children
 
     #--------------------------------------------------------------------------
     #  Private interface
@@ -175,8 +173,8 @@ class H5DictNode(object):
         out_data = cls._handle_array_values(pyt_file, node_path, data)
 
         kwargs = dict(where=node_path, name=cls._pyobject_data_node)
-        with closing(filenode.newNode(pyt_file, **kwargs)) as f:
-            json.dump(out_data, f)
+        with closing(filenode.new_node(pyt_file, **kwargs)) as f:
+            f.write(json.dumps(out_data).encode('ascii'))
 
     @classmethod
     def _get_pyt_group(self, group):
@@ -196,13 +194,13 @@ class H5DictNode(object):
 
         """
         if key in group:
-            pyt_file.removeNode(group, key)
-        pyt_file.createArray(group, key, array)
+            pyt_file.remove_node(group, key)
+        pyt_file.create_array(group, key, array)
         return {ARRAY_PROXY_KEY: True, NODE_KEY: key}
 
     @classmethod
     def _handle_array_values(cls, pyt_file, group_path, data):
-        group = pyt_file.getNode(group_path)
+        group = pyt_file.get_node(group_path)
 
         # Convert numpy array values to H5 array nodes.
         out_data = {}
@@ -217,6 +215,6 @@ class H5DictNode(object):
         pyt_children = group._v_children
         for key in pyt_children.keys():
             if key not in data:
-                pyt_file.removeNode(group, key)
+                pyt_file.remove_node(group, key)
 
         return out_data

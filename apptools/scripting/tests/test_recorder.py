@@ -2,7 +2,7 @@
 Unit tests for the script recorder.
 """
 # Author: Prabhu Ramachandran <prabhu@aero.iitb.ac.in>
-# Copyright (c) 2008, Enthought, Inc.
+# Copyright (c) 2008-2015, Enthought, Inc.
 # License: BSD Style.
 
 import unittest
@@ -10,8 +10,9 @@ import unittest
 from traits.api import (HasTraits, Float, Instance,
         Str, List, Bool, HasStrictTraits, Tuple, Range, TraitPrefixMap,
         Trait)
-from apptools.scripting.api import (Recorder, recordable,
-    set_recorder)
+from apptools.scripting.recorder import Recorder
+from apptools.scripting.recordable import recordable
+from apptools.scripting.package_globals import set_recorder
 
 
 ######################################################################
@@ -445,8 +446,8 @@ class TestRecorder(unittest.TestCase):
         tape.recording = False
         tape.unregister(p)
 
-        import StringIO
-        f = StringIO.StringIO()
+        import io
+        f = io.StringIO()
         tape.save(f)
         # Test if the file is OK.
         expect = ["child = parent.children[0]\n",

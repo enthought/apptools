@@ -6,11 +6,12 @@ TODO:
 
 """
 # Author: Prabhu Ramachandran <prabhu@aero.iitb.ac.in>
-# Copyright (c) 2008, Enthought, Inc.
+# Copyright (c) 2008-2015, Enthought, Inc.
 # License: BSD Style.
 
 import warnings
-import types
+import sys
+PY_VER = sys.version_info[0]
 import __builtin__
 
 from traits.api import (HasTraits, List, Str, Dict, Bool,
@@ -291,7 +292,7 @@ class Recorder(HasTraits):
         if hasattr(object, 'recorder'):
             try:
                 object.recorder = self
-            except Exception, e:
+            except Exception as e:
                 msg = "Cannot set 'recorder' trait of object %r: "\
                       "%s"%(object, e)
                 warnings.warn(msg, warnings.RuntimeWarning)
@@ -336,7 +337,7 @@ class Recorder(HasTraits):
         if hasattr(object, 'recorder'):
             try:
                 object.recorder = None
-            except Exception, e:
+            except Exception as e:
                 msg = "Cannot unset 'recorder' trait of object %r:"\
                       "%s"%(object, e)
                 warnings.warn(msg, warnings.RuntimeWarning)
@@ -372,7 +373,10 @@ class Recorder(HasTraits):
         """Save the recorded lines to the given file.  It does not close
         the file.
         """
-        file.write(self.get_code())
+        if PY_VER == 3:
+            file.write(self.get_code())
+        else:
+            file.write(unicode(self.get_code(), encoding='utf-8'))
         file.flush()
 
     def record_function(self, func, args, kw):
@@ -687,8 +691,8 @@ class Recorder(HasTraits):
         """Return a string given a returned object from a function.
         """
         result = ''
-        ignore = (types.FloatType, types.ComplexType, types.BooleanType,
-                  types.IntType, types.LongType) + types.StringTypes
+        long_type = long if PY_VER == 2 else int
+        ignore = (float, complex, bool, int, long_type, str)
         if object is not None and type(object) not in ignore:
             # If object is not know, register it.
             registry = self._registry

@@ -1,0 +1,6 @@
+git+http://github.com/enthought/traitsui.git#egg=traitsui
+configobj
+coverage
+tables
+pandas
+git+http://github.com/enthought/pyface.git#egg=pyface

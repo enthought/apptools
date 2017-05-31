@@ -18,7 +18,7 @@
 #-------------------------------------------------------------------------------
 
 from traits.api \
-    import Event, implements
+    import Event, provides
 
 from template_impl \
     import Template

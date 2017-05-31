@@ -1,4 +1,5 @@
 import os
+from contextlib import closing
 
 import numpy as np
 from numpy import testing
@@ -20,7 +21,32 @@ def teardown():
         pass
 
 
-def test_create_array():
+def test_reopen():
+    h5 = H5File(H5_TEST_FILE, mode='w')
+    assert h5.is_open
+    h5.close()
+    assert not h5.is_open
+    h5.open()
+    assert h5.is_open
+    h5.close()
+
+
+def test_open_from_pytables_object():
+    with closing(tables.File(H5_TEST_FILE, 'w')) as pyt_file:
+        pyt_file.create_group('/', 'my_group')
+        with open_h5file(pyt_file) as h5:
+            assert '/my_group' in h5
+
+
+def test_open_from_closed_pytables_object():
+    with closing(tables.File(H5_TEST_FILE, 'w')) as pyt_file:
+        pyt_file.create_group('/', 'my_group')
+        pyt_file.close()
+        with open_h5file(pyt_file) as h5:
+            assert '/my_group' in h5
+
+
+def test_create_array_with_H5File():
     array = np.arange(3)
     with open_h5file(H5_TEST_FILE, mode='w') as h5:
         h5array = h5.create_array('/array', array)
@@ -28,6 +54,18 @@ def test_create_array():
         testing.assert_allclose(h5array, array)
         # Test stored array
         testing.assert_allclose(h5['/array'], array)
+
+
+def test_create_array_with_H5Group():
+    array = np.arange(3)
+    node_path = '/tardigrade/array'
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        group = h5.create_group('/tardigrade')
+        h5array = group.create_array('array', array)
+        # Test returned array
+        testing.assert_allclose(h5array, array)
+        # Test stored array
+        testing.assert_allclose(h5[node_path], array)
 
 
 def test_getitem_failure():
@@ -48,20 +86,30 @@ def test_iteritems():
         node_paths.append('/')
         iter_paths = []
 
-        for path, node in h5.iteritems():
+        # 2to3 converts the iteritems blindly to items which is incorrect,
+        # so we resort to this ugliness.
+        items = getattr(h5, 'iteritems')()
+        for path, node in items:
             iter_paths.append(path)
 
     assert set(node_paths) == set(iter_paths)
 
 
-def test_create_plain_array():
+def test_create_plain_array_with_H5File():
     with open_h5file(H5_TEST_FILE, mode='w') as h5:
         h5array = h5.create_array('/array', np.arange(3), chunked=False)
         assert isinstance(h5array, tables.Array)
         assert not isinstance(h5array, tables.CArray)
 
 
-def test_create_chunked_array():
+def test_create_plain_array_with_H5Group():
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5array = h5.root.create_array('/array', np.arange(3), chunked=False)
+        assert isinstance(h5array, tables.Array)
+        assert not isinstance(h5array, tables.CArray)
+
+
+def test_create_chunked_array_with_H5File():
     array = np.arange(3, dtype=np.uint8)
     with open_h5file(H5_TEST_FILE, mode='w') as h5:
         h5array = h5.create_array('/array', array, chunked=True)
@@ -69,7 +117,15 @@ def test_create_chunked_array():
         assert isinstance(h5array, tables.CArray)
 
 
-def test_create_extendable_array():
+def test_create_chunked_array_with_H5Group():
+    array = np.arange(3, dtype=np.uint8)
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5array = h5.root.create_array('/array', array, chunked=True)
+        testing.assert_allclose(h5array, array)
+        assert isinstance(h5array, tables.CArray)
+
+
+def test_create_extendable_array_with_H5File():
     array = np.arange(3, dtype=np.uint8)
     with open_h5file(H5_TEST_FILE, mode='w') as h5:
         h5array = h5.create_array('/array', array, extendable=True)
@@ -77,10 +133,18 @@ def test_create_extendable_array():
         assert isinstance(h5array, tables.EArray)
 
 
+def test_create_extendable_array_with_H5Group():
+    array = np.arange(3, dtype=np.uint8)
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5array = h5.root.create_array('/array', array, extendable=True)
+        testing.assert_allclose(h5array, array)
+        assert isinstance(h5array, tables.EArray)
+
+
 def test_str_and_repr():
     array = np.arange(3)
     with open_h5file(H5_TEST_FILE, mode='w') as h5:
-        h5array = h5.create_array('/array', array)
+        h5.create_array('/array', array)
 
         assert repr(h5) == repr(h5._h5)
         assert str(h5) == str(h5._h5)
@@ -109,7 +173,7 @@ def test_create_duplicate_array_raises():
         testing.assert_raises(ValueError, h5.create_array, '/array', array)
 
 
-def test_delete_existing_array():
+def test_delete_existing_array_with_H5File():
     old_array = np.arange(3)
     new_array = np.ones(5)
     with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
@@ -119,7 +183,17 @@ def test_delete_existing_array():
         testing.assert_allclose(h5['/array'], new_array)
 
 
-def test_delete_existing_dict():
+def test_delete_existing_array_with_H5Group():
+    old_array = np.arange(3)
+    new_array = np.ones(5)
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5.create_array('/array', old_array)
+        # New array with the same node name should delete old array
+        h5.root.create_array('/array', new_array, delete_existing=True)
+        testing.assert_allclose(h5['/array'], new_array)
+
+
+def test_delete_existing_dict_with_H5File():
     old_dict = {'a': 'Goose'}
     new_dict = {'b': 'Quail'}
     with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
@@ -129,7 +203,17 @@ def test_delete_existing_dict():
         assert h5['/dict'].data == new_dict
 
 
-def test_delete_existing_table():
+def test_delete_existing_dict_with_H5Group():
+    old_dict = {'a': 'Goose'}
+    new_dict = {'b': 'Quail'}
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5.create_dict('/dict', old_dict)
+        # New dict with the same node name should delete old dict
+        h5.root.create_dict('/dict', new_dict, delete_existing=True)
+        assert h5['/dict'].data == new_dict
+
+
+def test_delete_existing_table_with_H5File():
     old_description = [('Honk', 'int'), ('Wink', 'float')]
     new_description = [('Toot', 'float'), ('Pop', 'int')]
     with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
@@ -141,7 +225,19 @@ def test_delete_existing_table():
         assert tab.ix[0][0] == np.pi
 
 
-def test_delete_existing_group():
+def test_delete_existing_table_with_H5Group():
+    old_description = [('Honk', 'int'), ('Wink', 'float')]
+    new_description = [('Toot', 'float'), ('Pop', 'int')]
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5.create_table('/table', old_description)
+        # New table with the same node name should delete old table
+        h5.root.create_table('/table', new_description, delete_existing=True)
+        tab = h5['/table']
+        tab.append({'Pop': (1,), 'Toot': (np.pi,)})
+        assert tab.ix[0][0] == np.pi
+
+
+def test_delete_existing_group_with_H5File():
     with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
         h5.create_group('/group')
         grp = h5['/group']
@@ -156,12 +252,63 @@ def test_delete_existing_group():
         assert grp.attrs['test'] == 6
 
 
-def test_remove_node():
+def test_delete_existing_group_with_H5Group():
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5.create_group('/group')
+        grp = h5['/group']
+        grp.attrs['test'] = 4
+
+        assert grp.attrs['test'] == 4
+
+        h5.root.create_group('/group', delete_existing=True)
+        grp = h5['/group']
+        grp.attrs['test'] = 6
+
+        assert grp.attrs['test'] == 6
+
+
+def test_remove_group_with_H5File():
+    with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
+        h5.create_group('/group')
+        assert '/group' in h5
+        h5.remove_group('/group')
+        assert '/group' not in h5
+
+
+def test_remove_group_with_H5Group():
+    node_path = '/waterbear/group'
+    with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
+        group = h5.create_group('/waterbear')
+        group.create_group('group')
+        assert node_path in h5
+        group.remove_group('group')
+        assert node_path not in h5
+
+
+@testing.raises(ValueError)
+def test_remove_group_with_remove_node():
+    node_path = '/group'
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        h5.create_group(node_path)
+        h5.remove_node(node_path)  # Groups should be removed w/ `remove_group`
+
+
+def test_remove_node_with_H5File():
     with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
         h5.create_array('/array', np.arange(3))
         assert '/array' in h5
         h5.remove_node('/array')
         assert '/array' not in h5
+
+
+def test_remove_node_with_H5Group():
+    node_path = '/waterbear/array'
+    with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
+        group = h5.create_group('/waterbear')
+        h5.create_array(node_path, np.arange(3))
+        assert node_path in h5
+        group.remove_node('array')
+        assert node_path not in h5
 
 
 def test_read_mode_raises_on_nonexistent_file():
@@ -177,9 +324,16 @@ def test_cleanup():
     assert not h5_pytables.isopen
 
 
-def test_create_group():
+def test_create_group_with_H5File():
     with open_h5file(H5_TEST_FILE, mode='w') as h5:
         h5.create_group('/group')
+        assert '/group' in h5
+
+
+def test_create_group_with_H5Group():
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        group = h5['/']
+        group.create_group('group')
         assert '/group' in h5
 
 
@@ -263,6 +417,42 @@ def test_group_properties():
         sub_names = h5['/group1'].subgroup_names
         assert sub_names == ['group2']
 
+        assert h5['/group1'].root.name == '/'
+        assert h5['/group1/group2'].root.name == '/'
+
+
+def test_iter_groups():
+    with open_h5file(H5_TEST_FILE, mode='w', auto_groups=True) as h5:
+        h5.create_array('/group1/array', np.arange(3))
+        h5.create_array('/group1/subgroup/deep_array', np.arange(3))
+        group = h5['/group1']
+        assert set(n.name for n in group.iter_groups()) == set(['subgroup'])
+
+
+def test_mapping_interface_for_file():
+    with open_h5file(H5_TEST_FILE, mode='w', auto_groups=True) as h5:
+        array = h5.create_array('/array', np.arange(3))
+        h5.create_array('/group/deep_array', np.arange(3))
+        # `deep_array` isn't a direct descendent and isn't counted.
+        assert len(h5) == 2
+        assert '/group' in h5
+        assert '/array' in h5
+        testing.assert_allclose(h5['/array'], array)
+        assert set(n.name for n in h5) == set(['array', 'group'])
+
+
+def test_mapping_interface_for_group():
+    with open_h5file(H5_TEST_FILE, mode='w', auto_groups=True) as h5:
+        array = h5.create_array('/group1/array', np.arange(3))
+        h5.create_array('/group1/subgroup/deep_array', np.arange(3))
+        group = h5['/group1']
+        # `deep_array` isn't a direct descendent and isn't counted.
+        assert len(group) == 2
+        assert 'subgroup' in group
+        assert 'array' in group
+        testing.assert_allclose(group['array'], array)
+        assert set(n.name for n in group) == set(['array', 'subgroup'])
+
 
 def test_group_str_and_repr():
     with open_h5file(H5_TEST_FILE, mode='w') as h5:
@@ -301,6 +491,17 @@ def test_get_attribute_default():
         assert h5['/'].attrs.get('missing', 'null') == 'null'
 
 
+def test_attribute_update():
+    with open_h5file(H5_TEST_FILE, mode='w') as h5:
+        attrs = h5['/'].attrs
+        attrs.update({'a': 1, 'b': 2})
+        assert attrs['a'] == 1
+        assert attrs['b'] == 2
+        attrs.update({'b': 20, 'c': 30})
+        assert attrs['b'] == 20
+        assert attrs['c'] == 30
+
+
 def test_attribute_iteration_methods():
     with open_h5file(H5_TEST_FILE, mode='w') as h5:
         attrs = h5['/'].attrs
@@ -335,7 +536,7 @@ def test_bad_group_name():
                               '/attrs/array', np.zeros(3))
 
 
-def test_create_dict():
+def test_create_dict_with_H5File():
     data = {'a': 1}
     with temp_h5_file() as h5:
         h5.create_dict('/dict', data)
@@ -343,7 +544,17 @@ def test_create_dict():
         assert h5['/dict']['a'] == 1
 
 
-def test_create_table():
+def test_create_dict_with_H5Group():
+    node_path = '/bananas/dict'
+    data = {'a': 1}
+    with temp_h5_file() as h5:
+        group = h5.create_group('/bananas')
+        group.create_dict('dict', data)
+        assert isinstance(h5[node_path], H5DictNode)
+        assert h5[node_path]['a'] == 1
+
+
+def test_create_table_with_H5File():
     description = [('foo', 'int'), ('bar', 'float')]
     with temp_h5_file() as h5:
         h5.create_table('/table', description)
@@ -355,6 +566,22 @@ def test_create_table():
 
         h5.remove_node('/table')
         assert '/table' not in h5
+
+
+def test_create_table_with_H5Group():
+    node_path = '/rhinocerous/table'
+    description = [('foo', 'int'), ('bar', 'float')]
+    with temp_h5_file() as h5:
+        group = h5.create_group('/rhinocerous')
+        group.create_table('table', description)
+        tab = h5[node_path]
+        assert isinstance(tab, H5TableNode)
+        tab.append({'foo': (1,), 'bar': (np.pi,)})
+        assert tab.ix[0][0] == 1
+        assert tab.ix[0][1] == np.pi
+
+        group.remove_node('table')
+        assert node_path not in h5
 
 
 if __name__ == '__main__':
