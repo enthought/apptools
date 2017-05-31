@@ -3,4 +3,4 @@ configobj
 coverage
 tables
 pandas
-git+http://github.com/enthought/pyface.git#egg=pyface ; python_version >= "3.0"
+git+http://github.com/enthought/pyface.git#egg=pyface
