@@ -2,8 +2,10 @@
 
 
 # Standard library imports.
+import gc
 import os, tempfile, unittest
 from os.path import join
+import weakref
 
 # Major package imports.
 from pkg_resources import resource_filename
@@ -117,6 +119,37 @@ class PreferenceBindingTestCase(unittest.TestCase):
         p.set('acme.ui.ratio', '0.75')
         self.assertEqual('0.75', p.get('acme.ui.ratio'))
         self.assertEqual(0.75, acme_ui.ratio)
+
+        return
+
+    def test_garbage_collection_of_obj(self):
+
+        p = self.preferences
+        p.load(self.example)
+
+        class AcmeUI(HasTraits):
+            """ The Acme UI class! """
+            # The traits that we want to initialize from preferences.
+            bgcolor = Str
+
+        acme_ui = AcmeUI()
+
+        # Make some bindings.
+        bind_preference(acme_ui, 'bgcolor', 'acme.ui.bgcolor')
+
+        # Make sure the object was initialized properly.
+        self.assertEqual('blue', acme_ui.bgcolor)
+
+        # Make sure we can set the preference via the helper...
+        acme_ui.bgcolor = 'yellow'
+        self.assertEqual('yellow', p.get('acme.ui.bgcolor'))
+        self.assertEqual('yellow', acme_ui.bgcolor)
+
+        acme_ui_ref = weakref.ref(acme_ui)
+        # Delete reference to the object
+        acme_ui = None
+        gc.collect()
+        self.assertIsNone(acme_ui_ref())
 
         return
 

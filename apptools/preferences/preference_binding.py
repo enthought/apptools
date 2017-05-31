@@ -2,7 +2,7 @@
 
 
 # Enthought library imports.
-from traits.api import Any, HasTraits, Instance, Str, Undefined
+from traits.api import HasTraits, Instance, Str, Undefined, WeakRef
 from traits.api import Unicode
 
 # Local imports.
@@ -16,7 +16,7 @@ class PreferenceBinding(HasTraits):
     #### 'PreferenceBinding' interface ########################################
 
     # The object that we are binding the preference to.
-    obj = Any
+    obj = WeakRef
 
     # The preferences node used by the binding. If this trait is not set then
     # the package-global default preferences node is used (and if that is not
