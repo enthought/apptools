@@ -32,7 +32,7 @@ from pyface.dock.api import DockSizer
 from traits.api import Delegate
 
 # Mixin class imports.
-from pyface.workbench.i_workbench_window_layout import \
+from apptools.workbench.i_workbench_window_layout import \
      MWorkbenchWindowLayout
 
 # Local imports.
@@ -652,7 +652,7 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
         if hasattr(editor, 'ui') and editor.ui is not None:
             from traitsui.dockable_view_element import DockableViewElement
             # This makes the control draggable outside of the main window.
-            #editor_dock_control.export = 'pyface.workbench.editor'
+            editor_dock_control.export = 'apptools.workbench.editor'
             editor_dock_control.dockable = DockableViewElement(
                 should_close=True, ui=editor.ui
             )
@@ -703,7 +703,7 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
         if hasattr(view, 'ui') and view.ui is not None:
             from traitsui.dockable_view_element import DockableViewElement
             # This makes the control draggable outside of the main window.
-            #view_dock_control.export = 'pyface.workbench.view'
+            view_dock_control.export = 'apptools.workbench.view'
 
             # If the ui's 'view' trait has an 'export' field set, pass that on
             # to the dock control. This makes the control detachable from the

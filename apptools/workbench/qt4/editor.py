@@ -13,7 +13,8 @@
 
 # Local imports.
 from traits.api import Event, Bool
-from pyface.workbench.i_editor import MEditor
+
+from apptools.workbench.i_editor import MEditor
 
 
 class Editor(MEditor):

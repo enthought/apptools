@@ -12,7 +12,7 @@ class ShowViewAction(WorkbenchAction):
     #### 'Action' interface ###################################################
 
     # The action's unique identifier (may be None).
-    id = 'pyface.workbench.action.show_view'
+    id = 'apptools.workbench.action.show_view'
 
     # The action's name (displayed on menus/tool bar tools etc).
     name = 'Show View'
@@ -40,5 +40,3 @@ class ShowViewAction(WorkbenchAction):
             chooser.view.activate()
 
         return
-
-#### EOF ######################################################################

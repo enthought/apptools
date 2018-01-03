@@ -20,7 +20,7 @@ class NewUserPerspectiveAction(WorkbenchAction):
     #### 'Action' interface ###################################################
 
     # The action's unique identifier.
-    id = 'pyface.workbench.action.new_user_perspective_action'
+    id = 'apptools.workbench.action.new_user_perspective_action'
 
     # The action's name.
     name = 'New Perspective...'

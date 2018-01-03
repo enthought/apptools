@@ -15,7 +15,7 @@ class ToolBarManager(pyface.ToolBarManager):
     #### 'ToolBarManager' interface ###########################################
 
     # The workbench window that we are the tool bar manager for.
-    window = Instance('pyface.workbench.api.WorkbenchWindow')
+    window = Instance('apptools.workbench.api.WorkbenchWindow')
 
     ###########################################################################
     # 'ToolBarManager' interface.

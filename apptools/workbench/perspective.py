@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 class Perspective(HasTraits):
     """ The default perspective. """
     # The ID of the default perspective.
-    DEFAULT_ID = 'pyface.workbench.default'
+    DEFAULT_ID = 'apptools.workbench.default'
 
     # The name of the default perspective.
     DEFAULT_NAME = 'Default'

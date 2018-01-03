@@ -3,8 +3,9 @@
 
 # Enthought library imports.
 from pyface.action.api import ActionController
-from pyface.workbench.api import WorkbenchWindow
-from traits.api import HasTraits, Instance
+from traits.api import Instance
+
+from apptools.workbench.api import WorkbenchWindow
 
 
 class ActionController(ActionController):
@@ -33,5 +34,3 @@ class ActionController(ActionController):
         event.window = self.window
 
         return action.perform(event)
-
-#### EOF ######################################################################

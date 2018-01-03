@@ -3,8 +3,8 @@ import mock
 
 from traits.testing.unittest_tools import unittest
 
-from pyface.ui.qt4.workbench.split_tab_widget import SplitTabWidget
-from pyface.ui.qt4.workbench.workbench_window_layout import \
+from apptools.workbench.qt4.split_tab_widget import SplitTabWidget
+from apptools.workbench.qt4.workbench_window_layout import \
     WorkbenchWindowLayout
 
 

@@ -37,7 +37,7 @@ class IWorkbenchWindowLayout(Interface):
     editor_area_id = Str
 
     # The workbench window that this is the layout for.
-    window = Instance('pyface.workbench.api.WorkbenchWindow')
+    window = Instance('apptools.workbench.api.WorkbenchWindow')
 
     #### Events ####
 

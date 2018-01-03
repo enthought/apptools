@@ -18,7 +18,7 @@ class ResetAllPerspectivesAction(WorkbenchAction):
     #### 'Action' interface ###################################################
 
     # The action's unique identifier (may be None).
-    id = 'pyface.workbench.action.reset_all_perspectives'
+    id = 'apptools.workbench.action.reset_all_perspectives'
 
     # The action's name (displayed on menus/tool bar tools etc).
     name = 'Reset All Perspectives'

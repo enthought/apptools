@@ -11,8 +11,7 @@
 #------------------------------------------------------------------------------
 
 
-# Enthought library imports.
-from pyface.workbench.i_view import MView
+from apptools.workbench.i_view import MView
 
 
 class View(MView):

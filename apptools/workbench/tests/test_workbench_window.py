@@ -5,12 +5,12 @@ import os
 
 from traits.testing.unittest_tools import unittest, UnittestTools
 
-from pyface.workbench.perspective import Perspective
-from pyface.workbench.api import Workbench
-from pyface.workbench.user_perspective_manager import UserPerspectiveManager
-from pyface.workbench.workbench_window import (WorkbenchWindow,
-                                               WorkbenchWindowLayout,
-                                               WorkbenchWindowMemento)
+from apptools.workbench.perspective import Perspective
+from apptools.workbench.api import Workbench
+from apptools.workbench.user_perspective_manager import UserPerspectiveManager
+from apptools.workbench.workbench_window import (
+    WorkbenchWindow, WorkbenchWindowLayout, WorkbenchWindowMemento
+)
 
 
 class TestWorkbenchWindowUserPerspective(unittest.TestCase, UnittestTools):
@@ -51,7 +51,7 @@ class TestWorkbenchWindowUserPerspective(unittest.TestCase, UnittestTools):
         workbench_window.active_perspective = perspective
         workbench_window.layout.is_editor_area_visible = mock.MagicMock(
             return_value=perspective.show_editor_area)
-    
+
     def test_editor_area_with_perspectives(self):
         """ Test show_editor_area is respected while switching perspective"""
 
@@ -62,7 +62,7 @@ class TestWorkbenchWindowUserPerspective(unittest.TestCase, UnittestTools):
         # Add perspectives
         workbench.user_perspective_manager.add(self.with_editor)
         workbench.user_perspective_manager.add(self.without_editor)
-        
+
         # There are the methods we want to test if they are called
         workbench_window.show_editor_area = mock.MagicMock()
         workbench_window.hide_editor_area = mock.MagicMock()
@@ -73,12 +73,12 @@ class TestWorkbenchWindowUserPerspective(unittest.TestCase, UnittestTools):
 
         # Show a perspective with an editor area
         self.show_perspective(workbench_window, self.with_editor)
-        
+
         # show_editor_area should be called
         self.assertTrue(workbench_window.show_editor_area.called)
 
         # Show a perspective withOUT an editor area
-        workbench_window.hide_editor_area.reset_mock()        
+        workbench_window.hide_editor_area.reset_mock()
         self.show_perspective(workbench_window, self.without_editor)
 
         # hide_editor_area should be called
@@ -113,18 +113,18 @@ class TestWorkbenchWindowUserPerspective(unittest.TestCase, UnittestTools):
                             "get_toolkit_memento.return_value": (0, dict(geometry=""))}
 
         workbench_window.layout.configure_mock(**layout_functions)
-        
+
         # The following records perspective mementos to workbench_window._memento
         self.show_perspective(workbench_window, self.without_editor)
         self.show_perspective(workbench_window, self.with_editor)
 
         # Save the window layout to a state file
         workbench._save_window_layout(workbench_window)
-        
+
         # We only needed the state file for this test
         del workbench_window
         del workbench
-        
+
         # We create another workbench which uses the state location
         # and we test if we can retore the saved perspective correctly
         workbench, workbench_window = self.get_workbench_with_window()
@@ -135,7 +135,7 @@ class TestWorkbenchWindowUserPerspective(unittest.TestCase, UnittestTools):
         # There are the methods we want to test if they are called
         workbench_window.show_editor_area = mock.MagicMock()
         workbench_window.hide_editor_area = mock.MagicMock()
-        
+
         # This restores the perspectives and mementos
         workbench.create_window()
 
@@ -145,7 +145,7 @@ class TestWorkbenchWindowUserPerspective(unittest.TestCase, UnittestTools):
         # Perspective mementos should be restored
         self.assertIn(self.with_editor.id, workbench_window._memento.perspective_mementos)
         self.assertIn(self.without_editor.id, workbench_window._memento.perspective_mementos)
-        
+
         # Since the with_editor perspective is used last,
         # it should be used as initial perspective
         self.assertTrue(workbench_window.show_editor_area.called)
@@ -155,11 +155,10 @@ class TestWorkbenchWindowUserPerspective(unittest.TestCase, UnittestTools):
         # We need to get them using their id
         perspective_without_editor = workbench_window.get_perspective_by_id(
             self.without_editor.id)
-        
+
         # Show the perspective with editor area
-        workbench_window.hide_editor_area.reset_mock()        
+        workbench_window.hide_editor_area.reset_mock()
         self.show_perspective(workbench_window, perspective_without_editor)
 
         # make sure hide_editor_area is called
         self.assertTrue(workbench_window.hide_editor_area.called)
-

@@ -34,7 +34,7 @@ class PerspectiveMenuManager(MenuManager):
     #### 'PerspectiveMenuManager' interface ###################################
 
     # The workbench window that the manager is part of.
-    window = Instance('pyface.workbench.api.WorkbenchWindow')
+    window = Instance('apptools.workbench.api.WorkbenchWindow')
 
     ###########################################################################
     # 'ActionManager' interface.

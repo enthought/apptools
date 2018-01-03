@@ -14,10 +14,11 @@ from .traits_ui_editor import TraitsUIEditor
 @provides(IEditorManager)
 class EditorManager(HasTraits):
     """ The default editor manager. """
+
     #### 'IEditorManager' interface ###########################################
 
     # The workbench window that the editor manager manages editors for ;^)
-    window = Instance('pyface.workbench.api.WorkbenchWindow')
+    window = Instance('apptools.workbench.api.WorkbenchWindow')
 
     ###########################################################################
     # 'object' interface.
@@ -91,5 +92,3 @@ class EditorManager(HasTraits):
         """ Return True if the editor is editing the object. """
 
         return editor.obj == obj
-
-#### EOF ######################################################################

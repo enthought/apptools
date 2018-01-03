@@ -40,7 +40,7 @@ class WorkbenchWindow(ApplicationWindow):
     selection = List
 
     # The workbench that the window belongs to.
-    workbench = Instance('pyface.workbench.api.IWorkbench')
+    workbench = Instance('apptools.workbench.api.IWorkbench')
 
     #### Editors #######################
 

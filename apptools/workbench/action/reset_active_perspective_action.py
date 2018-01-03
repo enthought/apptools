@@ -18,7 +18,7 @@ class ResetActivePerspectiveAction(WorkbenchAction):
     #### 'Action' interface ###################################################
 
     # The action's unique identifier (may be None).
-    id = 'pyface.workbench.action.reset_active_perspective'
+    id = 'apptools.workbench.action.reset_active_perspective'
 
     # The action's name (displayed on menus/tool bar tools etc).
     name = 'Reset Perspective'

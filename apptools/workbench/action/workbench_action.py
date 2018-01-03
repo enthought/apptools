@@ -2,9 +2,10 @@
 
 
 # Enthought library imports.
-from pyface.workbench.api import WorkbenchWindow
 from pyface.action.api import Action
 from traits.api import Instance
+
+from apptools.workbench.api import WorkbenchWindow
 
 
 class WorkbenchAction(Action):
@@ -16,5 +17,3 @@ class WorkbenchAction(Action):
     #
     # This is set by the framework.
     window = Instance(WorkbenchWindow)
-
-#### EOF ######################################################################

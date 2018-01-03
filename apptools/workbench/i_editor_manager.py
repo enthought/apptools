@@ -9,7 +9,7 @@ class IEditorManager(Interface):
     """ The editor manager interface. """
 
     # The workbench window that the editor manager manages editors for ;^)
-    window = Instance('pyface.workbench.api.WorkbenchWindow')
+    window = Instance('apptools.workbench.api.WorkbenchWindow')
 
     def add_editor(self, editor, kind):
         """ Registers an existing editor. """

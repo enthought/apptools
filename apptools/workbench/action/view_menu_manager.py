@@ -46,7 +46,7 @@ class ViewMenuManager(MenuManager):
     show_perspective_menu = Bool(True)
 
     # The workbench window that the menu is part of.
-    window = Instance('pyface.workbench.api.WorkbenchWindow')
+    window = Instance('apptools.workbench.api.WorkbenchWindow')
 
     #### 'Private' interface ##################################################
 

@@ -47,7 +47,7 @@ class IWorkbenchPart(Interface):
     # The workbench window that the part is in.
     #
     # The framework sets this when the part is created.
-    window = Instance('pyface.workbench.api.WorkbenchWindow')
+    window = Instance('apptools.workbench.api.WorkbenchWindow')
 
     #### Methods ##############################################################
 

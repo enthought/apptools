@@ -16,6 +16,5 @@
 
 # Import the toolkit specific version.
 from pyface.toolkit import toolkit_object
-Editor = toolkit_object('workbench.editor:Editor')
 
-### EOF #######################################################################
+Editor = toolkit_object('workbench.editor:Editor')

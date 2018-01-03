@@ -1,11 +1,9 @@
 """ An action that sets the active perspective. """
 
 
-# Enthought library imports.
-from pyface.workbench.api import IPerspective
 from traits.api import Delegate, Instance, on_trait_change
 
-# Local imports.
+from apptools.workbench.api import IPerspective
 from .workbench_action import WorkbenchAction
 
 
