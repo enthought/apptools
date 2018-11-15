@@ -427,7 +427,7 @@ class H5Group(Mapping):
 
     @property
     def subgroup_names(self):
-        return self._h5_group._v_groups.keys()
+        return list(self._h5_group._v_groups.keys())
 
     def iter_groups(self):
         """ Iterate over `H5Group` nodes that are children of this group. """

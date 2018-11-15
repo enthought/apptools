@@ -1,3 +1,5 @@
+import six
+
 import numpy as np
 from numpy.testing import raises, assert_allclose
 
@@ -170,14 +172,15 @@ def test_basic_dtypes():
         h5dict = H5DictNode.add_to_h5file(h5, NODE, data)
         assert isinstance(h5dict['a_int'], int)
         assert isinstance(h5dict['a_float'], float)
-        assert isinstance(h5dict['a_str'], basestring)
+        assert isinstance(h5dict['a_str'], six.string_types[0])
 
 
 def test_mixed_type_list():
     with temp_h5_file() as h5:
         data = dict(a=[1, 1.0, 'abc'])
         h5dict = H5DictNode.add_to_h5file(h5, NODE, data)
-        for value, dtype in zip(h5dict['a'], (int, float, basestring)):
+        for value, dtype in zip(
+                h5dict['a'], (int, float, six.string_types[0])):
             assert isinstance(value, dtype)
 
 

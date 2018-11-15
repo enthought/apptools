@@ -1,3 +1,5 @@
+import six
+
 import numpy as np
 from pandas import DataFrame
 from tables.table import Table as PyTablesTable
@@ -78,7 +80,7 @@ class H5TableNode(object):
         data : dict
             A dictionary of column name -> values items
         """
-        rows = zip(*[data[name] for name in self.keys()])
+        rows = list(zip(*[data[name] for name in self.keys()]))
         self._h5_table.append(rows)
 
     def __getitem__(self, col_or_cols):
@@ -95,7 +97,7 @@ class H5TableNode(object):
             An array of column data with the column order matching that of
             `col_or_cols`.
         """
-        if isinstance(col_or_cols, basestring):
+        if isinstance(col_or_cols, six.string_types[0]):
             return self._h5_table.col(col_or_cols)
 
         column_data = [self._h5_table.col(name) for name in col_or_cols]

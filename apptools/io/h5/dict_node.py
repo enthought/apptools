@@ -69,7 +69,7 @@ class H5DictNode(object):
         return key in self.data
 
     def keys(self):
-        return self.data.keys()
+        return list(self.data.keys())
 
     #--------------------------------------------------------------------------
     #  Public interface
@@ -213,8 +213,12 @@ class H5DictNode(object):
 
         # Remove stored arrays which are no longer in the data dictionary.
         pyt_children = group._v_children
+        keys_to_remove = []
         for key in pyt_children.keys():
             if key not in data:
-                pyt_file.remove_node(group, key)
+                keys_to_remove.append(key)
+
+        for key in keys_to_remove:
+            pyt_file.remove_node(group, key)
 
         return out_data

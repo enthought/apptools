@@ -514,7 +514,7 @@ def test_attribute_iteration_methods():
         assert all(isinstance(x, tuple) for x in items)
 
         # unfold the pairs
-        keys, vals = map(list, zip(*items))
+        keys, vals = map(list, list(zip(*items)))
 
         assert keys == attrs.keys()
         assert vals == attrs.values()
