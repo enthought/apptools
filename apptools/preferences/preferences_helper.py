@@ -163,7 +163,7 @@ class PreferencesHelper(HasTraits):
                 value = self._get_value(trait_name, preferences.get(key))
                 traits_to_set[trait_name] = value
 
-        self.set(trait_change_notify=notify, **traits_to_set)
+        self.trait_set(trait_change_notify=notify, **traits_to_set)
 
         # Listen for changes to the node's preferences.
         preferences.add_preferences_listener(
