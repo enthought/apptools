@@ -658,10 +658,10 @@ class StateUnpickler:
             if isinstance(data, str):
                 data = value['data'].encode('utf-8')
             junk = gunzip_string(base64.decodebytes(data))
-            result = numpy.loads(junk, encoding='bytes')
+            result = pickle.loads(junk, encoding='bytes')
         else:
             junk = gunzip_string(value['data'].decode('base64'))
-            result = numpy.loads(junk)
+            result = pickle.loads(junk)
         self._numeric[value['id']] = (path, result)
         self._obj_cache[value['id']] = result
         return result
