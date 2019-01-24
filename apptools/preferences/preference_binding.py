@@ -139,7 +139,7 @@ class PreferenceBinding(HasTraits):
             trait_value = self._get_value(self.trait_name, value)
             traits      = {self.trait_name : trait_value}
 
-            self.obj.set(trait_change_notify=notify, **traits)
+            self.obj.trait_set(trait_change_notify=notify, **traits)
 
         return
 
