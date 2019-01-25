@@ -183,19 +183,19 @@ class ScatterPlot ( Template ):
 
         # Create the plot:
         self.plot = plot = Plot( pd )
-        plot.plot( ( 'index', 'value' ),
-                   type           = 'scatter',
-                   index_sort     = 'ascending',
-                   marker         = self.marker,
-                   color          = self.color,
-                   outline_color  = self.outline_color,
-                   marker_size    = self.marker_size,
-                   line_width     = self.line_width,
-                   bgcolor        = 'white' )
-        plot.set(  padding_left   = 50,
-                   padding_right  = 0,
-                   padding_top    = 0,
-                   padding_bottom = 20 )
+        plot.plot(      ( 'index', 'value' ),
+                        type           = 'scatter',
+                        index_sort     = 'ascending',
+                        marker         = self.marker,
+                        color          = self.color,
+                        outline_color  = self.outline_color,
+                        marker_size    = self.marker_size,
+                        line_width     = self.line_width,
+                        bgcolor        = 'white' )
+        plot.trait_set( padding_left   = 50,
+                        padding_right  = 0,
+                        padding_top    = 0,
+                        padding_bottom = 20 )
 
         # Attach some tools to the plot:
         plot.tools.append( PanTool( plot, constrain_key = 'shift' ) )

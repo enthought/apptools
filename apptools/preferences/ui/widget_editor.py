@@ -77,7 +77,7 @@ class WidgetEditor(EditorFactory):
     def __call__ (self, *args, **traits):
         """ Call the object. """
 
-        return self.set(**traits)
+        return self.trait_set(**traits)
 
     ###########################################################################
     # 'EditorFactory' interface.
