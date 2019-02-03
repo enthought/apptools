@@ -13,6 +13,16 @@
 
 import sys, os
 
+def execfile(filepath, globals=None, locals=None):
+    if globals is None:
+        globals = {}
+    globals.update({
+        "__file__": filepath,
+        "__name__": "__main__",
+    })
+    with open(filepath, 'rb') as file:
+        exec(compile(file.read(), filepath, 'exec'), globals, locals)
+
 # If your extensions are in another directory, add it here. If the directory
 # is relative to the documentation root, use os.path.abspath to make it
 # absolute, like shown here.
