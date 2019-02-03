@@ -177,3 +177,9 @@ latex_documents = [
 
 # If false, no module index is generated.
 #latex_use_modindex = True
+
+# Grouping the document tree into Man pages. List of tuples
+# (startdocname, name, description, authors, section)
+man_pages = [
+  ( master_doc, project, project + ' ' + version, 'Enthought', 3 )
+]
