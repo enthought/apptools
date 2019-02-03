@@ -51,7 +51,7 @@ class FileTestCase(unittest.TestCase):
     ###########################################################################
     # Tests.
     ###########################################################################
-
+    @unittest.skipIf(os.getuid() == 0, "Cannot be run as root")
     def test_properties(self):
         """ file properties """
 
