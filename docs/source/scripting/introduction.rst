@@ -179,7 +179,7 @@ Here are a few advanced use cases.
    user to save the script.
 
  - Sometimes it is not enough to just record trait changes, one may want
-   to pass an arbitrary string or command when recording is occuring.
+   to pass an arbitrary string or command when recording is occurring.
    To allow for this, if one defines a ``recorder`` trait on the object,
    it is set to the current recorder.  One can then use this recorder to
    do whatever one wants.  This is very convenient.

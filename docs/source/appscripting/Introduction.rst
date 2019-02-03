@@ -58,12 +58,12 @@ The following are the concepts supported by the framework.
   possible for a recording to be run directly by the Python interpreter and
   independently of the application that made the recording.  Otherwise the
   application must run the script and first create any scriptable objects
-  refered to in the script.
+  referred to in the script.
 
 - Binding
 
   A script runs in a namespace which is, by default, empty.  If the scriptable
-  objects refered to in a script are not created by the script (because their
+  objects referred to in a script are not created by the script (because their
   type's ``__init__()`` method isn't scriptable) then they must be created by
   the application and added to the namespace.  Adding an object to the
   namespace is called binding.
