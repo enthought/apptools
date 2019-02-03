@@ -22,8 +22,11 @@ from traits.api \
 from traits.trait_base \
     import class_of, get_module_name
 
-from traitsui.api \
-    import DropEditor
+try:
+    from traitsui.api \
+        import DropEditor
+except ImportError:
+    pass
 
 from apptools.naming.api \
     import Binding
@@ -101,11 +104,15 @@ class NamingTraitHandler ( TraitHandler ):
 
     def get_editor ( self, trait ):
         if self.editor is None:
-            from traitsui.api import DropEditor
+            try:
+                from traitsui.api import DropEditor
 
-            self.editor = DropEditor( klass    = self.aClass,
-                                      binding  = True,
-                                      readonly = False )
+                self.editor = DropEditor( klass    = self.aClass,
+                                          binding  = True,
+                                          readonly = False )
+            except ImportError:
+                pass
+
         return self.editor
 
     def post_setattr ( self, object, name, value ):
