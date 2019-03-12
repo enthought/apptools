@@ -10,4 +10,5 @@
 #
 #------------------------------------------------------------------------------
 
-from naming_traits import NamingInstance
+from __future__ import absolute_import
+from .naming_traits import NamingInstance

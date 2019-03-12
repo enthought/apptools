@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from contextlib import closing
 import json
 
@@ -69,7 +70,7 @@ class H5DictNode(object):
         return key in self.data
 
     def keys(self):
-        return self.data.keys()
+        return list(self.data.keys())
 
     #--------------------------------------------------------------------------
     #  Public interface

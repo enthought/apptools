@@ -15,6 +15,7 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from pyface.tree.api import NodeMonitor
 
 

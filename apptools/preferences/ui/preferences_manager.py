@@ -2,6 +2,7 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from traits.api import HasTraits, Instance, List, Property, \
     Any, Bool, Dict
 from traitsui.api import Handler, HSplit, Item, TreeEditor
@@ -9,8 +10,8 @@ from traitsui.api import TreeNode, View, HTMLEditor
 from traitsui.menu import Action
 
 # Local imports.
-from preferences_node import PreferencesNode
-from preferences_page import PreferencesPage
+from .preferences_node import PreferencesNode
+from .preferences_page import PreferencesPage
 
 # fixme: This is part of the attempt to allow developers to use non-Traits UI
 # preferences pages. It doesn't work yet!

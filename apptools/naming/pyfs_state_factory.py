@@ -15,12 +15,13 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from apptools.io.api import File
 
 # Local imports.
-from address import Address
-from reference import Reference
-from state_factory import StateFactory
+from .address import Address
+from .reference import Reference
+from .state_factory import StateFactory
 
 
 class PyFSStateFactory(StateFactory):

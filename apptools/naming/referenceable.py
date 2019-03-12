@@ -15,10 +15,11 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from traits.api import HasPrivateTraits, Instance
 
 # Local imports.
-from reference import Reference
+from .reference import Reference
 
 
 class Referenceable(HasPrivateTraits):

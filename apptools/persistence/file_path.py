@@ -7,6 +7,7 @@ context of persistent storage with the state_pickler.
 # License: BSD Style.
 
 # Standard library imports.
+from __future__ import absolute_import
 import os
 from os.path import abspath, normpath, dirname, commonprefix, join
 

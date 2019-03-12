@@ -3,6 +3,7 @@
 from __future__ import print_function
 
 # Standard library imports.
+from __future__ import absolute_import
 from os.path import join
 
 # Enthought library imports.
@@ -200,7 +201,7 @@ class ScopedPreferences(Preferences):
 
         keys = set()
         for node in nodes:
-            keys.update(node.node(path).keys())
+            keys.update(list(node.node(path).keys()))
 
         return list(keys)
 

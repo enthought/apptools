@@ -2,12 +2,14 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from traits.api import Any, HasTraits, Instance, Str, Undefined
 from traits.api import Unicode
 
 # Local imports.
 from .i_preferences import IPreferences
 from .package_globals import get_default_preferences
+import six
 
 
 class PreferenceBinding(HasTraits):
@@ -101,7 +103,7 @@ class PreferenceBinding(HasTraits):
 
         # If the trait type is 'Unicode' then we convert the raw value.
         elif type(handler) is Unicode:
-            value = unicode(value)
+            value = six.text_type(value)
 
         # Otherwise, we eval it!
         else:

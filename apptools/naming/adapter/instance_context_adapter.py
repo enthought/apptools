@@ -2,6 +2,7 @@
 
 
 # Standard library imports.
+from __future__ import absolute_import
 import re
 
 # Enthought library imports.
@@ -144,7 +145,7 @@ class InstanceContextAdapter(ContextAdapter):
             names = obj.trait_names()
 
         elif hasattr(obj, '__dict__'):
-            names = self.adaptee.__dict__.keys()
+            names = list(self.adaptee.__dict__.keys())
 
         else:
             names = []

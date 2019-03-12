@@ -14,7 +14,8 @@
 
 
 # Standard library imports.
-import cPickle as pickle
+from __future__ import absolute_import
+import six.moves.cPickle as pickle
 import errno
 import os
 
@@ -54,7 +55,7 @@ class Persistent(object):
 
         try:
             os.mkdir(self._lock)
-        except OSError, e:
+        except OSError as e:
             if e.errno == errno.EEXIST:
                 msg = "The lock on %s is held by another application or user." % self._desc
             else:
@@ -67,7 +68,7 @@ class Persistent(object):
 
         try:
             os.rmdir(self._lock)
-        except OSError, e:
+        except OSError as e:
             raise PersistentError("Unable to release lock on %s: %s." % (self._desc, e))
 
     def read(self):
@@ -83,7 +84,7 @@ class Persistent(object):
                     raise PersistentError("Unable to read %s." % self._desc)
             finally:
                 f.close()
-        except IOError, e:
+        except IOError as e:
             if e.errno == errno.ENOENT:
                 data = self._factory()
             else:
@@ -104,7 +105,7 @@ class Persistent(object):
                     raise PersistentError("Unable to write %s." % self._desc)
             finally:
                 f.close()
-        except IOError, e:
+        except IOError as e:
             raise PersistentError("Unable to create %s: %s." % (self._desc, e))
 
 

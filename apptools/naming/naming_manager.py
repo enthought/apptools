@@ -15,6 +15,7 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from traits.api import HasTraits
 
 
@@ -39,7 +40,7 @@ class NamingManager(HasTraits):
         """
 
         # Local imports.
-        from context import Context
+        from .context import Context
 
         # We get the state factories from the context's environment.
         state_factories = context.environment[Context.STATE_FACTORIES]
@@ -68,7 +69,7 @@ class NamingManager(HasTraits):
         """
 
         # Local imports.
-        from context import Context
+        from .context import Context
 
         # We get the object factories from the context's environment.
         object_factories = context.environment[Context.OBJECT_FACTORIES]

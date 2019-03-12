@@ -1,9 +1,11 @@
+from __future__ import absolute_import
 from traits.api import Any, Event, HasTraits, List, provides, Str
 from traits.testing.unittest_tools import unittest
 
 from apptools.selection.api import (
     IDConflictError, ISelection, ISelectionProvider, ListenerNotConnectedError,
     ListSelection, ProviderNotRegisteredError, SelectionService)
+from six.moves import range
 
 
 @provides(ISelection)
@@ -222,7 +224,7 @@ class TestSelectionService(unittest.TestCase):
 
     def test_set_selection(self):
         service = SelectionService()
-        provider = SimpleListProvider(items=range(10))
+        provider = SimpleListProvider(items=list(range(10)))
         service.add_selection_provider(provider)
 
         provider_id = provider.provider_id
@@ -253,7 +255,7 @@ class TestSelectionService(unittest.TestCase):
         # raise an exception.
 
         service = SelectionService()
-        provider = SimpleListProvider(items=range(10))
+        provider = SimpleListProvider(items=list(range(10)))
         service.add_selection_provider(provider)
 
         new_selection = [0, 11, 1]

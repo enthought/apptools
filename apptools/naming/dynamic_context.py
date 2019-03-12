@@ -41,12 +41,13 @@
 """
 
 # Standardlibrary imports
+from __future__ import absolute_import
 import logging
 
 # Local imports
-from binding import Binding
-from context import Context
-from exception import OperationNotSupportedError
+from .binding import Binding
+from .context import Context
+from .exception import OperationNotSupportedError
 
 
 # Setup a logger for this module.

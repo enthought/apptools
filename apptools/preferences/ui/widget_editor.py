@@ -2,6 +2,7 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from traits.etsconfig.api import ETSConfig
 from traits.api import Any
 from traitsui.api import EditorFactory

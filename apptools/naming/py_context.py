@@ -15,17 +15,18 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from traits.api import Any, Dict, Instance, Property
 
 # Local imports.
-from address import Address
-from binding import Binding
-from context import Context
-from naming_manager import naming_manager
-from py_object_factory import PyObjectFactory
-from reference import Reference
-from referenceable import Referenceable
-from referenceable_state_factory import ReferenceableStateFactory
+from .address import Address
+from .binding import Binding
+from .context import Context
+from .naming_manager import naming_manager
+from .py_object_factory import PyObjectFactory
+from .reference import Reference
+from .referenceable import Referenceable
+from .referenceable_state_factory import ReferenceableStateFactory
 
 
 # The default environment.
@@ -192,7 +193,7 @@ class PyContext(Context, Referenceable):
     def _list_names(self):
         """ Lists the names bound in this context. """
 
-        return self.namespace.keys()
+        return list(self.namespace.keys())
 
     ###########################################################################
     # Private interface.

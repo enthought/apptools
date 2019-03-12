@@ -23,6 +23,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 from traits.api \
     import Bool
 
@@ -35,10 +36,10 @@ from apptools.template.template_choice \
 from apptools.template.itemplate_data_context \
     import ITemplateDataContext
 
-from any_data_name_item \
+from .any_data_name_item \
     import AnyDataNameItem
 
-from helper \
+from .helper \
     import parse_name, path_for
 
 #-------------------------------------------------------------------------------

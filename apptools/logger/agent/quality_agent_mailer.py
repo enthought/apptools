@@ -13,11 +13,13 @@
 #------------------------------------------------------------------------------
 
 # Standard library imports.
+from __future__ import absolute_import
 import logging
 import os
 
 # Enthought library imports.
 from traits.util.home_directory import get_home_directory
+import six
 
 
 # Setup a logger for this module.
@@ -88,7 +90,7 @@ def create_email_message(fromaddr, toaddrs, ccaddrs, subject, priority,
         """
         try:
             entries = []
-            for key, value in os.environ.iteritems():
+            for key, value in six.iteritems(os.environ):
                 entries.append('%30s : %s\n' % (key, value))
 
             ctype = 'application/octet-stream'

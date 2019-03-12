@@ -11,6 +11,7 @@
 """
 
 # Standard library imports.
+from __future__ import absolute_import
 import unittest
 import logging
 
@@ -211,9 +212,9 @@ class UpdaterTestCase(unittest.TestCase):
         self.assertEqual(1, len(self.registry.state_functions))
         self.assertEqual(1, len(self.registry.version_attribute_map))
         self.assertEqual(1, len(self.registry._state_function_classes))
-        self._validate_class_map_contents(updater.class_map.items())
+        self._validate_class_map_contents(list(updater.class_map.items()))
         counts = {('foo', 'Foo'): 1}
-        self._validate_state_function_contents(updater.state_functions.items(),
+        self._validate_state_function_contents(list(updater.state_functions.items()),
             counts)
 
         # Merge in a second updater and validate the state of the registry is
@@ -238,8 +239,8 @@ class UpdaterTestCase(unittest.TestCase):
         self.assertEqual(2, len(self.registry.state_functions))
         self.assertEqual(2, len(self.registry.version_attribute_map))
         self.assertEqual(1, len(self.registry._state_function_classes))
-        self._validate_class_map_contents(updater.class_map.items() + \
-            updater2.class_map.items())
+        self._validate_class_map_contents(list(updater.class_map.items()) + \
+            list(updater2.class_map.items()))
         counts = {('foo', 'Foo'): 3}
         self._validate_state_function_contents(
             [ (('foo', 'Foo', 1), [fn1, fn2]), (('foo', 'Foo', 2), [fn2]) ],
@@ -291,11 +292,11 @@ class UpdaterTestCase(unittest.TestCase):
         self.assertEqual(1, len(self.registry.state_functions))
         self.assertEqual(0, len(self.registry.version_attribute_map))
         self.assertEqual(1, len(self.registry._state_function_classes))
-        self.assertEqual(key, self.registry.state_functions.keys()[0])
+        self.assertEqual(key, list(self.registry.state_functions.keys())[0])
         self.assertEqual(value, self.registry.state_functions[key])
         classes_key = (key[0], key[1])
         self.assertEqual(classes_key,
-            self.registry._state_function_classes.keys()[0])
+            list(self.registry._state_function_classes.keys())[0])
         self.assertEqual(len(value),
             self.registry._state_function_classes[classes_key])
 

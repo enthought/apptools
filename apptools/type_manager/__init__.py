@@ -6,4 +6,4 @@
     hooks for methods and functions. Part of the AppTools project of the
     Enthought Tool Suite.
 """
-from api import *
+from .api import *

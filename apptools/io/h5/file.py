@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from collections import Mapping, MutableMapping
 from functools import partial
 
@@ -6,6 +7,7 @@ import tables
 
 from .dict_node import H5DictNode
 from .table_node import H5TableNode
+import six
 
 
 def get_atom(dtype):
@@ -423,15 +425,15 @@ class H5Group(Mapping):
 
     @property
     def children_names(self):
-        return self._h5_group._v_children.keys()
+        return list(self._h5_group._v_children.keys())
 
     @property
     def subgroup_names(self):
-        return self._h5_group._v_groups.keys()
+        return list(self._h5_group._v_groups.keys())
 
     def iter_groups(self):
         """ Iterate over `H5Group` nodes that are children of this group. """
-        return (_wrap_node(g) for g in self._h5_group._v_groups.itervalues())
+        return (_wrap_node(g) for g in six.itervalues(self._h5_group._v_groups))
 
     @h5_group_wrapper(H5File.create_group)
     def create_group(self, group_subpath, delete_existing=False, **kwargs):

@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 import os
 from contextlib import closing
 
@@ -9,6 +10,8 @@ from ..file import H5File
 from ..dict_node import H5DictNode
 from ..table_node import H5TableNode
 from .utils import open_h5file, temp_h5_file
+from six.moves import map
+from six.moves import zip
 
 
 H5_TEST_FILE = '_temp_test_filt.h5'
@@ -509,15 +512,15 @@ def test_attribute_iteration_methods():
         attrs['count'] = 42
         attrs['alpha'] = 0xff
 
-        items = attrs.items()
+        items = list(attrs.items())
 
         assert all(isinstance(x, tuple) for x in items)
 
         # unfold the pairs
-        keys, vals = map(list, zip(*items))
+        keys, vals = list(map(list, list(zip(*items))))
 
-        assert keys == attrs.keys()
-        assert vals == attrs.values()
+        assert keys == list(attrs.keys())
+        assert vals == list(attrs.values())
 
         # Check that __iter__ is consistent
         assert keys == list(iter(attrs))

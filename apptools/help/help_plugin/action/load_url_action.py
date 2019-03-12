@@ -11,7 +11,7 @@
 # Thanks for using Enthought open source!
 
 # Enthought library imports.
-from doc_action import DocAction
+from .doc_action import DocAction
 
 # This module's parent package.
 PARENT = '.'.join(__name__.split('.')[:-2])

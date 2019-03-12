@@ -13,6 +13,7 @@ It assumes that the Workbench plugin is being used.
 # Thanks for using Enthought open source!
 
 # Standard library imports.
+from __future__ import absolute_import
 import logging
 import new
 
@@ -22,10 +23,10 @@ from envisage.ui.action.api import ActionSet, Group, Menu
 from traits.api import Instance, List, Str
 
 # Local imports
-from help_code import HelpCode
-from help_doc import HelpDoc
-from i_help_code import IHelpCode
-from i_help_doc import IHelpDoc
+from .help_code import HelpCode
+from .help_doc import HelpDoc
+from .i_help_code import IHelpCode
+from .i_help_doc import IHelpDoc
 
 # Logging.
 logger = logging.getLogger(__name__)

@@ -15,10 +15,11 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from traits.api import Any, Dict, Instance, Property, Str
 
 # Local imports.
-from context import Context
+from .context import Context
 
 
 class ContextAdapter(Context):

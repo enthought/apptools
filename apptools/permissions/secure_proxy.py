@@ -14,21 +14,22 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from traits.etsconfig.api import ETSConfig
 from traitsui.api import Handler
 
 # Local imports.
-from adapter_base import AdapterBase
-from package_globals import get_permissions_manager
+from .adapter_base import AdapterBase
+from .package_globals import get_permissions_manager
 
 
 # Register the bundled adapters.
-from adapters import pyface_action
+from .adapters import pyface_action
 
 if ETSConfig.toolkit == 'wx':
-    from adapters import wx_window
+    from .adapters import wx_window
 elif ETSConfig.toolkit == 'qt4':
-    from adapters import qt4_widget
+    from .adapters import qt4_widget
 
 
 class SecureProxy(object):

@@ -15,8 +15,9 @@
 
 
 # Local imports.
-from object_factory import ObjectFactory
-from reference import Reference
+from __future__ import absolute_import
+from .object_factory import ObjectFactory
+from .reference import Reference
 
 
 class PyObjectFactory(ObjectFactory):

@@ -15,6 +15,7 @@
 
 
 # Standard library imports.
+from __future__ import absolute_import
 import logging
 from traceback import print_exc
 from os.path import splitext
@@ -59,7 +60,7 @@ class ObjectSerializer(HasTraits):
                  obj = sweet_pickle.load(f)
 #                obj = cPickle.load(f)
 #                obj = pickle.load(f)
-            except Exception, ex:
+            except Exception as ex:
                 print_exc()
                 logger.exception( "Failed to load pickle file: %s, %s" % (path, ex))
 
@@ -89,7 +90,7 @@ class ObjectSerializer(HasTraits):
             sweet_pickle.dump(obj, f, 1)
 #            cPickle.dump(obj, f, 1)
 #            pickle.dump(obj, f, 1)
-        except Exception, ex:
+        except Exception as ex:
             logger.exception( "Failed to pickle into file: %s, %s, object:%s"
                 % (path, ex, obj))
             print_exc()

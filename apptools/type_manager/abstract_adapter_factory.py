@@ -1,13 +1,14 @@
 """ Abstract base class for all adapter factories. """
 
 # Standard library imports.
+from __future__ import absolute_import
 import logging
 
 # Enthought library imports.
 from traits.api import Delegate, HasTraits, Instance
 
 # Local imports.
-from adapter_manager import AdapterManager
+from .adapter_manager import AdapterManager
 
 
 logger = logging.getLogger(__name__)

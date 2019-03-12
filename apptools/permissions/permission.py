@@ -14,10 +14,11 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from traits.api import Bool, HasTraits, Property, Str, Unicode
 
 # Locals imports.
-from package_globals import get_permissions_manager
+from .package_globals import get_permissions_manager
 
 
 class Permission(HasTraits):

@@ -9,10 +9,12 @@ TODO:
 # Copyright (c) 2008-2015, Enthought, Inc.
 # License: BSD Style.
 
+from __future__ import absolute_import
 import warnings
 import sys
+import six
 PY_VER = sys.version_info[0]
-import __builtin__
+import six.moves.builtins
 
 from traits.api import (HasTraits, List, Str, Dict, Bool,
         Unicode, Property, Int, Instance)
@@ -221,9 +223,9 @@ class Recorder(HasTraits):
             # Always ignore these.
             ignore.extend(['trait_added', 'trait_modified'])
 
-            sub_recordables = object.traits(record=True).keys()
+            sub_recordables = list(object.traits(record=True).keys())
             # Find all the trait names we must ignore.
-            ignore.extend(object.traits(record=False).keys())
+            ignore.extend(list(object.traits(record=False).keys()))
             # The traits to listen for.
             tnames = [t for t in object.trait_names()
                       if not t.startswith('_') and not t.endswith('_') \
@@ -376,7 +378,7 @@ class Recorder(HasTraits):
         if PY_VER == 3:
             file.write(self.get_code())
         else:
-            file.write(unicode(self.get_code(), encoding='utf-8'))
+            file.write(six.text_type(self.get_code(), encoding='utf-8'))
         file.flush()
 
     def record_function(self, func, args, kw):
@@ -429,7 +431,7 @@ class Recorder(HasTraits):
         # First unregister any registered objects.
         registry = self._registry
         while len(registry) > 0:
-            self.unregister(registry.keys()[0])
+            self.unregister(list(registry.keys())[0])
         # Clear the various lists.
         self.lines[:] = []
         self._registry.clear()
@@ -503,7 +505,7 @@ class Recorder(HasTraits):
         nm = self._name_map
         result = ''
         builtin = False
-        if cname in __builtin__.__dict__:
+        if cname in six.moves.builtins.__dict__:
             builtin = True
             if hasattr(obj, '__name__'):
                 cname = obj.__name__
@@ -625,7 +627,7 @@ class Recorder(HasTraits):
     def _function_as_string(self, func, args, kw):
         """Return a string representing the function call."""
         func_name = func.__name__
-        func_code = func.func_code
+        func_code = func.__code__
         # Even if func is really a decorated method it never shows up as
         # a bound or unbound method here, so we have to inspect the
         # argument names to figure out if this is a method or function.
@@ -649,7 +651,7 @@ class Recorder(HasTraits):
 
         # Convert the keyword args.
         kwl = ['%s=%s'%(key, self._object_as_string(value))
-               for key, value in kw.iteritems()]
+               for key, value in six.iteritems(kw)]
         argl.extend(kwl)
 
         # Make a string representation of the args, kw.
@@ -691,7 +693,7 @@ class Recorder(HasTraits):
         """Return a string given a returned object from a function.
         """
         result = ''
-        long_type = long if PY_VER == 2 else int
+        long_type = int if PY_VER == 2 else int
         ignore = (float, complex, bool, int, long_type, str)
         if object is not None and type(object) not in ignore:
             # If object is not know, register it.
@@ -710,7 +712,7 @@ class Recorder(HasTraits):
         """
         cname = cls.__name__
         result = ''
-        if cname not in __builtin__.__dict__:
+        if cname not in six.moves.builtins.__dict__:
             mod = cls.__module__
             typename = '%s.%s'%(mod, cname)
             if typename not in self._known_types:

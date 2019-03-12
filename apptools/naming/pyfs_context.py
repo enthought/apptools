@@ -15,7 +15,8 @@
 
 
 # Standard library imports.
-import cPickle, glob, logging, os
+from __future__ import absolute_import
+import six.moves.cPickle, glob, logging, os
 from os.path import join, splitext
 
 # Enthought library imports.
@@ -23,19 +24,19 @@ from apptools.io.api import File
 from traits.api import Any, Dict, Instance, Property, Str
 
 # Local imports.
-from address import Address
-from binding import Binding
-from context import Context
-from dir_context import DirContext
-from exception import NameNotFoundError, NotContextError
-from naming_event import NamingEvent
-from naming_manager import naming_manager
-from object_serializer import ObjectSerializer
-from pyfs_context_factory import PyFSContextFactory
-from pyfs_object_factory import PyFSObjectFactory
-from pyfs_state_factory import PyFSStateFactory
-from reference import Reference
-from referenceable import Referenceable
+from .address import Address
+from .binding import Binding
+from .context import Context
+from .dir_context import DirContext
+from .exception import NameNotFoundError, NotContextError
+from .naming_event import NamingEvent
+from .naming_manager import naming_manager
+from .object_serializer import ObjectSerializer
+from .pyfs_context_factory import PyFSContextFactory
+from .pyfs_object_factory import PyFSObjectFactory
+from .pyfs_state_factory import PyFSStateFactory
+from .reference import Reference
+from .referenceable import Referenceable
 
 
 # Setup a logger for this module.
@@ -443,7 +444,7 @@ class PyFSContext(DirContext, Referenceable):
     def _list_names(self):
         """ Lists the names bound in this context. """
 
-        return self._name_to_filename_map.keys()
+        return list(self._name_to_filename_map.keys())
 
     # fixme: YFI this is not part of the protected 'Context' interface so
     # what is it doing here?
@@ -509,7 +510,7 @@ class PyFSContext(DirContext, Referenceable):
         path = join(self.path, self.ATTRIBUTES_FILE)
 
         f = open(path, 'wb')
-        cPickle.dump(self._attributes, f, 1)
+        six.moves.cPickle.dump(self._attributes, f, 1)
         f.close()
 
         return
@@ -553,7 +554,7 @@ class PyFSContext(DirContext, Referenceable):
         attributes_file = File(join(self.path, self.ATTRIBUTES_FILE))
         if attributes_file.is_file:
             f = open(attributes_file.path, 'rb')
-            attributes = cPickle.load(f)
+            attributes = six.moves.cPickle.load(f)
             f.close()
 
         else:

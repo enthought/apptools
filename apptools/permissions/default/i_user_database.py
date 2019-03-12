@@ -14,10 +14,11 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from traits.api import Bool, Instance, Interface
 
 # Local imports.
-from i_user_storage import IUserStorage
+from .i_user_storage import IUserStorage
 
 
 class IUserDatabase(Interface):

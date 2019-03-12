@@ -21,6 +21,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 from traits.api \
     import HasPrivateTraits, Instance, Property, provides
 
@@ -36,10 +37,10 @@ from apptools.template.itemplate_data_name_item \
 from apptools.template.template_impl \
     import Template
 
-from template_data_context \
+from .template_data_context \
     import TemplateDataContext
 
-from helper \
+from .helper \
     import path_for
 
 #-------------------------------------------------------------------------------

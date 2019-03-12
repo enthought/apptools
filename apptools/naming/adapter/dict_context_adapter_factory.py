@@ -2,10 +2,11 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from apptools.naming.api import ContextAdapterFactory
 
 # Local imports.
-from dict_context_adapter import DictContextAdapter
+from .dict_context_adapter import DictContextAdapter
 
 
 class DictContextAdapterFactory(ContextAdapterFactory):

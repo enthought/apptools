@@ -15,11 +15,13 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
+from __future__ import print_function
 from traits.api import Delegate, Instance, Str
 
 # Local imports.
-from i_preferences_page import IPreferencesPage
-from tree_item import TreeItem
+from .i_preferences_page import IPreferencesPage
+from .tree_item import TreeItem
 
 
 class PreferencesNode(TreeItem):
@@ -91,7 +93,7 @@ class PreferencesNode(TreeItem):
     def dump(self, indent=''):
         """ Pretty-print the node to stdout. """
 
-        print indent, 'Node', str(self)
+        print(indent, 'Node', str(self))
 
         for child in self.children:
             child.dump(indent+'  ')

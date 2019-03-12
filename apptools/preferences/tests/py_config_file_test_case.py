@@ -2,6 +2,7 @@
 
 
 # Standard library imports.
+from __future__ import absolute_import
 import os, tempfile, unittest
 from os.path import join
 
@@ -9,7 +10,7 @@ from os.path import join
 from pkg_resources import resource_filename
 
 # Enthought library imports.
-from py_config_file import PyConfigFile
+from .py_config_file import PyConfigFile
 
 
 # This module's package.

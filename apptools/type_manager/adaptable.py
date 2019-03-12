@@ -2,10 +2,11 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from traits.api import HasTraits, Instance
 
 # Local imports.
-from adapter_manager import AdapterManager
+from .adapter_manager import AdapterManager
 
 
 class Adaptable(HasTraits):

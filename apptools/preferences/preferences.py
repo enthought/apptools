@@ -1,8 +1,8 @@
 """ The default implementation of a node in a preferences hierarchy. """
 
-from __future__ import print_function
-
 # Standard library imports.
+from __future__ import absolute_import
+from __future__ import print_function
 import logging, threading
 
 # Enthought library imports.
@@ -11,6 +11,7 @@ from traits.api import Property, Str, Undefined, provides
 
 # Local imports.
 from .i_preferences import IPreferences
+import six
 
 
 # Logging.
@@ -493,7 +494,7 @@ class Preferences(HasTraits):
         """ Return the preference keys of this node. """
 
         self._lk.acquire()
-        keys = self._preferences.keys()
+        keys = list(self._preferences.keys())
         self._lk.release()
 
         return keys
@@ -515,7 +516,7 @@ class Preferences(HasTraits):
         """ Return the names of the children of this node. """
 
         self._lk.acquire()
-        node_names = self._children.keys()
+        node_names = list(self._children.keys())
         self._lk.release()
 
         return node_names
@@ -546,7 +547,7 @@ class Preferences(HasTraits):
         # everything must be unicode encoded so that ConfigObj configuration
         # can properly serialize the data. Python str are supposed to be ASCII
         # encoded.
-        value = unicode(value)
+        value = six.text_type(value)
 
         self._lk.acquire()
         old = self._preferences.get(key)
@@ -575,7 +576,7 @@ class Preferences(HasTraits):
         if indent == '':
             print()
 
-        print(indent, 'Node(%s)' % self.name, self._preferences)
+        print((indent, 'Node(%s)' % self.name, self._preferences))
         indent += '  '
 
         for child in self._children.values():

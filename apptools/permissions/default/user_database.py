@@ -14,6 +14,7 @@
 
 
 # Standard library imports.
+from __future__ import absolute_import
 import os
 
 # Enthought library imports.
@@ -25,9 +26,9 @@ from traitsui.menu import Action, OKCancelButtons
 
 # Local imports.
 from apptools.permissions.i_user import IUser
-from i_user_database import IUserDatabase
-from i_user_storage import IUserStorage, UserStorageError
-from select_user import select_user
+from .i_user_database import IUserDatabase
+from .i_user_storage import IUserStorage, UserStorageError
+from .select_user import select_user
 
 
 @provides(IUser)
@@ -312,7 +313,7 @@ class UserDatabase(HasTraits):
         try:
             name, description, blob = self.user_storage.authenticate_user(
                     lu.name.strip(), lu.password)
-        except UserStorageError, e:
+        except UserStorageError as e:
             self._us_error(e)
             return False
 
@@ -349,7 +350,7 @@ class UserDatabase(HasTraits):
         # Update the password in the database.
         try:
             self.user_storage.update_password(name, np.new_password)
-        except UserStorageError, e:
+        except UserStorageError as e:
             self._us_error(e)
 
     def add_user(self):
@@ -365,7 +366,7 @@ class UserDatabase(HasTraits):
             try:
                 self.user_storage.add_user(vuac.name.strip(), vuac.description,
                         vuac.password)
-            except UserStorageError, e:
+            except UserStorageError as e:
                 self._us_error(e)
 
     def modify_user(self):
@@ -381,7 +382,7 @@ class UserDatabase(HasTraits):
             try:
                 self.user_storage.modify_user(vuac.name.strip(),
                         vuac.description, vuac.password)
-            except UserStorageError, e:
+            except UserStorageError as e:
                 self._us_error(e)
 
     def delete_user(self):
@@ -400,7 +401,7 @@ class UserDatabase(HasTraits):
                 # Delete the data from the database.
                 try:
                     self.user_storage.delete_user(name)
-                except UserStorageError, e:
+                except UserStorageError as e:
                     self._us_error(e)
 
     def matching_user(self, name):
@@ -463,7 +464,7 @@ class UserDatabase(HasTraits):
         if not self._updating_blob_internally:
             try:
                 self.user_storage.update_blob(user.name, user.blob)
-            except UserStorageError, e:
+            except UserStorageError as e:
                 self._us_error(e)
 
     ###########################################################################
@@ -477,7 +478,7 @@ class UserDatabase(HasTraits):
         # Get all users that satisfy the criteria.
         try:
             users = self.user_storage.matching_users(name)
-        except UserStorageError, e:
+        except UserStorageError as e:
             self._us_error(e)
             return '', ''
 

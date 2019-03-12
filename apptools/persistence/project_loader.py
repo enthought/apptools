@@ -1,5 +1,6 @@
 
 # Standard library imports
+from __future__ import absolute_import
 import sys
 import pickle
 import logging
@@ -26,7 +27,7 @@ def load_project(pickle_filename, updater_path, application_version, protocol,
     project_version = metadata.get('version', False)
 
     if not project_version:
-        raise ValueError, "Could not read version number from the project file"
+        raise ValueError("Could not read version number from the project file")
 
     logger.debug('Project version: %d, Application version: %d' %
                 (project_version, application_version))

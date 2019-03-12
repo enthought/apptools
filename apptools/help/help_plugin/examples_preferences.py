@@ -11,6 +11,7 @@
 # Thanks for using Enthought open source!
 
 
+from __future__ import absolute_import
 from apptools.preferences.api import PreferencesHelper
 from traits.api import Either, Enum, File, Str, provides
 

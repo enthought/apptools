@@ -23,6 +23,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 from traits.api \
     import HasPrivateTraits, Instance, Property, provides, on_trait_change
 
@@ -35,8 +36,9 @@ from apptools.template.itemplate_data_name_item \
 from apptools.template.template_impl \
     import Template
 
-from template_data_context \
+from .template_data_context \
     import TemplateDataContext
+from six.moves import filter
 
 #-------------------------------------------------------------------------------
 #  'AnyContextDataNameItem' class:
@@ -122,13 +124,13 @@ class AnyContextDataNameItem ( Template ):
             filter = self.filter
             gdc    = input_context.get_data_context
             for name in input_context.data_contexts:
-                if filter( name, gdc( name ) ):
+                if list(filter( name, gdc( name ) )):
                     contexts[ name ] = context
 
             # If the result set is not empty, create an output context for it:
             n = len( contexts )
             if n == 1:
-                output_context = values.values()[0]
+                output_context = list(values.values())[0]
             elif n > 1:
                 output_context = TemplateDataContext(
                     data_context_path = input_context.data_context_path,

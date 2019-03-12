@@ -2,11 +2,12 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from apptools.naming.api import ContextAdapterFactory
 from traits.api import Str, TraitList
 
 # Local imports.
-from trait_list_context_adapter import TraitListContextAdapter
+from .trait_list_context_adapter import TraitListContextAdapter
 
 
 class TraitListContextAdapterFactory(ContextAdapterFactory):

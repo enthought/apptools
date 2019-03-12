@@ -15,13 +15,15 @@
 
 
 # Standard library imports.
+from __future__ import absolute_import
+from __future__ import print_function
 import logging, inspect, os
 
 # Local imports.
 #
 # fixme: This module was just copied over from 'envisage.core' (so
 # that we don't rely on Envisage here!). Where should this module go?
-from util import get_module_name
+from .util import get_module_name
 
 
 class FilteringHandler(logging.Handler):
@@ -99,7 +101,7 @@ class FilteringHandler(logging.Handler):
     def filtered_emit(self, record):
         """ Emits a log record if it has not been filtered. """
 
-        print record.getMessage()
+        print(record.getMessage())
 
         return
 

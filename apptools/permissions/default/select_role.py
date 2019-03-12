@@ -14,6 +14,7 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from traits.api import HasTraits, Instance, List, Unicode
 from traitsui.api import Item, TableEditor, View
 from traitsui.menu import OKCancelButtons

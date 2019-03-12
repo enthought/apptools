@@ -19,6 +19,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 from traits.api \
     import HasPrivateTraits, Instance, Int, List, Property, Delegate, \
            cached_property
@@ -29,14 +30,15 @@ from traitsui.api \
 from traitsui.table_column \
     import ObjectColumn
 
-from template_data_name \
+from .template_data_name \
     import TemplateDataName
 
-from itemplate_data_context \
+from .itemplate_data_context \
     import ITemplateDataContext
 
-from template_choice \
+from .template_choice \
     import TemplateChoice
+from six.moves import range
 
 #-------------------------------------------------------------------------------
 #  Table editor support for editing a list of TemplateDataName objects:

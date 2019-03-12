@@ -14,11 +14,12 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from pyface.action.api import Action
 from traits.api import Bool, Event, Instance, Interface, List
 
 # Local imports.
-from i_user import IUser
+from .i_user import IUser
 
 
 class IUserManager(Interface):

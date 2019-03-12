@@ -11,4 +11,4 @@
 # Author: Enthought, Inc.
 # Description: <Enthought IO package component>
 #------------------------------------------------------------------------------
-from file import File
+from .file import File

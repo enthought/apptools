@@ -11,10 +11,11 @@
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
 #------------------------------------------------------------------------------
-from context_monitor import ContextMonitor
-from context_node_type import ContextNodeType
-from explorer import Explorer, explore
-from naming_node_manager import NamingNodeManager
-from naming_tree import NamingTree
-from naming_tree_model import NamingTreeModel
-from object_node_type import ObjectNodeType
+from __future__ import absolute_import
+from .context_monitor import ContextMonitor
+from .context_node_type import ContextNodeType
+from .explorer import Explorer, explore
+from .naming_node_manager import NamingNodeManager
+from .naming_tree import NamingTree
+from .naming_tree_model import NamingTreeModel
+from .object_node_type import ObjectNodeType

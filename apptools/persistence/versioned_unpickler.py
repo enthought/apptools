@@ -1,4 +1,5 @@
 # Standard library imports
+from __future__ import absolute_import
 from pickle import *
 import sys, new
 import logging
@@ -72,7 +73,7 @@ class NewUnpickler(Unpickler):
                 raise UnpicklingError(msg)
             for o, g in generators[:]:
                 try:
-                    g.next()
+                    next(g)
                 except StopIteration:
                     generators.remove((o, g))
 

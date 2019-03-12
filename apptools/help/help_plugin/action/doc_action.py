@@ -12,6 +12,7 @@
 
 
 # Standard library imports.
+from __future__ import absolute_import
 import logging
 from os.path import isabs, join, normpath
 from subprocess import Popen
@@ -26,7 +27,7 @@ from pyface.api import ImageResource
 from apptools.help.help_plugin.api import HelpDoc
 
 # Local imports
-from util import get_sys_prefix_relative_filename
+from .util import get_sys_prefix_relative_filename
 
 # Logging.
 logger = logging.getLogger(__name__)
@@ -100,7 +101,7 @@ class DocAction(WorkbenchAction):
                 import webbrowser
                 try:
                     webbrowser.open(filename)
-                except (OSError, webbrowser.Error), msg:
+                except (OSError, webbrowser.Error) as msg:
                     logger.error('Could not open page in browser for '+ \
                         'Document "%s":\n\n' % self.my_help_doc.label + \
                         str(msg) + '\n\nTry changing Dcoument Preferences.')
@@ -108,7 +109,7 @@ class DocAction(WorkbenchAction):
                 # Run the viewer, passing it the filename
                 try:
                     Popen([self.my_help_doc.viewer, filename])
-                except OSError, msg:
+                except OSError as msg:
                     logger.error('Could not execute program for Document' + \
                         ' "%s":\n\n ' % self.my_help_doc.label + str(msg) + \
                         '\n\nTry changing Document Preferences.')

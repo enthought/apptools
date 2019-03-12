@@ -20,6 +20,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 from traits.api \
     import Adapter, Str, List, adapts
 
@@ -32,7 +33,7 @@ from codetools.contexts.api \
 from apptools.template.itemplate_data_context \
     import ITemplateDataContext, ITemplateDataContextError
 
-from helper \
+from .helper \
     import path_for
 
 #-------------------------------------------------------------------------------
@@ -84,7 +85,7 @@ class IContextAdapter ( Adapter ):
 
             raise ITemplateDataContextError(
                       "No value named '%s' found." % name )
-        except Exception, excp:
+        except Exception as excp:
             raise ITemplateDataContextError( str( excp ) )
 
     def get_data_context ( self, name ):
@@ -113,7 +114,7 @@ class IContextAdapter ( Adapter ):
 
             raise ITemplateDataContextError(
                       "No context named '%s' found." % name )
-        except Exception, excp:
+        except Exception as excp:
             raise ITemplateDataContextError( str( excp ) )
 
     #-- Traits Event Handlers --------------------------------------------------

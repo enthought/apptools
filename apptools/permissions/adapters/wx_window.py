@@ -14,6 +14,7 @@
 
 
 # Major library imports.
+from __future__ import absolute_import
 import wx
 
 # Enthought library imports.

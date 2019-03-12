@@ -14,6 +14,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 import sys
 
 from traits.api \
@@ -27,6 +28,7 @@ from traitsui.api \
 
 from apptools.naming.api \
     import Binding
+import six
 
 
 #-------------------------------------------------------------------------------
@@ -57,11 +59,11 @@ class NamingTraitHandler ( TraitHandler ):
         self.module  = module
         self.aClass  = aClass
         if (aClass is not None) \
-            and (not isinstance( aClass, ( basestring, type ) )):
+            and (not isinstance( aClass, ( six.string_types, type ) )):
             self.aClass = aClass.__class__
 
     def validate ( self, object, name, value ):
-        if isinstance( value, basestring ):
+        if isinstance( value, six.string_types ):
             if value == '':
                 if self.or_none:
                     return ''
@@ -72,7 +74,7 @@ class NamingTraitHandler ( TraitHandler ):
             except:
                 self.validate_failed( object, name, value )
 
-        if isinstance(self.aClass, basestring):
+        if isinstance(self.aClass, six.string_types):
             self.resolve_class( object, name, value )
 
         if (isinstance( value, Binding ) and

@@ -13,6 +13,7 @@
 # Author: Enthought, Inc.
 # -----------------------------------------------------------------------------
 
+from __future__ import absolute_import
 from threading import RLock
 
 try:
@@ -88,7 +89,7 @@ class LRUCache(HasStrictTraits):
             if dropped and self.cache_drop_callback is not None:
                 self.cache_drop_callback(*dropped)
         finally:
-            self.updated = self.keys()
+            self.updated = list(self.keys())
 
     def get(self, key, default=None):
         try:
@@ -98,15 +99,15 @@ class LRUCache(HasStrictTraits):
 
     def items(self):
         with self._lock:
-            return self._cache.items()
+            return list(self._cache.items())
 
     def keys(self):
         with self._lock:
-            return self._cache.keys()
+            return list(self._cache.keys())
 
     def values(self):
         with self._lock:
-            return self._cache.values()
+            return list(self._cache.values())
 
     def clear(self):
         with self._lock:

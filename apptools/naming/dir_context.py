@@ -15,11 +15,12 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from traits.api import Dict
 
 # Local imports.
-from context import Context
-from exception import NameNotFoundError, NotContextError
+from .context import Context
+from .exception import NameNotFoundError, NotContextError
 
 
 class DirContext(Context):

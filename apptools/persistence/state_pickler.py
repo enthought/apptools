@@ -98,6 +98,7 @@ Notes
 # License: BSD Style.
 
 # Standard library imports.
+from __future__ import absolute_import
 import base64
 import sys
 import types
@@ -110,6 +111,9 @@ import numpy
 # Local imports.
 from . import version_registry
 from .file_path import FilePath
+import six
+from six.moves import range
+from six.moves import zip
 
 PY_VER = sys.version_info[0]
 NumpyArrayType = type(numpy.array([]))
@@ -269,8 +273,8 @@ class StatePickler:
                     State: self._do_state,
                     }
         if PY_VER == 2:
-            type_map[long] = self._do_basic_type
-            type_map[unicode] = self._do_basic_type
+            type_map[int] = self._do_basic_type
+            type_map[six.text_type] = self._do_basic_type
         self.type_map = type_map
 
     def dump(self, value, file):
@@ -440,7 +444,7 @@ class StatePickler:
     def _do_dict(self, value):
         idx = self._register(value)
         vals = [self._do(x) for x in value.values()]
-        data = dict(zip(value.keys(), vals))
+        data = dict(list(zip(list(value.keys()), vals)))
         return dict(type='dict', id=idx, data=data)
 
     def _do_numeric(self, value):

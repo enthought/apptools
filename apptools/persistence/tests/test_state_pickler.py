@@ -5,6 +5,7 @@
 # Copyright (c) 2005-2015, Enthought, Inc.
 # License: BSD Style.
 
+from __future__ import absolute_import
 import base64
 import unittest
 import math
@@ -15,6 +16,7 @@ import numpy
 
 from traits.api import Bool, Int, Long, Array, Float, Complex, Any, \
     Str, Unicode, Instance, Tuple, List, Dict, HasTraits
+from six.moves import range
 
 try:
     from tvtk.api import tvtk

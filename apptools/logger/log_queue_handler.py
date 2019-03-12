@@ -13,10 +13,11 @@
 #------------------------------------------------------------------------------
 
 # Standard library imports.
+from __future__ import absolute_import
 from logging import Handler
 
 # Local imports.
-from ring_buffer import RingBuffer
+from .ring_buffer import RingBuffer
 
 
 class LogQueueHandler(Handler):
@@ -46,7 +47,7 @@ class LogQueueHandler(Handler):
         if self._view is not None:
             try:
                 self._view.update()
-            except Exception, e:
+            except Exception as e:
                 pass
         self.dirty = True
         return
@@ -57,7 +58,7 @@ class LogQueueHandler(Handler):
 
         try:
             result = self.ring.get()
-        except Exception, msg:
+        except Exception as msg:
             # we did our best and it won't cause too much damage
             # to just return a bogus message
             result = []
@@ -75,7 +76,7 @@ class LogQueueHandler(Handler):
         if self._view is not None:
             try:
                 self._view.update()
-            except Exception, e:
+            except Exception as e:
                 pass
         self.dirty = True
         return

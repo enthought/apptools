@@ -106,7 +106,8 @@
 ##############################################################################
 
 # Expose our custom pickler as the standard Unpickler
-from versioned_unpickler import VersionedUnpickler as Unpickler
+from __future__ import absolute_import
+from .versioned_unpickler import VersionedUnpickler as Unpickler
 
 # Use our custom unpickler to load from files
 def load(file, max_pass=-1):
@@ -121,18 +122,18 @@ def loads(str, max_pass=-1):
 
 # We don't customize the Python pickler, though we do use the cPickle module
 # for improved performance.
-from cPickle import Pickler
+from six.moves.cPickle import Pickler
 
 # Implement the dump and dumps methods so that all traits in a HasTraits object
 # get included in the pickle.
 def dump(obj, file, protocol=2):
     _flush_traits(obj)
-    from cPickle import dump as d
+    from six.moves.cPickle import dump as d
     return d(obj, file, protocol)
 
 def dumps(obj, protocol=2):
     _flush_traits(obj)
-    from cPickle import dumps as ds
+    from six.moves.cPickle import dumps as ds
     return ds(obj, protocol)
 
 # We don't customize exceptions so just map to the Python pickle package
@@ -143,14 +144,14 @@ from pickle import PickleError, PicklingError, UnpicklingError
 # Allow retrieval of the global registry
 ##############################################################################
 
-from global_registry import get_global_registry
+from .global_registry import get_global_registry
 
 
 ##############################################################################
 # Expose our Updater class so users can explicitly create their own.
 ##############################################################################
 
-from updater import Updater
+from .updater import Updater
 
 
 ##############################################################################

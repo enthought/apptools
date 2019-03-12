@@ -12,6 +12,7 @@
 # Description: <Enthought logger package component>
 #------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 import logging
 
 from apptools.preferences.ui.api import PreferencesPage

@@ -1,4 +1,5 @@
 # Standard library imports
+from __future__ import absolute_import
 from cStringIO import StringIO
 import logging
 import os
@@ -132,7 +133,7 @@ class LoggerService(HasTraits):
             #server.set_debuglevel(1)
             server.sendmail(fromaddr, toaddrs + ccaddrs, message.as_string())
             server.quit()
-        except Exception, e:
+        except Exception as e:
             logger.exception("Problem sending error report")
 
     #### Traits stuff #########################################################

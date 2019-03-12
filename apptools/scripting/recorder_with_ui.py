@@ -5,6 +5,7 @@ A Recorder subclass that presents a simple user interface.
 # Copyright (c) 2008, Prabhu Ramachandran.
 # License: BSD Style.
 
+from __future__ import absolute_import
 from traits.api import Code, Button, Int, on_trait_change, Any
 from traitsui.api import (View, Item, Group, HGroup, CodeEditor,
                                      spring, Handler)
@@ -69,8 +70,8 @@ class RecorderWithUI(Recorder):
         """Called from the CloseHandler when the UI is closed. This
         method basically stops the recording.
         """
-        from util import stop_recording
-        from package_globals import get_recorder
+        from .util import stop_recording
+        from .package_globals import get_recorder
 
         if get_recorder() is self:
             stop_recording(self.root, save=False)

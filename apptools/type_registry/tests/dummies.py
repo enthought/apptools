@@ -1,4 +1,6 @@
+from __future__ import absolute_import
 import abc
+import six
 
 
 class A(object):
@@ -21,8 +23,8 @@ class Mixed(A, D):
     pass
 
 
-class Abstract(object):
-    __metaclass__ = abc.ABCMeta
+class Abstract(six.with_metaclass(abc.ABCMeta, object)):
+    pass
 
 
 class Concrete(object):

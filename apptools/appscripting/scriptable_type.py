@@ -14,6 +14,7 @@
 
 
 # Standard library imports.
+from __future__ import absolute_import
 import inspect
 import types
 
@@ -21,8 +22,8 @@ import types
 from traits.api import HasTraits
 
 # Local imports.
-from package_globals import get_script_manager
-from scriptable import scriptable, Scriptable
+from .package_globals import get_script_manager
+from .scriptable import scriptable, Scriptable
 
 
 def create_scriptable_type(scripted_type, name=None, bind_policy='auto',
@@ -98,7 +99,7 @@ def create_scriptable_type(scripted_type, name=None, bind_policy='auto',
                 except KeyError:
                     pass
 
-        names = ndict.keys()
+        names = list(ndict.keys())
 
     # Create the type dictionary containing replacements for everything that
     # needs to be scriptable.

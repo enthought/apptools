@@ -15,20 +15,21 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
 from traits.api import Any, Dict, Event, HasTraits, Instance
 from traits.api import Property, Str
 from apptools.type_manager.api import TypeManager
 
 # Local imports.
-from binding import Binding
-from exception import InvalidNameError, NameAlreadyBoundError
-from exception import NameNotFoundError, NotContextError
-from exception import OperationNotSupportedError
-from naming_event import NamingEvent
-from naming_manager import naming_manager
-from object_factory import ObjectFactory
-from state_factory import StateFactory
-from unique_name import make_unique_name
+from .binding import Binding
+from .exception import InvalidNameError, NameAlreadyBoundError
+from .exception import NameNotFoundError, NotContextError
+from .exception import OperationNotSupportedError
+from .naming_event import NamingEvent
+from .naming_manager import naming_manager
+from .object_factory import ObjectFactory
+from .state_factory import StateFactory
+from .unique_name import make_unique_name
 
 
 # Constants for environment property keys.
@@ -698,7 +699,7 @@ class Context(HasTraits):
     def _list_names(self):
         """ Lists the names bound in this context. """
 
-        return self._bindings.keys()
+        return list(self._bindings.keys())
 
     def _is_context(self, name):
         """ Returns True if a name is bound to a context. """

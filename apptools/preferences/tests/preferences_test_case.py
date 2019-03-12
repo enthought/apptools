@@ -2,6 +2,7 @@
 
 
 # Standard library imports.
+from __future__ import absolute_import
 import os, tempfile, unittest
 from os.path import join
 
@@ -164,14 +165,14 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # It should be empty to start with!
-        self.assertEqual([], p.keys())
+        self.assertEqual([], list(p.keys()))
 
         # Set some preferences in the node.
         p.set('a', '1')
         p.set('b', '2')
         p.set('c', '3')
 
-        keys = p.keys()
+        keys = list(p.keys())
         keys.sort()
 
         self.assertEqual(['a', 'b', 'c'], keys)

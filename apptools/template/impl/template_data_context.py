@@ -23,6 +23,7 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 from traits.api\
     import HasPrivateTraits, Dict, Str, Any, Property, provides, \
            cached_property
@@ -69,13 +70,13 @@ class TemplateDataContext ( HasPrivateTraits ):
 
     @cached_property
     def _get_data_context_values ( self ):
-        values = self.values.keys()
+        values = list(self.values.keys())
         values.sort()
         return values
 
     @cached_property
     def _get_data_contexts ( self ):
-        contexts = self.contexts.keys()
+        contexts = list(self.contexts.keys())
         contexts.sort()
         return contexts
 

@@ -1,12 +1,15 @@
 """ A manager for adapter factories. """
 
+from __future__ import absolute_import
+from __future__ import print_function
+import six
 
 # Enthought library imports.
 from traits.api import Dict, HasTraits, Instance, Property
 
 # Local imports.
-from abstract_type_system import AbstractTypeSystem
-from python_type_system import PythonTypeSystem
+from .abstract_type_system import AbstractTypeSystem
+from .python_type_system import PythonTypeSystem
 
 
 class AdapterManager(HasTraits):
@@ -141,7 +144,7 @@ class AdapterManager(HasTraits):
 
         """
 
-        if isinstance(adaptee_class, basestring):
+        if isinstance(adaptee_class, six.string_types):
             adaptee_class_name = adaptee_class
 
         else:
@@ -179,7 +182,7 @@ class AdapterManager(HasTraits):
 
         """
 
-        print 'DEPRECATED: use "register_type_adapters" instead.'
+        print('DEPRECATED: use "register_type_adapters" instead.')
 
         self.register_type_adapters(factory, adaptee_class)
 
@@ -188,7 +191,7 @@ class AdapterManager(HasTraits):
     def unregister_adapters(self, factory):
         """ Unregisters an adapter factory. """
 
-        print 'DEPRECATED: use "unregister_type_adapters" instead.'
+        print('DEPRECATED: use "unregister_type_adapters" instead.')
 
         self.unregister_type_adapters(factory)
 

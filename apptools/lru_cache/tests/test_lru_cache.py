@@ -3,9 +3,12 @@
 
 from __future__ import division, print_function
 
+from __future__ import absolute_import
 from nose.tools import assert_equal
 
 from ..lru_cache import LRUCache
+from six.moves import map
+from six.moves import range
 
 
 def test_cache_callback():
@@ -73,7 +76,7 @@ def test_cache_resize():
 
 def test_cache_items():
     c = LRUCache(2)
-    assert_equal([], c.items())
+    assert_equal([], list(c.items()))
 
     c[0] = str(0)
     c[1] = str(1)
@@ -105,7 +108,7 @@ def test_cache_idempotency():
 
 def test_cache_keys_values():
     c = LRUCache(2)
-    assert_equal([], c.items())
+    assert_equal([], list(c.items()))
 
     c[0] = str(0)
     c[1] = str(1)
@@ -113,7 +116,7 @@ def test_cache_keys_values():
 
     expected = [1, 2]
     assert_equal(expected, sorted(c.keys()))
-    assert_equal(map(str, expected), sorted(c.values()))
+    assert_equal(list(map(str, expected)), sorted(c.values()))
 
 
 def test_cache_clear():
@@ -141,7 +144,7 @@ def test_updated_event():
     c.on_trait_change(lambda x: events.append(x), 'updated')
 
     c[0] = 0
-    print(c.keys())
+    print(list(c.keys()))
     assert_equal(sorted(events), [[0]])
 
     c[1] = 1

@@ -15,11 +15,13 @@
 
 
 # Enthought library imports.
+from __future__ import absolute_import
+from __future__ import print_function
 from apptools.naming.api import Context
 from pyface.tree.api import NodeType
 
 # Local imports.
-from context_monitor import ContextMonitor
+from .context_monitor import ContextMonitor
 
 
 class ContextNodeType(NodeType):
@@ -78,8 +80,8 @@ class ContextNodeType(NodeType):
     def set_text(self, node, text):
         """ Sets the label text for a node. """
 
-        print 'Setting text on', node.name, node.obj
-        print 'Context details', node.obj.name, node.obj.path
+        print('Setting text on', node.name, node.obj)
+        print('Context details', node.obj.name, node.obj.path)
 
         # Do the rename in the naming system.
         node.context.rename(node.name, text)

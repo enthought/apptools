@@ -19,21 +19,23 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from __future__ import absolute_import
 from traits.api \
     import HasPrivateTraits, Instance, Bool, Property, Undefined, \
            on_trait_change, cached_property
 
-from itemplate_data_name_item \
+from .itemplate_data_name_item \
     import ITemplateDataNameItem
 
-from itemplate_data_context \
+from .itemplate_data_context \
     import ITemplateDataContext
 
-from template_impl \
+from .template_impl \
     import Template
 
-from template_traits \
+from .template_traits \
     import TList, TStr, TBool
+from six.moves import range
 
 #-------------------------------------------------------------------------------
 #  'TemplateDataName' interface:

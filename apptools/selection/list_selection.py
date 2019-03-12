@@ -1,6 +1,8 @@
+from __future__ import absolute_import
 from traits.api import HasTraits, List, provides, Str
 
 from apptools.selection.i_selection import IListSelection
+from six.moves import range
 
 
 @provides(IListSelection)
