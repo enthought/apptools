@@ -19,8 +19,6 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from six.moves import range
-
 from traits.api \
     import HasPrivateTraits, Instance, Bool, Property, Undefined, \
            on_trait_change, cached_property

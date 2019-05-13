@@ -110,7 +110,6 @@ import numpy
 # Local imports.
 from . import version_registry
 from .file_path import FilePath
-from six.moves import range, zip
 
 PY_VER = sys.version_info[0]
 NumpyArrayType = type(numpy.array([]))

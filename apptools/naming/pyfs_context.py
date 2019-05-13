@@ -558,7 +558,7 @@ class PyFSContext(DirContext, Referenceable):
         attributes_file = File(join(self.path, self.ATTRIBUTES_FILE))
         if attributes_file.is_file:
             f = open(attributes_file.path, 'rb')
-            attributes = six.moves.cPickle.load(f)
+            attributes = pickle.load(f)
             f.close()
 
         else:

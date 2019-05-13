@@ -3,7 +3,6 @@ from functools import partial
 
 import numpy as np
 import tables
-import six
 
 from .dict_node import H5DictNode
 from .table_node import H5TableNode
@@ -432,7 +431,7 @@ class H5Group(Mapping):
 
     def iter_groups(self):
         """ Iterate over `H5Group` nodes that are children of this group. """
-        return (_wrap_node(g) for g in six.itervalues(self._h5_group._v_groups))
+        return (_wrap_node(g) for g in self._h5_group._v_groups.itervalues())
 
     @h5_group_wrapper(H5File.create_group)
     def create_group(self, group_subpath, delete_existing=False, **kwargs):

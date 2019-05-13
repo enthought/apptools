@@ -15,9 +15,6 @@
 import unittest
 import logging
 
-# Third-party library imports.
-from six.moves import range
-
 # Enthought library imports
 import apptools.sweet_pickle as sweet_pickle
 from apptools.sweet_pickle.global_registry import _clear_global_registry

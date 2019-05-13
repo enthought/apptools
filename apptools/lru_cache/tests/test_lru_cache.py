@@ -4,7 +4,6 @@
 from __future__ import division
 
 from nose.tools import assert_equal
-from six.moves import map, range
 
 from ..lru_cache import LRUCache
 

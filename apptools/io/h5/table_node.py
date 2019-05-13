@@ -2,7 +2,6 @@ import numpy as np
 from pandas import DataFrame
 from tables.table import Table as PyTablesTable
 import six
-from six.moves import zip
 
 
 class _TableRowAccessor(object):

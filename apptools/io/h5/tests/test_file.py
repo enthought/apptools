@@ -3,7 +3,6 @@ from contextlib import closing
 
 import numpy as np
 from numpy import testing
-from six.moves import map, zip
 import tables
 
 from ..file import H5File

@@ -19,8 +19,6 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from six.moves import range
-
 from traits.api \
     import HasPrivateTraits, Instance, Int, List, Property, Delegate, \
            cached_property

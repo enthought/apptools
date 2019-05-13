@@ -1,7 +1,6 @@
 import numpy as np
 from numpy.testing import assert_allclose
 from pandas import DataFrame
-from six.moves import zip
 
 from ..table_node import H5TableNode
 from .utils import temp_h5_file

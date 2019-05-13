@@ -20,8 +20,6 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
-from six.moves import range
-
 from traits.api \
     import Undefined
 

@@ -16,9 +16,6 @@
 import logging
 import os
 
-# Third-party library imports.
-import six
-
 # Enthought library imports.
 from traits.util.home_directory import get_home_directory
 
@@ -91,7 +88,7 @@ def create_email_message(fromaddr, toaddrs, ccaddrs, subject, priority,
         """
         try:
             entries = []
-            for key, value in six.iteritems(os.environ):
+            for key, value in os.environ.items():
                 entries.append('%30s : %s\n' % (key, value))
 
             ctype = 'application/octet-stream'
