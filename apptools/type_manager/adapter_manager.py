@@ -1,6 +1,9 @@
 """ A manager for adapter factories. """
 
-from __future__ import print_function
+# Standard library imports
+import warnings
+
+# Third-party imports
 import six
 
 # Enthought library imports.
@@ -181,7 +184,10 @@ class AdapterManager(HasTraits):
 
         """
 
-        print('DEPRECATED: use "register_type_adapters" instead.')
+        warnings.warn(
+            'Use "register_type_adapters" instead.',
+            DeprecationWarning
+        )
 
         self.register_type_adapters(factory, adaptee_class)
 
@@ -190,7 +196,10 @@ class AdapterManager(HasTraits):
     def unregister_adapters(self, factory):
         """ Unregisters an adapter factory. """
 
-        print('DEPRECATED: use "unregister_type_adapters" instead.')
+        warnings.warn(
+            'use "unregister_type_adapters" instead.',
+            DeprecationWarning
+        )
 
         self.unregister_type_adapters(factory)
 
