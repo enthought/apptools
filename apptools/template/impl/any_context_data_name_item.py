@@ -37,7 +37,6 @@ from apptools.template.template_impl \
 
 from .template_data_context \
     import TemplateDataContext
-from six.moves import filter
 
 #-------------------------------------------------------------------------------
 #  'AnyContextDataNameItem' class:
@@ -123,7 +122,7 @@ class AnyContextDataNameItem ( Template ):
             filter = self.filter
             gdc    = input_context.get_data_context
             for name in input_context.data_contexts:
-                if list(filter( name, gdc( name ) )):
+                if filter( name, gdc( name ) ):
                     contexts[ name ] = context
 
             # If the result set is not empty, create an output context for it:

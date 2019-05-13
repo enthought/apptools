@@ -15,8 +15,13 @@
 
 
 # Standard library imports.
-import six.moves.cPickle, glob, logging, os
+import glob
+import logging
+import os
 from os.path import join, splitext
+
+# Third-party library imports.
+import six.moves.cPickle as pickle
 
 # Enthought library imports.
 from apptools.io.api import File
@@ -509,7 +514,7 @@ class PyFSContext(DirContext, Referenceable):
         path = join(self.path, self.ATTRIBUTES_FILE)
 
         f = open(path, 'wb')
-        six.moves.cPickle.dump(self._attributes, f, 1)
+        pickle.dump(self._attributes, f, 1)
         f.close()
 
         return

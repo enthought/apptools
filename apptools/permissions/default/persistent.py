@@ -14,9 +14,11 @@
 
 
 # Standard library imports.
-import six.moves.cPickle as pickle
 import errno
 import os
+
+# Third-party imports.
+import six.moves.cPickle as pickle
 
 # Enthought library imports.
 from traits.etsconfig.api import ETSConfig

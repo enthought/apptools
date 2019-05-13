@@ -1,10 +1,10 @@
 import numpy as np
 from numpy.testing import raises, assert_allclose
+import six
+from six.moves import zip
 
 from ..dict_node import H5DictNode
 from .utils import open_h5file, temp_h5_file, temp_file
-import six
-from six.moves import zip
 
 
 NODE = '/dict_node'

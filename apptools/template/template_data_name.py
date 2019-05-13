@@ -19,6 +19,8 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from six.moves import range
+
 from traits.api \
     import HasPrivateTraits, Instance, Bool, Property, Undefined, \
            on_trait_change, cached_property
@@ -34,7 +36,6 @@ from .template_impl \
 
 from .template_traits \
     import TList, TStr, TBool
-from six.moves import range
 
 #-------------------------------------------------------------------------------
 #  'TemplateDataName' interface:

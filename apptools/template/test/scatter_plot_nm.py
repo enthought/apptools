@@ -20,6 +20,8 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from six.moves import range
+
 from traits.api \
     import Undefined
 
@@ -49,7 +51,6 @@ from .enable_editor \
 
 from .scatter_plot \
     import ScatterPlot
-from six.moves import range
 
 #-------------------------------------------------------------------------------
 #  Trait definitions:

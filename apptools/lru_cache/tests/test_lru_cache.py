@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import division, print_function
+from __future__ import division
 
 from nose.tools import assert_equal
+from six.moves import map, range
 
 from ..lru_cache import LRUCache
-from six.moves import map
-from six.moves import range
 
 
 def test_cache_callback():
@@ -143,7 +142,6 @@ def test_updated_event():
     c.on_trait_change(lambda x: events.append(x), 'updated')
 
     c[0] = 0
-    print(list(c.keys()))
     assert_equal(sorted(events), [[0]])
 
     c[1] = 1

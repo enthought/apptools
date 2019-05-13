@@ -3,10 +3,10 @@ from functools import partial
 
 import numpy as np
 import tables
+import six
 
 from .dict_node import H5DictNode
 from .table_node import H5TableNode
-import six
 
 
 def get_atom(dtype):

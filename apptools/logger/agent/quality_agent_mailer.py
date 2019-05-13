@@ -16,9 +16,11 @@
 import logging
 import os
 
+# Third-party library imports.
+import six
+
 # Enthought library imports.
 from traits.util.home_directory import get_home_directory
-import six
 
 
 # Setup a logger for this module.

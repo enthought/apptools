@@ -3,14 +3,13 @@ from contextlib import closing
 
 import numpy as np
 from numpy import testing
+from six.moves import map, zip
 import tables
 
 from ..file import H5File
 from ..dict_node import H5DictNode
 from ..table_node import H5TableNode
 from .utils import open_h5file, temp_h5_file
-from six.moves import map
-from six.moves import zip
 
 
 H5_TEST_FILE = '_temp_test_filt.h5'

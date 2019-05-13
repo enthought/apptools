@@ -4,14 +4,15 @@
 from __future__ import print_function
 import logging, threading
 
+# Third-party library imports.
+import six
+
 # Enthought library imports.
 from traits.api import Any, Callable, Dict, HasTraits, Instance, List
 from traits.api import Property, Str, Undefined, provides
 
 # Local imports.
 from .i_preferences import IPreferences
-import six
-
 
 # Logging.
 logger = logging.getLogger(__name__)
@@ -575,7 +576,7 @@ class Preferences(HasTraits):
         if indent == '':
             print()
 
-        print((indent, 'Node(%s)' % self.name, self._preferences))
+        print(indent, 'Node(%s)' % self.name, self._preferences)
         indent += '  '
 
         for child in self._children.values():

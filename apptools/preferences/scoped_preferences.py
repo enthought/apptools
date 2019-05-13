@@ -200,7 +200,7 @@ class ScopedPreferences(Preferences):
 
         keys = set()
         for node in nodes:
-            keys.update(list(node.node(path).keys()))
+            keys.update(node.node(path).keys())
 
         return list(keys)
 

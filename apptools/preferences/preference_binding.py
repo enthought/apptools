@@ -5,10 +5,12 @@
 from traits.api import Any, HasTraits, Instance, Str, Undefined
 from traits.api import Unicode
 
+# Third-party librart imports.
+import six
+
 # Local imports.
 from .i_preferences import IPreferences
 from .package_globals import get_default_preferences
-import six
 
 
 class PreferenceBinding(HasTraits):

@@ -18,6 +18,9 @@ import datetime
 import types
 import weakref
 
+# Third-party library imports
+import six
+
 # Enthought library imports.
 from traits.api import Any, Bool, Callable, Dict, Event, HasTraits, \
         implements, Instance, Int, List, Property, Str, Unicode
@@ -28,7 +31,6 @@ from .i_bind_event import IBindEvent
 from .i_script_manager import IScriptManager
 from .lazy_namespace import add_to_namespace, FactoryWrapper, LazyNamespace
 from .scriptable_type import make_object_scriptable
-import six
 
 
 @provides(IScriptManager)

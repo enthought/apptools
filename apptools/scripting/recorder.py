@@ -10,9 +10,8 @@ TODO:
 # License: BSD Style.
 
 import warnings
-import sys
+
 import six
-PY_VER = sys.version_info[0]
 import six.moves.builtins
 
 from traits.api import (HasTraits, List, Str, Dict, Bool,
@@ -374,7 +373,7 @@ class Recorder(HasTraits):
         """Save the recorded lines to the given file.  It does not close
         the file.
         """
-        if PY_VER == 3:
+        if six.PY3:
             file.write(self.get_code())
         else:
             file.write(six.text_type(self.get_code(), encoding='utf-8'))
@@ -692,7 +691,7 @@ class Recorder(HasTraits):
         """Return a string given a returned object from a function.
         """
         result = ''
-        long_type = int if PY_VER == 2 else int
+        long_type = long if six.PY2 else int
         ignore = (float, complex, bool, int, long_type, str)
         if object is not None and type(object) not in ignore:
             # If object is not know, register it.

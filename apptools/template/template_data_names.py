@@ -19,6 +19,8 @@
 #  Imports:
 #-------------------------------------------------------------------------------
 
+from six.moves import range
+
 from traits.api \
     import HasPrivateTraits, Instance, Int, List, Property, Delegate, \
            cached_property
@@ -37,7 +39,6 @@ from .itemplate_data_context \
 
 from .template_choice \
     import TemplateChoice
-from six.moves import range
 
 #-------------------------------------------------------------------------------
 #  Table editor support for editing a list of TemplateDataName objects:
