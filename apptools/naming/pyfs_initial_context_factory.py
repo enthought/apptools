@@ -15,7 +15,6 @@
 
 
 # Local imports.
-from __future__ import absolute_import
 from .context import Context
 from .initial_context_factory import InitialContextFactory
 from .object_serializer import ObjectSerializer

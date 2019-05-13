@@ -15,7 +15,6 @@
 
 
 # Enthought library imports.
-from __future__ import absolute_import
 from apptools.io.api import File
 
 # Local imports.

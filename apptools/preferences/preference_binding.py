@@ -2,7 +2,6 @@
 
 
 # Enthought library imports.
-from __future__ import absolute_import
 from traits.api import Any, HasTraits, Instance, Str, Undefined
 from traits.api import Unicode
 

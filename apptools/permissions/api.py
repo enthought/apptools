@@ -12,7 +12,6 @@
 # Description: <Enthought permissions package component>
 #------------------------------------------------------------------------------
 
-from __future__ import absolute_import
 from .adapter_base import AdapterBase
 from .i_policy_manager import IPolicyManager
 from .i_user import IUser

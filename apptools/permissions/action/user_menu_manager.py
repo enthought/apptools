@@ -14,7 +14,6 @@
 
 
 # Enthought library imports.
-from __future__ import absolute_import
 from pyface.action.api import Group, MenuManager
 from traits.api import Unicode
 

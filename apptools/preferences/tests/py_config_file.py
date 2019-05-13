@@ -1,6 +1,5 @@
 """ A Python based configuration file with hierarchical sections. """
 from __future__ import print_function
-from __future__ import absolute_import
 import six
 
 

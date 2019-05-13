@@ -15,7 +15,6 @@
 
 
 # Standard/built-in imports.
-from __future__ import absolute_import
 import mimetypes, os, shutil, stat
 
 # Enthought library imports.

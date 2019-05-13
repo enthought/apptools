@@ -6,7 +6,6 @@ code remains here because we can reuse the zip utility code in that extensible
 rewrite.
 """
 
-from __future__ import absolute_import
 import logging
 import os.path
 from email import Encoders

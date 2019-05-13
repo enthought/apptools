@@ -17,7 +17,6 @@ state of other objects in the same pickle.
 """
 
 # Standard library imports.
-from __future__ import absolute_import
 import sys
 import logging
 from os import path

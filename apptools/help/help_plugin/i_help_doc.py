@@ -10,7 +10,6 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 
-from __future__ import absolute_import
 from traits.api import Interface, Either, File, Str, Bool
 
 class IHelpDoc(Interface):

@@ -2,7 +2,6 @@
 
 
 # Enthought library imports.
-from __future__ import absolute_import
 from apptools.naming.api import Binding, ContextAdapter, naming_manager
 from traits.api import List, Property
 

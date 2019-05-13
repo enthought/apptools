@@ -1,6 +1,5 @@
 """ A manager for adapter factories. """
 
-from __future__ import absolute_import
 from __future__ import print_function
 import six
 

@@ -14,7 +14,6 @@
 
 
 # Enthought library imports.
-from __future__ import absolute_import
 from pyface.action.api import Action
 from traits.api import Unicode
 

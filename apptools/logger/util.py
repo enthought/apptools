@@ -7,7 +7,6 @@ this go?
 
 
 # Standard library imports.
-from __future__ import absolute_import
 import os
 from os.path import basename, dirname, isdir, splitdrive, splitext
 from zipfile import is_zipfile, ZipFile

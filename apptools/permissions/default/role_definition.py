@@ -14,7 +14,6 @@
 
 
 # Enthought library imports.
-from __future__ import absolute_import
 from pyface.api import confirm, error, YES
 from traits.api import Instance
 from traitsui.api import Group, Handler, Item, SetEditor, View

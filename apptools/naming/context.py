@@ -15,7 +15,6 @@
 
 
 # Enthought library imports.
-from __future__ import absolute_import
 from traits.api import Any, Dict, Event, HasTraits, Instance
 from traits.api import Property, Str
 from apptools.type_manager.api import TypeManager

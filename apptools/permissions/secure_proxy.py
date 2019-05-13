@@ -14,7 +14,6 @@
 
 
 # Enthought library imports.
-from __future__ import absolute_import
 from traits.etsconfig.api import ETSConfig
 from traitsui.api import Handler
 

@@ -2,7 +2,6 @@
 
 
 # Enthought library imports.
-from __future__ import absolute_import
 from traits.api import HasTraits, Instance, List, Property, \
     Any, Bool, Dict
 from traitsui.api import Handler, HSplit, Item, TreeEditor

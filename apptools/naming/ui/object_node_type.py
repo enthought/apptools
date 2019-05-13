@@ -15,7 +15,6 @@
 
 
 # Enthought library imports.
-from __future__ import absolute_import
 from apptools.naming.api import Context
 from pyface.tree.api import NodeType
 

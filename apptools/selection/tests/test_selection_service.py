@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from traits.api import Any, Event, HasTraits, List, provides, Str
 from traits.testing.unittest_tools import unittest
 

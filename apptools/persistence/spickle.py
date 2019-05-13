@@ -15,7 +15,6 @@ NOTE: This module is not likely to work for very complex pickles but
 # Copyright (c) 2006-2015, Prabhu Ramachandran
 # License: BSD Style.
 
-from __future__ import absolute_import
 import sys
 if sys.version_info[0] > 2:
     raise ImportError("This module does not work with Python 3.x")

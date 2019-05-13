@@ -12,7 +12,6 @@
 #
 # -----------------------------------------------------------------------------
 
-from __future__ import absolute_import
 from traits.testing.unittest_tools import unittest
 from contextlib import contextmanager
 from nose.tools import assert_equal

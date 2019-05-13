@@ -12,7 +12,6 @@
 # Description: <Enthought permissions package component>
 #------------------------------------------------------------------------------
 
-from __future__ import absolute_import
 from .i_policy_storage import IPolicyStorage, PolicyStorageError
 from .i_user_database import IUserDatabase
 from .i_user_storage import IUserStorage, UserStorageError

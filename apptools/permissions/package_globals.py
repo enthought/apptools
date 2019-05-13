@@ -14,7 +14,6 @@
 
 
 # The permissions manager.
-from __future__ import absolute_import
 _permissions_manager = None
 
 

@@ -38,7 +38,6 @@
     framework manages the repository.
 """
 
-from __future__ import absolute_import
 try:
     import six.moves._thread as _thread
 except ImportError:

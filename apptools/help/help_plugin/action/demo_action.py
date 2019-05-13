@@ -11,7 +11,6 @@
 # Thanks for using Enthought open source!
 
 # Standard library imports.
-from __future__ import absolute_import
 import logging
 from os.path import isabs, join, normpath
 from subprocess import Popen

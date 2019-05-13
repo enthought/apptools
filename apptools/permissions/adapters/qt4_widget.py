@@ -14,7 +14,6 @@
 
 
 # Major library imports.
-from __future__ import absolute_import
 from pyface.qt import QtGui
 
 # Enthought library imports.

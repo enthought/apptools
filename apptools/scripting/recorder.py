@@ -9,7 +9,6 @@ TODO:
 # Copyright (c) 2008-2015, Enthought, Inc.
 # License: BSD Style.
 
-from __future__ import absolute_import
 import warnings
 import sys
 import six

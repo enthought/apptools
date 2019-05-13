@@ -6,7 +6,6 @@
 # License: BSD Style.
 
 
-from __future__ import absolute_import
 import unittest
 import numpy
 from pickle import dumps

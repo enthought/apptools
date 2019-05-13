@@ -15,7 +15,6 @@
 
 
 # Standard library imports.
-from __future__ import absolute_import
 import six.moves.cPickle, glob, logging, os
 from os.path import join, splitext
 

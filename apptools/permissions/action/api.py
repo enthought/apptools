@@ -12,7 +12,6 @@
 # Description: <Enthought permissions package component>
 #------------------------------------------------------------------------------
 
-from __future__ import absolute_import
 from .login_action import LoginAction
 from .logout_action import LogoutAction
 from .user_menu_manager import UserMenuManager

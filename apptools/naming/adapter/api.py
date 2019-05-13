@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from .dict_context_adapter import DictContextAdapter
 from .dict_context_adapter_factory import DictContextAdapterFactory
 from .instance_context_adapter import InstanceContextAdapter

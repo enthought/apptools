@@ -6,7 +6,6 @@
 # License: BSD Style.
 
 # Standard library imports.
-from __future__ import absolute_import
 import sys
 from imp import reload
 import unittest

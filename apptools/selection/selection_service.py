@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from traits.api import Dict, HasTraits
 
 from apptools.selection.errors import (

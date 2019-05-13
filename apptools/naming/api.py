@@ -11,7 +11,6 @@
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
 #------------------------------------------------------------------------------
-from __future__ import absolute_import
 from .exception import NamingError, InvalidNameError, NameAlreadyBoundError
 from .exception import NameNotFoundError, NotContextError
 from .exception import OperationNotSupportedError

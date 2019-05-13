@@ -15,7 +15,6 @@
 
 
 # Enthought library imports.
-from __future__ import absolute_import
 from apptools.naming.api import Binding, PyContext
 from pyface.api import PythonShell, SplitApplicationWindow
 from traits.api import Float, Instance, Str

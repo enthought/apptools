@@ -2,7 +2,6 @@
 
 
 # Enthought library imports.
-from __future__ import absolute_import
 from apptools.naming.api import ContextAdapterFactory
 from traits.api import List, Str
 from apptools.type_manager import PythonObject

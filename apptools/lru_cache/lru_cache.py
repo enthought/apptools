@@ -13,7 +13,6 @@
 # Author: Enthought, Inc.
 # -----------------------------------------------------------------------------
 
-from __future__ import absolute_import
 from threading import RLock
 
 try:

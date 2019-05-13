@@ -11,7 +11,6 @@
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
 #------------------------------------------------------------------------------
-from __future__ import absolute_import
 from .context_monitor import ContextMonitor
 from .context_node_type import ContextNodeType
 from .explorer import Explorer, explore

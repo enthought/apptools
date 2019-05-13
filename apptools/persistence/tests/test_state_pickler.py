@@ -5,7 +5,6 @@
 # Copyright (c) 2005-2015, Enthought, Inc.
 # License: BSD Style.
 
-from __future__ import absolute_import
 import base64
 import unittest
 import math

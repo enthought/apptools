@@ -41,7 +41,6 @@
 """
 
 # Standardlibrary imports
-from __future__ import absolute_import
 import logging
 
 # Local imports

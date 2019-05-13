@@ -106,7 +106,6 @@
 ##############################################################################
 
 # Expose our custom pickler as the standard Unpickler
-from __future__ import absolute_import
 from .versioned_unpickler import VersionedUnpickler as Unpickler
 
 # Use our custom unpickler to load from files

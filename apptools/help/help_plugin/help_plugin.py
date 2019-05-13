@@ -13,7 +13,6 @@ It assumes that the Workbench plugin is being used.
 # Thanks for using Enthought open source!
 
 # Standard library imports.
-from __future__ import absolute_import
 import logging
 import new
 

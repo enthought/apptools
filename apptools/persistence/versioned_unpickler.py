@@ -1,5 +1,4 @@
 # Standard library imports
-from __future__ import absolute_import
 from pickle import *
 import sys, new
 import logging

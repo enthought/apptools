@@ -5,7 +5,6 @@ A Recorder subclass that presents a simple user interface.
 # Copyright (c) 2008, Prabhu Ramachandran.
 # License: BSD Style.
 
-from __future__ import absolute_import
 from traits.api import Code, Button, Int, on_trait_change, Any
 from traitsui.api import (View, Item, Group, HGroup, CodeEditor,
                                      spring, Handler)
