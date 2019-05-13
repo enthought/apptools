@@ -649,7 +649,7 @@ class Recorder(HasTraits):
 
         # Convert the keyword args.
         kwl = ['%s=%s'%(key, self._object_as_string(value))
-               for key, value in six.iteritems(kw)]
+               for key, value in kw.items()]
         argl.extend(kwl)
 
         # Make a string representation of the args, kw.

@@ -18,9 +18,6 @@ import datetime
 import types
 import weakref
 
-# Third-party library imports
-import six
-
 # Enthought library imports.
 from traits.api import Any, Bool, Callable, Dict, Event, HasTraits, \
         implements, Instance, Int, List, Property, Str, Unicode
@@ -408,7 +405,7 @@ class ScriptManager(HasTraits):
 
         # Initialise the namespace with all explicitly bound objects.
         nspace = LazyNamespace()
-        for name, bo in six.iteritems(self._namespace):
+        for name, bo in self._namespace.items():
             if bo.explicitly_bound:
                 add_to_namespace(bo.obj, name, nspace)
 
@@ -513,7 +510,7 @@ class ScriptManager(HasTraits):
             # Doing this now avoids problems with mutable arguments.
             so.args = [self._scriptable_object_as_string(a) for a in args]
 
-            for n, value in six.iteritems(kwargs):
+            for n, value in kwargs.items():
                 so.kwargs[n] = self._scriptable_object_as_string(value)
 
             so.explicitly_bound = False
@@ -543,7 +540,7 @@ class ScriptManager(HasTraits):
             s = ScriptManager.arg_as_string(arg, so_needed)
             all_args.append(s)
 
-        for name, value in six.iteritems(kwargs):
+        for name, value in kwargs.items():
             s = ScriptManager.arg_as_string(value, so_needed)
             all_args.append('%s=%s' % (name, s))
 
@@ -592,7 +589,7 @@ class ScriptManager(HasTraits):
             nargs = nargs[1:]
 
         nkwargs = {}
-        for name, value in six.iteritems(kwargs):
+        for name, value in kwargs.items():
             nkwargs[name] = self._object_as_string(value)
 
         return _ScriptMethod(name=func.__name__, so=so, args=nargs,
