@@ -273,7 +273,7 @@ class StatePickler:
                     State: self._do_state,
                     }
         if PY_VER == 2:
-            type_map[int] = self._do_basic_type
+            type_map[long] = self._do_basic_type
             type_map[six.text_type] = self._do_basic_type
         self.type_map = type_map
 

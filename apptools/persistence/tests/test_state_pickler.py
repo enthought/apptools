@@ -13,10 +13,15 @@ import os
 import tempfile
 
 import numpy
+import six
 
 from traits.api import Bool, Int, Long, Array, Float, Complex, Any, \
     Str, Unicode, Instance, Tuple, List, Dict, HasTraits
-from six.moves import range
+
+if six.PY2:
+    long_trait_type = Long
+else:
+    long_trait_type = Int
 
 try:
     from tvtk.api import tvtk
@@ -65,7 +70,7 @@ class TestClassic:
 class TestTraits(HasTraits):
     b = Bool(False)
     i = Int(7)
-    l = Int(12345678901234567890)
+    l = long_trait_type(12345678901234567890)
     f = Float(math.pi)
     c = Complex(complex(1.01234, 2.3))
     n = Any
