@@ -69,7 +69,7 @@ class H5DictNode(object):
         return key in self.data
 
     def keys(self):
-        return list(self.data.keys())
+        return self.data.keys()
 
     #--------------------------------------------------------------------------
     #  Public interface
