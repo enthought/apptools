@@ -1,7 +1,7 @@
 import numpy as np
 from pandas import DataFrame
-from tables.table import Table as PyTablesTable
 import six
+from tables.table import Table as PyTablesTable
 
 
 class _TableRowAccessor(object):

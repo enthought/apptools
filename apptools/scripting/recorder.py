@@ -223,7 +223,7 @@ class Recorder(HasTraits):
 
             sub_recordables = list(object.traits(record=True).keys())
             # Find all the trait names we must ignore.
-            ignore.extend(list(object.traits(record=False).keys()))
+            ignore.extend(object.traits(record=False).keys())
             # The traits to listen for.
             tnames = [t for t in object.trait_names()
                       if not t.startswith('_') and not t.endswith('_') \

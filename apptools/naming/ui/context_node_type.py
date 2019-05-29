@@ -13,9 +13,9 @@
 #------------------------------------------------------------------------------
 """ The node type for contexts in a naming system. """
 
+from __future__ import print_function
 
 # Enthought library imports.
-from __future__ import print_function
 from apptools.naming.api import Context
 from pyface.tree.api import NodeType
 

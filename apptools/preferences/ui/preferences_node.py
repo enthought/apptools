@@ -13,9 +13,9 @@
 #------------------------------------------------------------------------------
 """ Abstract base class for a node in a preferences dialog. """
 
+from __future__ import print_function
 
 # Enthought library imports.
-from __future__ import print_function
 from traits.api import Delegate, Instance, Str
 
 # Local imports.

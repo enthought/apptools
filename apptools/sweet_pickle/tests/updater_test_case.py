@@ -238,8 +238,9 @@ class UpdaterTestCase(unittest.TestCase):
         self.assertEqual(2, len(self.registry.state_functions))
         self.assertEqual(2, len(self.registry.version_attribute_map))
         self.assertEqual(1, len(self.registry._state_function_classes))
-        self._validate_class_map_contents(list(updater.class_map.items()) + \
-            list(updater2.class_map.items()))
+        self._validate_class_map_contents(
+            list(updater.class_map.items()) + list(updater2.class_map.items())
+        )
         counts = {('foo', 'Foo'): 3}
         self._validate_state_function_contents(
             [ (('foo', 'Foo', 1), [fn1, fn2]), (('foo', 'Foo', 2), [fn2]) ],

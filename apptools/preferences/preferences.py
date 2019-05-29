@@ -1,7 +1,8 @@
 """ The default implementation of a node in a preferences hierarchy. """
 
-# Standard library imports.
 from __future__ import print_function
+
+# Standard library imports.
 import logging, threading
 
 # Third-party library imports.

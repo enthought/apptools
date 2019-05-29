@@ -16,6 +16,8 @@
 
 import sys
 
+import six
+
 from traits.api \
     import Trait, TraitHandler, TraitFactory
 
@@ -27,7 +29,6 @@ from traitsui.api \
 
 from apptools.naming.api \
     import Binding
-import six
 
 
 #-------------------------------------------------------------------------------

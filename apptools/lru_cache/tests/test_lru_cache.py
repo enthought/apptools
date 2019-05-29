@@ -73,7 +73,7 @@ def test_cache_resize():
 
 def test_cache_items():
     c = LRUCache(2)
-    assert_equal([], list(c.items()))
+    assert_equal([], c.items())
 
     c[0] = str(0)
     c[1] = str(1)
@@ -105,7 +105,7 @@ def test_cache_idempotency():
 
 def test_cache_keys_values():
     c = LRUCache(2)
-    assert_equal([], list(c.items()))
+    assert_equal([], c.items())
 
     c[0] = str(0)
     c[1] = str(1)
@@ -113,7 +113,7 @@ def test_cache_keys_values():
 
     expected = [1, 2]
     assert_equal(expected, sorted(c.keys()))
-    assert_equal(list(map(str, expected)), sorted(c.values()))
+    assert_equal([str(val) for val in expected], sorted(c.values()))
 
 
 def test_cache_clear():
