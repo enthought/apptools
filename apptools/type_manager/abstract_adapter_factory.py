@@ -7,7 +7,7 @@ import logging
 from traits.api import Delegate, HasTraits, Instance
 
 # Local imports.
-from adapter_manager import AdapterManager
+from .adapter_manager import AdapterManager
 
 
 logger = logging.getLogger(__name__)

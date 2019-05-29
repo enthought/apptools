@@ -12,10 +12,11 @@
 #
 # -----------------------------------------------------------------------------
 
-from traits.testing.unittest_tools import unittest
 from contextlib import contextmanager
+
 from nose.tools import assert_equal
 
+from traits.testing.unittest_tools import unittest
 from apptools.undo.api import CommandStack, UndoManager
 from apptools.undo.tests.testing_commands import SimpleCommand, UnnamedCommand
 

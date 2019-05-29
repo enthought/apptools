@@ -72,7 +72,7 @@ class NewUnpickler(Unpickler):
                 raise UnpicklingError(msg)
             for o, g in generators[:]:
                 try:
-                    g.next()
+                    next(g)
                 except StopIteration:
                     generators.remove((o, g))
 

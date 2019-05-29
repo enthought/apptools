@@ -17,7 +17,7 @@
 from traits.api import Bool, Event, Instance, Interface, Unicode
 
 # Local imports.
-from i_bind_event import IBindEvent
+from .i_bind_event import IBindEvent
 
 
 class IScriptManager(Interface):

@@ -12,11 +12,11 @@
 # Description: <Enthought permissions package component>
 #------------------------------------------------------------------------------
 
-from adapter_base import AdapterBase
-from i_policy_manager import IPolicyManager
-from i_user import IUser
-from i_user_manager import IUserManager
-from package_globals import get_permissions_manager, set_permissions_manager
-from permission import ManagePolicyPermission, ManageUsersPermission, Permission
-from permissions_manager import PermissionsManager
-from secure_proxy import SecureHandler, SecureProxy
+from .adapter_base import AdapterBase
+from .i_policy_manager import IPolicyManager
+from .i_user import IUser
+from .i_user_manager import IUserManager
+from .package_globals import get_permissions_manager, set_permissions_manager
+from .permission import ManagePolicyPermission, ManageUsersPermission, Permission
+from .permissions_manager import PermissionsManager
+from .secure_proxy import SecureHandler, SecureProxy

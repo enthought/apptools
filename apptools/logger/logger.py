@@ -22,7 +22,7 @@ from logging.handlers import RotatingFileHandler
 from traits.util.api import deprecated
 
 # Local imports.
-from log_queue_handler import LogQueueHandler
+from .log_queue_handler import LogQueueHandler
 
 
 # The default logging level.

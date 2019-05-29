@@ -15,4 +15,4 @@
     preferences. Part of the AppTools project of the Enthought Tool Suite.
 
 """
-from api import *
+from apptools.naming.api import *

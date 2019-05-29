@@ -18,7 +18,7 @@
 from traits.api \
     import HasPrivateTraits, Str, provides
 
-from itemplate_choice \
+from .itemplate_choice \
     import ITemplateChoice
 
 #-------------------------------------------------------------------------------

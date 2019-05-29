@@ -5,7 +5,7 @@
 from traits.api import Tuple
 
 # Local imports.
-from list_context_adapter import ListContextAdapter
+from .list_context_adapter import ListContextAdapter
 
 
 class TupleContextAdapter(ListContextAdapter):

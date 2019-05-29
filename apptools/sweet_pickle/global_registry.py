@@ -39,9 +39,9 @@
 """
 
 try:
-    import thread as _thread
+    import six.moves._thread as _thread
 except ImportError:
-    import dummy_thread as _thread
+    import six.moves._dummy_thread as _thread
 
 
 ##############################################################################
@@ -65,7 +65,7 @@ def get_global_registry():
         _global_registry_lock.acquire()
         try:
             if _global_registry is None:
-                from updater import Updater
+                from .updater import Updater
                 _global_registry = Updater()
         finally:
             _global_registry_lock.release()

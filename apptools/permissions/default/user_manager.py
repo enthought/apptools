@@ -23,7 +23,7 @@ from apptools.permissions.i_user import IUser
 from apptools.permissions.i_user_manager import IUserManager
 from apptools.permissions.package_globals import get_permissions_manager
 from apptools.permissions.permission import ManageUsersPermission
-from i_user_database import IUserDatabase
+from .i_user_database import IUserDatabase
 
 
 @provides(IUserManager)

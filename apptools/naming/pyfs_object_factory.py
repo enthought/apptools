@@ -18,8 +18,8 @@
 from apptools.io.api import File
 
 # Local imports.
-from object_factory import ObjectFactory
-from reference import Reference
+from .object_factory import ObjectFactory
+from .reference import Reference
 
 
 class PyFSObjectFactory(ObjectFactory):

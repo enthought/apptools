@@ -22,7 +22,7 @@
 from traits.api \
     import HasPrivateTraits, Undefined, provides
 
-from itemplate \
+from .itemplate \
     import ITemplate
 
 #-------------------------------------------------------------------------------

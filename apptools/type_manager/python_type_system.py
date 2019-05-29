@@ -5,7 +5,7 @@
 import inspect
 
 # Local imports.
-from abstract_type_system import AbstractTypeSystem
+from .abstract_type_system import AbstractTypeSystem
 
 
 class PythonObject:

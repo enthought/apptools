@@ -18,7 +18,7 @@ from traits.api import Any, Property, Undefined
 from traits.traits import trait_cast
 
 # Local imports.
-from package_globals import get_script_manager
+from .package_globals import get_script_manager
 
 
 # This is the guard that ensures that only outermost scriptable methods get
@@ -44,7 +44,7 @@ def scriptable(func):
             # See if there is an script manager set.
             sm = get_script_manager()
 
-            if func.func_name == '__init__':
+            if func.__name__ == '__init__':
                 sm.new_object(args[0], type(args[0]), args[1:], kwargs)
 
                 try:

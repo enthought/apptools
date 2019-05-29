@@ -15,8 +15,8 @@
 
 
 # Local imports.
-from referenceable import Referenceable
-from state_factory import StateFactory
+from .referenceable import Referenceable
+from .state_factory import StateFactory
 
 
 class ReferenceableStateFactory(StateFactory):

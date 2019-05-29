@@ -9,7 +9,7 @@ from os.path import join
 from pkg_resources import resource_filename
 
 # Enthought library imports.
-from py_config_file import PyConfigFile
+from .py_config_file import PyConfigFile
 
 
 # This module's package.

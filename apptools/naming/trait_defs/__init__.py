@@ -14,4 +14,4 @@
 #  Imports:
 #------------------------------------------------------------------------------
 
-from api import *
+from apptools.naming.trait_defs.api import *

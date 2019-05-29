@@ -144,7 +144,7 @@ class InstanceContextAdapter(ContextAdapter):
             names = obj.trait_names()
 
         elif hasattr(obj, '__dict__'):
-            names = self.adaptee.__dict__.keys()
+            names = list(self.adaptee.__dict__.keys())
 
         else:
             names = []

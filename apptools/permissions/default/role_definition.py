@@ -22,9 +22,9 @@ from traitsui.menu import Action, CancelButton
 # Local imports.
 from apptools.permissions.package_globals import get_permissions_manager
 from apptools.permissions.permission import Permission
-from i_policy_storage import PolicyStorageError
-from policy_data import Role
-from select_role import select_role
+from .i_policy_storage import PolicyStorageError
+from .policy_data import Role
+from .select_role import select_role
 
 
 class _RoleView(View):
@@ -46,7 +46,7 @@ class _RoleView(View):
         buttons = [Action(name="Search"), Action(name="Add"),
                 Action(name="Modify"), Action(name="Delete"), CancelButton]
 
-        all_perms = get_permissions_manager().policy_manager.permissions.values()
+        all_perms = list(get_permissions_manager().policy_manager.permissions.values())
 
         perms_editor = SetEditor(values=all_perms,
                 left_column_title="Available Permissions",
@@ -75,7 +75,7 @@ class _RoleHandler(Handler):
         # Get all roles that satisfy the criteria.
         try:
             roles = get_permissions_manager().policy_manager.policy_storage.matching_roles(role.name)
-        except PolicyStorageError, e:
+        except PolicyStorageError as e:
             self._ps_error(e)
             return
 
@@ -104,7 +104,7 @@ class _RoleHandler(Handler):
                     role.name, role.description,
                     [p.id for p in role.permissions])
             info.ui.dispose()
-        except PolicyStorageError, e:
+        except PolicyStorageError as e:
             self._ps_error(e)
 
     def _modify_clicked(self, info):
@@ -120,7 +120,7 @@ class _RoleHandler(Handler):
                     role.name, role.description,
                     [p.id for p in role.permissions])
             info.ui.dispose()
-        except PolicyStorageError, e:
+        except PolicyStorageError as e:
             self._ps_error(e)
 
     def _delete_clicked(self, info):
@@ -136,7 +136,7 @@ class _RoleHandler(Handler):
                 get_permissions_manager().policy_manager.policy_storage.delete_role(role.name)
 
                 info.ui.dispose()
-            except PolicyStorageError, e:
+            except PolicyStorageError as e:
                 self._ps_error(e)
 
     ###########################################################################

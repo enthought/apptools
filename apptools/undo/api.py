@@ -12,8 +12,6 @@
 # Description: <Enthought undo package component>
 #------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
 from .abstract_command import AbstractCommand
 from .command_stack import CommandStack
 from .i_command import ICommand

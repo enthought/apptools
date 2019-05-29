@@ -161,7 +161,7 @@ class NewUnpickler(Unpickler):
                 raise UnpicklingError(msg)
             for o, g in generators[:]:
                 try:
-                    g.next()
+                    next(g)
                 except StopIteration:
                     generators.remove((o, g))
 
@@ -218,7 +218,7 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
 
         self._file = file
         if self.updater is None:
-            from global_registry import get_global_registry
+            from .global_registry import get_global_registry
             self.updater = get_global_registry()
         logger.debug('VersionedUnpickler [%s] using Updater [%s]', self,
             self.updater)
@@ -276,7 +276,7 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
         # Retrieve the target class definition
         try:
             klass = super(VersionedUnpickler, self).find_class(module, name)
-        except Exception, e:
+        except Exception as e:
             from apptools.sweet_pickle import UnpicklingError
             logger.debug('Traceback when finding class [%s.%s]:' \
                          % (module, name), exc_info=True)

@@ -49,7 +49,7 @@ from blockcanvas.app.utils \
 from apptools.template.api \
     import ITemplate, ITemplateDataContext, TemplateDataNames, Template
 
-from enable_editor \
+from .enable_editor \
     import EnableEditor
 
 #-- Adapters that might be used ------------------------------------------------
@@ -287,7 +287,7 @@ class TemplateView ( HasPrivateTraits ):
             self.template           = template
             self.template_file_name = file_name
 
-        except Exception, excp:
+        except Exception as excp:
             self.template_view = Message( str( excp ) )
 
         # Clean up the Python path:
@@ -309,7 +309,7 @@ class TemplateView ( HasPrivateTraits ):
             module = __import__( module_name )
             self.template = load( fh )
             self.template_file_name = file_name
-        except Exception, excp:
+        except Exception as excp:
             import traceback
             traceback.print_exc()
             self.template_view = Message( str( excp ) )
@@ -325,7 +325,7 @@ class TemplateView ( HasPrivateTraits ):
         """
         try:
             self.context = import_log_files( file_name, 'las' )
-        except Exception, excp:
+        except Exception as excp:
             self.names_view = Message( str( excp ) )
 
     def _save_pickled_template ( self ):

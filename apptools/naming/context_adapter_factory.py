@@ -18,7 +18,7 @@
 from apptools.type_manager.api import AdapterFactory
 
 # Local imports.
-from context import Context
+from .context import Context
 
 
 class ContextAdapterFactory(AdapterFactory):

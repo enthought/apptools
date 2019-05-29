@@ -18,7 +18,7 @@
 from traits.api import HasTraits, Instance
 
 # Local imports.
-from binding import Binding
+from .binding import Binding
 
 
 # Classes for event traits.

@@ -21,8 +21,8 @@ from traitsui.menu import Action, CancelButton
 
 # Local imports.
 from apptools.permissions.package_globals import get_permissions_manager
-from i_policy_storage import PolicyStorageError
-from policy_data import Assignment, Role
+from .i_policy_storage import PolicyStorageError
+from .policy_data import Assignment, Role
 
 
 class _AssignmentView(View):
@@ -43,7 +43,7 @@ class _AssignmentView(View):
 
         buttons = [Action(name="Search"), Action(name="Save"), CancelButton]
 
-        roles_editor = SetEditor(values=all_roles.values(),
+        roles_editor = SetEditor(values=list(all_roles.values()),
                 left_column_title="Available Roles",
                 right_column_title="Assigned Roles")
 
@@ -78,7 +78,7 @@ class _AssignmentHandler(Handler):
 
         try:
             user_name, role_names = pm.policy_manager.policy_storage.get_assignment(user.name)
-        except PolicyStorageError, e:
+        except PolicyStorageError as e:
             self._ps_error(e)
             return
 
@@ -99,7 +99,7 @@ class _AssignmentHandler(Handler):
             get_permissions_manager().policy_manager.policy_storage.set_assignment(assignment.user_name, [r.name for r in assignment.roles])
 
             info.ui.dispose()
-        except PolicyStorageError, e:
+        except PolicyStorageError as e:
             self._ps_error(e)
 
     ###########################################################################
@@ -164,7 +164,7 @@ def role_assignment():
 
     try:
         roles = get_permissions_manager().policy_manager.policy_storage.all_roles()
-    except PolicyStorageError, e:
+    except PolicyStorageError as e:
         error(None, str(e))
         return
 

@@ -5,7 +5,7 @@
 from apptools.naming.api import ContextAdapterFactory
 
 # Local imports.
-from tuple_context_adapter import TupleContextAdapter
+from .tuple_context_adapter import TupleContextAdapter
 
 
 class TupleContextAdapterFactory(ContextAdapterFactory):

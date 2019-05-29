@@ -18,7 +18,7 @@
 from traits.api import HasTraits
 
 # Local imports.
-from context import Context
+from .context import Context
 
 
 class InitialContextFactory(HasTraits):

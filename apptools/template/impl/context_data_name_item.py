@@ -24,10 +24,10 @@
 from apptools.template.template_traits \
     import TStr
 
-from any_context_data_name_item \
+from .any_context_data_name_item \
     import AnyContextDataNameItem
 
-from helper \
+from .helper \
     import path_for, parse_name
 
 #-------------------------------------------------------------------------------

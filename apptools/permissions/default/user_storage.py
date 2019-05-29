@@ -17,8 +17,8 @@
 from traits.api import HasTraits, Instance, provides
 
 # Local imports.
-from i_user_storage import IUserStorage, UserStorageError
-from persistent import Persistent, PersistentError
+from .i_user_storage import IUserStorage, UserStorageError
+from .persistent import Persistent, PersistentError
 
 
 @provides(IUserStorage)
@@ -51,7 +51,7 @@ class UserStorage(HasTraits):
         try:
             users = self._db.read()
 
-            if users.has_key(name):
+            if name in users:
                 raise UserStorageError("The user \"%s\" already exists." % name)
 
             users[name] = (description, {}, password)
@@ -190,7 +190,7 @@ class UserStorage(HasTraits):
                 data = self._db.read()
             finally:
                 self._db.unlock()
-        except PersistentError, e:
+        except PersistentError as e:
             raise UserStorageError(str(e))
 
         return data

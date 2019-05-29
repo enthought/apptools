@@ -20,10 +20,10 @@
 from traits.api \
     import Event, provides
 
-from template_impl \
+from .template_impl \
     import Template
 
-from imutable_template \
+from .imutable_template \
     import IMutableTemplate
 
 #-------------------------------------------------------------------------------

@@ -509,15 +509,15 @@ def test_attribute_iteration_methods():
         attrs['count'] = 42
         attrs['alpha'] = 0xff
 
-        items = attrs.items()
+        items = list(attrs.items())
 
         assert all(isinstance(x, tuple) for x in items)
 
         # unfold the pairs
-        keys, vals = map(list, zip(*items))
+        keys, vals = [list(item) for item in zip(*items)]
 
-        assert keys == attrs.keys()
-        assert vals == attrs.values()
+        assert keys == list(attrs.keys())
+        assert vals == list(attrs.values())
 
         # Check that __iter__ is consistent
         assert keys == list(iter(attrs))

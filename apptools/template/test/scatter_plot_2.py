@@ -44,10 +44,10 @@ from chaco.scatter_markers \
 from apptools.template.api \
     import Template, TRange, TStr, TInstance, TDerived
 
-from enable_editor \
+from .enable_editor \
     import EnableEditor
 
-from scatter_plot \
+from .scatter_plot \
     import ScatterPlot
 
 #-------------------------------------------------------------------------------

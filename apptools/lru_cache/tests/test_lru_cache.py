@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from __future__ import division, print_function
+from __future__ import division
 
 from nose.tools import assert_equal
 
@@ -113,7 +113,7 @@ def test_cache_keys_values():
 
     expected = [1, 2]
     assert_equal(expected, sorted(c.keys()))
-    assert_equal(map(str, expected), sorted(c.values()))
+    assert_equal([str(val) for val in expected], sorted(c.values()))
 
 
 def test_cache_clear():
@@ -141,7 +141,6 @@ def test_updated_event():
     c.on_trait_change(lambda x: events.append(x), 'updated')
 
     c[0] = 0
-    print(c.keys())
     assert_equal(sorted(events), [[0]])
 
     c[1] = 1

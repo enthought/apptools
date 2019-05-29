@@ -15,7 +15,7 @@
 
 
 # Local imports.
-from context import Context
+from .context import Context
 
 
 def InitialContext(environment):

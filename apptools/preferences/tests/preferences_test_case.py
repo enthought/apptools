@@ -164,15 +164,14 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # It should be empty to start with!
-        self.assertEqual([], p.keys())
+        self.assertEqual([], list(p.keys()))
 
         # Set some preferences in the node.
         p.set('a', '1')
         p.set('b', '2')
         p.set('c', '3')
 
-        keys = p.keys()
-        keys.sort()
+        keys = sorted(p.keys())
 
         self.assertEqual(['a', 'b', 'c'], keys)
 
@@ -181,8 +180,7 @@ class PreferencesTestCase(unittest.TestCase):
         p.set('acme.b', '2')
         p.set('acme.c', '3')
 
-        keys = p.keys('acme')
-        keys.sort()
+        keys = sorted(p.keys('acme'))
 
         self.assertEqual(['a', 'b', 'c'], keys)
 
@@ -191,8 +189,7 @@ class PreferencesTestCase(unittest.TestCase):
         p.set('acme.ui.b', '2')
         p.set('acme.ui.c', '3')
 
-        keys = p.keys('acme.ui')
-        keys.sort()
+        keys = sorted(p.keys('acme.ui'))
 
         self.assertEqual(['a', 'b', 'c'], keys)
 
@@ -263,8 +260,7 @@ class PreferencesTestCase(unittest.TestCase):
         p.node('b')
         p.node('c')
 
-        names = p.node_names()
-        names.sort()
+        names = sorted(p.node_names())
 
         self.assertEqual(['a', 'b', 'c'], names)
 
@@ -273,8 +269,7 @@ class PreferencesTestCase(unittest.TestCase):
         p.node('acme.b')
         p.node('acme.c')
 
-        names = p.node_names('acme')
-        names.sort()
+        names = sorted(p.node_names('acme'))
 
         self.assertEqual(['a', 'b', 'c'], names)
 
@@ -283,8 +278,7 @@ class PreferencesTestCase(unittest.TestCase):
         p.node('acme.ui.b')
         p.node('acme.ui.c')
 
-        names = p.node_names('acme.ui')
-        names.sort()
+        names = sorted(p.node_names('acme.ui'))
 
         self.assertEqual(['a', 'b', 'c'], names)
 

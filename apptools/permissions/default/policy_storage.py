@@ -17,8 +17,8 @@
 from traits.api import HasTraits, Instance, provides
 
 # Local imports.
-from i_policy_storage import IPolicyStorage, PolicyStorageError
-from persistent import Persistent, PersistentError
+from .i_policy_storage import IPolicyStorage, PolicyStorageError
+from .persistent import Persistent, PersistentError
 
 
 @provides(IPolicyStorage)
@@ -49,7 +49,7 @@ class PolicyStorage(HasTraits):
         try:
             roles, assigns = self._db.read()
 
-            if roles.has_key(name):
+            if name in roles:
                 raise PolicyStorageError("The role \"%s\" already exists." % name)
 
             roles[name] = (description, perm_ids)
@@ -72,7 +72,7 @@ class PolicyStorage(HasTraits):
         try:
             roles, assigns = self._db.read()
 
-            if not roles.has_key(name):
+            if name not in roles:
                 raise PolicyStorageError("The role \"%s\" does not exist." % name)
 
             del roles[name]
@@ -149,7 +149,7 @@ class PolicyStorage(HasTraits):
         try:
             roles, assigns = self._db.read()
 
-            if not roles.has_key(name):
+            if name not in roles:
                 raise PolicyStorageError("The role \"%s\" does not exist." % name)
 
             roles[name] = (description, perm_ids)
@@ -203,7 +203,7 @@ class PolicyStorage(HasTraits):
                 data = self._db.read()
             finally:
                 self._db.unlock()
-        except PersistentError, e:
+        except PersistentError as e:
             raise PolicyStorageError(str(e))
 
         return data

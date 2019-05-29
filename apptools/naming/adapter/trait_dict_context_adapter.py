@@ -5,7 +5,7 @@
 from traits.api import Dict, Property, Str
 
 # Local imports.
-from dict_context_adapter import DictContextAdapter
+from .dict_context_adapter import DictContextAdapter
 
 
 class TraitDictContextAdapter(DictContextAdapter):

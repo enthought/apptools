@@ -5,7 +5,7 @@
 from traits.api import Any
 
 # Local imports.
-from abstract_adapter_factory import AbstractAdapterFactory
+from .abstract_adapter_factory import AbstractAdapterFactory
 
 
 class AdapterFactory(AbstractAdapterFactory):

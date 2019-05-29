@@ -23,8 +23,8 @@ from apptools.logger.log_queue_handler import LogQueueHandler
 from traits.api import Callable, List
 
 # Local imports.
-from logger_preferences import LoggerPreferences
-from logger_service import LoggerService
+from .logger_preferences import LoggerPreferences
+from .logger_service import LoggerService
 
 
 ID = 'apptools.logger'

@@ -35,7 +35,7 @@ from apptools.template.itemplate_data_name_item \
 from apptools.template.template_impl \
     import Template
 
-from template_data_context \
+from .template_data_context \
     import TemplateDataContext
 
 #-------------------------------------------------------------------------------
@@ -128,7 +128,7 @@ class AnyContextDataNameItem ( Template ):
             # If the result set is not empty, create an output context for it:
             n = len( contexts )
             if n == 1:
-                output_context = values.values()[0]
+                output_context = list(values.values())[0]
             elif n > 1:
                 output_context = TemplateDataContext(
                     data_context_path = input_context.data_context_path,

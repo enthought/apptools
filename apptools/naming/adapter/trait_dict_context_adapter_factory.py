@@ -6,7 +6,7 @@ from apptools.naming.api import ContextAdapterFactory
 from traits.api import Str, TraitDict
 
 # Local imports.
-from trait_dict_context_adapter import TraitDictContextAdapter
+from .trait_dict_context_adapter import TraitDictContextAdapter
 
 
 class TraitDictContextAdapterFactory(ContextAdapterFactory):

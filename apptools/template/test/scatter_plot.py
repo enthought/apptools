@@ -48,7 +48,7 @@ from apptools.template.api \
 from apptools.template.impl.api \
     import TemplateDataSource, ValueDataNameItem
 
-from enable_editor \
+from .enable_editor \
     import EnableEditor
 
 #-------------------------------------------------------------------------------

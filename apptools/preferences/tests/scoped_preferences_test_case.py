@@ -12,7 +12,7 @@ from pkg_resources import resource_filename
 from apptools.preferences.api import Preferences, ScopedPreferences
 
 # Local imports.
-from preferences_test_case import PreferencesTestCase
+from .preferences_test_case import PreferencesTestCase
 
 
 # This module's package.

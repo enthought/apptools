@@ -18,7 +18,7 @@
 from traits.api import Any, Dict, Instance, Property, Str
 
 # Local imports.
-from context import Context
+from .context import Context
 
 
 class ContextAdapter(Context):

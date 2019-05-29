@@ -22,10 +22,10 @@
 from traits.api \
     import Interface, Instance, List
 
-from itemplate_data_context \
+from .itemplate_data_context \
     import ITemplateDataContext
 
-from itemplate_choice \
+from .itemplate_choice \
     import ITemplateChoice
 
 #-------------------------------------------------------------------------------

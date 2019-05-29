@@ -5,11 +5,11 @@
 from traits.api import HasTraits, Instance, Property, Str
 
 # Local imports.
-from abstract_type_system import AbstractTypeSystem
-from adapter_manager import AdapterManager
-from factory import Factory
-from hook import add_pre, add_post, remove_pre, remove_post
-from python_type_system import PythonTypeSystem
+from .abstract_type_system import AbstractTypeSystem
+from .adapter_manager import AdapterManager
+from .factory import Factory
+from .hook import add_pre, add_post, remove_pre, remove_post
+from .python_type_system import PythonTypeSystem
 
 
 class TypeManager(HasTraits):
