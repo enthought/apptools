@@ -69,14 +69,12 @@ class TemplateDataContext ( HasPrivateTraits ):
 
     @cached_property
     def _get_data_context_values ( self ):
-        values = list(self.values.keys())
-        values.sort()
+        values = sorted(self.values.keys())
         return values
 
     @cached_property
     def _get_data_contexts ( self ):
-        contexts = list(self.contexts.keys())
-        contexts.sort()
+        contexts = sorted(self.contexts.keys())
         return contexts
 
     #-- 'ITemplateDataContext' Interface Implementation ------------------------

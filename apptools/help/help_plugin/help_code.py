@@ -12,10 +12,11 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 
-from apptools.preferences.api import PreferencesHelper
 from traits.api import File, Str, provides
 
+from apptools.preferences.api import PreferencesHelper
 from .i_help_code import IHelpCode
+
 
 @provides(IHelpCode)
 class HelpCode(PreferencesHelper):

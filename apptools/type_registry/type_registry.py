@@ -1,4 +1,6 @@
 import six
+
+
 def get_mro(obj_class):
     """ Get a reasonable method resolution order of a class and its
     superclasses for both old-style and new-style classes.

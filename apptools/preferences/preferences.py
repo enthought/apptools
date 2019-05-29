@@ -15,6 +15,7 @@ from traits.api import Property, Str, Undefined, provides
 # Local imports.
 from .i_preferences import IPreferences
 
+
 # Logging.
 logger = logging.getLogger(__name__)
 
