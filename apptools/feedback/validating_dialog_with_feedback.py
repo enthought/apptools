@@ -70,9 +70,10 @@ elif ETSConfig.toolkit == 'wx':
     from traitsui.wx.constants import WindowColor
     background_color = '#{0:x}{1:x}{2:x}'.format(*WindowColor.GetRGB())
 
-from feedbackbot.model import FeedbackMessage
-from feedbackbot.view import FeedbackController
-from feedbackbot.utils import take_screenshot_qimg, get_raw_qimg_data
+from apptools.feedback.feedbackbot.model import FeedbackMessage
+from apptools.feedback.feedbackbot.view import FeedbackController
+from apptools.feedback.feedbackbot.utils import take_screenshot_qimg, \
+    get_raw_qimg_data
 
 #: A map of password strength values to icons.
 strength_map = {
