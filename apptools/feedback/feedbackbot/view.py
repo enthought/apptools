@@ -12,8 +12,7 @@ from chaco.api import Plot, ArrayPlotData
 from enable.api import ComponentEditor
 
 from .model import FeedbackMessage
-
-
+from .utils import bytes_to_matrix
 
 # ----------------------------------------------------------------------------
 # TraitsUI Actions 
@@ -76,7 +75,11 @@ class FeedbackController(Controller):
         """ Plots screenshot in Chaco from RGB data. """
 
         # Reverse rows of model.img_data so that the img_plot looks right
-        plotdata = ArrayPlotData(img_data=self.model.img_data[::-1, ...])
+
+        img_data = bytes_to_matrix(
+            self.model.img_bytes, self.model.img_h, self.model.img_w)
+
+        plotdata = ArrayPlotData(img_data=img_data[::-1, ...])
         plot = Plot(plotdata)
         plot.img_plot('img_data', hide_grids=True)
 

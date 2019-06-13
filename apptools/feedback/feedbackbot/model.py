@@ -46,37 +46,14 @@ class FeedbackMessage(HasTraits):
     #: The final slack message that will be posted.
     msg = Str
 
-    #: The screenshot pixel data in raw bytes.
+    #: The screenshot pixel data in raw bytes. Note that RGB[A] ordering is assumed.
     img_bytes = Bytes
-
-    #: The screenshot RGB data as a numeric array.
-    img_data = Property(Array)
 
     #: The screenshot width in pixels.
     img_w = Int 
 
     #: The screenshot height in pixels.
     img_h = Int
-
-    @cached_property
-    def _get_img_data(self):
-        """ Compute RGB data from raw image bytes. 
-
-        Returns
-        -------
-        numpy.ndarray
-            RGB values in a numpy ndarray of shape 
-            (self.img_h, self.img_w, 3).
-
-        """
-
-        # TODO: assume RGB ordering and provide helper functions to change the
-        # order if necessary
-        #  [2::-1] is required to order the channels as RGB
-        return np.frombuffer(
-            self.img_bytes, dtype=np.uint8).reshape((
-                self.img_h, 
-                self.img_w, -1))[..., 2::-1]
 
     @on_trait_change('+msg_meta')
     def _update_msg(self):
@@ -98,7 +75,8 @@ class FeedbackMessage(HasTraits):
                                  ssl=True)
 
         # Compress image into PNG format using an in-memory buffer.
-        img = Image.fromarray(self.img_data, mode='RGB')
+        #img = Image.fromarray(self.img_data, mode='RGB')
+        img = Image.frombytes('RGBA', (self.img_w, self.img_h), self.img_bytes)
 
         buf = io.BytesIO()
 

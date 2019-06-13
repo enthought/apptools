@@ -74,8 +74,8 @@ elif ETSConfig.toolkit == 'wx':
 
 from apptools.feedback.feedbackbot.model import FeedbackMessage
 from apptools.feedback.feedbackbot.view import FeedbackController
-from apptools.feedback.feedbackbot.utils import take_screenshot_qimg, \
-    get_raw_qimg_data
+from apptools.feedback.feedbackbot.utils import (
+    take_screenshot_qimg, get_raw_qimg_data, bgr_bytes_to_rgb_bytes)
 
 #: A map of password strength values to icons.
 strength_map = {
@@ -424,10 +424,13 @@ class MainAppHandler(Handler):
 
     def create_feedback_dialog(self, ui_info):
 
-        img_bytes, img_h, img_w = get_raw_qimg_data(
+        img_bgr_bytes, img_h, img_w = get_raw_qimg_data(
             take_screenshot_qimg(ui_info))
 
-        msg = FeedbackMessage(img_bytes=img_bytes, img_h=img_h, 
+        img_rgb_bytes = bgr_bytes_to_rgb_bytes(
+            img_bgr_bytes, img_h, img_w)
+
+        msg = FeedbackMessage(img_bytes=img_rgb_bytes, img_h=img_h, 
             img_w=img_w, channels='#general',
             token=os.environ['FEEDBACKBOT_OAUTH_TOKEN'])
 
