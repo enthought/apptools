@@ -21,6 +21,8 @@ TraitsUI dialog.  The example shows four things:
 
 """
 
+import os
+
 try:
     from zxcvbn import zxcvbn as test_strength
 except ImportError:
@@ -426,7 +428,8 @@ class MainAppHandler(Handler):
             take_screenshot_qimg(ui_info))
 
         msg = FeedbackMessage(img_bytes=img_bytes, img_h=img_h, 
-            img_w=img_w, channels='#general')
+            img_w=img_w, channels='#general',
+            token=os.environ['FEEDBACKBOT_OAUTH_TOKEN'])
 
         msg_controller = FeedbackController(model=msg)
         msg_controller.configure_traits()

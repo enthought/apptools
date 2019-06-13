@@ -3,7 +3,6 @@ This module implements a class that provides logic for a simple plugin
 for sending messages to a developer team's slack channel.
 """
 
-import os
 import io
 
 import numpy as np
@@ -24,8 +23,6 @@ class FeedbackMessage(HasTraits):
     The user-developer must specify the slack channel that the message must be
     sent to, as well as provide raw screenshot data.
 
-    TODO:
-    Add service that reveals OAUTH token.
     """
 
     first_name = Str(msg_meta=True)
@@ -42,6 +39,9 @@ class FeedbackMessage(HasTraits):
 
     #: The target slack channel that the bot will post to, must start with #.
     channels = String(minlen=2, regex='#.*')
+
+    #: OAuth token for the slackbot, must be provided by the user-developer.
+    token = Str
 
     #: The final slack message that will be posted.
     msg = Str
@@ -93,11 +93,8 @@ class FeedbackMessage(HasTraits):
     def send(self):
         """ Send feedback message and screenshot to slack. """
 
-        # TODO: OAuth token should be revealed after client 
-        # user credentials are  presented
-        # Initialize slack client
-        client = slack.WebClient(token=os.environ['FEEDBACKBOT_OAUTH_TOKEN'],
-                                 timeout=10,
+        client = slack.WebClient(token=self.token,
+                                 timeout=5,
                                  ssl=True)
 
         # Compress image into PNG format using an in-memory buffer.
