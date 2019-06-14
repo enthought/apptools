@@ -3,6 +3,7 @@ This model implements UI classes and logic for a plugin that enables
 clients to send feedback messages to a developer team's slack channel.
 """
 
+import numpy as np
 from traits.api import Property, Instance
 from traitsui.api import (
         View, Group, Item, Action, 
@@ -10,9 +11,9 @@ from traitsui.api import (
 from traitsui.menu import CancelButton 
 from chaco.api import Plot, ArrayPlotData
 from enable.api import ComponentEditor
+from enable.primitives.image import Image
 
 from .model import FeedbackMessage
-from .utils import bytes_to_matrix
 
 # ----------------------------------------------------------------------------
 # TraitsUI Actions 
@@ -39,7 +40,7 @@ feedback_msg_view = View(
                  height=200,
                  springy=True)),
         Group(
-            Item('controller.screenshot_plot',
+            Item('controller.image_component',
                  editor=ComponentEditor(),
                  show_label=False)),
         orientation='horizontal'),
@@ -62,8 +63,7 @@ class FeedbackController(Controller):
 
     model = Instance(FeedbackMessage)
 
-    #: Chaco plot to display the screenshot.
-    screenshot_plot = Instance(Plot)
+    image_component = Instance(Image)
 
     #: Property that decides whether the state of the message is valid 
     # for sending.
@@ -71,23 +71,9 @@ class FeedbackController(Controller):
 
     trait_view = feedback_msg_view
 
-    def _screenshot_plot_default(self):
-        """ Plots screenshot in Chaco from RGB data. """
+    def _image_component_default(self):
 
-        # Reverse rows of model.img_data so that the img_plot looks right
-
-        img_data = bytes_to_matrix(
-            self.model.img_bytes, self.model.img_h, self.model.img_w)
-
-        plotdata = ArrayPlotData(img_data=img_data[::-1, ...])
-        plot = Plot(plotdata)
-        plot.img_plot('img_data', hide_grids=True)
-
-        plot.border_visible = False
-        plot.x_axis = None
-        plot.y_axis = None
-
-        return plot
+        return Image(data=self.model.img_data)
 
     def _get__send_enabled(self):
         """ Logic to check if message is valid for sending. """

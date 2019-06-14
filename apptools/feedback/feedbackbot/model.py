@@ -9,10 +9,11 @@ import numpy as np
 import slack
 import aiohttp
 from PIL import Image
+
 from traits.api import (
         HasTraits, Str, Property,
         Int, Array, Bytes, String,
-        cached_property, on_trait_change)
+        Any, cached_property, on_trait_change)
 
 
 class FeedbackMessage(HasTraits):
@@ -46,14 +47,7 @@ class FeedbackMessage(HasTraits):
     #: The final slack message that will be posted.
     msg = Str
 
-    #: The screenshot pixel data in raw bytes. Note that RGB[A] ordering is assumed.
-    img_bytes = Bytes
-
-    #: The screenshot width in pixels.
-    img_w = Int 
-
-    #: The screenshot height in pixels.
-    img_h = Int
+    img_data = Array(shape=(None, None, 3), dtype='uint8')
 
     @on_trait_change('+msg_meta')
     def _update_msg(self):
@@ -75,12 +69,8 @@ class FeedbackMessage(HasTraits):
                                  ssl=True)
 
         # Compress image into PNG format using an in-memory buffer.
-        #img = Image.fromarray(self.img_data, mode='RGB')
-        img = Image.frombytes('RGBA', (self.img_w, self.img_h), self.img_bytes)
-
         buf = io.BytesIO()
-
-        img.save(buf, 'PNG')
+        Image.fromarray(self.img_data).save(buf, 'PNG')
         buf.seek(0)
 
         try:
