@@ -19,29 +19,77 @@ def take_screenshot_qimage(control):
 
      Parameters
      ----------
-     control: TODO     
+     control : `QtGui.QWidget`
+        GUI widget that will be grabbed.
 
      Returns:
      --------
-     qimg: PyQt4.QtGui.QImage
-        Screenshot image as PyQt4.QtGui.QImage instance. 
+     qimg : `QtGui.QImage`
+        The screenshot image.
 
      """
 
     return QPixmap.grabWidget(control).toImage()
 
-def qimage_to_pillow(qimg, fmt='PNG'):
+def qimage_to_rgb_array(qimg):
+    """ Converts a `QImage` instance to a numeric RGB array containing pixel data.
 
-    qbuf = QBuffer()
-    qbuf.open(QBuffer.WriteOnly)
-    qimg.save(qbuf, fmt)
+    Parameters
+    ----------
+    qimg : `QtGui.QImage` 
+        Image to convert to array.
 
-    return Image.open(io.BytesIO(qbuf.data()))
+    Returns
+    -------
+    img_array : `numpy.ndarray`
+        A 3D array containing pixel data in RGB format.
+
+    Note
+    ----
+    If an Alpha channel is present in `qimg`, it will be dropped in the array representation.
+
+    """
+
+    num_channels = qimg.depth() // 8
+
+    qbits = qimg.bits()
+    qbits.setsize(qimg.height() * qimg.width() * num_channels)
+
+    img_bytes = qbits.asstring()
+
+    img_array = np.ascontiguousarray(
+        np.frombuffer(img_bytes, dtype=np.uint8).reshape(
+            qimg.height(), qimg.width(), -1)[..., 2::-1])
+
+    return img_array
 
 def initiate_feedback_dialog(control, token, channels):
+    """ Initiate the feedback dialog box.
 
-    img_data = np.array(
-            qimage_to_pillow(take_screenshot_qimage(control)))[..., :3]
+    This function grabs a screenshot of the active GUI widget 
+    and starts up a feedback dialog box. The dialog box displays a preview of 
+    the screenshot, and allows the client-user to enter their name, 
+    organization, and a message. This message is then sent to
+    the specified Slack channel.
+
+    Parameters
+    ----------
+    control : `QtGui.QWidget`
+        GUI widget whose screenshot will be taken.
+
+    token : str
+        Slack API authentication token. 
+
+    channels : list
+        List of channels where the message will be sent.
+
+    Note
+    ----
+    The authentication `token` must bear the required scopes, i.e., it must have 
+    permissions to send messages to the specified channels.
+
+    """
+    img_data = qimage_to_rgb_array(take_screenshot_qimage(control))
 
     msg = FeedbackMessage(img_data=img_data, channels=channels, token=token)
 

@@ -60,8 +60,10 @@ class FeedbackController(Controller):
 
     """
 
+    #: The underlying model.
     model = Instance(FeedbackMessage)
 
+    #: Enable component to store the screenshot.
     image_component = Instance(ImageComponent)
 
     #: Property that decides whether the state of the message is valid 

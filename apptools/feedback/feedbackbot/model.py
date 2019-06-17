@@ -37,7 +37,8 @@ class FeedbackMessage(HasTraits):
     #: Main body of the feedback message.
     description = Str(msg_meta=True)
 
-    #: The target slack channel that the bot will post to, must start with #.
+    #: The target slack channel that the bot will post to, must start with # 
+    # and must be provided by the user-developer.
     channels = String(minlen=2, regex='#.*')
 
     #: OAuth token for the slackbot, must be provided by the user-developer.
@@ -46,8 +47,8 @@ class FeedbackMessage(HasTraits):
     #: The final slack message that will be posted.
     msg = Property(Str, depends_on='msg_meta')
 
+    #: 3D numpy array to hold three channel (RGB) screenshot pixel data.
     img_data = Array(shape=(None, None, 3), dtype='uint8')
-
     
     def _get_msg(self):
 
