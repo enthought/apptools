@@ -54,7 +54,7 @@ class FeedbackMessage(HasTraits):
         feedback_template = 'Name: {name}\n' \
             + 'Organization: {org}\nDescription: {desc}'
 
-        self.msg = feedback_template.format(
+        return  feedback_template.format(
             name=self.name, 
             org=self.organization, 
             desc=self.description)
