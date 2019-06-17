@@ -31,8 +31,7 @@ feedback_msg_view = View(
     Label('Enter feedback here. All fields are mandatory.'),
     Group(
         Group(
-            Item('first_name'),
-            Item('last_name'),
+            Item('name'),
             Item('organization', 
                  tooltip='Enter the name of your organization.'),
             Item('description', 
@@ -69,10 +68,9 @@ class FeedbackController(Controller):
     # for sending.
     _send_enabled = Property(depends_on='[+msg_meta]')
 
+    # Default view for this controller.
     trait_view = feedback_msg_view
 
-    #TODO: this doesn't look right, CODE SMELL CODE SMELLg
-    # However, Property(ImageComponent) doesn't work.
     def _image_component_default(self):
 
         return ImageComponent(data=self.model.img_data)
@@ -80,6 +78,6 @@ class FeedbackController(Controller):
     def _get__send_enabled(self):
         """ Logic to check if message is valid for sending. """
 
-        return self.model.first_name and self.model.last_name \
+        return self.model.name \
            and self.model.organization and self.model.description 
 

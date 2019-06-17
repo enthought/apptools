@@ -26,9 +26,8 @@ class FeedbackMessage(HasTraits):
 
     """
 
-    first_name = Str(msg_meta=True)
-
-    last_name = Str(msg_meta=True)
+    #: Name of the client user
+    name = Str(msg_meta=True)
 
     #: Name of the client organization.
     organization = Str(msg_meta=True)
@@ -45,19 +44,18 @@ class FeedbackMessage(HasTraits):
     token = Str
 
     #: The final slack message that will be posted.
-    msg = Str
+    msg = Property(Str, depends_on='msg_meta')
 
     img_data = Array(shape=(None, None, 3), dtype='uint8')
 
-    @on_trait_change('+msg_meta')
-    def _update_msg(self):
+    
+    def _get_msg(self):
 
-        feedback_template = 'Name: {first} {last}\n' \
+        feedback_template = 'Name: {name}\n' \
             + 'Organization: {org}\nDescription: {desc}'
 
         self.msg = feedback_template.format(
-            first=self.first_name,
-            last=self.last_name, 
+            name=self.name, 
             org=self.organization, 
             desc=self.description)
 
