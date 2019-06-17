@@ -11,7 +11,7 @@ from traitsui.api import (
 from traitsui.menu import CancelButton 
 from chaco.api import Plot, ArrayPlotData
 from enable.api import ComponentEditor
-from enable.primitives.image import Image
+from enable.primitives.image import Image as ImageComponent
 
 from .model import FeedbackMessage
 
@@ -63,7 +63,7 @@ class FeedbackController(Controller):
 
     model = Instance(FeedbackMessage)
 
-    image_component = Instance(Image)
+    image_component = Instance(ImageComponent)
 
     #: Property that decides whether the state of the message is valid 
     # for sending.
@@ -71,10 +71,12 @@ class FeedbackController(Controller):
 
     trait_view = feedback_msg_view
 
+    #TODO: this doesn't look right, CODE SMELL CODE SMELLg
+    # However, Property(ImageComponent) doesn't work.
     def _image_component_default(self):
 
-        return Image(data=self.model.img_data)
-
+        return ImageComponent(data=self.model.img_data)
+    
     def _get__send_enabled(self):
         """ Logic to check if message is valid for sending. """
 
