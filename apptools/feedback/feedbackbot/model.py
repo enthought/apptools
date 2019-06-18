@@ -63,9 +63,15 @@ class FeedbackMessage(HasTraits):
     def send(self):
         """ Send feedback message and screenshot to slack. """
 
+        # Set up object that talks to Slack's API. Note that the run_async  
+        # flag is False. This ensures that each HTTP request is blocking. More
+        # precisely, the WebClient sets up an event loop with just a single
+        # HTTP request in it, and ensures that the event loop runs to
+        # completion before returning. 
         client = slack.WebClient(token=self.token,
                                  timeout=5,
-                                 ssl=True)
+                                 ssl=True, 
+                                 run_async=False)
 
         # Compress image into PNG format using an in-memory buffer.
         buf = io.BytesIO()
