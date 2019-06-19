@@ -71,38 +71,20 @@ class FeedbackMessage(HasTraits):
         client = slack.WebClient(token=self.token,
                                  timeout=5,
                                  ssl=True, 
-                                 run_async=False)
+                                 run_async=False) 
 
         # Compress image into PNG format using an in-memory buffer.
         buf = io.BytesIO()
         Image.fromarray(self.img_data).save(buf, 'PNG')
         buf.seek(0)
 
-        try:
+        # Send message.
+        response = client.files_upload(
+                channels=self.channels,
+                initial_comment=self.msg,
+                filetype='png',
+                filename='screenshot.png',
+                file=buf)
 
-            # Send message.
-            response = client.files_upload(
-                    channels=self.channels,
-                    initial_comment=self.msg,
-                    filetype='png',
-                    filename='screenshot.png',
-                    file=buf)
+        return response
 
-        except slack.errors.SlackApiError as error:
-
-            print(
-                'Message sent successfully,'
-                + ' but received the following error from Slack:')
-            print(error)
-            raise
-
-        except aiohttp.client_exceptions.ClientConnectorError as error:
-
-            print('Message not sent.')
-            print(error)
-            raise
-
-        else:
-
-            print('Message sent successfully!')
- 
