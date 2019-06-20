@@ -1,18 +1,20 @@
 """
-This model implements UI classes and logic for a plugin that enables 
+This module implements UI classes and logic for a plugin that enables 
 clients to send feedback messages to a developer team's slack channel.
 """
 
 import sys
+import logging
 import traceback
 
 import slack
 import numpy as np
 import aiohttp
+
 from traits.api import Property, Instance
 from traitsui.api import (
         View, Group, Item, Action, 
-        Label, Controller)
+        Label, Controller, Handler)
 from traitsui.menu import CancelButton 
 from chaco.api import Plot, ArrayPlotData
 from enable.api import ComponentEditor
@@ -20,6 +22,8 @@ from enable.primitives.image import Image as ImageComponent
 from pyface.api import confirm, information, warning, error, YES, NO
 
 from .model import FeedbackMessage
+
+logger = logging.getLogger(__name__)
 
 # ----------------------------------------------------------------------------
 # TraitsUI Actions 
@@ -51,7 +55,8 @@ feedback_msg_view = View(
         orientation='horizontal'),
     buttons=[CancelButton, send_button],
     width=800,
-    resizable=True)
+    resizable=True,
+    title='Feedback Reporter')
 
 
 # ----------------------------------------------------------------------------
@@ -91,9 +96,19 @@ class FeedbackController(Controller):
            and self.model.organization and self.model.description 
 
     def _do_send(self, ui_info):
+        """ Actions to perform when the send button is clicked. """
 
-        # Variable to store whether to let the client-user try again if Slack rate limits
-        # the bot, or if the request takes too long.
+        logger.info('Send button clicked in feedback dialog box.')
+
+        # Boolean that specifies whether the client-user can try again or not.
+        # If False, then the feedback dialog box is automatically closed. 
+        # If True, the feedback dialog is kept alive. A possible use case could
+        # arise when the request to the Slack API takes too long (in which case
+        # an aiohttp.ServerTimeoutError is raised). In that case, notify the
+        # user of the error, but keep the dialog box alive. This way, the data
+        # that the client-user enters persists, allowing them to try sending it
+        # again without more typing. The other possible use case is when Slack
+        # rate-limits the app.
         retry = False
 
         try:
@@ -102,26 +117,39 @@ class FeedbackController(Controller):
 
         except slack.errors.SlackApiError as exc:
 
-            # Allow the client-user to try again if rate limited by Slack, 
-            # or if the HTTP request to Slack takes too long. The rate
-            # limit for this API call is around 20 requests per workspace per
-            # minute. It is unlikely that this will happen, but no harm in
-            # handling it.
             if exc.response["error"] == "ratelimited":
+                # Slack has rate-limited the bot.
+                # The rate limit for this API call is around 20 requests per 
+                # workspace per minute. It is unlikely that this will happen, 
+                # but no harm in handling it.
 
-                    retry_time = exc.response.headers["retry-after"]
+                # Slack promises to return a retry-after value in seconds in
+                # the response headers.
+                retry_time = exc.response.headers["retry-after"]
 
-                    err_msg = "Server received too many requests." \
-                        + " Please try again after {} seconds.".format(retry_time)
+                err_msg = "Server received too many requests." \
+                    + " Please try again after {} seconds.".format(retry_time)
 
-                    retry = True
+                # Allow the user the opportunity to retry the send operation.
+                retry = True
 
             else:
+                # All other Slack API errors (invalid_auth, invalid_channel,
+                # etc.)
 
                 err_msg = 'Message sent successfully, but received an error' \
                     + ' response from Slack.'
             
-            error(ui_info.ui.control, err_msg, detail=str(exc))
+            # Construct the detail message explicitly instead of simply calling
+            # str(exc), which in some cases can reveal the OAuth token.
+            detail = 'Slack response: <ok : {ok_resp}, error : {err_resp}>'.format(
+                ok_resp=exc.response['ok'], err_resp=exc.response['error'])
+            
+            error(ui_info.ui.control, err_msg, detail=detail)
+
+            # For the same reason (str(exc) can reveal the OAuth token)
+            # use logger.error instead of logger.exception
+            logger.error(err_msg + ' ' + detail) 
 
         except aiohttp.ServerTimeoutError as exc:
 
@@ -131,19 +159,28 @@ class FeedbackController(Controller):
 
             retry = True
 
+            logger.exception(err_msg)
+
         except aiohttp.ClientConnectionError as exc:
+            # Handle all client-related connection errors raised by aiohttp
+            # here.
 
             err_msg = 'An error occured while connecting to the server.'
 
             error(ui_info.ui.control, err_msg, detail=str(exc))
 
+            logger.exception(err_msg)
+
         except Exception as exc:
+            # Handle all other exceptions here.
 
             err_msg = 'Unexpected error: {}'.format(str(exc))
 
             detail = ' '.join(traceback.format_tb(exc.__traceback__))
 
             error(ui_info.ui.control, err_msg, detail=detail)
+
+            logger.exception(err_msg)
 
         else:
 
@@ -155,5 +192,8 @@ class FeedbackController(Controller):
 
             # Kill the GUI if the user will not retry.
             if not retry:
+
                 ui_info.ui.dispose()
+
+                logger.info('Feedback dialog closed automatically.')
 

@@ -5,6 +5,7 @@ plugin can be used in their application.
 """
 
 import io
+import logging
 
 from pyface.qt.QtGui import QPixmap
 from pyface.qt.QtCore import QBuffer
@@ -13,6 +14,8 @@ import numpy as np
 
 from .model import FeedbackMessage
 from .view import FeedbackController
+
+logger = logging.getLogger(__name__)
 
 def take_screenshot_qimage(control):
     """ Take screenshot of an active GUI widget. 
@@ -27,9 +30,15 @@ def take_screenshot_qimage(control):
      qimg : `QtGui.QImage`
         The screenshot image.
 
-     """
+    """
 
-    return QPixmap.grabWidget(control).toImage()
+    logger.info('Grabbing screenshot of control'
+        + ' with id <%s> and title <%s>.', 
+        str(control.winId()), control.windowTitle())
+
+    qpixmap = QPixmap.grabWidget(control).toImage() 
+
+    return qpixmap
 
 def qimage_to_rgb_array(qimg):
     """ Converts a `QImage` instance to a numeric RGB array containing pixel data.
@@ -46,7 +55,8 @@ def qimage_to_rgb_array(qimg):
 
     Note
     ----
-    If an Alpha channel is present in `qimg`, it will be dropped in the array representation.
+    If an Alpha channel is present in `qimg`, it will be dropped in the 
+    array representation.
 
     """
 
@@ -57,6 +67,8 @@ def qimage_to_rgb_array(qimg):
 
     img_bytes = qbits.asstring()
 
+    logger.info('Converting raw screenshot bytes to RGB array.')
+    
     img_array = np.ascontiguousarray(
         np.frombuffer(img_bytes, dtype=np.uint8).reshape(
             qimg.height(), qimg.width(), -1)[..., 2::-1])
@@ -89,11 +101,16 @@ def initiate_feedback_dialog(control, token, channels):
     permissions to send messages to the specified channels.
 
     """
+
+    logger.info('Feedback dialog requested on control'
+        + ' with id <%s> and title <%s>', 
+        str(control.winId()), control.windowTitle())
+
     img_data = qimage_to_rgb_array(take_screenshot_qimage(control))
 
     msg = FeedbackMessage(img_data=img_data, channels=channels, token=token)
 
     msg_controller = FeedbackController(model=msg)
-    msg_controller.configure_traits()
 
-
+    logger.info('Launching feedback dialog box.')
+    msg_controller.configure_traits(kind='livemodal')

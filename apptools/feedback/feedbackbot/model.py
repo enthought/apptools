@@ -4,6 +4,7 @@ for sending messages to a developer team's slack channel.
 """
 
 import io
+import logging
 
 import numpy as np
 import slack
@@ -15,9 +16,10 @@ from traits.api import (
         Int, Array, Bytes, String,
         Any, cached_property, on_trait_change)
 
+logger = logging.getLogger(__name__)
 
 class FeedbackMessage(HasTraits):
-    """Model for the feedback message.
+    """ Model for the feedback message.
 
     Notes
     -----
@@ -49,6 +51,9 @@ class FeedbackMessage(HasTraits):
 
     #: 3D numpy array to hold three channel (RGB) screenshot pixel data.
     img_data = Array(shape=(None, None, 3), dtype='uint8')
+
+    #: In-memory file buffer to store the compressed screenshot.
+    compressed_img_buf = Any(io.BytesIO())
     
     def _get_msg(self):
 
@@ -59,6 +64,11 @@ class FeedbackMessage(HasTraits):
             name=self.name, 
             org=self.organization, 
             desc=self.description)
+
+    def _img_data_changed(self):
+        
+        Image.fromarray(self.img_data).save(self.compressed_img_buf, 'PNG')
+        self.compressed_img_buf.seek(0)
 
     def send(self):
         """ Send feedback message and screenshot to slack. """
@@ -73,10 +83,8 @@ class FeedbackMessage(HasTraits):
                                  ssl=True, 
                                  run_async=False) 
 
-        # Compress image into PNG format using an in-memory buffer.
-        buf = io.BytesIO()
-        Image.fromarray(self.img_data).save(buf, 'PNG')
-        buf.seek(0)
+        logger.info("Attempting to send message: <%s> to channel: <%s>", 
+            self.msg, self.channels)
 
         # Send message.
         response = client.files_upload(
@@ -84,7 +92,11 @@ class FeedbackMessage(HasTraits):
                 initial_comment=self.msg,
                 filetype='png',
                 filename='screenshot.png',
-                file=buf)
+                file=self.compressed_img_buf)
+        
+        
+        logger.info("Message sent." 
+            + " Slack responded with OK : {ok_resp}".format(ok_resp=response['ok']))
 
         return response
 
