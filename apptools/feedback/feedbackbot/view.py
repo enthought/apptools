@@ -108,7 +108,7 @@ class FeedbackController(Controller):
         # user of the error, but keep the dialog box alive. This way, the data
         # that the client-user enters persists, allowing them to try sending it
         # again without more typing. The other possible use case is when Slack
-        # rate-limits the app.
+        # rate-limits the bot.
         retry = False
 
         try:

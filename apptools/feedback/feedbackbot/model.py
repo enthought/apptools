@@ -46,12 +46,14 @@ class FeedbackMessage(HasTraits):
     #: OAuth token for the slackbot, must be provided by the user-developer.
     token = Str
 
-    #: The final slack message that will be posted.
+    #: The final message that gets posted to Slack.
     msg = Property(Str, depends_on='msg_meta')
 
     #: 3D numpy array to hold three channel (RGB) screenshot pixel data.
     img_data = Array(shape=(None, None, 3), dtype='uint8')
 
+    # FIXME: Not sure if this the right way to go about initiating a 
+    # non-Trait. 
     #: In-memory file buffer to store the compressed screenshot.
     compressed_img_buf = Any(io.BytesIO())
     
@@ -71,7 +73,7 @@ class FeedbackMessage(HasTraits):
         self.compressed_img_buf.seek(0)
 
     def send(self):
-        """ Send feedback message and screenshot to slack. """
+        """ Send feedback message and screenshot to Slack. """
 
         # Set up object that talks to Slack's API. Note that the run_async  
         # flag is False. This ensures that each HTTP request is blocking. More
