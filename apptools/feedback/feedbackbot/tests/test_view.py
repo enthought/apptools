@@ -2,25 +2,27 @@
 Tests for FeedbackController.
 """
 
-from unittest import TestCase
+import unittest
 from unittest.mock import patch, MagicMock, create_autospec
+
 import numpy as np
 from aiohttp import ClientConnectionError, ServerTimeoutError
 from slack.errors import SlackApiError
 
-from pyface.api import information, error
 from traits.testing.unittest_tools import UnittestTools
-from traitsui.api import UI, UIInfo
+from traitsui.api import UIInfo
 
 from apptools.feedback.feedbackbot.model import FeedbackMessage
 from apptools.feedback.feedbackbot.view import FeedbackController
 
-class TestFeedbackController(TestCase, UnittestTools):
+
+class TestFeedbackController(unittest.TestCase, UnittestTools):
 
     def setUp(self):
 
-        self.msg = FeedbackMessage(img_data=np.empty((2,2,3)),
-            channels='#dummy', token='xoxb-123456')
+        self.msg = FeedbackMessage(img_data=np.empty((2, 2, 3)),
+                                   channels='#dummy',
+                                   token='xoxb-123456')
 
         self.msg.name = 'dummy_name'
         self.msg.organization = 'dummy_org'
@@ -53,7 +55,7 @@ class TestFeedbackController(TestCase, UnittestTools):
 
         self.assertFalse(controller_no_description._send_enabled)
 
-    def test_error_dialog_is_opened_if_slack_ratelimited_exception_occurs(self):
+    def test_error_dialog_opened_if_slack_ratelimited_exception_occurs(self):
         """ Test that an error dialog box is opened if a SlackApiError occurs
             as a result of being rate-limited.
 
@@ -78,7 +80,7 @@ class TestFeedbackController(TestCase, UnittestTools):
 
             mock_error.assert_called_once()
 
-    def test_error_dialog_is_opened_if_slack_exception_occurs(self):
+    def test_error_dialog_opened_if_slack_exception_occurs(self):
         """ Test that an error dialog box is opened if a SlackApiError occurs,
             but not as a result of being rate-limited.
 
@@ -98,7 +100,7 @@ class TestFeedbackController(TestCase, UnittestTools):
 
             mock_error.assert_called_once()
 
-    def test_error_dialog_is_opened_if_client_connection_exception_occurs(self):
+    def test_error_dialog_opened_if_client_connection_exception_occurs(self):
         """ Test that an error dialog box is opened if a ClientConnectionError
             occurs.
 
@@ -115,7 +117,7 @@ class TestFeedbackController(TestCase, UnittestTools):
 
             mock_error.assert_called_once()
 
-    def test_error_dialog_is_opened_if_server_timeout_exception_occurs(self):
+    def test_error_dialog_opened_if_server_timeout_exception_occurs(self):
         """ Test that an error dialog box is opened if a ServerTimeoutError
             occurs.
 
@@ -132,7 +134,7 @@ class TestFeedbackController(TestCase, UnittestTools):
 
             mock_error.assert_called_once()
 
-    def test_error_dialog_is_opened_if_other_exception_occurs(self):
+    def test_error_dialog_opened_if_other_exception_occurs(self):
         """ Test that an error dialog box is opened if an Exception
             occurs.
 
@@ -148,8 +150,11 @@ class TestFeedbackController(TestCase, UnittestTools):
 
             mock_error.assert_called_once()
 
-    def test_information_dialog_is_opened_if_no_exception_occurs(self):
-        """ Test that an information dialog box is opened if no Exception occurs. """
+    def test_information_dialog_opened_if_no_exception_occurs(self):
+        """ Test that an information dialog box is opened
+            if no Exception occurs.
+
+        """
 
         self.msg.__dict__['send'] = MagicMock()
 
@@ -161,6 +166,7 @@ class TestFeedbackController(TestCase, UnittestTools):
             controller._do_send(create_autospec(UIInfo()))
 
             mock_info.assert_called_once()
+
 
 if __name__ == '__main__':
 

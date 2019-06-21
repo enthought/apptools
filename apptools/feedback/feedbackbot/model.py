@@ -6,17 +6,14 @@ for sending messages to a developer team's slack channel.
 import io
 import logging
 
-import numpy as np
 import slack
-import aiohttp
 from PIL import Image
 
 from traits.api import (
-        HasRequiredTraits, Str, Property,
-        Int, Array, Bytes, String,
-        Any, cached_property, on_trait_change)
+    HasRequiredTraits, Str, Property, Array, String, Any)
 
 logger = logging.getLogger(__name__)
+
 
 class FeedbackMessage(HasRequiredTraits):
     """ Model for the feedback message.
@@ -39,7 +36,7 @@ class FeedbackMessage(HasRequiredTraits):
     #: Main body of the feedback message.
     description = Str(msg_meta=True)
 
-    #: The target slack channel that the bot will post to, must start with # 
+    #: The target slack channel that the bot will post to, must start with #
     # and must be provided by the user-developer.
     channels = String(minlen=2, regex='#.*', required=True)
 
@@ -52,19 +49,19 @@ class FeedbackMessage(HasRequiredTraits):
     #: 3D numpy array to hold three channel (RGB) screenshot pixel data.
     img_data = Array(shape=(None, None, 3), dtype='uint8', required=True)
 
-    # FIXME: Not sure if this the right way to go about initiating a 
-    # non-Trait. 
+    # FIXME: Not sure if this the right way to go about initiating a
+    # non-Trait.
     #: In-memory file buffer to store the compressed screenshot.
     compressed_img_buf = Any(io.BytesIO())
-    
+
     def _get_msg(self):
 
         feedback_template = 'Name: {name}\n' \
             + 'Organization: {org}\nDescription: {desc}'
 
-        return  feedback_template.format(
-            name=self.name, 
-            org=self.organization, 
+        return feedback_template.format(
+            name=self.name,
+            org=self.organization,
             desc=self.description)
 
     def _img_data_changed(self):
@@ -75,18 +72,18 @@ class FeedbackMessage(HasRequiredTraits):
     def send(self):
         """ Send feedback message and screenshot to Slack. """
 
-        # Set up object that talks to Slack's API. Note that the run_async  
+        # Set up object that talks to Slack's API. Note that the run_async
         # flag is False. This ensures that each HTTP request is blocking. More
         # precisely, the WebClient sets up an event loop with just a single
         # HTTP request in it, and ensures that the event loop runs to
-        # completion before returning. 
+        # completion before returning.
         client = slack.WebClient(token=self.token,
                                  timeout=5,
-                                 ssl=True, 
-                                 run_async=False) 
+                                 ssl=True,
+                                 run_async=False)
 
-        logger.info("Attempting to send message: <%s> to channel: <%s>", 
-            self.msg, self.channels)
+        logger.info("Attempting to send message: <%s> to channel: <%s>",
+                    self.msg, self.channels)
 
         # Send message.
         response = client.files_upload(
@@ -95,10 +92,9 @@ class FeedbackMessage(HasRequiredTraits):
                 filetype='png',
                 filename='screenshot.png',
                 file=self.compressed_img_buf)
-        
-        
-        logger.info("Message sent." 
-            + " Slack responded with OK : {ok_resp}".format(ok_resp=response['ok']))
+
+        logger.info("Message sent."
+                    + " Slack responded with OK : {ok_resp}".format(
+                        ok_resp=response['ok']))
 
         return response
-

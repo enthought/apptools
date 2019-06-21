@@ -12,16 +12,14 @@ class).
 """
 
 import os
-import logging
 
-from traits.api import HasTraits, Str, Instance
+from traits.api import HasTraits, Str
 from traitsui.api import (
     Item, Menu, MenuBar, OKCancelButtons, View, Action, Handler
 )
 
-from apptools.feedback.feedbackbot.model import FeedbackMessage
-from apptools.feedback.feedbackbot.view import FeedbackController
 from apptools.feedback.feedbackbot.utils import initiate_feedback_dialog_
+
 
 class FeedbackExampleApp(HasTraits):
     """ A simple model to demonstrate the feedback dialog."""
@@ -34,20 +32,22 @@ class FeedbackExampleApp(HasTraits):
         return """
         This app demonstrates how to use the feedback dialog.
 
-        To begin, click on Feedback/Bugs in the Help menu. This will 
-        automatically take a screenshot of this app, and launch the feedback 
-        dialog box. You should be able to see a preview of the screenshot in the
-        dialog box. 
-        
-        Next, enter your details, and a description of the problem. All fields 
-        are mandatory, and you can't send the message till you type something 
-        in each field. When you're done, click on the Send button. The dialog 
-        is pre-configured by our developers to ensure it reaches the right team. 
+        To begin, click on Feedback/Bugs in the Help menu. This will
+        automatically take a screenshot of this app, and launch the feedback
+        dialog box. You should be able to see a preview of the
+        screenshot in the dialog box.
 
-        The dialog will notify you of successful delivery of the message, or if 
+        Next, enter your details, and a description of the problem. All fields
+        are mandatory, and you can't send the message till you type something
+        in each field. When you're done, click on the Send button. The dialog
+        is pre-configured by our developers to ensure it reaches
+        the right team.
+
+        The dialog will notify you of successful delivery of the message, or if
         any problems occured."""
 
-# View for the example app. The feedbackbot module provides a helper function 
+
+# View for the example app. The feedbackbot module provides a helper function
 # `initiate_feedback_dialog_` that launches the feedback dialog box. To include
 # the feedback dialog box in the app, simply call this function from an
 # appropriate place. In this example, we call it from the Feedback/Bugs menu
@@ -66,11 +66,12 @@ feedback_example_view = View(
     resizable=True,
 )
 
+
 class FeedbackExampleHandler(Handler):
     """ Simple handler for the FeedbackExampleApp. """
 
     def initiate_feedback_dialog(self, ui_info):
-        """ Initiates the feedback dialog. """ 
+        """ Initiates the feedback dialog. """
 
         # As mentioned earlier, the feedback dialog can be initiated by
         # invoking the `initiate_feedback_dialog_` function. The first argument
@@ -81,14 +82,15 @@ class FeedbackExampleHandler(Handler):
         # pass around the token (again, see the README for a discussion on what
         # could go wrong if the token gets leaked.). The third argument is the
         # channel where you'd like messages from this app to go. The value for
-        # this argument must start with '#'.  
+        # this argument must start with '#'.
         initiate_feedback_dialog_(ui_info.ui.control,
-            os.environ['FEEDBACKBOT_OAUTH_TOKEN'], '#general')
+                                  os.environ['FEEDBACKBOT_OAUTH_TOKEN'],
+                                  '#general')
 
 
 if __name__ == '__main__':
 
     app = FeedbackExampleApp()
 
-    app.configure_traits(view=feedback_example_view, 
-        handler=FeedbackExampleHandler())
+    app.configure_traits(view=feedback_example_view,
+                         handler=FeedbackExampleHandler())

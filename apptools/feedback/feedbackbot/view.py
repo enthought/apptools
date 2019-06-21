@@ -1,36 +1,32 @@
 """
-This module implements UI classes and logic for a plugin that enables 
+This module implements UI classes and logic for a plugin that enable
 clients to send feedback messages to a developer team's slack channel.
 """
 
-import sys
 import logging
 import traceback
 
 import slack
-import numpy as np
 import aiohttp
 
 from traits.api import Property, Instance
 from traitsui.api import (
-        View, Group, Item, Action, 
-        Label, Controller, Handler)
-from traitsui.menu import CancelButton 
-from chaco.api import Plot, ArrayPlotData
+        View, Group, Item, Action, Label, Controller)
+from traitsui.menu import CancelButton
 from enable.api import ComponentEditor
 from enable.primitives.image import Image as ImageComponent
-from pyface.api import confirm, information, warning, error, YES, NO
+from pyface.api import information, error
 
 from .model import FeedbackMessage
 
 logger = logging.getLogger(__name__)
 
 # ----------------------------------------------------------------------------
-# TraitsUI Actions 
+# TraitsUI Actions
 # ----------------------------------------------------------------------------
 
-send_button = Action(name='Send', action='_do_send', 
-    enabled_when='controller._send_enabled')
+send_button = Action(name='Send', action='_do_send',
+                     enabled_when='controller._send_enabled')
 
 # ----------------------------------------------------------------------------
 # TraitsUI Views
@@ -42,9 +38,9 @@ feedback_msg_view = View(
     Group(
         Group(
             Item('name'),
-            Item('organization', 
+            Item('organization',
                  tooltip='Enter the name of your organization.'),
-            Item('description', 
+            Item('description',
                  style='custom',
                  tooltip='Enter feedback.',
                  height=200,
@@ -67,7 +63,7 @@ feedback_msg_view = View(
 class FeedbackController(Controller):
     """Controller for FeedbackMessage.
 
-    The Controller allows the client user to specify the feedback and preview 
+    The Controller allows the client user to specify the feedback and preview
     the screenshot.
 
     """
@@ -78,7 +74,7 @@ class FeedbackController(Controller):
     #: Enable component to store the screenshot.
     image_component = Instance(ImageComponent)
 
-    #: Property that decides whether the state of the message is valid 
+    #: Property that decides whether the state of the message is valid
     # for sending.
     _send_enabled = Property(depends_on='[+msg_meta]')
 
@@ -89,12 +85,12 @@ class FeedbackController(Controller):
         """ Default image to display, this is simply the screenshot."""
 
         return ImageComponent(data=self.model.img_data)
-    
+
     def _get__send_enabled(self):
         """ Logic to check if message is valid for sending. """
 
         return self.model.name \
-           and self.model.organization and self.model.description 
+            and self.model.organization and self.model.description
 
     def _do_send(self, ui_info):
         """ Actions to perform when the send button is clicked. """
@@ -102,7 +98,7 @@ class FeedbackController(Controller):
         logger.info('Send button clicked in feedback dialog box.')
 
         # Boolean that specifies whether the client-user can try again or not.
-        # If False, then the feedback dialog box is automatically closed. 
+        # If False, then the feedback dialog box is automatically closed.
         # If True, the feedback dialog is kept alive. A possible use case could
         # arise when the request to the Slack API takes too long (in which case
         # an aiohttp.ServerTimeoutError is raised). In that case, notify the
@@ -114,14 +110,14 @@ class FeedbackController(Controller):
 
         try:
 
-            response = self.model.send()
+            self.model.send()
 
         except slack.errors.SlackApiError as exc:
 
             if exc.response["error"] == "ratelimited":
                 # Slack has rate-limited the bot.
-                # The rate limit for this API call is around 20 requests per 
-                # workspace per minute. It is unlikely that this will happen, 
+                # The rate limit for this API call is around 20 requests per
+                # workspace per minute. It is unlikely that this will happen,
                 # but no harm in handling it.
 
                 # Slack promises to return a retry-after value in seconds in
@@ -140,21 +136,22 @@ class FeedbackController(Controller):
 
                 err_msg = 'Message sent successfully, but received an error' \
                     + ' response from Slack.'
-            
+
             # Construct the detail message explicitly instead of simply calling
             # str(exc), which in some cases can reveal the OAuth token.
-            detail = 'Slack response: <ok : {ok_resp}, error : {err_resp}>'.format(
-                ok_resp=exc.response['ok'], err_resp=exc.response['error'])
-            
+            detail = 'Slack response: <ok : {ok}, error : {err}>'.format(
+                ok=exc.response['ok'], err=exc.response['error'])
+
             error(ui_info.ui.control, err_msg, detail=detail)
 
             # For the same reason (str(exc) can reveal the OAuth token)
             # use logger.error instead of logger.exception
-            logger.error(err_msg + ' ' + detail) 
+            logger.error(err_msg + ' ' + detail)
 
         except aiohttp.ServerTimeoutError as exc:
 
-            err_msg = 'Server took too long to respond. Please try again later.'
+            err_msg = 'Server took too long to respond.' \
+                       + ' Please try again later.'
 
             error(ui_info.ui.control, err_msg, detail=str(exc))
 
@@ -197,4 +194,3 @@ class FeedbackController(Controller):
                 ui_info.ui.dispose()
 
                 logger.info('Feedback dialog closed automatically.')
-
