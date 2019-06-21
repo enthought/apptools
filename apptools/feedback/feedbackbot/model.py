@@ -12,13 +12,13 @@ import aiohttp
 from PIL import Image
 
 from traits.api import (
-        HasTraits, Str, Property,
+        HasRequiredTraits, Str, Property,
         Int, Array, Bytes, String,
         Any, cached_property, on_trait_change)
 
 logger = logging.getLogger(__name__)
 
-class FeedbackMessage(HasTraits):
+class FeedbackMessage(HasRequiredTraits):
     """ Model for the feedback message.
 
     Notes
@@ -41,16 +41,16 @@ class FeedbackMessage(HasTraits):
 
     #: The target slack channel that the bot will post to, must start with # 
     # and must be provided by the user-developer.
-    channels = String(minlen=2, regex='#.*')
+    channels = String(minlen=2, regex='#.*', required=True)
 
     #: OAuth token for the slackbot, must be provided by the user-developer.
-    token = Str
+    token = Str(required=True)
 
     #: The final message that gets posted to Slack.
     msg = Property(Str, depends_on='msg_meta')
 
     #: 3D numpy array to hold three channel (RGB) screenshot pixel data.
-    img_data = Array(shape=(None, None, 3), dtype='uint8')
+    img_data = Array(shape=(None, None, 3), dtype='uint8', required=True)
 
     # FIXME: Not sure if this the right way to go about initiating a 
     # non-Trait. 
@@ -68,7 +68,7 @@ class FeedbackMessage(HasTraits):
             desc=self.description)
 
     def _img_data_changed(self):
-        
+
         Image.fromarray(self.img_data).save(self.compressed_img_buf, 'PNG')
         self.compressed_img_buf.seek(0)
 
