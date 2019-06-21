@@ -53,7 +53,7 @@ class FeedbackExampleApp(HasTraits):
 # appropriate place. In this example, we call it from the Feedback/Bugs menu
 # item in the Help menu.
 feedback_example_view = View(
-    Item('explanation', style='readonly', show_label=False),
+    Item('client_user_explanation', style='readonly', show_label=False),
     menubar=MenuBar(
         Menu(
             Action(name='Feedback/Bugs', action='initiate_feedback_dialog'),
@@ -70,7 +70,7 @@ class FeedbackExampleHandler(Handler):
     """ Simple handler for the FeedbackExampleApp. """
 
     def initiate_feedback_dialog(self, ui_info):
-       """ Initiates the feedback dialog. """ 
+        """ Initiates the feedback dialog. """ 
 
         # As mentioned earlier, the feedback dialog can be initiated by
         # invoking the `initiate_feedback_dialog_` function. The first argument
