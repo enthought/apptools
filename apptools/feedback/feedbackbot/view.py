@@ -45,6 +45,7 @@ feedback_msg_view = View(
             Item('organization', 
                  tooltip='Enter the name of your organization.'),
             Item('description', 
+                 style='custom',
                  tooltip='Enter feedback.',
                  height=200,
                  springy=True)),
