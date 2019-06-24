@@ -55,6 +55,20 @@ class TestFeedbackController(unittest.TestCase, UnittestTools):
 
         self.assertFalse(controller_no_description._send_enabled)
 
+    def _test_error_called_once(self, controller):
+        """ Helper function to test if error dialog box is opened. """
+
+        with patch('apptools.feedback.feedbackbot.view.error') as mock_error:
+            # Use a mocked version of the function that creates the error
+            # dialog.
+
+            # Mock the UIInfo object that is passed to the send button.
+            mock_ui_info = create_autospec(UIInfo())
+
+            controller._do_send(mock_ui_info)
+
+            mock_error.assert_called_once()
+
     def test_error_dialog_opened_if_slack_ratelimited_exception_occurs(self):
         """ Test that an error dialog box is opened if a SlackApiError occurs
             as a result of being rate-limited.
@@ -69,16 +83,13 @@ class TestFeedbackController(unittest.TestCase, UnittestTools):
                 data=patch.dict({'ok': False, 'error': 'ratelimited'}),
                 headers={'retry-after': 10})
 
+        # Mock the send method of the controller's model.
         self.msg.__dict__['send'] = MagicMock(
-            side_effect=SlackApiError('msg', dummy_response))
+            side_effect=SlackApiError('dummy_err_msg', dummy_response))
 
         controller = FeedbackController(model=self.msg)
 
-        with patch('apptools.feedback.feedbackbot.view.error') as mock_error:
-
-            controller._do_send(create_autospec(UIInfo()))
-
-            mock_error.assert_called_once()
+        self._test_error_called_once(controller)
 
     def test_error_dialog_opened_if_slack_exception_occurs(self):
         """ Test that an error dialog box is opened if a SlackApiError occurs,
@@ -90,15 +101,11 @@ class TestFeedbackController(unittest.TestCase, UnittestTools):
                 data=patch.dict({'ok': False, 'error': 'dummy_error'}))
 
         self.msg.__dict__['send'] = MagicMock(
-            side_effect=SlackApiError('msg', dummy_response))
+            side_effect=SlackApiError('dummy_err_msg', dummy_response))
 
         controller = FeedbackController(model=self.msg)
 
-        with patch('apptools.feedback.feedbackbot.view.error') as mock_error:
-
-            controller._do_send(create_autospec(UIInfo()))
-
-            mock_error.assert_called_once()
+        self._test_error_called_once(controller)
 
     def test_error_dialog_opened_if_client_connection_exception_occurs(self):
         """ Test that an error dialog box is opened if a ClientConnectionError
@@ -111,11 +118,7 @@ class TestFeedbackController(unittest.TestCase, UnittestTools):
 
         controller = FeedbackController(model=self.msg)
 
-        with patch('apptools.feedback.feedbackbot.view.error') as mock_error:
-
-            controller._do_send(create_autospec(UIInfo()))
-
-            mock_error.assert_called_once()
+        self._test_error_called_once(controller)
 
     def test_error_dialog_opened_if_server_timeout_exception_occurs(self):
         """ Test that an error dialog box is opened if a ServerTimeoutError
@@ -128,11 +131,7 @@ class TestFeedbackController(unittest.TestCase, UnittestTools):
 
         controller = FeedbackController(model=self.msg)
 
-        with patch('apptools.feedback.feedbackbot.view.error') as mock_error:
-
-            controller._do_send(create_autospec(UIInfo()))
-
-            mock_error.assert_called_once()
+        self._test_error_called_once(controller)
 
     def test_error_dialog_opened_if_other_exception_occurs(self):
         """ Test that an error dialog box is opened if an Exception
@@ -144,11 +143,7 @@ class TestFeedbackController(unittest.TestCase, UnittestTools):
 
         controller = FeedbackController(model=self.msg)
 
-        with patch('apptools.feedback.feedbackbot.view.error') as mock_error:
-
-            controller._do_send(create_autospec(UIInfo()))
-
-            mock_error.assert_called_once()
+        self._test_error_called_once(controller)
 
     def test_information_dialog_opened_if_no_exception_occurs(self):
         """ Test that an information dialog box is opened
@@ -163,7 +158,9 @@ class TestFeedbackController(unittest.TestCase, UnittestTools):
         with patch('apptools.feedback.feedbackbot.view.information') \
                 as mock_info:
 
-            controller._do_send(create_autospec(UIInfo()))
+            mock_ui_info = create_autospec(UIInfo())
+
+            controller._do_send(mock_ui_info)
 
             mock_info.assert_called_once()
 
