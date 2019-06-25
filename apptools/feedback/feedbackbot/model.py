@@ -10,7 +10,7 @@ import slack
 from PIL import Image
 
 from traits.api import (
-    HasRequiredTraits, Str, Property, Array, String, Any)
+    HasRequiredTraits, Str, Property, Array, String)
 
 logger = logging.getLogger(__name__)
 
@@ -49,11 +49,6 @@ class FeedbackMessage(HasRequiredTraits):
     #: 3D numpy array to hold three channel (RGB) screenshot pixel data.
     img_data = Array(shape=(None, None, 3), dtype='uint8', required=True)
 
-    # FIXME: Not sure if this the right way to go about initiating a
-    # non-Trait.
-    #: In-memory file buffer to store the compressed screenshot.
-    compressed_img_buf = Any(io.BytesIO())
-
     def _get_msg(self):
 
         feedback_template = 'Name: {name}\n' \
@@ -63,11 +58,6 @@ class FeedbackMessage(HasRequiredTraits):
             name=self.name,
             org=self.organization,
             desc=self.description)
-
-    def _img_data_changed(self):
-
-        Image.fromarray(self.img_data).save(self.compressed_img_buf, 'PNG')
-        self.compressed_img_buf.seek(0)
 
     def send(self):
         """ Send feedback message and screenshot to Slack. """
@@ -85,13 +75,20 @@ class FeedbackMessage(HasRequiredTraits):
         logger.info("Attempting to send message: <%s> to channel: <%s>",
                     self.msg, self.channels)
 
+        # Compress screenshot into PNG format using an in-memory buffer.
+        compressed_img_buf = io.BytesIO()
+
+        Image.fromarray(self.img_data).save(compressed_img_buf, 'PNG')
+
+        compressed_img_buf.seek(0)
+
         # Send message.
         response = client.files_upload(
                 channels=self.channels,
                 initial_comment=self.msg,
                 filetype='png',
                 filename='screenshot.png',
-                file=self.compressed_img_buf)
+                file=compressed_img_buf)
 
         logger.info("Message sent."
                     + " Slack responded with OK : {ok_resp}".format(
