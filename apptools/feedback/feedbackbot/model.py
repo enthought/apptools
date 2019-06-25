@@ -44,7 +44,7 @@ class FeedbackMessage(HasRequiredTraits):
     token = Str(required=True)
 
     #: The final message that gets posted to Slack.
-    msg = Property(Str, depends_on='msg_meta')
+    msg = Property(Str, depends_on='+msg_meta')
 
     #: 3D numpy array to hold three channel (RGB) screenshot pixel data.
     img_data = Array(shape=(None, None, 3), dtype='uint8', required=True)

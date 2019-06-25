@@ -76,7 +76,7 @@ class FeedbackController(Controller):
 
     #: Property that decides whether the state of the message is valid
     # for sending.
-    _send_enabled = Property(depends_on='[+msg_meta]')
+    _send_enabled = Property(depends_on='+msg_meta')
 
     # Default view for this controller.
     trait_view = feedback_msg_view
