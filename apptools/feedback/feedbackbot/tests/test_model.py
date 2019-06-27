@@ -40,6 +40,9 @@ class TestFeedbackMessage(unittest.TestCase, UnittestTools):
                             channels='general')
 
     def test_send(self):
+        """ Test that the slack client call happens with the correct arguments.
+
+        """
 
         img_data = np.array([[[1, 2, 3]]], dtype=np.uint8)
 
@@ -55,9 +58,8 @@ class TestFeedbackMessage(unittest.TestCase, UnittestTools):
         msg.organization = 'Death Eather, Inc'
         msg.description = 'No one calls me Voldy.'
 
-        expected_msg = \
-            'Name: {}\nOrganization: {}\nDescription: {}'.format(
-                msg.name, msg.organization, msg.description)
+        expected_msg = 'Name: {}\nOrganization: {}\nDescription: {}'.format(
+            msg.name, msg.organization, msg.description)
 
         files_upload_found = False
 
@@ -73,7 +75,7 @@ class TestFeedbackMessage(unittest.TestCase, UnittestTools):
                     # function calls.
 
                     # Glean function name, provided positional and keyword
-                    # arguemts in call_
+                    # arguments in call_
                     name, args, kwargs = call_
 
                     if name == '().files_upload':
@@ -86,8 +88,8 @@ class TestFeedbackMessage(unittest.TestCase, UnittestTools):
                         # There shouldn't be any positional arguments.
                         self.assertTupleEqual((), args)
 
-                        # The following lines check keyword arguments were
-                        # passed correctly.
+                        # The following lines check whether keyword arguments
+                        # were passed correctly.
                         np.testing.assert_almost_equal(
                             img_data, np.array(Image.open(kwargs['file'])))
 
