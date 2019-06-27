@@ -75,7 +75,7 @@ def qimage_to_rgb_array(qimg):
     return img_array
 
 
-def initiate_feedback_dialog_(control, token, channels):
+def initiate_feedback_dialog(control, token, channels):
     """ Initiate the feedback dialog box.
 
     This function grabs a screenshot of the active GUI widget
