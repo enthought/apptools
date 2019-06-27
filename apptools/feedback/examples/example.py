@@ -18,7 +18,7 @@ from traitsui.api import (
     Item, Menu, MenuBar, OKCancelButtons, View, Action, Handler
 )
 
-from apptools.feedback.feedbackbot.utils import initiate_feedback_dialog_
+from apptools.feedback.feedbackbot.utils import initiate_feedback_dialog
 
 
 class FeedbackExampleApp(HasTraits):
@@ -83,7 +83,7 @@ class FeedbackExampleHandler(Handler):
         # could go wrong if the token gets leaked.). The third argument is the
         # channel where you'd like messages from this app to go. The value for
         # this argument must start with '#'.
-        initiate_feedback_dialog_(ui_info.ui.control,
+        initiate_feedback_dialog(ui_info.ui.control,
                                   os.environ['FEEDBACKBOT_OAUTH_TOKEN'],
                                   '#general')
 
