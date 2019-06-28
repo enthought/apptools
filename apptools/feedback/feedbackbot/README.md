@@ -12,7 +12,7 @@ demonstrate how the dialog box can be incorporated in any TraitsUI app.
 
 Create a Slack app and install it to the Slack workspace. Then, add a bot user
 to the app (detailed instructions are provided
-[here](https://api.slack.com/bot-users).
+[here](https://api.slack.com/bot-users)).
 
 #### Tokens, authentication, and security
 
@@ -26,8 +26,7 @@ they can upload files to a channel, lookup a user with an email address, and
 even get the entire conversation history of a channel (see this
 [link](https://api.slack.com/bot-users#methods) for a full list of functions
 accessible with a bot token). Needless to say, tokens must be secured and never
-revealed publicly. The Slack developers blog likens it to sharing passwords
-online. The responsibility of transmitting tokens securely lies with the
+revealed publicly. The responsibility of transmitting tokens securely lies with the
 developer of the app incorporating this dialog box. Refer to the [Slack API
 documentation](https://api.slack.com/docs/oauth-safety)
 for security best-practices.
