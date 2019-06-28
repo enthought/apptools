@@ -48,7 +48,7 @@ class FeedbackExampleApp(HasTraits):
 
 
 # View for the example app. The feedbackbot module provides a helper function
-# `initiate_feedback_dialog_` that launches the feedback dialog box. To include
+# `initiate_feedback_dialog` that launches the feedback dialog box. To include
 # the feedback dialog box in the app, simply call this function from an
 # appropriate place. In this example, we call it from the Feedback/Bugs menu
 # item in the Help menu.
