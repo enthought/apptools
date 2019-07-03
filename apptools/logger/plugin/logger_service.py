@@ -1,8 +1,10 @@
 # Standard library imports
-from cStringIO import StringIO
 import logging
 import os
 import zipfile
+
+# Third-party library imports
+from six.moves import cStringIO as StringIO
 
 # Enthought library imports
 from pyface.workbench.api import View as WorkbenchView

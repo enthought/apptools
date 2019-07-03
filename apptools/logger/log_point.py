@@ -19,7 +19,9 @@
 
 # Standard library imports.
 import inspect
-from cStringIO import StringIO
+
+# Third-party library imports.
+from six.moves import cStringIO as StringIO
 
 
 def log_point(msg='\n'):
