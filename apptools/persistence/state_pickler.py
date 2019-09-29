@@ -602,9 +602,8 @@ class StateUnpickler:
         return State(__metadata__=value)
 
     def _handle_file_path(self, value):
-        if (value['class_name'] == 'FilePath') and \
-           ('file_path' in value['module']) and \
-           self.file_name:
+        if ((value['class_name'] == 'FilePath') and
+            ('file_path' in value['module']) and self.file_name):
             data = value['data']['data']
             fp = FilePath(data['rel_pth'])
             fp.set_absolute(self.file_name)
@@ -726,8 +725,8 @@ class StateSetter:
           order), after all other attributes are set.
 
         """
-        if (not isinstance(state, State)) and \
-               state.__metadata__['type'] != 'instance':
+        if ((not isinstance(state, State)) and
+            state.__metadata__['type'] != 'instance'):
             raise StateSetterError(
                 'Can only set the attributes of an instance.'
             )
@@ -829,12 +828,12 @@ class StateSetter:
         cls = obj.__class__
         if (metadata['class_name'] != cls.__name__):
             raise StateSetterError(
-                'Instance (%s) and state (%s) do not have the same class'\
+                'Instance (%s) and state (%s) do not have the same class'
                 ' name!'%(cls.__name__, metadata['class_name'])
             )
         if (metadata['module'] != cls.__module__):
             raise StateSetterError(
-                'Instance (%s) and state (%s) do not have the same module'\
+                'Instance (%s) and state (%s) do not have the same module'
                 ' name!'%(cls.__module__, metadata['module'])
             )
 
@@ -995,8 +994,8 @@ def update_state(state):
 def create_instance(state):
     """Create an instance from the state if possible.
     """
-    if (not isinstance(state, State)) and \
-           ('class_name'  not in state.__metadata__):
+    if ((not isinstance(state, State)) and
+        ('class_name'  not in state.__metadata__)):
         raise StateSetterError('No class information in state')
     metadata = state.__metadata__
     class_name = metadata.get('class_name')
