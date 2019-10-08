@@ -8,8 +8,8 @@ rewrite.
 
 import logging
 import os.path
-from email import Encoders
-from email.MIMEBase import MIMEBase
+from email import encoders
+from email.mime.base import MIMEBase
 
 from traits.api import Any, HasTraits
 
@@ -71,7 +71,7 @@ class Attachments(HasTraits):
 
         msg.set_payload(file_object.getvalue())
 
-        Encoders.encode_base64(msg) # Encode the payload using Base64
+        encoders.encode_base64(msg) # Encode the payload using Base64
         msg.add_header('Content-Disposition', 'attachment', filename='project.zip')
 
         self.message.attach(msg)
