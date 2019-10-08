@@ -21,7 +21,7 @@
 import inspect
 
 # Third-party library imports.
-from six.moves import cStringIO as StringIO
+from six import StringIO
 
 
 def log_point(msg='\n'):

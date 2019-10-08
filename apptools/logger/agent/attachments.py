@@ -58,13 +58,13 @@ class Attachments(HasTraits):
         relpath = os.path.basename(dir)
 
         import zipfile
-        from six.moves import cStringIO as StringIO
+        from six import BytesIO
 
         ctype = 'application/octet-stream'
         maintype, subtype = ctype.split('/', 1)
         msg = MIMEBase(maintype, subtype)
 
-        file_object = StringIO()
+        file_object = BytesIO()
         zip = zipfile.ZipFile(file_object, 'w')
         _append_to_zip_archive(zip, dir, relpath)
         zip.close()
