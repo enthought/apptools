@@ -8,8 +8,6 @@ except ImportError:
 
 __requires__ = [
     'configobj',
-    'numpy',
-    'pandas',
     'six',
     'traitsui',
 ]
