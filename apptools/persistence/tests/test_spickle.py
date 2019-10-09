@@ -33,7 +33,7 @@ class Foo(object):
         self.a.b = 200
         self.ref = self.a
         self.b = B()
-        self.b.set(i=20, f=2.0)
+        self.b.trait_set(i=20, f=2.0)
 
 class TestStatePickler(unittest.TestCase):
     def _test_object(self, x):
