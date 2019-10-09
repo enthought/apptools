@@ -20,7 +20,6 @@ class LoggerServiceTestCase(unittest.TestCase):
             msg = logger_service.create_email_message(
                 fromaddr='', toaddrs='', ccaddrs='', subject='', priority=''
             )
-        self.assertIsNotNone(msg)
         self.assertIsInstance(msg, MIMEMultipart)
 
     def test_create_email_message_with_user_data(self):
@@ -39,5 +38,4 @@ class LoggerServiceTestCase(unittest.TestCase):
                 fromaddr='', toaddrs='', ccaddrs='', subject='', priority='',
                 include_userdata=True,
             )
-        self.assertIsNotNone(msg)
         self.assertIsInstance(msg, MIMEMultipart)
