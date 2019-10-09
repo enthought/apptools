@@ -6,6 +6,7 @@
 # License: BSD Style.
 
 import base64
+import pickle
 import unittest
 import math
 import os
@@ -151,7 +152,7 @@ class TestDictPickler(unittest.TestCase):
         junk = state_pickler.gunzip_string(
             decodestring(data[num_attr]['data'])
         )
-        num = numpy.loads(junk)
+        num = pickle.loads(junk)
         self.assertEqual(numpy.alltrue(numpy.ravel(num == obj.numeric)), 1)
 
         self.assertTrue(data['ref']['type'] in ['reference', 'numeric'])
