@@ -4,6 +4,8 @@ Apptools CHANGELOG
 Version 4.5.0
 ~~~~~~~~~~~~~
 
+Released : 10 October 2019
+
 * Remove use of `2to3`. (#90)
 * Use etstool for CI tasks. Setup travis macos and appveyor CI. (#92)
 * Temporarily change cwd when running tests. (#104)
