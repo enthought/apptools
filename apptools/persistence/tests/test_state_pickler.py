@@ -6,6 +6,7 @@
 # License: BSD Style.
 
 import base64
+import pickle
 import unittest
 import math
 import os
