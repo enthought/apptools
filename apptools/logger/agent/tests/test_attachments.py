@@ -22,7 +22,7 @@ class AttachmentsTestCase(unittest.TestCase):
 
         self.tmpfile = os.path.join(self.tmpdir, "dummy_file.txt")
         with io.open(self.tmpfile, 'w') as filehandle:
-            filehandle.write("Dummy data in dummy file for dummies")
+            filehandle.write(u"Dummy data in dummy file for dummies")
 
     def test_attaching_workspace(self):
         class DummyWorkspace(object):
