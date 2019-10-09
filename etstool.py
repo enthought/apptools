@@ -98,6 +98,7 @@ dependencies = {
     "pandas",
     "pyface",
     "nose",
+    "mock",
 }
 
 
