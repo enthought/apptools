@@ -58,7 +58,7 @@ class Attachments(HasTraits):
         relpath = os.path.basename(dir)
 
         import zipfile
-        from six import BytesIO
+        from io import BytesIO
 
         ctype = 'application/octet-stream'
         maintype, subtype = ctype.split('/', 1)

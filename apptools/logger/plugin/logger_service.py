@@ -4,7 +4,7 @@ import os
 import zipfile
 
 # Third-party library imports
-from six import BytesIO
+from io import BytesIO
 
 # Enthought library imports
 from pyface.workbench.api import View as WorkbenchView
