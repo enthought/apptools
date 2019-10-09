@@ -12,9 +12,13 @@ import sys
 from os.path import abspath, dirname, basename, join
 from io import BytesIO
 
+# 3rd party imports.
+import pkg_resources
+
 # Enthought library imports.
 from apptools.persistence import state_pickler
 from apptools.persistence import file_path
+
 
 class Test:
     def __init__(self):
@@ -22,6 +26,16 @@ class Test:
 
 
 class TestFilePath(unittest.TestCase):
+    def setUp(self):
+        # If the cwd is somewhere under /tmp, that confuses the tests below.
+        # Use the directory containing this file, instead.
+        test_cwd = pkg_resources.resource_filename("apptools.persistence", "")
+        self.old_cwd = os.getcwd()
+        os.chdir(test_cwd)
+
+    def tearDown(self):
+        os.chdir(self.old_cwd)
+
     def test_relative(self):
         """Test if relative paths are set correctly.
         """

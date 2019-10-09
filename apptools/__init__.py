@@ -7,6 +7,7 @@ except ImportError:
     __version__ = 'not-built'
 
 __requires__ = [
-    'traitsui',
     'configobj',
+    'six',
+    'traitsui',
 ]
