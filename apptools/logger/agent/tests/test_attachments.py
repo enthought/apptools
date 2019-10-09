@@ -42,7 +42,7 @@ class AttachmentsTestCase(unittest.TestCase):
         message = attachments.message
         self.assertTrue(message.is_multipart())
         payload = message.get_payload()
-        self.assertTrue(len(payload), 1)
+        self.assertEqual(len(payload), 1)
 
     def test_attaching_single_project(self):
         class DummySingleProject(object):
@@ -62,4 +62,4 @@ class AttachmentsTestCase(unittest.TestCase):
         message = attachments.message
         self.assertTrue(message.is_multipart())
         payload = message.get_payload()
-        self.assertTrue(len(payload), 1)
+        self.assertEqual(len(payload), 1)
