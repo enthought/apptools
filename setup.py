@@ -123,6 +123,7 @@ if __name__ == "__main__":
               """.splitlines() if len(c.strip()) > 0],
           description='application tools',
           long_description=open('README.rst').read(),
+          long_description_content_type="text/x-rst",
           include_package_data=True,
           package_data={'apptools': ['help/help_plugin/*.ini',
                                      'help/help_plugin/action/images/*.png',
