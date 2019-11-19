@@ -2,13 +2,13 @@
 apptools: application tools
 ===========================
 
-.. image:: https://api.travis-ci.org/enthought/apptools.png?branch=master
-   :target: https://travis-ci.org/enthought/apptools
-   :alt: Build status
+.. image:: https://travis-ci.org/enthought/apptools.svg?branch=master
+    :target: https://travis-ci.org/enthought/apptools
+    :alt: Build status
 
-.. image:: http://codecov.io/github/enthought/apptools/coverage.svg?branch=master
-   :target: http://codecov.io/github/enthought/apptools?branch=master
-   :alt: Coverage report
+.. image:: https://codecov.io/github/enthought/apptools/coverage.svg?branch=master
+    :target: https://codecov.io/github/enthought/apptools?branch=master
+    :alt: Coverage report
 
 Documentation: http://docs.enthought.com/apptools
 
