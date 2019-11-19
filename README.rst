@@ -2,7 +2,7 @@
 apptools: application tools
 ===========================
 
-.. image:: https://api.travis-ci.org/enthought/apptools.svg?branch=master
+.. image:: https://travis-ci.org/enthought/apptools.svg?branch=master
     :target: https://travis-ci.org/enthought/apptools
     :alt: Build status
 
