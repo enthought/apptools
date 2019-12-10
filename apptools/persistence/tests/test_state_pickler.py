@@ -14,7 +14,7 @@ import tempfile
 
 import numpy
 
-from traits.api import Bool, Int, Long, Array, Float, Complex, Any, \
+from traits.api import Bool, Int, Array, Float, Complex, Any, \
     Str, Unicode, Instance, Tuple, List, Dict, HasTraits
 
 try:
@@ -64,7 +64,7 @@ class TestClassic:
 class TestTraits(HasTraits):
     b = Bool(False)
     i = Int(7)
-    l = Long(12345678901234567890)
+    l = Int(12345678901234567890)
     f = Float(math.pi)
     c = Complex(complex(1.01234, 2.3))
     n = Any
