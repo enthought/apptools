@@ -67,7 +67,7 @@ class FilePath(object):
         ret = (_src.count(os.sep) * ('..' + os.sep)) + _dst
 
         # Make it posix style.
-        if os.sep is not '/':
+        if os.sep != '/':
             ret.replace(os.sep, '/')
 
         # Store it.
