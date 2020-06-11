@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from traits.api import Bool, Event, Instance, Interface, Unicode
+from traits.api import Bool, Event, Instance, Interface, Str
 
 # Local imports.
 from .i_bind_event import IBindEvent
@@ -43,7 +43,7 @@ class IScriptManager(Interface):
     # This is the text of the script currently being recorded (or the last
     # recorded script if none is currently being recorded).  It is updated
     # automatically as the user performs actions.
-    script = Unicode
+    script = Str
 
     # This event is fired when the recorded script changes.  The value of the
     # event will be the ScriptManager instance.

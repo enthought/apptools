@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from traits.api import Any, Instance, Str, Unicode
+from traits.api import Any, Instance, Str
 from pyface.action.api import Action
 from pyface.workbench.api import WorkbenchWindow
 
@@ -149,7 +149,7 @@ class LabelIncrementSizeAction(LabelAction):
     #### 'Action' interface ###################################################
 
     # The name of the action.
-    name = Unicode("&Increment size")
+    name = Str("&Increment size")
 
     ###########################################################################
     # 'Action' interface.
@@ -167,7 +167,7 @@ class LabelDecrementSizeAction(LabelAction):
     #### 'Action' interface ###################################################
 
     # The name of the action.
-    name = Unicode("&Decrement size")
+    name = Str("&Decrement size")
 
     ###########################################################################
     # 'Action' interface.
@@ -185,7 +185,7 @@ class LabelNormalFontAction(LabelAction):
     #### 'Action' interface ###################################################
 
     # The name of the action.
-    name = Unicode("&Normal font")
+    name = Str("&Normal font")
 
     ###########################################################################
     # 'Action' interface.
@@ -203,7 +203,7 @@ class LabelBoldFontAction(LabelAction):
     #### 'Action' interface ###################################################
 
     # The name of the action.
-    name = Unicode("&Bold font")
+    name = Str("&Bold font")
 
     ###########################################################################
     # 'Action' interface.
@@ -221,7 +221,7 @@ class LabelItalicFontAction(LabelAction):
     #### 'Action' interface ###################################################
 
     # The name of the action.
-    name = Unicode("&Italic font")
+    name = Str("&Italic font")
 
     ###########################################################################
     # 'Action' interface.

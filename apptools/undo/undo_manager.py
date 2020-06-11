@@ -14,7 +14,7 @@
 
 # Enthought library imports.
 from traits.api import Bool, Event, HasTraits, Instance, Int, Property, \
-    Unicode, provides
+    Str, provides
 
 # Local imports.
 from .i_undo_manager import IUndoManager
@@ -40,7 +40,7 @@ class UndoManager(HasTraits):
     # This is the name of the command that can be redone.  It will be empty if
     # there is no command that can be redone.  It is maintained by the undo
     # manager.
-    redo_name = Property(Unicode)
+    redo_name = Property(Str)
 
     # This is the sequence number of the next command to be performed.  It is
     # incremented immediately before a command is invoked (by its 'do()'
@@ -55,7 +55,7 @@ class UndoManager(HasTraits):
     # This is the name of the command that can be undone.  It will be empty if
     # there is no command that can be undone.  It is maintained by the undo
     # manager.
-    undo_name = Property(Unicode)
+    undo_name = Property(Str)
 
     ###########################################################################
     # 'IUndoManager' interface.

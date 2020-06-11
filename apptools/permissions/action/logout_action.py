@@ -15,7 +15,7 @@
 
 # Enthought library imports.
 from pyface.action.api import Action
-from traits.api import Bool, Unicode
+from traits.api import Bool, Str
 
 # Local imports.
 from apptools.permissions.package_globals import get_permissions_manager
@@ -28,7 +28,7 @@ class LogoutAction(Action):
 
     enabled = Bool(False)
 
-    name = Unicode("Log&out")
+    name = Str("Log&out")
 
     ###########################################################################
     # 'object' interface.

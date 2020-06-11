@@ -83,7 +83,7 @@ object that enables the ``age`` item when the user has the
 has the ``PersonSalaryPerm`` permission::
 
     from apptools.permissions.api import SecureHandler
-    from traits.api import HasTraits, Int, Unicode
+    from traits.api import HasTraits, Int, Str
     from traitsui.api import Item, View
 
     from permissions import UpdatePersonAgePerm, PersonSalaryPerm
@@ -92,7 +92,7 @@ has the ``PersonSalaryPerm`` permission::
         """A simple example of an object model"""
 
         # Name.
-        name = Unicode
+        name = Str
 
         # Age in years.
         age = Int

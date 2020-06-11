@@ -13,7 +13,7 @@
 #------------------------------------------------------------------------------
 
 # Enthought library imports.
-from traits.api import Bool, Instance, Interface, Unicode
+from traits.api import Bool, Instance, Interface, Str
 
 # Local imports.
 from .i_undo_manager import IUndoManager
@@ -36,7 +36,7 @@ class ICommandStack(Interface):
     # This is the name of the command that can be redone.  It will be empty if
     # there is no command that can be redone.  It is maintained by the undo
     # stack.
-    redo_name = Unicode
+    redo_name = Str
 
     # This is the undo manager that manages this stack.
     undo_manager = Instance(IUndoManager)
@@ -44,7 +44,7 @@ class ICommandStack(Interface):
     # This is the name of the command that can be undone.  It will be empty if
     # there is no command that can be undone.  It is maintained by the undo
     # stack.
-    undo_name = Unicode
+    undo_name = Str
 
     ###########################################################################
     # 'ICommandStack' interface.

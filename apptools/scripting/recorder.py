@@ -15,7 +15,7 @@ import six
 import six.moves.builtins
 
 from traits.api import (HasTraits, List, Str, Dict, Bool,
-        Unicode, Property, Int, Instance)
+        Property, Int, Instance)
 from traits.util.camel_case import camel_case_to_python
 
 
@@ -101,7 +101,7 @@ class Recorder(HasTraits):
 
     # The Python script we have recorded so far.  This is just a
     # convenience trait for the `get_code()` method.
-    script = Property(Unicode)
+    script = Property(Str)
 
     ########################################
     # Private traits.

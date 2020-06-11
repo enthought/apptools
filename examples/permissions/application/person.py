@@ -3,7 +3,7 @@
 
 # Enthought library imports.
 from apptools.permissions.api import SecureHandler
-from traits.api import HasTraits, Int, Unicode
+from traits.api import HasTraits, Int, Str
 from traitsui.api import Item, View
 
 # Local imports.
@@ -14,7 +14,7 @@ class Person(HasTraits):
     """A simple example of an object model"""
 
     # Name.
-    name = Unicode
+    name = Str
 
     # Age in years.
     age = Int

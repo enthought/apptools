@@ -15,7 +15,7 @@
 
 # Enthought library imports.
 from pyface.action.api import Action
-from traits.api import Unicode
+from traits.api import Str
 
 # Local imports.
 from apptools.permissions.package_globals import get_permissions_manager
@@ -26,7 +26,7 @@ class LoginAction(Action):
 
     #### 'Action' interface ###################################################
 
-    name = Unicode("Log&in...")
+    name = Str("Log&in...")
 
     ###########################################################################
     # 'Action' interface.

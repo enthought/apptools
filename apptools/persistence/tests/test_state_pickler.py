@@ -15,7 +15,7 @@ import tempfile
 import numpy
 
 from traits.api import Bool, Int, Array, Float, Complex, Any, \
-    Str, Unicode, Instance, Tuple, List, Dict, HasTraits
+    Str, Instance, Tuple, List, Dict, HasTraits
 
 try:
     from tvtk.api import tvtk
@@ -69,7 +69,7 @@ class TestTraits(HasTraits):
     c = Complex(complex(1.01234, 2.3))
     n = Any
     s = Str('String')
-    u = Unicode(u'Unicode')
+    u = Str(u'Unicode')
     inst = Instance(A)
     tuple = Tuple
     list = List

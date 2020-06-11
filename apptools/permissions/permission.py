@@ -13,8 +13,8 @@
 #------------------------------------------------------------------------------
 
 
-# Enthought library imports.
-from traits.api import Bool, HasTraits, Property, Str, Unicode
+# Enthought library imports
+from traits.api import Bool, HasTraits, Property, Str
 
 # Locals imports.
 from .package_globals import get_permissions_manager
@@ -32,7 +32,7 @@ class Permission(HasTraits):
     id = Str
 
     # A user friendly description of the permission.
-    description = Unicode
+    description = Str
 
     # Set if the current user has this permission.  This is typically used with
     # the enabled_when and visible_when traits of a TraitsUI Item object when
@@ -88,7 +88,7 @@ class ManagePolicyPermission(Permission):
 
     id = Str('ets.permissions.manage_policy')
 
-    description = Unicode(u"Manage permissions policy")
+    description = Str(u"Manage permissions policy")
 
     bootstrap = Bool(True)
 
@@ -100,6 +100,6 @@ class ManageUsersPermission(Permission):
 
     id = Str('ets.permissions.manage_users')
 
-    description = Unicode(u"Manage users")
+    description = Str(u"Manage users")
 
     bootstrap = Bool(True)

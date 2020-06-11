@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from traits.api import HasTraits, Instance, List, Unicode
+from traits.api import HasTraits, Instance, List, Str
 from traitsui.api import Item, TableEditor, View
 from traitsui.menu import OKCancelButtons
 from traitsui.table_column import ObjectColumn
@@ -26,10 +26,10 @@ class _User(HasTraits):
     #### '_User' interface ####################################################
 
     # The user name.
-    name = Unicode
+    name = Str
 
     # The user description.
-    description = Unicode
+    description = Str
 
 
 class _UsersView(HasTraits):

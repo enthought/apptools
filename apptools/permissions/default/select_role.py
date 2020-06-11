@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from traits.api import HasTraits, Instance, List, Unicode
+from traits.api import HasTraits, Instance, List, Str
 from traitsui.api import Item, TableEditor, View
 from traitsui.menu import OKCancelButtons
 from traitsui.table_column import ObjectColumn
@@ -26,10 +26,10 @@ class _Role(HasTraits):
     #### '_RoleModel' interface ###############################################
 
     # The role name.
-    name = Unicode
+    name = Str
 
     # The role description.
-    description = Unicode
+    description = Str
 
     # The permissions ids.
     permissions = List

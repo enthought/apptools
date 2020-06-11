@@ -3,7 +3,7 @@
 
 # Enthought library imports.
 from traits.api import Any, HasTraits, Instance, Str, Undefined
-from traits.api import Unicode
+from traits.api import Str
 
 # Third-party librart imports.
 import six
@@ -102,8 +102,8 @@ class PreferenceBinding(HasTraits):
         if type(handler) is Str:
             pass
 
-        # If the trait type is 'Unicode' then we convert the raw value.
-        elif type(handler) is Unicode:
+        # If the trait type is 'Str' then we convert the raw value.
+        elif type(handler) is Str:
             value = six.text_type(value)
 
         # Otherwise, we eval it!

@@ -15,7 +15,7 @@
 
 # Enthought library imports.
 from pyface.action.api import Group, MenuManager
-from traits.api import Unicode
+from traits.api import Str
 
 # Local imports.
 from apptools.permissions.package_globals import get_permissions_manager
@@ -31,7 +31,7 @@ class UserMenuManager(MenuManager):
 
     id = 'User'
 
-    name = Unicode("&User")
+    name = Str("&User")
 
     ###########################################################################
     # 'object' interface.

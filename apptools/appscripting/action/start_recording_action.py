@@ -15,7 +15,7 @@
 
 # Enthought library imports.
 from pyface.action.api import Action
-from traits.api import Unicode
+from traits.api import Str
 
 # Local imports.
 from apptools.appscripting.package_globals import get_script_manager
@@ -27,7 +27,7 @@ class StartRecordingAction(Action):
 
     #### 'Action' interface ###################################################
 
-    name = Unicode("Start recording")
+    name = Str("Start recording")
 
     ###########################################################################
     # 'Action' interface.

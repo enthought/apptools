@@ -16,7 +16,7 @@
 # Enthought library imports.
 from pyface.action.api import Action
 from traits.api import Bool, Event, HasTraits, provides, \
-        Instance, List, Unicode
+        Instance, List, Str
 
 # Local imports.
 from apptools.permissions.i_user import IUser
@@ -149,7 +149,7 @@ class _ChangePasswordAction(Action):
 
     enabled = Bool(False)
 
-    name = Unicode("&Change Password...")
+    name = Str("&Change Password...")
 
     ###########################################################################
     # 'object' interface.

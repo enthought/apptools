@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from traits.api import Bool, Dict, Interface, Unicode
+from traits.api import Bool, Dict, Interface, Str
 
 
 class IUser(Interface):
@@ -22,7 +22,7 @@ class IUser(Interface):
 
     # The user's name, ie. how they identified themselves to the permissions
     # policy.  It is only valid if the authenticated trait is True.
-    name = Unicode
+    name = Str
 
     # This is set if the user has been authenticated, ie. the name trait is
     # valid.
@@ -30,7 +30,7 @@ class IUser(Interface):
 
     # An optional description of the user (eg. their full name).  The exact
     # meaning is defined by the user manager.
-    description = Unicode
+    description = Str
 
     # This allows application defined, user specific data to be persisted in
     # the user database.  An application (or plugin) should save the data as a

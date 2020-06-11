@@ -13,7 +13,7 @@
 #------------------------------------------------------------------------------
 
 # Enthought library imports.
-from traits.api import Any, HasTraits, Unicode, provides
+from traits.api import Any, HasTraits, Str, provides
 
 # Local imports.
 from .i_command import ICommand
@@ -33,7 +33,7 @@ class AbstractCommand(HasTraits):
     # This is the name of the command as it will appear in any GUI element.  It
     # may include '&' which will be automatically removed whenever it is
     # inappropriate.
-    name = Unicode
+    name = Str
 
     ###########################################################################
     # 'ICommand' interface.

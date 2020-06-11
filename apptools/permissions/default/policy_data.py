@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from traits.api import HasTraits, Instance, List, Unicode
+from traits.api import HasTraits, Instance, List, Str
 
 # Local imports.
 from apptools.permissions.permission import Permission
@@ -24,10 +24,10 @@ class Role(HasTraits):
     """This represents a role."""
 
     # The role name.
-    name = Unicode
+    name = Str
 
     # The role description.
-    description = Unicode
+    description = Str
 
     # The permissions that define the role.
     permissions = List(Instance(Permission))
@@ -46,10 +46,10 @@ class Assignment(HasTraits):
     """This represents the assignment of roles to a user."""
 
     # The user name.
-    user_name = Unicode
+    user_name = Str
 
     # The user description.
-    description = Unicode
+    description = Str
 
     # The list of assigned roles.
     roles = List(Instance(Role))

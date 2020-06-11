@@ -15,7 +15,7 @@
 
 # Enthought library imports.
 from pyface.action.api import Action
-from traits.api import Bool, Unicode
+from traits.api import Bool, Str
 
 # Local imports.
 from apptools.appscripting.package_globals import get_script_manager
@@ -29,7 +29,7 @@ class StopRecordingAction(Action):
 
     enabled = Bool(False)
 
-    name = Unicode("Stop recording")
+    name = Str("Stop recording")
 
     ###########################################################################
     # 'object' interface.

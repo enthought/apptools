@@ -20,7 +20,7 @@ import weakref
 
 # Enthought library imports.
 from traits.api import Any, Bool, Callable, Dict, Event, HasTraits, \
-        implements, Instance, Int, List, Property, Str, Unicode
+        implements, Instance, Int, List, Property, Str
 
 # Local imports.
 from .bind_event import BindEvent
@@ -313,7 +313,7 @@ class ScriptManager(HasTraits):
     # This is the text of the script currently being recorded (or the last
     # recorded script if none is currently being recorded).  It is updated
     # automatically as the user performs actions.
-    script = Property(Unicode)
+    script = Property(Str)
 
     # This event is fired when the recorded script changes.  The value of the
     # event will be the ScriptManager instance.

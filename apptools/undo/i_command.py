@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from traits.api import Any, Interface, Unicode
+from traits.api import Any, Interface, Str
 
 
 class ICommand(Interface):
@@ -31,7 +31,7 @@ class ICommand(Interface):
     # This is the name of the command as it will appear in any GUI element.  It
     # may include '&' which will be automatically removed whenever it is
     # inappropriate.
-    name = Unicode
+    name = Str
 
     ###########################################################################
     # 'ICommand' interface.

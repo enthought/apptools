@@ -19,7 +19,7 @@ import os
 # Enthought library imports.
 from pyface.api import confirm, error, YES
 from traits.api import Bool, Dict, HasTraits, provides, Instance, \
-        List, Password, Property, Unicode
+        List, Password, Property, Str
 from traitsui.api import Handler, Item, View
 from traitsui.menu import Action, OKCancelButtons
 
@@ -37,7 +37,7 @@ class _LoginUser(HasTraits):
     #### '_LoginUser' interface ###############################################
 
     # The user name.
-    name = Unicode
+    name = Str
 
     # The user password.
     password = Password
@@ -53,7 +53,7 @@ class _ChangePassword(HasTraits):
     #### '_ChangePassword' interface ##########################################
 
     # The user name.
-    name = Unicode
+    name = Str
 
     # The new user password.
     new_password = Password
@@ -73,10 +73,10 @@ class _ViewUserAccount(HasTraits):
     #### '_ViewUserAccount' interface #########################################
 
     # The name the user uses to identify themselves.
-    name = Unicode
+    name = Str
 
     # A description of the user (typically their full name).
-    description = Unicode
+    description = Str
 
     # The password
     password = Password
@@ -249,11 +249,11 @@ class User(HasTraits):
 
     #### 'IUser' interface ####################################################
 
-    name = Unicode
+    name = Str
 
     authenticated = Bool(False)
 
-    description = Unicode
+    description = Str
 
     blob = Dict
 
