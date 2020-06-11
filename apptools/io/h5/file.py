@@ -431,7 +431,12 @@ class H5Group(Mapping):
 
     def iter_groups(self):
         """ Iterate over `H5Group` nodes that are children of this group. """
-        return (_wrap_node(g) for g in self._h5_group._v_groups.itervalues())
+        groups = self._h5_group._v_groups
+
+        # not using the groups.values() method here, because groups is a
+        # `proxydict` object whose .values() method is non-lazy. Related:
+        # PyTables/PyTables#784.
+        return (_wrap_node(groups[group_name]) for group_name in groups)
 
     @h5_group_wrapper(H5File.create_group)
     def create_group(self, group_subpath, delete_existing=False, **kwargs):
