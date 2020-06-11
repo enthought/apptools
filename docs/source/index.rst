@@ -4,7 +4,7 @@ AppTools Documentation
 .. toctree::
     :maxdepth: 2
     :glob:
-      
+
     appscripting/*
     permissions/Introduction
     permissions/ApplicationAPI
@@ -14,5 +14,6 @@ AppTools Documentation
     scripting/*
     undo/*
     selection/*
-      
+    api
+
 * :ref:`search`
