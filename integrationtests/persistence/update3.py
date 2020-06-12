@@ -5,7 +5,7 @@ from apptools.persistence.updater import Updater
 
 
 def update_project(self, state):
-    print 'updating to v3'
+    print('updating to v3')
     metadata = state['metadata']
     metadata['version'] = 3
     metadata['finished'] = True

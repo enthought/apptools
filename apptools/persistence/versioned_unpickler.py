@@ -172,7 +172,7 @@ class VersionedUnpickler(NewUnpickler):
 
         else:
             pass
-            #print 'No updater fn to worry about'
+            #print('No updater fn to worry about')
 
         return
 
@@ -214,7 +214,7 @@ class VersionedUnpickler(NewUnpickler):
         objects that are required for v1 and v2 do not have to exist they only
         need to be placeholders for the state during an upgrade.
         """
-        #print "importing %s %s" % (name, module)
+        #print("importing %s %s" % (name, module))
         module = __import__(module, globals(), locals(), [name])
         return vars(module)[name]
 

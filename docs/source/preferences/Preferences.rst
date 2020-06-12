@@ -194,7 +194,7 @@ mechanism when the preferences are changed (either via the helper or via the
 preferences node directly::
 
   def listener(obj, trait_name, old, new):
-      print trait_name, old, new
+      print(trait_name, old, new)
 
   >>> helper.on_trait_change(listener)
   >>> helper.ratio = 0.75
@@ -332,10 +332,9 @@ If you are using Envisage to build your applications then you might also be
 interested in the `Preferences in Envisage`_ section.
 
 .. _API: api/index.html
-.. _ConfigObj: http://www.voidspace.org.uk/python/configobj.html 
+.. _ConfigObj: http://www.voidspace.org.uk/python/configobj.html
 .. _IPreferences: ../../enthought/preferences/i_preferences.py
 .. _Preferences: ../../enthought/preferences/preferences.py
 .. _PreferencesHelper: ../../enthought/preferences/preferences_helper.py
 .. _ScopedPreferences: ../../enthought/preferences/scoped_preferences.py
 .. _`Preferences in Envisage`: PreferencesInEnvisage.html
-

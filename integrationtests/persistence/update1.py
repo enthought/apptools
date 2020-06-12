@@ -5,7 +5,7 @@ from apptools.persistence.updater import Updater
 
 def cleanup_foo(self, state):
 
-    print 'cleaning up Foo0'
+    print('cleaning up Foo0')
     state['firstname'] = state['prenom']
     state['lastname'] = state['surnom']
 
@@ -13,7 +13,7 @@ def cleanup_foo(self, state):
     del state['surnom']
 
     '''for key in state:
-        print '%s state ---> %s' % (key, state[key])
+        print('%s state ---> %s' % (key, state[key]))
     '''
 
     #self.__setstate_original__(state)
@@ -21,7 +21,7 @@ def cleanup_foo(self, state):
 
 
 def update_project(self, state):
-    print 'updating to v1'
+    print('updating to v1')
     metadata = state['metadata']
     metadata['version'] = 1
     metadata['diesel'] = 'E300TD'

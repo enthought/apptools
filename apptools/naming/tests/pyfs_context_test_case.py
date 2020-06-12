@@ -94,7 +94,7 @@ class PyFSContextTestCase(unittest.TestCase):
 
         # Bind a local file object.
         f = File(os.path.join(sub.path, 'foo.py'))
-        #f.create_file('print "foo!"\n')
+        #f.create_file('print("foo!")\n')
 
         context.bind('sub/foo.py', f)
         self.assertEqual(len(sub.list_bindings('')), 1)
@@ -209,7 +209,7 @@ class PyFSContextTestCase(unittest.TestCase):
 
         # Bind a file object.
         f = File(os.path.join(sub.path, 'foo.py'))
-        #f.create_file('print "foo!"\n')
+        #f.create_file('print("foo!")\n')
 
         context.bind('sub/foo.py', f)
         self.assertEqual(len(sub.list_bindings('')), 1)

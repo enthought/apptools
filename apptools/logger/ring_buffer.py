@@ -44,10 +44,10 @@ class RingBufferFull:
 # sample of use
 """x=RingBuffer(5)
 x.append(1); x.append(2); x.append(3); x.append(4)
-print x.__class__,x.get()
+print(x.__class__,x.get())
 x.append(5)
-print x.__class__,x.get()
+print(x.__class__,x.get())
 x.append(6)
-print x.data,x.get()
+print(x.data,x.get())
 x.append(7); x.append(8); x.append(9); x.append(10)
-print x.data,x.get()"""
+print(x.data,x.get())"""

@@ -277,8 +277,8 @@ except xmlrpclib.Fault, e:
     else:
         msg = e.faultString[tail + 1:]
 
-    print "The call raised an exception: %s" % msg
+    print("The call raised an exception: %s" % msg)
     sys.exit(0)
 
 # Show the result.
-print "Result:", result
+print("Result:", result)
