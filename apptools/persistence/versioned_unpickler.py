@@ -1,14 +1,28 @@
 # Standard library imports
 from pickle import *
-import sys, new
+import sys
 import logging
-from types import GeneratorType
+from types import GeneratorType, MethodType
 
 # Enthought library imports
 from apptools.persistence.updater import __replacement_setstate__
 
 
 logger = logging.getLogger(__name__)
+
+
+def _unbound_method(method, klass):
+    """
+    Python-version-agnostic unbound_method generator.
+
+    For Python 2, use MethodType. Python 3 doesn't have a separate
+    type for unbound methods; just return the method itself.
+    """
+    if sys.version_info < (3,):
+        return MethodType(method, None, klass)
+    else:
+        return method
+
 
 ##############################################################################
 # class 'NewUnpickler'
@@ -145,7 +159,7 @@ class VersionedUnpickler(NewUnpickler):
             # restore the original __setstate__ if necessary
             fn = getattr(klass, '__setstate_original__', False)
             if fn:
-                m = new.instancemethod(fn, None, klass)
+                m = _unbound_method(fn, klass)
                 setattr(klass, '__setstate__', m)
 
         return klass
@@ -163,11 +177,11 @@ class VersionedUnpickler(NewUnpickler):
             self.backup_setstate(module, klass)
 
             # add the updater into the class
-            m = new.instancemethod(fn, None, klass)
+            m = _unbound_method(fn, klass)
             setattr(klass, '__updater__', m)
 
             # hook up our __setstate__ which updates self.__dict__
-            m = new.instancemethod(__replacement_setstate__, None, klass)
+            m = _unbound_method(__replacement_setstate__, klass)
             setattr(klass, '__setstate__', m)
 
         else:
@@ -192,7 +206,7 @@ class VersionedUnpickler(NewUnpickler):
 
             #logger.debug('renaming __setstate__ to %s' % name)
             method = getattr(klass, '__setstate__')
-            m = new.instancemethod(method, None, klass)
+            m = _unbound_method(method, klass)
             setattr(klass, name, m)
 
         else:
