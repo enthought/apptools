@@ -25,10 +25,8 @@ from .itemplate_choice \
 #  'TemplateChoice' class:
 #-------------------------------------------------------------------------------
 
+@provides(ITemplateChoice)
 class TemplateChoice ( HasPrivateTraits ):
-
-    implements ( ITemplateChoice )
 
     # The user interface string for this choice:
     choice_value = Str
-
