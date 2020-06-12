@@ -105,7 +105,7 @@ class FileTestCase(unittest.TestCase):
     def test_copy(self):
         """ file copy """
 
-        content = 'print "Hello World!"\n'
+        content = 'print("Hello World!")\n'
 
         f = File('data/foo.txt')
         self.assertEqual(f.exists, False)
@@ -153,7 +153,7 @@ class FileTestCase(unittest.TestCase):
     def test_create_file(self):
         """ file creation """
 
-        content = 'print "Hello World!"\n'
+        content = 'print("Hello World!")\n'
 
         f = File('data/foo.txt')
         self.assertEqual(f.exists, False)
@@ -171,7 +171,7 @@ class FileTestCase(unittest.TestCase):
     def test_delete(self):
         """ file deletion """
 
-        content = 'print "Hello World!"\n'
+        content = 'print("Hello World!")\n'
 
         f = File('data/foo.txt')
         self.assertEqual(f.exists, False)

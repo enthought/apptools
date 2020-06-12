@@ -13,6 +13,8 @@
 #------------------------------------------------------------------------------
 
 
+from __future__ import print_function
+
 # Enthought library imports.
 from pyface.action.api import Action, Group, MenuManager
 from pyface.workbench.api import WorkbenchWindow
@@ -111,8 +113,8 @@ class ExampleScriptWindow(WorkbenchWindow):
         script = script_manager.script
 
         if script:
-            print script,
+            print(script, end="")
         else:
-            print "Script empty"
+            print("Script empty")
 
 #### EOF ######################################################################
