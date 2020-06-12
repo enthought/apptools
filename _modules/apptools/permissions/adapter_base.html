@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.permissions.adapter_base &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.permissions.adapter_base</h1><div class="highlight"><pre>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2007, Riverbank Computing Limited</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Riverbank Computing Limited</span>
+<span class="c1"># Description: &lt;Enthought permissions package component&gt;</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">.package_globals</span> <span class="k">import</span> <span class="n">get_permissions_manager</span>
+<span class="kn">from</span> <span class="nn">.permission</span> <span class="k">import</span> <span class="n">Permission</span>
+
+
+<div class="viewcode-block" id="AdapterBase"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.adapter_base.AdapterBase">[docs]</a><span class="k">class</span> <span class="nc">AdapterBase</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This is the base class for object specific adapters.&quot;&quot;&quot;</span>
+
+    <span class="c1"># The object being proxied.</span>
+    <span class="n">proxied</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1"># The list of permissions applied to the proxied object.</span>
+    <span class="n">permissions</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Instance</span><span class="p">(</span><span class="n">Permission</span><span class="p">))</span>
+
+    <span class="c1"># Set if the proxied object should be shown when it is enabled.</span>
+    <span class="n">show</span> <span class="o">=</span> <span class="n">Bool</span>
+
+    <span class="c1"># The desired enabled state of the proxied object, ie. the state set by the</span>
+    <span class="c1"># application before any permissions were applied.</span>
+    <span class="n">_desired_enabled</span> <span class="o">=</span> <span class="n">Bool</span>
+
+    <span class="c1"># The desired visible state of the proxied object, ie. the state set by the</span>
+    <span class="c1"># application before any permissions were applied.</span>
+    <span class="n">_desired_visible</span> <span class="o">=</span> <span class="n">Bool</span>
+
+    <span class="c1"># The registered adapter types.</span>
+    <span class="n">_adapter_types</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="AdapterBase.register_adapter"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.adapter_base.AdapterBase.register_adapter">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">register_adapter</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">adapter</span><span class="p">,</span> <span class="o">*</span><span class="n">types</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Register an adapter type for one or more object types.&quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">types</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">_adapter_types</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">adapter</span></div>
+
+<div class="viewcode-block" id="AdapterBase.factory"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.adapter_base.AdapterBase.factory">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">factory</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">proxied</span><span class="p">,</span> <span class="n">permissions</span><span class="p">,</span> <span class="n">show</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return an adapter for the proxied object.  permissions is a list of</span>
+<span class="sd">        permissions to attach to the object.  show is set if the proxied object</span>
+<span class="sd">        should be visible when it is disabled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Find a suitable adapter type.</span>
+        <span class="k">for</span> <span class="n">object_type</span><span class="p">,</span> <span class="n">adapter_type</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_adapter_types</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">proxied</span><span class="p">,</span> <span class="n">object_type</span><span class="p">):</span>
+                <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;no SecureProxy adapter registered for </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">proxied</span><span class="p">)</span>
+
+        <span class="n">adapter</span> <span class="o">=</span> <span class="n">adapter_type</span><span class="p">(</span><span class="n">proxied</span><span class="o">=</span><span class="n">proxied</span><span class="p">,</span> <span class="n">permissions</span><span class="o">=</span><span class="n">permissions</span><span class="p">,</span>
+                <span class="n">show</span><span class="o">=</span><span class="n">show</span><span class="p">)</span>
+
+        <span class="c1"># Refresh the state of the object when the authentication state of the</span>
+        <span class="c1"># current user changes.</span>
+        <span class="n">get_permissions_manager</span><span class="p">()</span><span class="o">.</span><span class="n">user_manager</span><span class="o">.</span><span class="n">on_trait_event</span><span class="p">(</span><span class="n">adapter</span><span class="o">.</span><span class="n">_refresh</span><span class="p">,</span>
+                <span class="s1">&#39;user_authenticated&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">adapter</span></div>
+
+<div class="viewcode-block" id="AdapterBase.adapt"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.adapter_base.AdapterBase.adapt">[docs]</a>    <span class="k">def</span> <span class="nf">adapt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Try and adapt the proxied object and return the adapted object if</span>
+<span class="sd">        successful.  If None is returned a proxy wrapper will be created.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="AdapterBase.setattr"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.adapter_base.AdapterBase.setattr">[docs]</a>    <span class="k">def</span> <span class="nf">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The default implementation to set an attribute of the proxied</span>
+<span class="sd">        object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">proxied</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AdapterBase.get_enabled"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.adapter_base.AdapterBase.get_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">get_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the enabled state of the proxied object.&quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="AdapterBase.set_enabled"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.adapter_base.AdapterBase.set_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">set_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the enabled state of the proxied object.&quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="AdapterBase.update_enabled"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.adapter_base.AdapterBase.update_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">update_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the proxied object after a possible new value of the enabled</span>
+<span class="sd">        attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">get_permissions_manager</span><span class="p">()</span><span class="o">.</span><span class="n">check_permissions</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">permissions</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_enabled</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_desired_visible</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_enabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Save the desired value so that it can be checked if the user becomes</span>
+        <span class="c1"># authenticated.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_desired_enabled</span> <span class="o">=</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="AdapterBase.get_visible"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.adapter_base.AdapterBase.get_visible">[docs]</a>    <span class="k">def</span> <span class="nf">get_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the visible state of the proxied object.&quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="AdapterBase.set_visible"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.adapter_base.AdapterBase.set_visible">[docs]</a>    <span class="k">def</span> <span class="nf">set_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the visible state of the proxied object.&quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="AdapterBase.update_visible"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.adapter_base.AdapterBase.update_visible">[docs]</a>    <span class="k">def</span> <span class="nf">update_visible</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the proxied object after a possible new value of the visible</span>
+<span class="sd">        attribute.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">get_permissions_manager</span><span class="p">()</span><span class="o">.</span><span class="n">check_permissions</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">permissions</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Save the desired value so that it can be checked if the user becomes</span>
+        <span class="c1"># authenticated.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_desired_visible</span> <span class="o">=</span> <span class="n">value</span></div>
+
+    <span class="k">def</span> <span class="nf">_refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Invoked whenever the current user&#39;s authorisation state changes.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_visible</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_desired_visible</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_enabled</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_desired_enabled</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

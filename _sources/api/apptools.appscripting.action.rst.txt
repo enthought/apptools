@@ -1,0 +1,38 @@
+apptools.appscripting.action package
+====================================
+
+Submodules
+----------
+
+apptools.appscripting.action.api module
+---------------------------------------
+
+.. automodule:: apptools.appscripting.action.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.appscripting.action.start\_recording\_action module
+------------------------------------------------------------
+
+.. automodule:: apptools.appscripting.action.start_recording_action
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.appscripting.action.stop\_recording\_action module
+-----------------------------------------------------------
+
+.. automodule:: apptools.appscripting.action.stop_recording_action
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.appscripting.action
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.sweet_pickle.updater &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="apptools.sweet_pickle" href="../sweet_pickle.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" >Module code</a></li>
+          <li class="active"><a href="../sweet_pickle.html" accesskey="U">apptools.sweet_pickle</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.sweet_pickle.updater</h1><div class="highlight"><pre>
+<span></span><span class="c1">#-----------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2005, 2006 by Enthought, Inc.</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Author: Dave Peterson &lt;dpeterson@enthought.com&gt;</span>
+<span class="c1">#  Author: Duncan Child &lt;duncan@enthought.com&gt;</span>
+<span class="c1">#</span>
+<span class="c1">#-----------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot; A record of refactorings to be performed during unpickling of objects.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Standard library imports</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># Enthought library imports</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">HasPrivateTraits</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Str</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="c1">##############################################################################</span>
+<span class="c1"># class &#39;Updater&#39;</span>
+<span class="c1">##############################################################################</span>
+
+<div class="viewcode-block" id="Updater"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.updater.Updater">[docs]</a><span class="k">class</span> <span class="nc">Updater</span><span class="p">(</span><span class="n">HasPrivateTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A record of refactorings to be performed during unpickling of objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">##########################################################################</span>
+    <span class="c1"># Traits</span>
+    <span class="c1">##########################################################################</span>
+
+    <span class="c1">### public &#39;Updater&#39; interface ###########################################</span>
+
+    <span class="c1"># Mappings from a pickled class to a class it should be unpickled as.</span>
+    <span class="c1">#</span>
+    <span class="c1"># The keys are a tuple of the source class&#39;s module and class names in</span>
+    <span class="c1"># that order.  The values are the target class&#39;s module and class names</span>
+    <span class="c1"># in that order.</span>
+    <span class="n">class_map</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="n">Str</span><span class="p">,</span> <span class="n">Str</span><span class="p">),</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Str</span><span class="p">,</span> <span class="n">Str</span><span class="p">))</span>
+
+    <span class="c1"># State functions that should be called to convert state from one version</span>
+    <span class="c1"># of a class to another.</span>
+    <span class="c1">#</span>
+    <span class="c1"># The keys are a tuple of the class&#39;s module name, class name, and version</span>
+    <span class="c1"># in that order.  The values are a list of functions to be called during</span>
+    <span class="c1"># unpickling to do the state conversion.   Note that the version in the</span>
+    <span class="c1"># key represents the version that the function converts *TO*.</span>
+    <span class="n">state_functions</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="n">Str</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Int</span><span class="p">),</span> <span class="n">List</span><span class="p">)</span>
+
+    <span class="c1"># Our record of the attribute that records the version number for a</span>
+    <span class="c1"># specific class.  If no record is found for a given class, then the</span>
+    <span class="c1"># default value is used instead -- see &#39;_default_version_attribute&#39;.</span>
+    <span class="c1">#</span>
+    <span class="c1"># The key is a tuple of the class&#39;s module name and class name in that</span>
+    <span class="c1"># order.  The value is the name of the version attribute.</span>
+    <span class="n">version_attribute_map</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="n">Str</span><span class="p">,</span> <span class="n">Str</span><span class="p">),</span> <span class="n">Str</span><span class="p">)</span>
+
+
+    <span class="c1">### protected &#39;Updater&#39; interface ########################################</span>
+
+    <span class="c1"># The default name of the attribute that declares the version of a class</span>
+    <span class="c1"># or class instance.</span>
+    <span class="n">_default_version_attribute</span> <span class="o">=</span> <span class="s1">&#39;_enthought_pickle_version&#39;</span>
+
+    <span class="c1"># A record of which classes we have state functions for.</span>
+    <span class="c1">#</span>
+    <span class="c1"># The keys are a tuple of the class&#39;s module name and class name in that</span>
+    <span class="c1"># order.  The values are reference counts.</span>
+    <span class="n">_state_function_classes</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">(</span><span class="n">Tuple</span><span class="p">(</span><span class="n">Str</span><span class="p">,</span> <span class="n">Str</span><span class="p">),</span> <span class="n">Int</span><span class="p">)</span>
+
+
+    <span class="c1">##########################################################################</span>
+    <span class="c1"># &#39;Updater&#39; interface</span>
+    <span class="c1">##########################################################################</span>
+
+    <span class="c1">### public interface #####################################################</span>
+
+<div class="viewcode-block" id="Updater.add_mapping"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.updater.Updater.add_mapping">[docs]</a>    <span class="k">def</span> <span class="nf">add_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_module</span><span class="p">,</span> <span class="n">source_name</span><span class="p">,</span> <span class="n">target_module</span><span class="p">,</span>
+        <span class="n">target_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adds a mapping from the class with the source name in the source</span>
+<span class="sd">            module to the class with the target name in the target module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_map</span><span class="p">[(</span><span class="n">source_module</span><span class="p">,</span> <span class="n">source_name</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="n">target_module</span><span class="p">,</span>
+            <span class="n">target_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Updater.add_mapping_to_class"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.updater.Updater.add_mapping_to_class">[docs]</a>    <span class="k">def</span> <span class="nf">add_mapping_to_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_module</span><span class="p">,</span> <span class="n">source_name</span><span class="p">,</span> <span class="n">target_class</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Convenience method to add a mapping, from the class with the</span>
+<span class="sd">            source name in the source module to the target class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_mapping</span><span class="p">(</span><span class="n">source_module</span><span class="p">,</span> <span class="n">source_name</span><span class="p">,</span> <span class="n">target_class</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span>
+            <span class="n">target_class</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Updater.add_mappings"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.updater.Updater.add_mappings">[docs]</a>    <span class="k">def</span> <span class="nf">add_mappings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source_module</span><span class="p">,</span> <span class="n">target_module</span><span class="p">,</span> <span class="n">class_names</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adds mappings, from the specified source module to the specified</span>
+<span class="sd">            target module, for each of the class names in the specified</span>
+<span class="sd">            list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">class_names</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_mapping</span><span class="p">(</span><span class="n">source_module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">target_module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Updater.add_state_function"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.updater.Updater.add_state_function">[docs]</a>    <span class="k">def</span> <span class="nf">add_state_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">target_version</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adds the specified function as a state function to be called to</span>
+<span class="sd">            convert an instance of the class with the specified name within</span>
+<span class="sd">            the specified module *TO* the specified version.</span>
+
+<span class="sd">            Note that the framework handles calling of state functions to make</span>
+<span class="sd">            the smallest version jumps possible.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">target_version</span><span class="p">)</span>
+        <span class="nb">list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_functions</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="nb">list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">[:]</span> <span class="c1"># Copy necessary because traits only recognizes list</span>
+                       <span class="c1"># changes by list instance - not its contents.</span>
+        <span class="nb">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_functions</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span></div>
+
+
+<div class="viewcode-block" id="Updater.add_state_function_for_class"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.updater.Updater.add_state_function_for_class">[docs]</a>    <span class="k">def</span> <span class="nf">add_state_function_for_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">klass</span><span class="p">,</span> <span class="n">target_version</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Convenience method to add the specified function as a state</span>
+<span class="sd">            function to be called to convert an instance of the specified</span>
+<span class="sd">            class *TO* the specified version.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_state_function</span><span class="p">(</span><span class="n">klass</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="n">klass</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="n">target_version</span><span class="p">,</span> <span class="n">function</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Updater.declare_version_attribute"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.updater.Updater.declare_version_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">declare_version_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adds the specified attribute name as the version attribute for the</span>
+<span class="sd">            class within the specified module with the specified name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version_attribute_map</span><span class="p">[(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)]</span> <span class="o">=</span> <span class="n">attribute_name</span></div>
+
+
+<div class="viewcode-block" id="Updater.declare_version_attribute_for_class"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.updater.Updater.declare_version_attribute_for_class">[docs]</a>    <span class="k">def</span> <span class="nf">declare_version_attribute_for_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">klass</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Covenience method to add the specified attribute name as the</span>
+<span class="sd">            version attribute for the specified class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">declare_version_attribute</span><span class="p">(</span><span class="n">klass</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="n">klass</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+            <span class="n">attribute_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Updater.get_version_attribute"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.updater.Updater.get_version_attribute">[docs]</a>    <span class="k">def</span> <span class="nf">get_version_attribute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the name of the version attribute for the class of the</span>
+<span class="sd">            specified name within the specified module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_attribute_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_default_version_attribute</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Updater.has_class_mapping"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.updater.Updater.has_class_mapping">[docs]</a>    <span class="k">def</span> <span class="nf">has_class_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns True if this updater contains a class mapping for</span>
+<span class="sd">            the class identified by the specified module and class name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_map</span></div>
+
+
+<div class="viewcode-block" id="Updater.has_state_function"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.updater.Updater.has_state_function">[docs]</a>    <span class="k">def</span> <span class="nf">has_state_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns True if this updater contains any state functions for</span>
+<span class="sd">            the class identified by the specified module and class name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_function_classes</span></div>
+
+
+<div class="viewcode-block" id="Updater.merge_updater"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.updater.Updater.merge_updater">[docs]</a>    <span class="k">def</span> <span class="nf">merge_updater</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">updater</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Merges the mappings and state functions from the specified updater</span>
+<span class="sd">            into this updater.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_map</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">updater</span><span class="o">.</span><span class="n">class_map</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version_attribute_map</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">updater</span><span class="o">.</span><span class="n">version_attribute_map</span><span class="p">)</span>
+
+        <span class="c1"># The state functions dictionary requires special processing because</span>
+        <span class="c1"># each value is a list and we don&#39;t just want to replace the existing</span>
+        <span class="c1"># list with only the new content.</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">updater</span><span class="o">.</span><span class="n">state_functions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">funcs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_functions</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">[])</span>
+                <span class="n">funcs</span> <span class="o">=</span> <span class="n">funcs</span><span class="p">[:]</span> <span class="c1"># Copy necessary because traits only recognizes</span>
+                               <span class="c1"># funcs changes by funcs instance - not its</span>
+                               <span class="c1"># contents.</span>
+                <span class="n">funcs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">state_functions</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">funcs</span></div>
+
+
+    <span class="c1">### trait handlers #######################################################</span>
+
+    <span class="k">def</span> <span class="nf">_class_map_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Detected class_map change from [</span><span class="si">%s</span><span class="s1">] to [</span><span class="si">%s</span><span class="s1">] in [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span>
+            <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">_class_map_items_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">removed</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Detected [</span><span class="si">%s</span><span class="s1">] removed from class_map in [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span>
+                <span class="bp">self</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">changed</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Detected [</span><span class="si">%s</span><span class="s1">] changed from [</span><span class="si">%s</span><span class="s1">] to [</span><span class="si">%s</span><span class="s1">] in &#39;</span> <span class="o">+</span> \
+                <span class="s1">&#39;class_map in [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_map</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">added</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Detected mapping from [</span><span class="si">%s</span><span class="s1">] to [</span><span class="si">%s</span><span class="s1">] added to &#39;</span> <span class="o">+</span> \
+                <span class="s1">&#39;class_map in [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">_state_functions_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Detected state_functions changed from [</span><span class="si">%s</span><span class="s1">] to [</span><span class="si">%s</span><span class="s1">] &#39;</span> <span class="o">+</span> \
+            <span class="s1">&#39;in [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># Update our record of which classes we have state functions for.</span>
+        <span class="c1"># All of our old state functions are gone so we simply need to rescan</span>
+        <span class="c1"># the new functions.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_state_function_classes</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">new</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">key</span>
+            <span class="n">klass_key</span> <span class="o">=</span> <span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_function_classes</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">klass_key</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state_function_classes</span><span class="p">[</span><span class="n">klass_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">_state_functions_items_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="c1"># Decrement our reference counts for the classes we no longer</span>
+        <span class="c1"># have state functions for.  If the reference count reaches zero,</span>
+        <span class="c1"># remove the record completely.</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">removed</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Detected [</span><span class="si">%s</span><span class="s1">] removed from state_functions in [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span>
+                <span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+            <span class="c1"># Determine the new reference count of state functions for the</span>
+            <span class="c1"># class who the removed item was for.</span>
+            <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">k</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_function_classes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+            <span class="c1"># Store the new reference count.  Delete the entry if it is zero.</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Unexpectedly reached negative reference count &#39;</span> <span class="o">+</span>
+                    <span class="s1">&#39;value of [</span><span class="si">%s</span><span class="s1">] for [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_function_classes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_function_classes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_state_function_classes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+
+        <span class="c1"># Update our reference counts for changes to the list of functions</span>
+        <span class="c1"># for a specific class and version.  The &#39;changed&#39; dictionary&#39;s values</span>
+        <span class="c1"># are the old values.</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">changed</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_functions</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Detected [</span><span class="si">%s</span><span class="s1">] changed in state_functions from &#39;</span> <span class="o">+</span> \
+                <span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">] to [</span><span class="si">%s</span><span class="s1">] in [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+            <span class="c1"># Determine the new reference count as a result of the change.</span>
+            <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">k</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_function_classes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+            <span class="c1"># Store the new reference count.  Delete the entry if it is zero.</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Unexpectedly reached negative reference count &#39;</span> <span class="o">+</span>
+                    <span class="s1">&#39;value of [</span><span class="si">%s</span><span class="s1">] for [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_function_classes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_function_classes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_state_function_classes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+
+
+        <span class="c1"># Update our reference counts for newly registered state functions.</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">added</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Detected mapping of [</span><span class="si">%s</span><span class="s1">] to [</span><span class="si">%s</span><span class="s1">] added to &#39;</span> <span class="o">+</span> \
+                <span class="s1">&#39;state_functions in [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+            <span class="c1"># Determine the new reference count as a result of the change.</span>
+            <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span> <span class="o">=</span> <span class="n">k</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state_function_classes</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+            <span class="c1"># Store the new reference count</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_state_function_classes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+
+
+    <span class="k">def</span> <span class="nf">_version_attribute_map_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Detected version_attribute_map change from [</span><span class="si">%s</span><span class="s1">] &#39;</span> <span class="o">+</span> \
+            <span class="s1">&#39;to [</span><span class="si">%s</span><span class="s1">] in [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">_version_attribute_map_items_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">removed</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Detected [</span><span class="si">%s</span><span class="s1">] removed from version_attribute_map &#39;</span> <span class="o">+</span> \
+                <span class="s1">&#39;in [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">changed</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Detected [</span><span class="si">%s</span><span class="s1">] changed in version_attribute_map &#39;</span> <span class="o">+</span> \
+                <span class="s1">&#39;in [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">event</span><span class="o">.</span><span class="n">added</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Detected [</span><span class="si">%s</span><span class="s1">] added to version_attribute_map in &#39;</span> <span class="o">+</span> \
+                <span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
+
+
+<span class="c1">### EOF ######################################################################</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

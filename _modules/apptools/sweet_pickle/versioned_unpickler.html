@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.sweet_pickle.versioned_unpickler &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="apptools.sweet_pickle" href="../sweet_pickle.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" >Module code</a></li>
+          <li class="active"><a href="../sweet_pickle.html" accesskey="U">apptools.sweet_pickle</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.sweet_pickle.versioned_unpickler</h1><div class="highlight"><pre>
+<span></span><span class="c1">#-----------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2005-2008 by Enthought, Inc.</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Author: Dave Peterson &lt;dpeterson@enthought.com&gt;</span>
+<span class="c1">#  Author: Duncan Child &lt;duncan@enthought.com&gt;</span>
+<span class="c1">#</span>
+<span class="c1">#-----------------------------------------------------------------------------</span>
+<span class="c1"># The code for two-stage unpickling support has been taken from a PEP draft</span>
+<span class="c1"># prepared by Dave Peterson and Prabhu Ramachandran.</span>
+
+<span class="sd">&quot;&quot;&quot; An unpickler that is tolerant of class refactorings, and implements a</span>
+<span class="sd">two-stage pickling process to make it possible to unpickle complicated Python</span>
+<span class="sd">object hierarchies where the unserialized state of an object depends on the</span>
+<span class="sd">state of other objects in the same pickle.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Standard library imports.</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="k">import</span> <span class="n">path</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="k">import</span> <span class="n">GeneratorType</span>
+
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pickle</span> <span class="k">import</span> <span class="n">_Unpickler</span> <span class="k">as</span> <span class="n">Unpickler</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pickle</span> <span class="k">import</span> <span class="n">Unpickler</span>
+
+<span class="kn">from</span> <span class="nn">pickle</span> <span class="k">import</span> <span class="n">UnpicklingError</span><span class="p">,</span> <span class="n">BUILD</span>
+
+<span class="c1"># Enthought library imports</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
+
+
+<span class="c1"># Setup a logger for this module</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="c1">##############################################################################</span>
+<span class="c1"># constants</span>
+<span class="c1">##############################################################################</span>
+
+<span class="c1"># The name we backup the original setstate method to.</span>
+<span class="n">_BACKUP_NAME</span> <span class="o">=</span> <span class="s1">&#39;__enthought_sweet_pickle_original_setstate__&#39;</span>
+
+<span class="c1"># The name of the setstate method we hook</span>
+<span class="n">_SETSTATE_NAME</span> <span class="o">=</span> <span class="s1">&#39;__setstate__&#39;</span>
+
+<span class="c1"># The name we store our unpickling data under.</span>
+<span class="n">_UNPICKLER_DATA</span> <span class="o">=</span> <span class="s1">&#39;__enthought_sweet_pickle_unpickler__&#39;</span>
+
+
+<span class="c1">##############################################################################</span>
+<span class="c1"># function &#39;__replacement_setstate__&#39;</span>
+<span class="c1">##############################################################################</span>
+
+<span class="k">def</span> <span class="nf">__replacement_setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Called to enable an unpickler to modify the state of this instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Retrieve the unpickling information and use it to let the unpickler</span>
+    <span class="c1"># modify our state.</span>
+    <span class="n">unpickler</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_UNPICKLER_DATA</span><span class="p">)</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">unpickler</span><span class="o">.</span><span class="n">modify_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># If we were given a state, apply it to this instance now.</span>
+    <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="c1"># Save our state</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Final state: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+
+<span class="c1">##############################################################################</span>
+<span class="c1"># function &#39;load_build_with_meta_data&#39;</span>
+<span class="c1">##############################################################################</span>
+
+<div class="viewcode-block" id="load_build_with_meta_data"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.versioned_unpickler.load_build_with_meta_data">[docs]</a><span class="k">def</span> <span class="nf">load_build_with_meta_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Called prior to the actual load_build() unpickling method which primes</span>
+<span class="sd">        the state dictionary with meta-data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Access the state object and check if it is a dictionary (state may also be</span>
+    <span class="c1"># a tuple, which is used for other unpickling build operations).  Proceed to</span>
+    <span class="c1"># the standard load_build() if the state obj is not a dict.</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span>
+
+        <span class="c1"># If a file object is used, reference the file name</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">):</span>
+            <span class="n">pickle_file_name</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">pickle_file_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="c1"># Add any meta-data needed by __setstate__() methods here...</span>
+        <span class="n">state</span><span class="p">[</span><span class="s1">&#39;_pickle_file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pickle_file_name</span>
+
+    <span class="c1"># Call the standard load_build() method</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_build</span><span class="p">()</span></div>
+
+
+<span class="c1">##############################################################################</span>
+<span class="c1"># class &#39;NewUnpickler&#39;</span>
+<span class="c1">##############################################################################</span>
+<div class="viewcode-block" id="NewUnpickler"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.versioned_unpickler.NewUnpickler">[docs]</a><span class="k">class</span> <span class="nc">NewUnpickler</span><span class="p">(</span><span class="n">Unpickler</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; An unpickler that implements a two-stage pickling process to make it</span>
+<span class="sd">    possible to unpickle complicated Python object hierarchies where the</span>
+<span class="sd">    unserialized state of an object depends on the state of other objects in</span>
+<span class="sd">    the same pickle.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="NewUnpickler.load"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.versioned_unpickler.NewUnpickler.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_pass</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read a pickled object representation from the open file.</span>
+
+<span class="sd">        Return the reconstituted object hierarchy specified in the file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># List of objects to be unpickled.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">objects</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># We overload the load_build method.</span>
+        <span class="n">dispatch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dispatch</span>
+        <span class="n">dispatch</span><span class="p">[</span><span class="n">BUILD</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">NewUnpickler</span><span class="o">.</span><span class="n">load_build</span>
+
+        <span class="c1"># call the super class&#39; method.</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">Unpickler</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">max_pass</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">objects</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Reset the Unpickler&#39;s dispatch table.</span>
+        <span class="n">dispatch</span><span class="p">[</span><span class="n">BUILD</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Unpickler</span><span class="o">.</span><span class="n">load_build</span>
+        <span class="k">return</span> <span class="n">ret</span></div>
+
+<div class="viewcode-block" id="NewUnpickler.initialize"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.versioned_unpickler.NewUnpickler.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_pass</span><span class="p">):</span>
+        <span class="c1"># List of (object, generator) tuples that initialize objects.</span>
+        <span class="n">generators</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Execute object&#39;s initialize to setup the generators.</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;__initialize__&#39;</span><span class="p">)</span> <span class="ow">and</span> \
+                   <span class="n">callable</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">__initialize__</span><span class="p">):</span>
+                <span class="n">ret</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">__initialize__</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ret</span><span class="p">,</span> <span class="n">GeneratorType</span><span class="p">):</span>
+                    <span class="n">generators</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">obj</span><span class="p">,</span> <span class="n">ret</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">ret</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">UnpicklingError</span><span class="p">(</span><span class="s1">&#39;Unexpected return value from &#39;</span>
+                        <span class="s1">&#39;__initialize__.  </span><span class="si">%s</span><span class="s1"> returned </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ret</span><span class="p">))</span>
+
+        <span class="c1"># Ensure a maximum number of passes</span>
+        <span class="k">if</span> <span class="n">max_pass</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">max_pass</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">generators</span><span class="p">)</span>
+
+        <span class="c1"># Now run the generators.</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">generators</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="n">max_pass</span><span class="p">:</span>
+                <span class="n">not_done</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">generators</span><span class="p">]</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Reached maximum pass count </span><span class="si">%s</span><span class="s2">.  You may have</span>
+<span class="s2">                         a deadlock!  The following objects are</span>
+<span class="s2">                         uninitialized: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">max_pass</span><span class="p">,</span> <span class="n">not_done</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">UnpicklingError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">o</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">generators</span><span class="p">[:]:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="nb">next</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                    <span class="n">generators</span><span class="o">.</span><span class="n">remove</span><span class="p">((</span><span class="n">o</span><span class="p">,</span> <span class="n">g</span><span class="p">))</span></div>
+
+    <span class="c1"># Make this a class method since dispatch is a class variable.</span>
+    <span class="c1"># Otherwise, supposing the initial sweet_pickle.load call (which would</span>
+    <span class="c1"># have overloaded the load_build method) makes a pickle.load call at some</span>
+    <span class="c1"># point, we would have the dispatch still pointing to</span>
+    <span class="c1"># NewPickler.load_build whereas the object being passed in will be an</span>
+    <span class="c1"># Unpickler instance, causing a TypeError.</span>
+<div class="viewcode-block" id="NewUnpickler.load_build"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.versioned_unpickler.NewUnpickler.load_build">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">load_build</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="c1"># Just save the instance in the list of objects.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">NewUnpickler</span><span class="p">):</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">Unpickler</span><span class="o">.</span><span class="n">load_build</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div></div>
+
+
+<span class="c1">##############################################################################</span>
+<span class="c1"># class &#39;VersionedUnpickler&#39;</span>
+<span class="c1">##############################################################################</span>
+
+<div class="viewcode-block" id="VersionedUnpickler"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.versioned_unpickler.VersionedUnpickler">[docs]</a><span class="k">class</span> <span class="nc">VersionedUnpickler</span><span class="p">(</span><span class="n">NewUnpickler</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; An unpickler that is tolerant of class refactorings.</span>
+
+<span class="sd">        This class reads in a pickled file and applies the transforms</span>
+<span class="sd">        specified in its updater to generate a new hierarchy of objects</span>
+<span class="sd">        which are at the current version of the classes they are instances</span>
+<span class="sd">        of.</span>
+
+<span class="sd">        Note that the creation of an updater is kept out of this class to</span>
+<span class="sd">        ensure that the class can be reused in different situations.</span>
+<span class="sd">        However, if no updater is provided during construction, then the</span>
+<span class="sd">        global registry updater will be used.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">##########################################################################</span>
+    <span class="c1"># Traits</span>
+    <span class="c1">##########################################################################</span>
+
+    <span class="c1">### public &#39;VersionedUnpickler&#39; interface ################################</span>
+
+    <span class="c1"># The updater used to modify the objects being unpickled.</span>
+    <span class="n">updater</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="s1">&#39;apptools.sweet_pickle.updater.Updater&#39;</span><span class="p">)</span>
+
+
+    <span class="c1">##########################################################################</span>
+    <span class="c1"># &#39;object&#39; interface</span>
+    <span class="c1">##########################################################################</span>
+
+    <span class="c1">### operator methods #####################################################</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">VersionedUnpickler</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_file</span> <span class="o">=</span> <span class="n">file</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">.global_registry</span> <span class="k">import</span> <span class="n">get_global_registry</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">updater</span> <span class="o">=</span> <span class="n">get_global_registry</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;VersionedUnpickler [</span><span class="si">%s</span><span class="s1">] using Updater [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="p">)</span>
+
+        <span class="c1"># Update the BUILD instruction to use an overridden load_build method</span>
+        <span class="c1"># NOTE: this is being disabled since, on some platforms, the object</span>
+        <span class="c1"># is replaced with a regular Unpickler instance, creating a traceback:</span>
+        <span class="c1"># AttributeError: Unpickler instance has no attribute &#39;_file&#39;</span>
+        <span class="c1"># ...not sure how this happens since only a VersionedUnpickler has</span>
+        <span class="c1"># the BUILD instruction replaced with one that uses _file, and it</span>
+        <span class="c1"># should have _file defined.</span>
+        <span class="c1">#self.dispatch[BUILD[0]] = load_build_with_meta_data</span>
+
+
+    <span class="c1">##########################################################################</span>
+    <span class="c1"># &#39;Unpickler&#39; interface</span>
+    <span class="c1">##########################################################################</span>
+
+    <span class="c1">### public interface #####################################################</span>
+
+<div class="viewcode-block" id="VersionedUnpickler.find_class"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.versioned_unpickler.VersionedUnpickler.find_class">[docs]</a>    <span class="k">def</span> <span class="nf">find_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the class definition for the named class within the</span>
+<span class="sd">            specified module.</span>
+
+<span class="sd">            Overridden here to:</span>
+
+<span class="sd">            - Allow updaters to redirect to a different class, possibly</span>
+<span class="sd">              within a different module.</span>
+<span class="sd">            - Ensure that any setstate hooks for the class are called</span>
+<span class="sd">              when the instance of this class is unpickled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Remove any extraneous characters that an Unpickler might handle</span>
+        <span class="c1"># but a user wouldn&#39;t have included in their mapping definitions.</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="c1"># Attempt to find the class, this may cause a new mapping for that</span>
+        <span class="c1"># very class to be introduced.  That&#39;s why we ignore the result.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">klass</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">VersionedUnpickler</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">find_class</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="c1"># Determine the target class that the requested class should be</span>
+        <span class="c1"># mapped to according to our updater.  The target class is the one</span>
+        <span class="c1"># at the end of any chain of mappings.</span>
+        <span class="n">original_module</span><span class="p">,</span> <span class="n">original_name</span> <span class="o">=</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">has_class_mapping</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+            <span class="n">module</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_target_class</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">module</span> <span class="o">!=</span> <span class="n">original_module</span> <span class="ow">or</span> <span class="n">name</span> <span class="o">!=</span> <span class="n">original_name</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Unpickling [</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">] as [</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">original_module</span><span class="p">,</span>
+                    <span class="n">original_name</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># Retrieve the target class definition</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">klass</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">VersionedUnpickler</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">find_class</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">apptools.sweet_pickle</span> <span class="k">import</span> <span class="n">UnpicklingError</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Traceback when finding class [</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">]:&#39;</span> \
+                         <span class="o">%</span> <span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">UnpicklingError</span><span class="p">(</span><span class="s1">&#39;Unable to load class [</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">]. &#39;</span>
+                <span class="s1">&#39;Original exception was, &quot;</span><span class="si">%s</span><span class="s1">&quot;.  map:</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">class_map</span><span class="p">))</span>
+
+        <span class="c1"># Make sure we run the updater&#39;s state functions if any are declared</span>
+        <span class="c1"># for the target class.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_state_function</span><span class="p">(</span><span class="n">original_module</span><span class="p">,</span> <span class="n">original_name</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_unpickler</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">original_module</span><span class="p">,</span> <span class="n">original_name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">klass</span></div>
+
+
+    <span class="c1">##########################################################################</span>
+    <span class="c1"># &#39;VersionedUnpickler&#39; interface</span>
+    <span class="c1">##########################################################################</span>
+
+    <span class="c1">### public interface #####################################################</span>
+
+<div class="viewcode-block" id="VersionedUnpickler.modify_state"><a class="viewcode-back" href="../../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.versioned_unpickler.VersionedUnpickler.modify_state">[docs]</a>    <span class="k">def</span> <span class="nf">modify_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Called to update the specified state dictionary, which represents</span>
+<span class="sd">            the class of the specified name within the specified module, to</span>
+<span class="sd">            complete the unpickling of the specified object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Remove our setstate hook and associated data to ensure that</span>
+        <span class="c1"># instances unpickled through some other framework don&#39;t call us.</span>
+        <span class="c1"># IMPORTANT: Do this first to minimize the time this hook is in place!</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_remove_unpickler</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+
+        <span class="c1"># Determine what class and version we&#39;re starting from and going to.</span>
+        <span class="c1"># If there is no version information, then assume version 0. (0 is</span>
+        <span class="c1"># like an unversioned version.)</span>
+        <span class="n">source_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">get_version_attribute</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">source_version</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">source_key</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">target_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">get_version_attribute</span><span class="p">(</span>
+            <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">target_version</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">target_key</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Iterate through all the updates to the state by going one version</span>
+        <span class="c1"># at a time.  Note that we assume there is exactly one path from our</span>
+        <span class="c1"># starting class and version to our ending class and version.  As a</span>
+        <span class="c1"># result, we assume we update a given class to its latest version</span>
+        <span class="c1"># before looking for any class mappings.  Note that the version in the</span>
+        <span class="c1"># updater is the version to convert *TO*.</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">source_version</span>
+        <span class="n">next_version</span> <span class="o">=</span> <span class="n">version</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+
+            <span class="c1"># Iterate through all version updates for the current class.</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">get_version_attribute</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">while</span> <span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">next_version</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">state_functions</span><span class="p">:</span>
+                <span class="n">functions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">state_functions</span><span class="p">[(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                    <span class="n">next_version</span><span class="p">)]</span>
+                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">functions</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Modifying state from [</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1"> (v.</span><span class="si">%s</span><span class="s1">)] to &#39;</span> <span class="o">+</span> \
+                        <span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1"> (v.</span><span class="si">%s</span><span class="s1">)] using function </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                        <span class="n">version</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">next_version</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+                    <span class="n">state</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+                <span class="c1"># Avoid infinite loops due to versions not changing.</span>
+                <span class="n">new_version</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">new_version</span> <span class="o">==</span> <span class="n">version</span><span class="p">:</span>
+                    <span class="n">new_version</span> <span class="o">=</span> <span class="n">version</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">version</span> <span class="o">=</span> <span class="n">new_version</span>
+                <span class="n">next_version</span> <span class="o">=</span> <span class="n">version</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="c1"># If there is one, move to the next class in the chain.  (We</span>
+            <span class="c1"># explicitly keep the version number the same.)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">has_class_mapping</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+                <span class="n">original_module</span><span class="p">,</span> <span class="n">original_name</span> <span class="o">=</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span>
+                <span class="n">module</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">class_map</span><span class="p">[(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)]</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Modifying state from [</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1"> (v.</span><span class="si">%s</span><span class="s1">)] to &#39;</span> <span class="o">+</span> \
+                    <span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1"> (v.</span><span class="si">%s</span><span class="s1">)]&#39;</span><span class="p">,</span> <span class="n">original_module</span><span class="p">,</span> <span class="n">original_name</span><span class="p">,</span> <span class="n">version</span><span class="p">,</span>
+                    <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="c1"># If one exists, call the final class&#39;s setstate method. According to</span>
+        <span class="c1"># standard pickling protocol, this method will apply the state to the</span>
+        <span class="c1"># instance so our state becomes None so that we don&#39;t try to apply our</span>
+        <span class="c1"># unfinished state to the object.</span>
+        <span class="n">fn</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">_SETSTATE_NAME</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">fn</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">version</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">target_key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">state</span>
+
+        <span class="c1"># Something is wrong if we aren&#39;t at our target class and version!</span>
+        <span class="k">if</span> <span class="n">module</span> <span class="o">!=</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span> \
+            <span class="ow">or</span> <span class="n">name</span> <span class="o">!=</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> \
+            <span class="ow">or</span> <span class="n">version</span> <span class="o">!=</span> <span class="n">target_version</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">apptools.sweet_pickle</span> <span class="k">import</span> <span class="n">UnpicklingError</span>
+            <span class="k">raise</span> <span class="n">UnpicklingError</span><span class="p">(</span><span class="s1">&#39;Unexpected state! Got &#39;</span> <span class="o">+</span> \
+                <span class="s1">&#39;[</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1"> (v.</span><span class="si">%s</span><span class="s1">)] expected [</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1"> (v.</span><span class="si">%s</span><span class="s1">)]&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                <span class="n">version</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">target_version</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+    <span class="c1">### protected interface ##################################################</span>
+
+    <span class="k">def</span> <span class="nf">_add_unpickler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">klass</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Modifies the specified class so that our &#39;modify_state&#39; method</span>
+<span class="sd">            is called when its next instance is unpickled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Adding unpickler hook to [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span>
+
+        <span class="c1"># Replace the existing setstate method with ours.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_backup_setstate</span><span class="p">(</span><span class="n">klass</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">__replacement_setstate__</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">_SETSTATE_NAME</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+
+        <span class="c1"># Add the information necessary to allow this unpickler to run</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">_UNPICKLER_DATA</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+
+
+    <span class="k">def</span> <span class="nf">_backup_setstate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">klass</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Backs up the specified class&#39;s setstate method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># We only need to back it up if it actually exists.</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">_SETSTATE_NAME</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Backing up method [</span><span class="si">%s</span><span class="s1">] to [</span><span class="si">%s</span><span class="s1">] on [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span>
+                <span class="n">_SETSTATE_NAME</span><span class="p">,</span> <span class="n">_BACKUP_NAME</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">_BACKUP_NAME</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">_get_target_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the class info that the class, within the specified module</span>
+<span class="sd">            and with the specified name, should be instantiated as according to</span>
+<span class="sd">            our associated updater.</span>
+
+<span class="sd">            This is done in a manner that allows for chaining of class mappings</span>
+<span class="sd">            but is tolerant of the fact that a mapping away from an</span>
+<span class="sd">            intermediate class may not be registered until an attempt is made</span>
+<span class="sd">            to load that class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Keep a record of the original class asked for.</span>
+        <span class="n">original_module</span><span class="p">,</span> <span class="n">original_name</span> <span class="o">=</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span>
+
+        <span class="c1"># Iterate through any mappings in a manner that allows us to detect any</span>
+        <span class="c1"># infinite loops.</span>
+        <span class="n">visited</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">has_class_mapping</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="ow">in</span> <span class="n">visited</span><span class="p">:</span>
+                <span class="kn">from</span> <span class="nn">apptools.sweet_pickle</span> <span class="k">import</span> <span class="n">UnpicklingError</span>
+                <span class="k">raise</span> <span class="n">UnpicklingError</span><span class="p">(</span><span class="s1">&#39;Detected infinite loop in class &#39;</span> <span class="o">+</span> \
+                    <span class="s1">&#39;mapping from [</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">] to [</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">] within Updater [</span><span class="si">%s</span><span class="s1">]&#39;</span> <span class="o">%</span> \
+                    <span class="p">(</span><span class="n">original_module</span><span class="p">,</span> <span class="n">original_name</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="p">))</span>
+            <span class="n">visited</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="p">)</span>
+
+            <span class="c1"># Get the mapping for the current class and try loading the class</span>
+            <span class="c1"># to ensure any mappings away from it are registered.</span>
+            <span class="n">module</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">class_map</span><span class="p">[(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">super</span><span class="p">(</span><span class="n">VersionedUnpickler</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">find_class</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;_get_target_class can&#39;t find: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
+                <span class="k">pass</span>
+
+        <span class="k">return</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span>
+
+
+    <span class="k">def</span> <span class="nf">_has_state_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns True if the updater contains any state functions that could</span>
+<span class="sd">            be called by unpickling an instance of the class identified by the</span>
+<span class="sd">            specified module and name.</span>
+
+<span class="sd">            Note: If we had a version number we could tell for sure, but we</span>
+<span class="sd">            don&#39;t have one so we&#39;ll have to settle for &#39;could&#39; be called.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Iterate through all the class mappings the requested class would</span>
+        <span class="c1"># go through.  If any of them have a state function, then we&#39;ve</span>
+        <span class="c1"># determined our answer and can stop searching.</span>
+        <span class="c1">#</span>
+        <span class="c1"># Note we don&#39;t need to check for infinite loops because we&#39;re only</span>
+        <span class="c1"># ever called after &#39;_get_target_class&#39; which detects the infinite</span>
+        <span class="c1"># loops.</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">has_state_function</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">has_class_mapping</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+                    <span class="n">module</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">updater</span><span class="o">.</span><span class="n">class_map</span><span class="p">[(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+
+    <span class="k">def</span> <span class="nf">_remove_unpickler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">klass</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Restores the specified class to its unmodified state.  Meaning</span>
+<span class="sd">            we won&#39;t get called when its next instance is unpickled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Removing unpickler hook from [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span>
+
+        <span class="c1"># Restore the backed up setstate method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_restore_setstate</span><span class="p">(</span><span class="n">klass</span><span class="p">)</span>
+
+        <span class="c1"># Remove the unpickling data attached to the class.  This ensures we</span>
+        <span class="c1"># don&#39;t pollute the &#39;real&#39; attributes of the class.</span>
+        <span class="nb">delattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">_UNPICKLER_DATA</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">_restore_setstate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">klass</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Restores the original setstate method back to its rightful place.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># We only need to restore if the backup actually exists.</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">_BACKUP_NAME</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Restoring method [</span><span class="si">%s</span><span class="s1">] to [</span><span class="si">%s</span><span class="s1">] on [</span><span class="si">%s</span><span class="s1">]&#39;</span><span class="p">,</span>
+                <span class="n">_BACKUP_NAME</span><span class="p">,</span> <span class="n">_SETSTATE_NAME</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span>
+            <span class="nb">delattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">_BACKUP_NAME</span><span class="p">)</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="n">method</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">klass</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">_SETSTATE_NAME</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span>
+
+        <span class="c1"># Otherwise, we simply remove our setstate.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">delattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">_SETSTATE_NAME</span><span class="p">)</span></div>
+
+
+<span class="c1">### EOF ######################################################################</span>
+
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

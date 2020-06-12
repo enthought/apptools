@@ -1,0 +1,118 @@
+apptools.naming.adapter package
+===============================
+
+Submodules
+----------
+
+apptools.naming.adapter.api module
+----------------------------------
+
+.. automodule:: apptools.naming.adapter.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.naming.adapter.dict\_context\_adapter module
+-----------------------------------------------------
+
+.. automodule:: apptools.naming.adapter.dict_context_adapter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.naming.adapter.dict\_context\_adapter\_factory module
+--------------------------------------------------------------
+
+.. automodule:: apptools.naming.adapter.dict_context_adapter_factory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.naming.adapter.instance\_context\_adapter module
+---------------------------------------------------------
+
+.. automodule:: apptools.naming.adapter.instance_context_adapter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.naming.adapter.instance\_context\_adapter\_factory module
+------------------------------------------------------------------
+
+.. automodule:: apptools.naming.adapter.instance_context_adapter_factory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.naming.adapter.list\_context\_adapter module
+-----------------------------------------------------
+
+.. automodule:: apptools.naming.adapter.list_context_adapter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.naming.adapter.list\_context\_adapter\_factory module
+--------------------------------------------------------------
+
+.. automodule:: apptools.naming.adapter.list_context_adapter_factory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.naming.adapter.trait\_dict\_context\_adapter module
+------------------------------------------------------------
+
+.. automodule:: apptools.naming.adapter.trait_dict_context_adapter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.naming.adapter.trait\_dict\_context\_adapter\_factory module
+---------------------------------------------------------------------
+
+.. automodule:: apptools.naming.adapter.trait_dict_context_adapter_factory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.naming.adapter.trait\_list\_context\_adapter module
+------------------------------------------------------------
+
+.. automodule:: apptools.naming.adapter.trait_list_context_adapter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.naming.adapter.trait\_list\_context\_adapter\_factory module
+---------------------------------------------------------------------
+
+.. automodule:: apptools.naming.adapter.trait_list_context_adapter_factory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.naming.adapter.tuple\_context\_adapter module
+------------------------------------------------------
+
+.. automodule:: apptools.naming.adapter.tuple_context_adapter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.naming.adapter.tuple\_context\_adapter\_factory module
+---------------------------------------------------------------
+
+.. automodule:: apptools.naming.adapter.tuple_context_adapter_factory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.naming.adapter
+    :members:
+    :undoc-members:
+    :show-inheritance:

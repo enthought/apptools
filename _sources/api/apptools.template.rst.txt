@@ -1,0 +1,126 @@
+apptools.template package
+=========================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    apptools.template.impl
+    apptools.template.test
+
+Submodules
+----------
+
+apptools.template.api module
+----------------------------
+
+.. automodule:: apptools.template.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.imutable\_template module
+-------------------------------------------
+
+.. automodule:: apptools.template.imutable_template
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.itemplate module
+----------------------------------
+
+.. automodule:: apptools.template.itemplate
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.itemplate\_choice module
+------------------------------------------
+
+.. automodule:: apptools.template.itemplate_choice
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.itemplate\_data\_context module
+-------------------------------------------------
+
+.. automodule:: apptools.template.itemplate_data_context
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.itemplate\_data\_name\_item module
+----------------------------------------------------
+
+.. automodule:: apptools.template.itemplate_data_name_item
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.itemplate\_data\_source module
+------------------------------------------------
+
+.. automodule:: apptools.template.itemplate_data_source
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.mutable\_template module
+------------------------------------------
+
+.. automodule:: apptools.template.mutable_template
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.template\_choice module
+-----------------------------------------
+
+.. automodule:: apptools.template.template_choice
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.template\_data\_name module
+---------------------------------------------
+
+.. automodule:: apptools.template.template_data_name
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.template\_data\_names module
+----------------------------------------------
+
+.. automodule:: apptools.template.template_data_names
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.template\_impl module
+---------------------------------------
+
+.. automodule:: apptools.template.template_impl
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.template\_traits module
+-----------------------------------------
+
+.. automodule:: apptools.template.template_traits
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.template
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.permissions.default package &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools.permissions package" href="apptools.permissions.html" >
+    <link rel="next" title="apptools.persistence package" href="apptools.persistence.html" >
+    <link rel="prev" title="apptools.permissions.adapters package" href="apptools.permissions.adapters.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../api.html" >API documentation</a></li>
+          <li class="active"><a href="modules.html" >apptools</a></li>
+          <li class="active"><a href="apptools.html" >apptools package</a></li>
+          <li class="active"><a href="apptools.permissions.html" accesskey="U">apptools.permissions package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.persistence.html" title="apptools.persistence package"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.permissions.adapters.html" title="apptools.permissions.adapters package"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="apptools-permissions-default-package">
+<h1>apptools.permissions.default package<a class="headerlink" href="#apptools-permissions-default-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-apptools.permissions.default.api">
+<span id="apptools-permissions-default-api-module"></span><h2>apptools.permissions.default.api module<a class="headerlink" href="#module-apptools.permissions.default.api" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-apptools.permissions.default.i_policy_storage">
+<span id="apptools-permissions-default-i-policy-storage-module"></span><h2>apptools.permissions.default.i_policy_storage module<a class="headerlink" href="#module-apptools.permissions.default.i_policy_storage" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.permissions.default.i_policy_storage.IPolicyStorage">
+<em class="property">class </em><code class="descclassname">apptools.permissions.default.i_policy_storage.</code><code class="descname">IPolicyStorage</code><a class="reference internal" href="../_modules/apptools/permissions/default/i_policy_storage.html#IPolicyStorage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_policy_storage.IPolicyStorage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.Interface</span></code></p>
+<p>This defines the interface expected by a PolicyManager to handle the low
+level storage of the policy data.</p>
+<dl class="method">
+<dt id="apptools.permissions.default.i_policy_storage.IPolicyStorage.add_role">
+<code class="descname">add_role</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>perm_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_policy_storage.html#IPolicyStorage.add_role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_policy_storage.IPolicyStorage.add_role" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new role.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_policy_storage.IPolicyStorage.all_roles">
+<code class="descname">all_roles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_policy_storage.html#IPolicyStorage.all_roles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_policy_storage.IPolicyStorage.all_roles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all roles where each element is a tuple of the name
+and description.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_policy_storage.IPolicyStorage.delete_role">
+<code class="descname">delete_role</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_policy_storage.html#IPolicyStorage.delete_role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_policy_storage.IPolicyStorage.delete_role" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the role with the given name (which will not be empty).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_policy_storage.IPolicyStorage.get_assignment">
+<code class="descname">get_assignment</code><span class="sig-paren">(</span><em>user_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_policy_storage.html#IPolicyStorage.get_assignment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_policy_storage.IPolicyStorage.get_assignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a tuple of the user name and list of role names of the
+assignment for the given user name.  The tuple will contain an empty
+string and list if the user isn’t known.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_policy_storage.IPolicyStorage.get_policy">
+<code class="descname">get_policy</code><span class="sig-paren">(</span><em>user_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_policy_storage.html#IPolicyStorage.get_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_policy_storage.IPolicyStorage.get_policy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a tuple of the user name and list of permission names for the
+user with the given name.  The tuple will contain an empty string and
+list if the user isn’t known.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_policy_storage.IPolicyStorage.is_empty">
+<code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_policy_storage.html#IPolicyStorage.is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_policy_storage.IPolicyStorage.is_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the user database is empty.  It will only ever be
+called once.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_policy_storage.IPolicyStorage.matching_roles">
+<code class="descname">matching_roles</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_policy_storage.html#IPolicyStorage.matching_roles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_policy_storage.IPolicyStorage.matching_roles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of tuples of the full name, description and list of
+permission names, sorted by the full name, of all roles that match the
+given name.  How the name is interpreted (eg. as a regular expression)
+is determined by the storage.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_policy_storage.IPolicyStorage.modify_role">
+<code class="descname">modify_role</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>perm_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_policy_storage.html#IPolicyStorage.modify_role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_policy_storage.IPolicyStorage.modify_role" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the description and permissions for the role with the given
+name (which will not be empty).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_policy_storage.IPolicyStorage.set_assignment">
+<code class="descname">set_assignment</code><span class="sig-paren">(</span><em>user_name</em>, <em>role_names</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_policy_storage.html#IPolicyStorage.set_assignment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_policy_storage.IPolicyStorage.set_assignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the assignment of the given role names to the given user.  Note
+that there may or may not be an existing assignment for the user.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="apptools.permissions.default.i_policy_storage.PolicyStorageError">
+<em class="property">exception </em><code class="descclassname">apptools.permissions.default.i_policy_storage.</code><code class="descname">PolicyStorageError</code><a class="reference internal" href="../_modules/apptools/permissions/default/i_policy_storage.html#PolicyStorageError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_policy_storage.PolicyStorageError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>This is the exception raised by an IPolicyStorage object when an error
+occurs accessing the database.  Its string representation is displayed as
+an error message to the user.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.permissions.default.i_user_database">
+<span id="apptools-permissions-default-i-user-database-module"></span><h2>apptools.permissions.default.i_user_database module<a class="headerlink" href="#module-apptools.permissions.default.i_user_database" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.permissions.default.i_user_database.IUserDatabase">
+<em class="property">class </em><code class="descclassname">apptools.permissions.default.i_user_database.</code><code class="descname">IUserDatabase</code><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_database.html#IUserDatabase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_database.IUserDatabase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.Interface</span></code></p>
+<p>The interface to be implemented by a user database for the default user
+manager.</p>
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_database.IUserDatabase.add_user">
+<code class="descname">add_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_database.html#IUserDatabase.add_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_database.IUserDatabase.add_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a user account to the database.  This only needs to be
+reimplemented if ‘can_add_user’ is True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_database.IUserDatabase.authenticate_user">
+<code class="descname">authenticate_user</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_database.html#IUserDatabase.authenticate_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_database.IUserDatabase.authenticate_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Authenticate the given user and return True if successful.  user
+implements IUser.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_database.IUserDatabase.bootstrapping">
+<code class="descname">bootstrapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_database.html#IUserDatabase.bootstrapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_database.IUserDatabase.bootstrapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the user database is bootstrapping.  Typically this
+is when no users have been defined.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_database.IUserDatabase.change_password">
+<code class="descname">change_password</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_database.html#IUserDatabase.change_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_database.IUserDatabase.change_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change a user’s password in the database.  This only needs to be
+reimplemented if ‘can_change_password’ is True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_database.IUserDatabase.delete_user">
+<code class="descname">delete_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_database.html#IUserDatabase.delete_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_database.IUserDatabase.delete_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a user account from the database.  This only needs to be
+reimplemented if ‘can_delete_user’ is True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_database.IUserDatabase.matching_user">
+<code class="descname">matching_user</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_database.html#IUserDatabase.matching_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_database.IUserDatabase.matching_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an object that implements IUser for the user selected based
+on the given name.  If there was no user selected then return None.
+How the name is interpreted (eg. as a regular expression) is determined
+by the user database.  Note that the blob attribute of the user will
+not be set.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_database.IUserDatabase.modify_user">
+<code class="descname">modify_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_database.html#IUserDatabase.modify_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_database.IUserDatabase.modify_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify a user account in the database.  This only needs to be
+reimplemented if ‘can_modify_user’ is True.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_database.IUserDatabase.unauthenticate_user">
+<code class="descname">unauthenticate_user</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_database.html#IUserDatabase.unauthenticate_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_database.IUserDatabase.unauthenticate_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unauthenticate the given user and return True if successful.  user
+implements IUser.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_database.IUserDatabase.user_factory">
+<code class="descname">user_factory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_database.html#IUserDatabase.user_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_database.IUserDatabase.user_factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new object that implements the IUser interface.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.permissions.default.i_user_storage">
+<span id="apptools-permissions-default-i-user-storage-module"></span><h2>apptools.permissions.default.i_user_storage module<a class="headerlink" href="#module-apptools.permissions.default.i_user_storage" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.permissions.default.i_user_storage.IUserStorage">
+<em class="property">class </em><code class="descclassname">apptools.permissions.default.i_user_storage.</code><code class="descname">IUserStorage</code><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_storage.html#IUserStorage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_storage.IUserStorage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.Interface</span></code></p>
+<p>This defines the interface expected by a UserManager instance to handle
+the low level storage of the user data.</p>
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_storage.IUserStorage.add_user">
+<code class="descname">add_user</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_storage.html#IUserStorage.add_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_storage.IUserStorage.add_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new user with the given name, description and password.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_storage.IUserStorage.authenticate_user">
+<code class="descname">authenticate_user</code><span class="sig-paren">(</span><em>name</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_storage.html#IUserStorage.authenticate_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_storage.IUserStorage.authenticate_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a tuple of the name, description, and blob of the user with
+the given name if they are successfully authenticated with the given
+password.  A tuple of empty strings will be returned if the
+authentication failed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_storage.IUserStorage.delete_user">
+<code class="descname">delete_user</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_storage.html#IUserStorage.delete_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_storage.IUserStorage.delete_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the user with the given name (which will not be empty).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_storage.IUserStorage.is_empty">
+<code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_storage.html#IUserStorage.is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_storage.IUserStorage.is_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the user database is empty.  It will only ever be
+called once.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_storage.IUserStorage.matching_users">
+<code class="descname">matching_users</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_storage.html#IUserStorage.matching_users"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_storage.IUserStorage.matching_users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of tuples of the full name and description of all
+users, sorted by the full name, that match the given name.  How the
+name is interpreted (eg. as a regular expression) is determined by the
+storage.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_storage.IUserStorage.modify_user">
+<code class="descname">modify_user</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_storage.html#IUserStorage.modify_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_storage.IUserStorage.modify_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the description and password for the user with the given name
+(which will not be empty).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_storage.IUserStorage.unauthenticate_user">
+<code class="descname">unauthenticate_user</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_storage.html#IUserStorage.unauthenticate_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_storage.IUserStorage.unauthenticate_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unauthenticate the given user (which is an object implementing
+IUser) and return True if it was successful.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_storage.IUserStorage.update_blob">
+<code class="descname">update_blob</code><span class="sig-paren">(</span><em>name</em>, <em>blob</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_storage.html#IUserStorage.update_blob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_storage.IUserStorage.update_blob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the blob for the user with the given name (which will not be
+empty).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.i_user_storage.IUserStorage.update_password">
+<code class="descname">update_password</code><span class="sig-paren">(</span><em>name</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_storage.html#IUserStorage.update_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_storage.IUserStorage.update_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the password for the user with the given name (which will not
+be empty).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="apptools.permissions.default.i_user_storage.UserStorageError">
+<em class="property">exception </em><code class="descclassname">apptools.permissions.default.i_user_storage.</code><code class="descname">UserStorageError</code><a class="reference internal" href="../_modules/apptools/permissions/default/i_user_storage.html#UserStorageError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.i_user_storage.UserStorageError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>This is the exception raised by an IUserStorage object when an error
+occurs accessing the database.  Its string representation is displayed as
+an error message to the user.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.permissions.default.persistent">
+<span id="apptools-permissions-default-persistent-module"></span><h2>apptools.permissions.default.persistent module<a class="headerlink" href="#module-apptools.permissions.default.persistent" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.permissions.default.persistent.Persistent">
+<em class="property">class </em><code class="descclassname">apptools.permissions.default.persistent.</code><code class="descname">Persistent</code><span class="sig-paren">(</span><em>factory</em>, <em>file_name</em>, <em>desc</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/persistent.html#Persistent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.persistent.Persistent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This persists a Traits class to a file.  It is used by the default
+permissions policy and user manager to implement basic (ie.  insecure)
+shared data storage.</p>
+<dl class="method">
+<dt id="apptools.permissions.default.persistent.Persistent.lock">
+<code class="descname">lock</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/persistent.html#Persistent.lock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.persistent.Persistent.lock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain a lock on the persisted data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.persistent.Persistent.read">
+<code class="descname">read</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/persistent.html#Persistent.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.persistent.Persistent.read" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read and return the persisted data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.persistent.Persistent.unlock">
+<code class="descname">unlock</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/persistent.html#Persistent.unlock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.persistent.Persistent.unlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Release the lock on the persisted data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.persistent.Persistent.write">
+<code class="descname">write</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/persistent.html#Persistent.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.persistent.Persistent.write" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the persisted data.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="apptools.permissions.default.persistent.PersistentError">
+<em class="property">exception </em><code class="descclassname">apptools.permissions.default.persistent.</code><code class="descname">PersistentError</code><a class="reference internal" href="../_modules/apptools/permissions/default/persistent.html#PersistentError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.persistent.PersistentError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>The class used for all persistence related exceptions.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.permissions.default.policy_data">
+<span id="apptools-permissions-default-policy-data-module"></span><h2>apptools.permissions.default.policy_data module<a class="headerlink" href="#module-apptools.permissions.default.policy_data" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.permissions.default.policy_data.Assignment">
+<em class="property">class </em><code class="descclassname">apptools.permissions.default.policy_data.</code><code class="descname">Assignment</code><a class="reference internal" href="../_modules/apptools/permissions/default/policy_data.html#Assignment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_data.Assignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>This represents the assignment of roles to a user.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="apptools.permissions.default.policy_data.Role">
+<em class="property">class </em><code class="descclassname">apptools.permissions.default.policy_data.</code><code class="descname">Role</code><a class="reference internal" href="../_modules/apptools/permissions/default/policy_data.html#Role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_data.Role" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>This represents a role.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.permissions.default.policy_manager">
+<span id="apptools-permissions-default-policy-manager-module"></span><h2>apptools.permissions.default.policy_manager module<a class="headerlink" href="#module-apptools.permissions.default.policy_manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.permissions.default.policy_manager.PolicyManager">
+<em class="property">class </em><code class="descclassname">apptools.permissions.default.policy_manager.</code><code class="descname">PolicyManager</code><a class="reference internal" href="../_modules/apptools/permissions/default/policy_manager.html#PolicyManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_manager.PolicyManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>The default policy manager implementation.  This policy enforces the use
+of roles.  Permissions are associated with roles rather than directly with
+users.  Users are then associated with one or more roles.</p>
+<dl class="method">
+<dt id="apptools.permissions.default.policy_manager.PolicyManager.bootstrapping">
+<code class="descname">bootstrapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/policy_manager.html#PolicyManager.bootstrapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_manager.PolicyManager.bootstrapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if we are bootstrapping, ie. no roles have been defined
+or assigned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.policy_manager.PolicyManager.load_policy">
+<code class="descname">load_policy</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/policy_manager.html#PolicyManager.load_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_manager.PolicyManager.load_policy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the policy for the given user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.policy_manager.PolicyManager.register_permission">
+<code class="descname">register_permission</code><span class="sig-paren">(</span><em>permission</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/policy_manager.html#PolicyManager.register_permission"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_manager.PolicyManager.register_permission" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register the given permission.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.permissions.default.policy_storage">
+<span id="apptools-permissions-default-policy-storage-module"></span><h2>apptools.permissions.default.policy_storage module<a class="headerlink" href="#module-apptools.permissions.default.policy_storage" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.permissions.default.policy_storage.PolicyStorage">
+<em class="property">class </em><code class="descclassname">apptools.permissions.default.policy_storage.</code><code class="descname">PolicyStorage</code><a class="reference internal" href="../_modules/apptools/permissions/default/policy_storage.html#PolicyStorage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_storage.PolicyStorage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>This implements a policy database that pickles its data in a local file.</p>
+<dl class="method">
+<dt id="apptools.permissions.default.policy_storage.PolicyStorage.add_role">
+<code class="descname">add_role</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>perm_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/policy_storage.html#PolicyStorage.add_role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_storage.PolicyStorage.add_role" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new role.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.policy_storage.PolicyStorage.all_roles">
+<code class="descname">all_roles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/policy_storage.html#PolicyStorage.all_roles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_storage.PolicyStorage.all_roles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all roles.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.policy_storage.PolicyStorage.delete_role">
+<code class="descname">delete_role</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/policy_storage.html#PolicyStorage.delete_role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_storage.PolicyStorage.delete_role" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a role.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.policy_storage.PolicyStorage.get_assignment">
+<code class="descname">get_assignment</code><span class="sig-paren">(</span><em>user_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/policy_storage.html#PolicyStorage.get_assignment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_storage.PolicyStorage.get_assignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the details of the assignment for the given user name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.policy_storage.PolicyStorage.get_policy">
+<code class="descname">get_policy</code><span class="sig-paren">(</span><em>user_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/policy_storage.html#PolicyStorage.get_policy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_storage.PolicyStorage.get_policy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the details of the policy for the given user name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.policy_storage.PolicyStorage.is_empty">
+<code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/policy_storage.html#PolicyStorage.is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_storage.PolicyStorage.is_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>See if the database is empty.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.policy_storage.PolicyStorage.matching_roles">
+<code class="descname">matching_roles</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/policy_storage.html#PolicyStorage.matching_roles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_storage.PolicyStorage.matching_roles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the full name, description and permissions of all the roles
+that match the given name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.policy_storage.PolicyStorage.modify_role">
+<code class="descname">modify_role</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>perm_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/policy_storage.html#PolicyStorage.modify_role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_storage.PolicyStorage.modify_role" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the description and permissions for the given role.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.policy_storage.PolicyStorage.set_assignment">
+<code class="descname">set_assignment</code><span class="sig-paren">(</span><em>user_name</em>, <em>role_names</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/policy_storage.html#PolicyStorage.set_assignment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.policy_storage.PolicyStorage.set_assignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the roles assigned to a user.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.permissions.default.role_assignment">
+<span id="apptools-permissions-default-role-assignment-module"></span><h2>apptools.permissions.default.role_assignment module<a class="headerlink" href="#module-apptools.permissions.default.role_assignment" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="apptools.permissions.default.role_assignment.role_assignment">
+<code class="descclassname">apptools.permissions.default.role_assignment.</code><code class="descname">role_assignment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/role_assignment.html#role_assignment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.role_assignment.role_assignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement the role assignment for the current policy manager.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.permissions.default.role_definition">
+<span id="apptools-permissions-default-role-definition-module"></span><h2>apptools.permissions.default.role_definition module<a class="headerlink" href="#module-apptools.permissions.default.role_definition" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="apptools.permissions.default.role_definition.role_definition">
+<code class="descclassname">apptools.permissions.default.role_definition.</code><code class="descname">role_definition</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/role_definition.html#role_definition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.role_definition.role_definition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implement the role definition for the current policy manager.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.permissions.default.select_role">
+<span id="apptools-permissions-default-select-role-module"></span><h2>apptools.permissions.default.select_role module<a class="headerlink" href="#module-apptools.permissions.default.select_role" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="apptools.permissions.default.select_role.select_role">
+<code class="descclassname">apptools.permissions.default.select_role.</code><code class="descname">select_role</code><span class="sig-paren">(</span><em>roles</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/select_role.html#select_role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.select_role.select_role" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a single role from the given list of roles.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.permissions.default.select_user">
+<span id="apptools-permissions-default-select-user-module"></span><h2>apptools.permissions.default.select_user module<a class="headerlink" href="#module-apptools.permissions.default.select_user" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="apptools.permissions.default.select_user.select_user">
+<code class="descclassname">apptools.permissions.default.select_user.</code><code class="descname">select_user</code><span class="sig-paren">(</span><em>users</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/select_user.html#select_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.select_user.select_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a single user from the given list of users.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.permissions.default.user_database">
+<span id="apptools-permissions-default-user-database-module"></span><h2>apptools.permissions.default.user_database module<a class="headerlink" href="#module-apptools.permissions.default.user_database" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.permissions.default.user_database.User">
+<em class="property">class </em><code class="descclassname">apptools.permissions.default.user_database.</code><code class="descname">User</code><a class="reference internal" href="../_modules/apptools/permissions/default/user_database.html#User"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_database.User" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>The user implementation.  We don’t store any extra information other
+than that defined by IUser.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="apptools.permissions.default.user_database.UserDatabase">
+<em class="property">class </em><code class="descclassname">apptools.permissions.default.user_database.</code><code class="descname">UserDatabase</code><a class="reference internal" href="../_modules/apptools/permissions/default/user_database.html#UserDatabase"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_database.UserDatabase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>This implements a user database that supports IUser for the default user
+manager (ie. using password authorisation) except that it leaves the actual
+access of the data to an implementation of IUserStorage.</p>
+<dl class="method">
+<dt id="apptools.permissions.default.user_database.UserDatabase.add_user">
+<code class="descname">add_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_database.html#UserDatabase.add_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_database.UserDatabase.add_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_database.UserDatabase.authenticate_user">
+<code class="descname">authenticate_user</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_database.html#UserDatabase.authenticate_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_database.UserDatabase.authenticate_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Authenticate a user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_database.UserDatabase.bootstrapping">
+<code class="descname">bootstrapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_database.html#UserDatabase.bootstrapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_database.UserDatabase.bootstrapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>See if we are bootstrapping.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_database.UserDatabase.change_password">
+<code class="descname">change_password</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_database.html#UserDatabase.change_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_database.UserDatabase.change_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change a user’s password.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_database.UserDatabase.delete_user">
+<code class="descname">delete_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_database.html#UserDatabase.delete_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_database.UserDatabase.delete_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_database.UserDatabase.matching_user">
+<code class="descname">matching_user</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_database.html#UserDatabase.matching_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_database.UserDatabase.matching_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select a user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_database.UserDatabase.modify_user">
+<code class="descname">modify_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_database.html#UserDatabase.modify_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_database.UserDatabase.modify_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modify a user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_database.UserDatabase.unauthenticate_user">
+<code class="descname">unauthenticate_user</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_database.html#UserDatabase.unauthenticate_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_database.UserDatabase.unauthenticate_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unauthenticate a user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_database.UserDatabase.user_factory">
+<code class="descname">user_factory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_database.html#UserDatabase.user_factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_database.UserDatabase.user_factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new user object.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.permissions.default.user_manager">
+<span id="apptools-permissions-default-user-manager-module"></span><h2>apptools.permissions.default.user_manager module<a class="headerlink" href="#module-apptools.permissions.default.user_manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.permissions.default.user_manager.UserManager">
+<em class="property">class </em><code class="descclassname">apptools.permissions.default.user_manager.</code><code class="descname">UserManager</code><a class="reference internal" href="../_modules/apptools/permissions/default/user_manager.html#UserManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_manager.UserManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>The default user manager implementation.</p>
+<dl class="method">
+<dt id="apptools.permissions.default.user_manager.UserManager.authenticate_user">
+<code class="descname">authenticate_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_manager.html#UserManager.authenticate_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_manager.UserManager.authenticate_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Authenticate the user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_manager.UserManager.bootstrapping">
+<code class="descname">bootstrapping</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_manager.html#UserManager.bootstrapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_manager.UserManager.bootstrapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if we are bootstrapping, ie. no users have been defined.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_manager.UserManager.matching_user">
+<code class="descname">matching_user</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_manager.html#UserManager.matching_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_manager.UserManager.matching_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select a user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_manager.UserManager.unauthenticate_user">
+<code class="descname">unauthenticate_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_manager.html#UserManager.unauthenticate_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_manager.UserManager.unauthenticate_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unauthenticate the user.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.permissions.default.user_storage">
+<span id="apptools-permissions-default-user-storage-module"></span><h2>apptools.permissions.default.user_storage module<a class="headerlink" href="#module-apptools.permissions.default.user_storage" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.permissions.default.user_storage.UserStorage">
+<em class="property">class </em><code class="descclassname">apptools.permissions.default.user_storage.</code><code class="descname">UserStorage</code><a class="reference internal" href="../_modules/apptools/permissions/default/user_storage.html#UserStorage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_storage.UserStorage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>This implements a user database that pickles its data in a local file.</p>
+<dl class="method">
+<dt id="apptools.permissions.default.user_storage.UserStorage.add_user">
+<code class="descname">add_user</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_storage.html#UserStorage.add_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_storage.UserStorage.add_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_storage.UserStorage.authenticate_user">
+<code class="descname">authenticate_user</code><span class="sig-paren">(</span><em>name</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_storage.html#UserStorage.authenticate_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_storage.UserStorage.authenticate_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the tuple of the user name, description, and blob if the user
+was successfully authenticated.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.permissions.default.user_storage.UserStorage.capabilities">
+<code class="descname">capabilities</code><em class="property"> = ['user_password', 'user_add', 'user_modify', 'user_delete']</em><a class="headerlink" href="#apptools.permissions.default.user_storage.UserStorage.capabilities" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_storage.UserStorage.delete_user">
+<code class="descname">delete_user</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_storage.html#UserStorage.delete_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_storage.UserStorage.delete_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_storage.UserStorage.is_empty">
+<code class="descname">is_empty</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_storage.html#UserStorage.is_empty"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_storage.UserStorage.is_empty" title="Permalink to this definition">¶</a></dt>
+<dd><p>See if the database is empty.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_storage.UserStorage.matching_users">
+<code class="descname">matching_users</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_storage.html#UserStorage.matching_users"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_storage.UserStorage.matching_users" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the full name and description of all the users that match the
+given name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_storage.UserStorage.modify_user">
+<code class="descname">modify_user</code><span class="sig-paren">(</span><em>name</em>, <em>description</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_storage.html#UserStorage.modify_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_storage.UserStorage.modify_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the description and password for the given user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_storage.UserStorage.unauthenticate_user">
+<code class="descname">unauthenticate_user</code><span class="sig-paren">(</span><em>user</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_storage.html#UserStorage.unauthenticate_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_storage.UserStorage.unauthenticate_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unauthenticate the given user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_storage.UserStorage.update_blob">
+<code class="descname">update_blob</code><span class="sig-paren">(</span><em>name</em>, <em>blob</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_storage.html#UserStorage.update_blob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_storage.UserStorage.update_blob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the blob for the given user.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.permissions.default.user_storage.UserStorage.update_password">
+<code class="descname">update_password</code><span class="sig-paren">(</span><em>name</em>, <em>password</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/permissions/default/user_storage.html#UserStorage.update_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.permissions.default.user_storage.UserStorage.update_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the password for the given user.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.permissions.default">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-apptools.permissions.default" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">apptools.permissions.default package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default.api">apptools.permissions.default.api module</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default.i_policy_storage">apptools.permissions.default.i_policy_storage module</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default.i_user_database">apptools.permissions.default.i_user_database module</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default.i_user_storage">apptools.permissions.default.i_user_storage module</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default.persistent">apptools.permissions.default.persistent module</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default.policy_data">apptools.permissions.default.policy_data module</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default.policy_manager">apptools.permissions.default.policy_manager module</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default.policy_storage">apptools.permissions.default.policy_storage module</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default.role_assignment">apptools.permissions.default.role_assignment module</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default.role_definition">apptools.permissions.default.role_definition module</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default.select_role">apptools.permissions.default.select_role module</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default.select_user">apptools.permissions.default.select_user module</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default.user_database">apptools.permissions.default.user_database module</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default.user_manager">apptools.permissions.default.user_manager module</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default.user_storage">apptools.permissions.default.user_storage module</a></li>
+<li><a class="reference internal" href="#module-apptools.permissions.default">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.permissions.adapters.html"
+                        title="previous chapter">apptools.permissions.adapters package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.persistence.html"
+                        title="next chapter">apptools.persistence package</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.permissions.default.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

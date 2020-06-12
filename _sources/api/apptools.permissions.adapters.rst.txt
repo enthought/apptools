@@ -1,0 +1,38 @@
+apptools.permissions.adapters package
+=====================================
+
+Submodules
+----------
+
+apptools.permissions.adapters.pyface\_action module
+---------------------------------------------------
+
+.. automodule:: apptools.permissions.adapters.pyface_action
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.adapters.qt4\_widget module
+------------------------------------------------
+
+.. automodule:: apptools.permissions.adapters.qt4_widget
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.adapters.wx\_window module
+-----------------------------------------------
+
+.. automodule:: apptools.permissions.adapters.wx_window
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.permissions.adapters
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,46 @@
+apptools.sweet\_pickle package
+==============================
+
+Submodules
+----------
+
+apptools.sweet\_pickle.global\_registry module
+----------------------------------------------
+
+.. automodule:: apptools.sweet_pickle.global_registry
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.sweet\_pickle.placeholder module
+-----------------------------------------
+
+.. automodule:: apptools.sweet_pickle.placeholder
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.sweet\_pickle.updater module
+-------------------------------------
+
+.. automodule:: apptools.sweet_pickle.updater
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.sweet\_pickle.versioned\_unpickler module
+--------------------------------------------------
+
+.. automodule:: apptools.sweet_pickle.versioned_unpickler
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.sweet_pickle
+    :members:
+    :undoc-members:
+    :show-inheritance:

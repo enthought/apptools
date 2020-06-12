@@ -1,0 +1,37 @@
+apptools.io package
+===================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    apptools.io.h5
+
+Submodules
+----------
+
+apptools.io.api module
+----------------------
+
+.. automodule:: apptools.io.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.io.file module
+-----------------------
+
+.. automodule:: apptools.io.file
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.io
+    :members:
+    :undoc-members:
+    :show-inheritance:

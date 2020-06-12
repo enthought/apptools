@@ -1,0 +1,17 @@
+apptools.help package
+=====================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    apptools.help.help_plugin
+
+Module contents
+---------------
+
+.. automodule:: apptools.help
+    :members:
+    :undoc-members:
+    :show-inheritance:

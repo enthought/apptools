@@ -1,0 +1,94 @@
+apptools.template.impl package
+==============================
+
+Submodules
+----------
+
+apptools.template.impl.any\_context\_data\_name\_item module
+------------------------------------------------------------
+
+.. automodule:: apptools.template.impl.any_context_data_name_item
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.impl.any\_data\_name\_item module
+---------------------------------------------------
+
+.. automodule:: apptools.template.impl.any_data_name_item
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.impl.api module
+---------------------------------
+
+.. automodule:: apptools.template.impl.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.impl.context\_data\_name\_item module
+-------------------------------------------------------
+
+.. automodule:: apptools.template.impl.context_data_name_item
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.impl.helper module
+------------------------------------
+
+.. automodule:: apptools.template.impl.helper
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.impl.i\_context\_adapter module
+-------------------------------------------------
+
+.. automodule:: apptools.template.impl.i_context_adapter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.impl.template\_data\_context module
+-----------------------------------------------------
+
+.. automodule:: apptools.template.impl.template_data_context
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.impl.template\_data\_source module
+----------------------------------------------------
+
+.. automodule:: apptools.template.impl.template_data_source
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.impl.value\_data\_name\_item module
+-----------------------------------------------------
+
+.. automodule:: apptools.template.impl.value_data_name_item
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.impl.value\_nd\_data\_name\_item module
+---------------------------------------------------------
+
+.. automodule:: apptools.template.impl.value_nd_data_name_item
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.template.impl
+    :members:
+    :undoc-members:
+    :show-inheritance:

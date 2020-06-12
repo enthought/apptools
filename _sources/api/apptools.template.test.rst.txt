@@ -1,0 +1,54 @@
+apptools.template.test package
+==============================
+
+Submodules
+----------
+
+apptools.template.test.enable\_editor module
+--------------------------------------------
+
+.. automodule:: apptools.template.test.enable_editor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.test.scatter\_plot module
+-------------------------------------------
+
+.. automodule:: apptools.template.test.scatter_plot
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.test.scatter\_plot\_2 module
+----------------------------------------------
+
+.. automodule:: apptools.template.test.scatter_plot_2
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.test.scatter\_plot\_nm module
+-----------------------------------------------
+
+.. automodule:: apptools.template.test.scatter_plot_nm
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.template.test.template\_view module
+--------------------------------------------
+
+.. automodule:: apptools.template.test.template_view
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.template.test
+    :members:
+    :undoc-members:
+    :show-inheritance:

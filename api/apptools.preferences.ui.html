@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.preferences.ui package &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools.preferences package" href="apptools.preferences.html" >
+    <link rel="next" title="apptools.scripting package" href="apptools.scripting.html" >
+    <link rel="prev" title="apptools.preferences package" href="apptools.preferences.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../api.html" >API documentation</a></li>
+          <li class="active"><a href="modules.html" >apptools</a></li>
+          <li class="active"><a href="apptools.html" >apptools package</a></li>
+          <li class="active"><a href="apptools.preferences.html" accesskey="U">apptools.preferences package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.scripting.html" title="apptools.scripting package"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.preferences.html" title="apptools.preferences package"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="apptools-preferences-ui-package">
+<h1>apptools.preferences.ui package<a class="headerlink" href="#apptools-preferences-ui-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-apptools.preferences.ui.api">
+<span id="apptools-preferences-ui-api-module"></span><h2>apptools.preferences.ui.api module<a class="headerlink" href="#module-apptools.preferences.ui.api" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-apptools.preferences.ui.i_preferences_page">
+<span id="apptools-preferences-ui-i-preferences-page-module"></span><h2>apptools.preferences.ui.i_preferences_page module<a class="headerlink" href="#module-apptools.preferences.ui.i_preferences_page" title="Permalink to this headline">¶</a></h2>
+<p>The interface for pages in a preferences dialog.</p>
+<dl class="class">
+<dt id="apptools.preferences.ui.i_preferences_page.IPreferencesPage">
+<em class="property">class </em><code class="descclassname">apptools.preferences.ui.i_preferences_page.</code><code class="descname">IPreferencesPage</code><a class="reference internal" href="../_modules/apptools/preferences/ui/i_preferences_page.html#IPreferencesPage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.i_preferences_page.IPreferencesPage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.Interface</span></code></p>
+<p>The interface for pages in a preferences dialog.</p>
+<dl class="method">
+<dt id="apptools.preferences.ui.i_preferences_page.IPreferencesPage.apply">
+<code class="descname">apply</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/i_preferences_page.html#IPreferencesPage.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.i_preferences_page.IPreferencesPage.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the page’s preferences.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.preferences.ui.preferences_manager">
+<span id="apptools-preferences-ui-preferences-manager-module"></span><h2>apptools.preferences.ui.preferences_manager module<a class="headerlink" href="#module-apptools.preferences.ui.preferences_manager" title="Permalink to this headline">¶</a></h2>
+<p>The preferences manager.</p>
+<dl class="class">
+<dt id="apptools.preferences.ui.preferences_manager.PreferencesHelpWindow">
+<em class="property">class </em><code class="descclassname">apptools.preferences.ui.preferences_manager.</code><code class="descname">PreferencesHelpWindow</code><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_manager.html#PreferencesHelpWindow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_manager.PreferencesHelpWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>Container class to present a view with string info.</p>
+<dl class="method">
+<dt id="apptools.preferences.ui.preferences_manager.PreferencesHelpWindow.traits_view">
+<code class="descname">traits_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_manager.html#PreferencesHelpWindow.traits_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_manager.PreferencesHelpWindow.traits_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default view to show for this class.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="apptools.preferences.ui.preferences_manager.PreferencesManager">
+<em class="property">class </em><code class="descclassname">apptools.preferences.ui.preferences_manager.</code><code class="descname">PreferencesManager</code><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_manager.html#PreferencesManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_manager.PreferencesManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>The preferences manager.</p>
+<dl class="method">
+<dt id="apptools.preferences.ui.preferences_manager.PreferencesManager.apply">
+<code class="descname">apply</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_manager.html#PreferencesManager.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_manager.PreferencesManager.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply all changes made in the manager.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.ui.preferences_manager.PreferencesManager.traits_view">
+<code class="descname">traits_view</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_manager.html#PreferencesManager.traits_view"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_manager.PreferencesManager.traits_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default traits view for this class.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="apptools.preferences.ui.preferences_manager.PreferencesManagerHandler">
+<em class="property">class </em><code class="descclassname">apptools.preferences.ui.preferences_manager.</code><code class="descname">PreferencesManagerHandler</code><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_manager.html#PreferencesManagerHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_manager.PreferencesManagerHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traitsui.handler.Handler</span></code></p>
+<p>The traits UI handler for the preferences manager.</p>
+<dl class="method">
+<dt id="apptools.preferences.ui.preferences_manager.PreferencesManagerHandler.apply">
+<code class="descname">apply</code><span class="sig-paren">(</span><em>info</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_manager.html#PreferencesManagerHandler.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_manager.PreferencesManagerHandler.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handle the <strong>Apply</strong> button being clicked.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.ui.preferences_manager.PreferencesManagerHandler.close">
+<code class="descname">close</code><span class="sig-paren">(</span><em>info</em>, <em>is_ok</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_manager.html#PreferencesManagerHandler.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_manager.PreferencesManagerHandler.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close a dialog-based user interface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.ui.preferences_manager.PreferencesManagerHandler.init">
+<code class="descname">init</code><span class="sig-paren">(</span><em>info</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_manager.html#PreferencesManagerHandler.init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_manager.PreferencesManagerHandler.init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the controls of a user interface.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.ui.preferences_manager.PreferencesManagerHandler.preferences_help">
+<code class="descname">preferences_help</code><span class="sig-paren">(</span><em>info</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_manager.html#PreferencesManagerHandler.preferences_help"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_manager.PreferencesManagerHandler.preferences_help" title="Permalink to this definition">¶</a></dt>
+<dd><p>Custom preferences help panel. The Traits help doesn’t work.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.preferences.ui.preferences_node">
+<span id="apptools-preferences-ui-preferences-node-module"></span><h2>apptools.preferences.ui.preferences_node module<a class="headerlink" href="#module-apptools.preferences.ui.preferences_node" title="Permalink to this headline">¶</a></h2>
+<p>Abstract base class for a node in a preferences dialog.</p>
+<dl class="class">
+<dt id="apptools.preferences.ui.preferences_node.PreferencesNode">
+<em class="property">class </em><code class="descclassname">apptools.preferences.ui.preferences_node.</code><code class="descname">PreferencesNode</code><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_node.html#PreferencesNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_node.PreferencesNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apptools.preferences.ui.tree_item.TreeItem" title="apptools.preferences.ui.tree_item.TreeItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">apptools.preferences.ui.tree_item.TreeItem</span></code></a></p>
+<p>Abstract base class for a node in a preferences dialog.</p>
+<p>A preferences node has a name and an image which are used to represent the
+node in a preferences dialog (usually in the form of a tree).</p>
+<dl class="method">
+<dt id="apptools.preferences.ui.preferences_node.PreferencesNode.create_page">
+<code class="descname">create_page</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_node.html#PreferencesNode.create_page"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_node.PreferencesNode.create_page" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the preference page for this node.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.ui.preferences_node.PreferencesNode.dump">
+<code class="descname">dump</code><span class="sig-paren">(</span><em>indent=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_node.html#PreferencesNode.dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_node.PreferencesNode.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pretty-print the node to stdout.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.ui.preferences_node.PreferencesNode.lookup">
+<code class="descname">lookup</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_node.html#PreferencesNode.lookup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_node.PreferencesNode.lookup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the child of this node with the specified Id.</p>
+<p>Returns None if no such child exists.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.preferences.ui.preferences_page">
+<span id="apptools-preferences-ui-preferences-page-module"></span><h2>apptools.preferences.ui.preferences_page module<a class="headerlink" href="#module-apptools.preferences.ui.preferences_page" title="Permalink to this headline">¶</a></h2>
+<p>A page in a preferences dialog.</p>
+<dl class="class">
+<dt id="apptools.preferences.ui.preferences_page.PreferencesPage">
+<em class="property">class </em><code class="descclassname">apptools.preferences.ui.preferences_page.</code><code class="descname">PreferencesPage</code><span class="sig-paren">(</span><em>**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_page.html#PreferencesPage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_page.PreferencesPage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="apptools.preferences.html#apptools.preferences.preferences_helper.PreferencesHelper" title="apptools.preferences.preferences_helper.PreferencesHelper"><code class="xref py py-class docutils literal notranslate"><span class="pre">apptools.preferences.preferences_helper.PreferencesHelper</span></code></a></p>
+<p>A page in a preferences dialog.</p>
+<dl class="method">
+<dt id="apptools.preferences.ui.preferences_page.PreferencesPage.apply">
+<code class="descname">apply</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/preferences_page.html#PreferencesPage.apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.preferences_page.PreferencesPage.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply the page’s preferences.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.preferences.ui.tree_item">
+<span id="apptools-preferences-ui-tree-item-module"></span><h2>apptools.preferences.ui.tree_item module<a class="headerlink" href="#module-apptools.preferences.ui.tree_item" title="Permalink to this headline">¶</a></h2>
+<p>A generic base-class for items in a tree data structure.</p>
+<p>An example:-</p>
+<p>root = TreeItem(data=’Root’)</p>
+<p>fruit = TreeItem(data=’Fruit’)
+fruit.append(TreeItem(data=’Apple’, allows_children=False))
+fruit.append(TreeItem(data=’Orange’, allows_children=False))
+fruit.append(TreeItem(data=’Pear’, allows_children=False))
+root.append(fruit)</p>
+<p>veg = TreeItem(data=’Veg’)
+veg.append(TreeItem(data=’Carrot’, allows_children=False))
+veg.append(TreeItem(data=’Cauliflower’, allows_children=False))
+veg.append(TreeItem(data=’Sprout’, allows_children=False))
+root.append(veg)</p>
+<dl class="class">
+<dt id="apptools.preferences.ui.tree_item.TreeItem">
+<em class="property">class </em><code class="descclassname">apptools.preferences.ui.tree_item.</code><code class="descname">TreeItem</code><a class="reference internal" href="../_modules/apptools/preferences/ui/tree_item.html#TreeItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.tree_item.TreeItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>A generic base-class for items in a tree data structure.</p>
+<dl class="method">
+<dt id="apptools.preferences.ui.tree_item.TreeItem.append">
+<code class="descname">append</code><span class="sig-paren">(</span><em>child</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/tree_item.html#TreeItem.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.tree_item.TreeItem.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends a child to this item.</p>
+<p>This removes the child from its current parent (if it has one).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.ui.tree_item.TreeItem.insert">
+<code class="descname">insert</code><span class="sig-paren">(</span><em>index</em>, <em>child</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/tree_item.html#TreeItem.insert"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.tree_item.TreeItem.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inserts a child into this item at the specified index.</p>
+<p>This removes the child from its current parent (if it has one).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.ui.tree_item.TreeItem.insert_after">
+<code class="descname">insert_after</code><span class="sig-paren">(</span><em>after</em>, <em>child</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/tree_item.html#TreeItem.insert_after"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.tree_item.TreeItem.insert_after" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inserts a child into this item after the specified item.</p>
+<p>This removes the child from its current parent (if it has one).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.ui.tree_item.TreeItem.insert_before">
+<code class="descname">insert_before</code><span class="sig-paren">(</span><em>before</em>, <em>child</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/tree_item.html#TreeItem.insert_before"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.tree_item.TreeItem.insert_before" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inserts a child into this item before the specified item.</p>
+<p>This removes the child from its current parent (if it has one).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.ui.tree_item.TreeItem.remove">
+<code class="descname">remove</code><span class="sig-paren">(</span><em>child</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/ui/tree_item.html#TreeItem.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.ui.tree_item.TreeItem.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a child from this item.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="apptools-preferences-ui-widget-editor-module">
+<h2>apptools.preferences.ui.widget_editor module<a class="headerlink" href="#apptools-preferences-ui-widget-editor-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-apptools.preferences.ui">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-apptools.preferences.ui" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">apptools.preferences.ui package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-apptools.preferences.ui.api">apptools.preferences.ui.api module</a></li>
+<li><a class="reference internal" href="#module-apptools.preferences.ui.i_preferences_page">apptools.preferences.ui.i_preferences_page module</a></li>
+<li><a class="reference internal" href="#module-apptools.preferences.ui.preferences_manager">apptools.preferences.ui.preferences_manager module</a></li>
+<li><a class="reference internal" href="#module-apptools.preferences.ui.preferences_node">apptools.preferences.ui.preferences_node module</a></li>
+<li><a class="reference internal" href="#module-apptools.preferences.ui.preferences_page">apptools.preferences.ui.preferences_page module</a></li>
+<li><a class="reference internal" href="#module-apptools.preferences.ui.tree_item">apptools.preferences.ui.tree_item module</a></li>
+<li><a class="reference internal" href="#apptools-preferences-ui-widget-editor-module">apptools.preferences.ui.widget_editor module</a></li>
+<li><a class="reference internal" href="#module-apptools.preferences.ui">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.preferences.html"
+                        title="previous chapter">apptools.preferences package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.scripting.html"
+                        title="next chapter">apptools.scripting package</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.preferences.ui.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

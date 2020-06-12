@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.type_manager.adapter_manager &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.type_manager.adapter_manager</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; A manager for adapter factories. &quot;&quot;&quot;</span>
+
+<span class="c1"># Standard library imports</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="c1"># Third-party imports</span>
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Property</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">.abstract_type_system</span> <span class="k">import</span> <span class="n">AbstractTypeSystem</span>
+<span class="kn">from</span> <span class="nn">.python_type_system</span> <span class="k">import</span> <span class="n">PythonTypeSystem</span>
+
+
+<div class="viewcode-block" id="AdapterManager"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.adapter_manager.AdapterManager">[docs]</a><span class="k">class</span> <span class="nc">AdapterManager</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A manager for adapter factories. &quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;AdapterManager&#39; interface ###########################################</span>
+
+    <span class="c1"># All registered type-scope factories by the type of object that they</span>
+    <span class="c1"># adapt.</span>
+    <span class="c1">#</span>
+    <span class="c1"># The dictionary is keyed by the *name* of the class rather than the class</span>
+    <span class="c1"># itself to allow for adapter factory proxies to register themselves</span>
+    <span class="c1"># without having to load and create the factories themselves (i.e., to</span>
+    <span class="c1"># allow us to lazily load adapter factories contributed by plugins). This</span>
+    <span class="c1"># is a slight compromise as it is obviously geared towards use in Envisage,</span>
+    <span class="c1"># but it doesn&#39;t affect the API other than allowing a class OR a string to</span>
+    <span class="c1"># be passed to &#39;register_adapters&#39;.</span>
+    <span class="c1">#</span>
+    <span class="c1"># { String adaptee_class_name : List(AdapterFactory) factories }</span>
+    <span class="n">type_factories</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Dict</span><span class="p">)</span>
+
+    <span class="c1"># All registered instance-scope factories by the object that they adapt.</span>
+    <span class="c1">#</span>
+    <span class="c1"># { id(obj) : List(AdapterFactory) factories }</span>
+    <span class="n">instance_factories</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Dict</span><span class="p">)</span>
+
+    <span class="c1"># The type system used by the manager (it determines &#39;is_a&#39; relationships</span>
+    <span class="c1"># and type MROs etc). By default we use standard Python semantics.</span>
+    <span class="n">type_system</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">AbstractTypeSystem</span><span class="p">,</span> <span class="n">PythonTypeSystem</span><span class="p">())</span>
+
+    <span class="c1">#### Private interface ####################################################</span>
+
+    <span class="c1"># All registered type-scope factories by the type of object that they</span>
+    <span class="c1"># adapt.</span>
+    <span class="n">_type_factories</span> <span class="o">=</span> <span class="n">Dict</span>
+
+    <span class="c1"># All registered instance-scope factories by the object that they adapt.</span>
+    <span class="n">_instance_factories</span> <span class="o">=</span> <span class="n">Dict</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;AdapterManager&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="c1">#### Properties ###########################################################</span>
+
+    <span class="k">def</span> <span class="nf">_get_type_factories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns all registered type-scope factories. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type_factories</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_get_instance_factories</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns all registered instance-scope factories. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_factories</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1">#### Methods ##############################################################</span>
+
+<div class="viewcode-block" id="AdapterManager.adapt"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.adapter_manager.AdapterManager.adapt">[docs]</a>    <span class="k">def</span> <span class="nf">adapt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptee</span><span class="p">,</span> <span class="n">target_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns an adapter that adapts an object to the target class.</span>
+
+<span class="sd">        &#39;adaptee&#39; is the object that we want to adapt.</span>
+<span class="sd">        &#39;target_class&#39; is the class that the adaptee should be adapted to.</span>
+
+<span class="sd">        Returns None if no such adapter exists.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the object is already an instance of the target class then we</span>
+        <span class="c1"># simply return it.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_system</span><span class="o">.</span><span class="n">is_a</span><span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="n">target_class</span><span class="p">):</span>
+            <span class="n">adapter</span> <span class="o">=</span> <span class="n">adaptee</span>
+
+        <span class="c1"># Otherwise, look at each class in the adaptee&#39;s MRO to see if there</span>
+        <span class="c1"># is an adapter factory registered that can adapt the object to the</span>
+        <span class="c1"># target class.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Look for instance-scope adapters first.</span>
+            <span class="n">adapter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_instance</span><span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="n">target_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+            <span class="c1"># If no instance-scope adapter was found then try type-scope</span>
+            <span class="c1"># adapters.</span>
+            <span class="k">if</span> <span class="n">adapter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">adaptee_class</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_system</span><span class="o">.</span><span class="n">get_mro</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">adaptee</span><span class="p">)):</span>
+                    <span class="n">adapter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapt_type</span><span class="p">(</span>
+                        <span class="n">adaptee</span><span class="p">,</span> <span class="n">adaptee_class</span><span class="p">,</span> <span class="n">target_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span>
+                    <span class="p">)</span>
+                    <span class="k">if</span> <span class="n">adapter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">adapter</span></div>
+
+<div class="viewcode-block" id="AdapterManager.register_instance_adapters"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.adapter_manager.AdapterManager.register_instance_adapters">[docs]</a>    <span class="k">def</span> <span class="nf">register_instance_adapters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Registers an instance-scope adapter factory.</span>
+
+<span class="sd">        A factory can be in exactly one manager (as it uses the manager&#39;s type</span>
+<span class="sd">        system).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">factories</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_factories</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="p">[])</span>
+        <span class="n">factories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">factory</span><span class="p">)</span>
+
+        <span class="c1"># A factory can be in exactly one manager.</span>
+        <span class="n">factory</span><span class="o">.</span><span class="n">adapter_manager</span> <span class="o">=</span> <span class="bp">self</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="AdapterManager.unregister_instance_adapters"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.adapter_manager.AdapterManager.unregister_instance_adapters">[docs]</a>    <span class="k">def</span> <span class="nf">unregister_instance_adapters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Unregisters an instance scope adapter factory.</span>
+
+<span class="sd">        A factory can be in exactly one manager (as it uses the manager&#39;s type</span>
+<span class="sd">        system).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">factories</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_factories</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="n">factory</span> <span class="ow">in</span> <span class="n">factories</span><span class="p">:</span>
+            <span class="n">factories</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">factory</span><span class="p">)</span>
+
+        <span class="c1"># A factory can be in exactly one manager.</span>
+        <span class="n">factory</span><span class="o">.</span><span class="n">adapter_manager</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="AdapterManager.register_type_adapters"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.adapter_manager.AdapterManager.register_type_adapters">[docs]</a>    <span class="k">def</span> <span class="nf">register_type_adapters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">adaptee_class</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Registers a type-scope adapter factory.</span>
+
+<span class="sd">        &#39;adaptee_class&#39; can be either a class object or the name of a class.</span>
+
+<span class="sd">        A factory can be in exactly one manager (as it uses the manager&#39;s type</span>
+<span class="sd">        system).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">adaptee_class</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="n">adaptee_class_name</span> <span class="o">=</span> <span class="n">adaptee_class</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">adaptee_class_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_class_name</span><span class="p">(</span><span class="n">adaptee_class</span><span class="p">)</span>
+
+        <span class="n">factories</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type_factories</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">adaptee_class_name</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">factories</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">factory</span><span class="p">)</span>
+
+        <span class="c1"># A factory can be in exactly one manager.</span>
+        <span class="n">factory</span><span class="o">.</span><span class="n">adapter_manager</span> <span class="o">=</span> <span class="bp">self</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="AdapterManager.unregister_type_adapters"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.adapter_manager.AdapterManager.unregister_type_adapters">[docs]</a>    <span class="k">def</span> <span class="nf">unregister_type_adapters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Unregisters a type-scope adapter factory. &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">adaptee_class_name</span><span class="p">,</span> <span class="n">factories</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type_factories</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">factory</span> <span class="ow">in</span> <span class="n">factories</span><span class="p">:</span>
+                <span class="n">factories</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">factory</span><span class="p">)</span>
+
+        <span class="c1"># The factory is no longer deemed to be part of this manager.</span>
+        <span class="n">factory</span><span class="o">.</span><span class="n">adapter_manager</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span></div>
+
+    <span class="c1">#### DEPRECATED ###########################################################</span>
+
+<div class="viewcode-block" id="AdapterManager.register_adapters"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.adapter_manager.AdapterManager.register_adapters">[docs]</a>    <span class="k">def</span> <span class="nf">register_adapters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">adaptee_class</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Registers an adapter factory.</span>
+
+<span class="sd">        &#39;adaptee_class&#39; can be either a class object or the name of a class.</span>
+
+<span class="sd">        A factory can be in exactly one manager (as it uses the manager&#39;s type</span>
+<span class="sd">        system).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s1">&#39;Use &quot;register_type_adapters&quot; instead.&#39;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_type_adapters</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">adaptee_class</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="AdapterManager.unregister_adapters"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.adapter_manager.AdapterManager.unregister_adapters">[docs]</a>    <span class="k">def</span> <span class="nf">unregister_adapters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Unregisters an adapter factory. &quot;&quot;&quot;</span>
+
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s1">&#39;use &quot;unregister_type_adapters&quot; instead.&#39;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">unregister_type_adapters</span><span class="p">(</span><span class="n">factory</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Private interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_adapt_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptee</span><span class="p">,</span> <span class="n">target_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns an adapter that adaptes an object to the target class.</span>
+
+<span class="sd">        Returns None if no such adapter exists.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">factory</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_factories</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">adaptee</span><span class="p">),</span> <span class="p">[]):</span>
+            <span class="n">adapter</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="n">target_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">adapter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">adapter</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">adapter</span>
+
+    <span class="k">def</span> <span class="nf">_adapt_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">adaptee</span><span class="p">,</span> <span class="n">adaptee_class</span><span class="p">,</span> <span class="n">target_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns an adapter that adapts an object to the target class.</span>
+
+<span class="sd">        Returns None if no such adapter exists.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">adaptee_class_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_class_name</span><span class="p">(</span><span class="n">adaptee_class</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">factory</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type_factories</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">adaptee_class_name</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="n">adapter</span> <span class="o">=</span> <span class="n">factory</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">adaptee</span><span class="p">,</span> <span class="n">target_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">adapter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">adapter</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">adapter</span>
+
+    <span class="k">def</span> <span class="nf">_get_class_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">klass</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the full class name for a class. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">klass</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="n">klass</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span></div>
+
+<span class="c1">#### EOF ######################################################################</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

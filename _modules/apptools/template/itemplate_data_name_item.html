@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.template.itemplate_data_name_item &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.template.itemplate_data_name_item</h1><div class="highlight"><pre>
+<span></span><span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  Defines the ITemplateDataNameItem interface used by elements of a</span>
+<span class="c1">#  TemplateDataName.</span>
+<span class="c1">#</span>
+<span class="c1">#  Written by: David C. Morrill</span>
+<span class="c1">#</span>
+<span class="c1">#  Date: 07/27/2007</span>
+<span class="c1">#</span>
+<span class="c1">#  (c) Copyright 2007 by Enthought, Inc.</span>
+<span class="c1">#</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot; Defines the ITemplateDataNameItem interface used by elements of a</span>
+<span class="sd">    TemplateDataName.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Imports:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<span class="kn">from</span> <span class="nn">traits.api</span> \
+    <span class="kn">import</span> <span class="nn">Interface</span><span class="o">,</span> <span class="nn">Instance</span><span class="o">,</span> <span class="nn">List</span>
+
+<span class="kn">from</span> <span class="nn">.itemplate_data_context</span> \
+    <span class="kn">import</span> <span class="nn">ITemplateDataContext</span>
+
+<span class="kn">from</span> <span class="nn">.itemplate_choice</span> \
+    <span class="kn">import</span> <span class="nn">ITemplateChoice</span>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;ITemplateDataNameItem&#39; interface:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="ITemplateDataNameItem"><a class="viewcode-back" href="../../../api/apptools.template.html#apptools.template.itemplate_data_name_item.ITemplateDataNameItem">[docs]</a><span class="k">class</span> <span class="nc">ITemplateDataNameItem</span> <span class="p">(</span> <span class="n">Interface</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Defines the ITemplateDataNameItem interface used by elements of a</span>
+<span class="sd">        TemplateDataName.</span>
+
+<span class="sd">        The contents of the *input_data_context* and *output_data_context*</span>
+<span class="sd">        are assumed to be immutable. That is, no changes should occur to the</span>
+<span class="sd">        data contexts once they have been assigned to the</span>
+<span class="sd">        **ITemplateDataNameItem** traits.</span>
+
+<span class="sd">        However, new input contexts can be assigned, in which case a new</span>
+<span class="sd">        output context should be created and assigned to the output context</span>
+<span class="sd">        (once it has been fully populated).</span>
+
+<span class="sd">        Also, the *output_data_context* should be **None** if the</span>
+<span class="sd">        *input_data_context* value is **None** or the object cannot match any</span>
+<span class="sd">        values in the *input_data_context*.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># The data context which this data name item should match against. This</span>
+    <span class="c1"># value must be read/write.</span>
+    <span class="n">input_data_context</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span> <span class="n">ITemplateDataContext</span> <span class="p">)</span>
+
+    <span class="c1"># The data context containing the data values and/or contexts this data</span>
+    <span class="c1"># name item matches. This value must be read/write.</span>
+    <span class="n">output_data_context</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span> <span class="n">ITemplateDataContext</span> <span class="p">)</span>
+
+    <span class="c1"># The ITemplateChoice instance representing the current settings of the</span>
+    <span class="c1"># data name item. This value must be read/write.</span>
+    <span class="n">data_name_item_choice</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span> <span class="n">ITemplateChoice</span> <span class="p">)</span>
+
+    <span class="c1"># The alternative choices the user has for the data name item settings for</span>
+    <span class="c1"># the current input data context. The list may be empty, in which case the</span>
+    <span class="c1"># user cannot change the settings of the data name item. This value can be</span>
+    <span class="c1"># read only.</span>
+    <span class="n">data_name_item_choices</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">ITemplateChoice</span> <span class="p">)</span></div>
+
+
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

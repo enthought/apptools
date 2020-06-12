@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.logger.agent package &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools.logger package" href="apptools.logger.html" >
+    <link rel="next" title="apptools.logger.plugin package" href="apptools.logger.plugin.html" >
+    <link rel="prev" title="apptools.logger package" href="apptools.logger.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../api.html" >API documentation</a></li>
+          <li class="active"><a href="modules.html" >apptools</a></li>
+          <li class="active"><a href="apptools.html" >apptools package</a></li>
+          <li class="active"><a href="apptools.logger.html" accesskey="U">apptools.logger package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.logger.plugin.html" title="apptools.logger.plugin package"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.logger.html" title="apptools.logger package"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="apptools-logger-agent-package">
+<h1>apptools.logger.agent package<a class="headerlink" href="#apptools-logger-agent-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-apptools.logger.agent.attachments">
+<span id="apptools-logger-agent-attachments-module"></span><h2>apptools.logger.agent.attachments module<a class="headerlink" href="#module-apptools.logger.agent.attachments" title="Permalink to this headline">¶</a></h2>
+<p>Attach relevant project files.</p>
+<p>FIXME: there are no public project plugins for Envisage 3, yet. In any case,
+this stuff should not be hard-coded, but extensible via extension points. The
+code remains here because we can reuse the zip utility code in that extensible
+rewrite.</p>
+<dl class="class">
+<dt id="apptools.logger.agent.attachments.Attachments">
+<em class="property">class </em><code class="descclassname">apptools.logger.agent.attachments.</code><code class="descname">Attachments</code><span class="sig-paren">(</span><em>message</em>, <em>**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/logger/agent/attachments.html#Attachments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.logger.agent.attachments.Attachments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<dl class="method">
+<dt id="apptools.logger.agent.attachments.Attachments.package_any_relevant_files">
+<code class="descname">package_any_relevant_files</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/logger/agent/attachments.html#Attachments.package_any_relevant_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.logger.agent.attachments.Attachments.package_any_relevant_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="apptools.logger.agent.attachments.Attachments.package_single_project">
+<code class="descname">package_single_project</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/logger/agent/attachments.html#Attachments.package_single_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.logger.agent.attachments.Attachments.package_single_project" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="apptools.logger.agent.attachments.Attachments.package_workspace">
+<code class="descname">package_workspace</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/logger/agent/attachments.html#Attachments.package_workspace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.logger.agent.attachments.Attachments.package_workspace" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.logger.agent.quality_agent_mailer">
+<span id="apptools-logger-agent-quality-agent-mailer-module"></span><h2>apptools.logger.agent.quality_agent_mailer module<a class="headerlink" href="#module-apptools.logger.agent.quality_agent_mailer" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="apptools.logger.agent.quality_agent_mailer.create_email_message">
+<code class="descclassname">apptools.logger.agent.quality_agent_mailer.</code><code class="descname">create_email_message</code><span class="sig-paren">(</span><em>fromaddr</em>, <em>toaddrs</em>, <em>ccaddrs</em>, <em>subject</em>, <em>priority</em>, <em>include_project=False</em>, <em>stack_trace=''</em>, <em>comments=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/logger/agent/quality_agent_mailer.html#create_email_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.logger.agent.quality_agent_mailer.create_email_message" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-apptools.logger.agent.quality_agent_view">
+<span id="apptools-logger-agent-quality-agent-view-module"></span><h2>apptools.logger.agent.quality_agent_view module<a class="headerlink" href="#module-apptools.logger.agent.quality_agent_view" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.logger.agent.quality_agent_view.QualityAgentView">
+<em class="property">class </em><code class="descclassname">apptools.logger.agent.quality_agent_view.</code><code class="descname">QualityAgentView</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/logger/agent/quality_agent_view.html#QualityAgentView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.logger.agent.quality_agent_view.QualityAgentView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pyface.base_toolkit.Unimplemented</span></code></p>
+<dl class="attribute">
+<dt id="apptools.logger.agent.quality_agent_view.QualityAgentView.cc_address">
+<code class="descname">cc_address</code><em class="property"> = &lt;traits.trait_types.Str object&gt;</em><a class="headerlink" href="#apptools.logger.agent.quality_agent_view.QualityAgentView.cc_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.agent.quality_agent_view.QualityAgentView.comments">
+<code class="descname">comments</code><em class="property"> = &lt;traits.trait_types.Str object&gt;</em><a class="headerlink" href="#apptools.logger.agent.quality_agent_view.QualityAgentView.comments" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.agent.quality_agent_view.QualityAgentView.from_address">
+<code class="descname">from_address</code><em class="property"> = &lt;traits.trait_types.Str object&gt;</em><a class="headerlink" href="#apptools.logger.agent.quality_agent_view.QualityAgentView.from_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.agent.quality_agent_view.QualityAgentView.help_id">
+<code class="descname">help_id</code><em class="property"> = 'enlib|HID_Quality_Agent_Dlg'</em><a class="headerlink" href="#apptools.logger.agent.quality_agent_view.QualityAgentView.help_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.agent.quality_agent_view.QualityAgentView.include_userdata">
+<code class="descname">include_userdata</code><a class="headerlink" href="#apptools.logger.agent.quality_agent_view.QualityAgentView.include_userdata" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.trait_types.Any</span></code></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.agent.quality_agent_view.QualityAgentView.msg">
+<code class="descname">msg</code><em class="property"> = &lt;traits.trait_types.Str object&gt;</em><a class="headerlink" href="#apptools.logger.agent.quality_agent_view.QualityAgentView.msg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.agent.quality_agent_view.QualityAgentView.priority">
+<code class="descname">priority</code><em class="property"> = &lt;traits.trait_types.Str object&gt;</em><a class="headerlink" href="#apptools.logger.agent.quality_agent_view.QualityAgentView.priority" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.agent.quality_agent_view.QualityAgentView.service">
+<code class="descname">service</code><em class="property"> = &lt;traits.trait_types.Any object&gt;</em><a class="headerlink" href="#apptools.logger.agent.quality_agent_view.QualityAgentView.service" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.agent.quality_agent_view.QualityAgentView.size">
+<code class="descname">size</code><em class="property"> = &lt;traits.trait_types.Tuple object&gt;</em><a class="headerlink" href="#apptools.logger.agent.quality_agent_view.QualityAgentView.size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.agent.quality_agent_view.QualityAgentView.smtp_server">
+<code class="descname">smtp_server</code><em class="property"> = &lt;traits.trait_types.Str object&gt;</em><a class="headerlink" href="#apptools.logger.agent.quality_agent_view.QualityAgentView.smtp_server" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.agent.quality_agent_view.QualityAgentView.subject">
+<code class="descname">subject</code><em class="property"> = &lt;traits.trait_types.Str object&gt;</em><a class="headerlink" href="#apptools.logger.agent.quality_agent_view.QualityAgentView.subject" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.agent.quality_agent_view.QualityAgentView.title">
+<code class="descname">title</code><em class="property"> = &lt;traits.trait_types.Str object&gt;</em><a class="headerlink" href="#apptools.logger.agent.quality_agent_view.QualityAgentView.title" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.agent.quality_agent_view.QualityAgentView.to_address">
+<code class="descname">to_address</code><em class="property"> = &lt;traits.trait_types.Str object&gt;</em><a class="headerlink" href="#apptools.logger.agent.quality_agent_view.QualityAgentView.to_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.logger.agent">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-apptools.logger.agent" title="Permalink to this headline">¶</a></h2>
+<p>lib.apptools.logger.agent</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">apptools.logger.agent package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-apptools.logger.agent.attachments">apptools.logger.agent.attachments module</a></li>
+<li><a class="reference internal" href="#module-apptools.logger.agent.quality_agent_mailer">apptools.logger.agent.quality_agent_mailer module</a></li>
+<li><a class="reference internal" href="#module-apptools.logger.agent.quality_agent_view">apptools.logger.agent.quality_agent_view module</a></li>
+<li><a class="reference internal" href="#module-apptools.logger.agent">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.logger.html"
+                        title="previous chapter">apptools.logger package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.logger.plugin.html"
+                        title="next chapter">apptools.logger.plugin package</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.logger.agent.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

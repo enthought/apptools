@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.naming.adapter.dict_context_adapter &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../../index.html" >
+    <link rel="up" title="Module code" href="../../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.naming.adapter.dict_context_adapter</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Context adapter for Python dictionaries. &quot;&quot;&quot;</span>
+
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">apptools.naming.api</span> <span class="k">import</span> <span class="n">Binding</span><span class="p">,</span> <span class="n">ContextAdapter</span><span class="p">,</span> <span class="n">naming_manager</span>
+
+
+<div class="viewcode-block" id="DictContextAdapter"><a class="viewcode-back" href="../../../../api/apptools.naming.adapter.html#apptools.naming.adapter.dict_context_adapter.DictContextAdapter">[docs]</a><span class="k">class</span> <span class="nc">DictContextAdapter</span><span class="p">(</span><span class="n">ContextAdapter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Context adapter for Python dictionaries. &quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;ContextAdapter&#39; interface ###########################################</span>
+
+    <span class="c1"># The object that we are adapting.</span>
+    <span class="c1">#</span>
+    <span class="c1">#</span>
+    <span class="c1"># fixme: We would like to specialize the &#39;adaptee&#39; trait here, but if we</span>
+    <span class="c1"># make it of type &#39;Dict&#39; then, on assignment, traits will create a *copy*</span>
+    <span class="c1"># of the actual dict which I think you&#39;ll agree is not very adapter-like!</span>
+<span class="c1">##     adaptee = Dict</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Protected &#39;Context&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_is_bound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Is a name bound in this context? &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span>
+
+    <span class="k">def</span> <span class="nf">_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Looks up a name in this context. &quot;&quot;&quot;</span>
+
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">naming_manager</span><span class="o">.</span><span class="n">get_object_instance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_lookup_binding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Looks up the binding for a name in this context. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">Binding</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_lookup</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Binds a name to an object in this context. &quot;&quot;&quot;</span>
+
+        <span class="n">state</span> <span class="o">=</span> <span class="n">naming_manager</span><span class="o">.</span><span class="n">get_state_to_bind</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_rebind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Rebinds a name to an object in this context. &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bind</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_unbind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Unbinds a name from this context. &quot;&quot;&quot;</span>
+
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Renames an object in this context. &quot;&quot;&quot;</span>
+
+        <span class="c1"># Bind the new name.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bind</span><span class="p">(</span><span class="n">new_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lookup</span><span class="p">(</span><span class="n">old_name</span><span class="p">))</span>
+
+        <span class="c1"># Unbind the old one.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_unbind</span><span class="p">(</span><span class="n">old_name</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_create_subcontext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates a sub-context of this context. &quot;&quot;&quot;</span>
+
+        <span class="c1"># Create a dictionary of the same type as the one we are adapting.</span>
+        <span class="n">sub</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="p">)()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">sub</span>
+
+        <span class="k">return</span> <span class="n">DictContextAdapter</span><span class="p">(</span><span class="n">adaptee</span><span class="o">=</span><span class="n">sub</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_destroy_subcontext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Destroys a sub-context of this context. &quot;&quot;&quot;</span>
+
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_list_bindings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Lists the bindings in this context. &quot;&quot;&quot;</span>
+
+        <span class="n">bindings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="p">:</span>
+            <span class="n">bindings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Binding</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">obj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_lookup</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">bindings</span>
+
+    <span class="k">def</span> <span class="nf">_list_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Lists the names bound in this context. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">adaptee</span><span class="p">]</span></div>
+
+<span class="c1">#### EOF ######################################################################</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

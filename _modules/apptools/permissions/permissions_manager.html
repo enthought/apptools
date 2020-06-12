@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.permissions.permissions_manager &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.permissions.permissions_manager</h1><div class="highlight"><pre>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2008, Riverbank Computing Limited</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Riverbank Computing Limited</span>
+<span class="c1"># Description: &lt;Enthought permissions package component&gt;</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">.i_policy_manager</span> <span class="k">import</span> <span class="n">IPolicyManager</span>
+<span class="kn">from</span> <span class="nn">.i_user_manager</span> <span class="k">import</span> <span class="n">IUserManager</span>
+
+
+<div class="viewcode-block" id="PermissionsManager"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.permissions_manager.PermissionsManager">[docs]</a><span class="k">class</span> <span class="nc">PermissionsManager</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A singleton class that provides access to the current policy and user</span>
+<span class="sd">    managers.&quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;PermissionsManager&#39; interface #######################################</span>
+
+    <span class="c1"># Set if bootstrap permissions should be automatically enabled in a</span>
+    <span class="c1"># bootstrap situation (ie. when no policy or user data has been defined).</span>
+    <span class="c1"># Bootstrap permissions are normally attached to actions used to define</span>
+    <span class="c1"># policy and user data.  Normally this is True, unless policy and user data</span>
+    <span class="c1"># is to be managed by an external application.</span>
+    <span class="n">allow_bootstrap_permissions</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># The current policy manager.</span>
+    <span class="n">policy_manager</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">IPolicyManager</span><span class="p">)</span>
+
+    <span class="c1"># The current user manager.</span>
+    <span class="n">user_manager</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">IUserManager</span><span class="p">)</span>
+
+    <span class="c1">#### Private interface ####################################################</span>
+
+    <span class="c1"># Set if we are bootstrapping.</span>
+    <span class="n">_bootstrap</span> <span class="o">=</span> <span class="n">Bool</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;PermissionsManager&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+<div class="viewcode-block" id="PermissionsManager.check_permissions"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.permissions_manager.PermissionsManager.check_permissions">[docs]</a>    <span class="k">def</span> <span class="nf">check_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">permissions</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check that the current user has one or more of the given permissions</span>
+<span class="sd">        and return True if they have.  permissions is a list of Permission</span>
+<span class="sd">        instances.&quot;&quot;&quot;</span>
+
+        <span class="c1"># Get the current user and their assigned permissions.</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_manager</span><span class="o">.</span><span class="n">user</span>
+        <span class="n">user_perms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_manager</span><span class="o">.</span><span class="n">user_permissions</span>
+
+        <span class="k">for</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">permissions</span><span class="p">:</span>
+            <span class="c1"># If this is a bootstrap permission then see if we are in a</span>
+            <span class="c1"># bootstrap situation.</span>
+            <span class="k">if</span> <span class="n">perm</span><span class="o">.</span><span class="n">bootstrap</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bootstrap</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+            <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">authenticated</span> <span class="ow">and</span> <span class="n">perm</span> <span class="ow">in</span> <span class="n">user_perms</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Trait handlers.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_policy_manager_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Provide a default policy manager.&quot;&quot;&quot;</span>
+
+        <span class="c1"># Defer to an external manager if there is one.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">apptools.permissions.external.policy_manager</span> <span class="k">import</span> <span class="n">PolicyManager</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">apptools.permissions.default.policy_manager</span> <span class="k">import</span> <span class="n">PolicyManager</span>
+
+        <span class="k">return</span> <span class="n">PolicyManager</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_user_manager_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Provide a default user manager.&quot;&quot;&quot;</span>
+
+        <span class="c1"># Defer to an external manager if there is one.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">apptools.permissions.external.user_manager</span> <span class="k">import</span> <span class="n">UserManager</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">apptools.permissions.default.user_manager</span> <span class="k">import</span> <span class="n">UserManager</span>
+
+        <span class="k">return</span> <span class="n">UserManager</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__bootstrap_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Determine whether or not we are bootstrapping.  We only want to do</span>
+<span class="sd">        it once as checking may involve one or more remote database queries.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">allow_bootstrap_permissions</span> <span class="ow">and</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">policy_manager</span><span class="o">.</span><span class="n">bootstrapping</span><span class="p">()</span> <span class="ow">or</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">user_manager</span><span class="o">.</span><span class="n">bootstrapping</span><span class="p">()))</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

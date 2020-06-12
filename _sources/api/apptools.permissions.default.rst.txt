@@ -1,0 +1,134 @@
+apptools.permissions.default package
+====================================
+
+Submodules
+----------
+
+apptools.permissions.default.api module
+---------------------------------------
+
+.. automodule:: apptools.permissions.default.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.default.i\_policy\_storage module
+------------------------------------------------------
+
+.. automodule:: apptools.permissions.default.i_policy_storage
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.default.i\_user\_database module
+-----------------------------------------------------
+
+.. automodule:: apptools.permissions.default.i_user_database
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.default.i\_user\_storage module
+----------------------------------------------------
+
+.. automodule:: apptools.permissions.default.i_user_storage
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.default.persistent module
+----------------------------------------------
+
+.. automodule:: apptools.permissions.default.persistent
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.default.policy\_data module
+------------------------------------------------
+
+.. automodule:: apptools.permissions.default.policy_data
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.default.policy\_manager module
+---------------------------------------------------
+
+.. automodule:: apptools.permissions.default.policy_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.default.policy\_storage module
+---------------------------------------------------
+
+.. automodule:: apptools.permissions.default.policy_storage
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.default.role\_assignment module
+----------------------------------------------------
+
+.. automodule:: apptools.permissions.default.role_assignment
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.default.role\_definition module
+----------------------------------------------------
+
+.. automodule:: apptools.permissions.default.role_definition
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.default.select\_role module
+------------------------------------------------
+
+.. automodule:: apptools.permissions.default.select_role
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.default.select\_user module
+------------------------------------------------
+
+.. automodule:: apptools.permissions.default.select_user
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.default.user\_database module
+--------------------------------------------------
+
+.. automodule:: apptools.permissions.default.user_database
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.default.user\_manager module
+-------------------------------------------------
+
+.. automodule:: apptools.permissions.default.user_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.default.user\_storage module
+-------------------------------------------------
+
+.. automodule:: apptools.permissions.default.user_storage
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.permissions.default
+    :members:
+    :undoc-members:
+    :show-inheritance:

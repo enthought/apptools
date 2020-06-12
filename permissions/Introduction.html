@@ -1,20 +1,19 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8">
     
-    <title>Permissions Framework - Introduction &mdash; apptools 4.4.0 documentation</title>
+    <title>Permissions Framework - Introduction &mdash; Apptools Documentation</title>
     
-    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../',
-        VERSION:     '4.4.0',
+        VERSION:     '4.6.0.dev77',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,35 +22,65 @@
     <script type="text/javascript" src="../_static/jquery.js"></script>
     <script type="text/javascript" src="../_static/underscore.js"></script>
     <script type="text/javascript" src="../_static/doctools.js"></script>
-    <link rel="shortcut icon" href="../_static/et.ico"/>
-    <link rel="top" title="apptools 4.4.0 documentation" href="../index.html" />
-    <link rel="next" title="Application API" href="ApplicationAPI.html" />
-    <link rel="prev" title="Application Scripting Framework" href="../appscripting/Introduction.html" /> 
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="next" title="Application API" href="ApplicationAPI.html" >
+    <link rel="prev" title="Application Scripting Framework" href="../appscripting/Introduction.html" > 
   </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="ApplicationAPI.html" title="Application API"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="../appscripting/Introduction.html" title="Application Scripting Framework"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">apptools 4.4.0 documentation</a> &raquo;</li> 
-      </ul>
-    </div>  
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
 
-    <div class="document">
-      <div class="documentwrapper">
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="ApplicationAPI.html" title="Application API"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="../appscripting/Introduction.html" title="Application Scripting Framework"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
         <div class="bodywrapper">
-          <div class="body" role="main">
+          <div class="body" id="spc-section-body">
             
   <div class="section" id="permissions-framework-introduction">
 <h1>Permissions Framework - Introduction<a class="headerlink" href="#permissions-framework-introduction" title="Permalink to this headline">¶</a></h1>
@@ -61,7 +90,7 @@ application unless the user is appropriately authorised.  In other words it
 enables and disables different parts of the GUI according to the identity of
 the user.</p>
 <p>The framework includes an API to allow it to be integrated with an
-organisation&#8217;s existing security infrastructure, for example to look users up
+organisation’s existing security infrastructure, for example to look users up
 in a corporate LDAP directory.</p>
 <p>The framework is completely configurable.  Alternate implementations of all
 major components can be provided if necessary.  The default implementations
@@ -135,18 +164,18 @@ groups.</p>
 <li><p class="first"><a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/i_policy_manager.py">Policy Manager API</a></p>
 <p>This is the interface that an alternative policy manager must implement.  The
 need to implement an alternative is expected to be very rare and so the API
-isn&#8217;t covered further.  See the definition of the IPolicyManager interface
+isn’t covered further.  See the definition of the IPolicyManager interface
 for the details.</p>
 </li>
 <li><p class="first"><a class="reference external" href="DefaultPolicyManagerDataAPI.html">Default Policy Manager Data API</a></p>
-<p>This part of the API is used by developers to store the policy&#8217;s persistent
+<p>This part of the API is used by developers to store the policy’s persistent
 data in a more secure location (eg. on a remote server) than that provided by
 the default implementation.</p>
 </li>
 <li><p class="first"><a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/enthought/permissions/i_user_manager.py">User Manager API</a></p>
 <p>This is the interface that an alternative user manager must implement.  The
 need to implement an alternative is expected to be very rare and so the API
-isn&#8217;t covered further.  See the definition of the IUserManager interface for
+isn’t covered further.  See the definition of the IUserManager interface for
 the details.</p>
 </li>
 <li><p class="first"><a class="reference external" href="DefaultUserManagerDataAPI.html">Default User Manager Data API</a></p>
@@ -190,16 +219,16 @@ needs to be reimplemented depending on your environment.</p>
 <div class="section" id="deploying-alternative-managers">
 <h2>Deploying Alternative Managers<a class="headerlink" href="#deploying-alternative-managers" title="Permalink to this headline">¶</a></h2>
 <p>The permissions framework will first try to import the different managers from
-the <code class="docutils literal"><span class="pre">apptools.permissions.external</span></code> namespace.  The default managers are
+the <code class="docutils literal notranslate"><span class="pre">apptools.permissions.external</span></code> namespace.  The default managers are
 only used if no alternative was found.  Therefore, alternative managers should
 be deployed as an egg containing that namespace.</p>
 <p>Specifically the framework looks for the following classes:</p>
 <blockquote>
-<div><p><code class="docutils literal"><span class="pre">PolicyManager</span></code> from <code class="docutils literal"><span class="pre">apptools.permissions.external.policy_manager</span></code></p>
-<p><code class="docutils literal"><span class="pre">PolicyStorage</span></code> from <code class="docutils literal"><span class="pre">apptools.permissions.external.policy_storage</span></code></p>
-<p><code class="docutils literal"><span class="pre">UserDatabase</span></code> from <code class="docutils literal"><span class="pre">apptools.permissions.external.user_database</span></code></p>
-<p><code class="docutils literal"><span class="pre">UserManager</span></code> from <code class="docutils literal"><span class="pre">apptools.permissions.external.user_manager</span></code></p>
-<p><code class="docutils literal"><span class="pre">UserStorage</span></code> from <code class="docutils literal"><span class="pre">apptools.permissions.external.user_storage</span></code></p>
+<div><p><code class="docutils literal notranslate"><span class="pre">PolicyManager</span></code> from <code class="docutils literal notranslate"><span class="pre">apptools.permissions.external.policy_manager</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">PolicyStorage</span></code> from <code class="docutils literal notranslate"><span class="pre">apptools.permissions.external.policy_storage</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">UserDatabase</span></code> from <code class="docutils literal notranslate"><span class="pre">apptools.permissions.external.user_database</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">UserManager</span></code> from <code class="docutils literal notranslate"><span class="pre">apptools.permissions.external.user_manager</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">UserStorage</span></code> from <code class="docutils literal notranslate"><span class="pre">apptools.permissions.external.user_storage</span></code></p>
 </div></blockquote>
 <p>The example server is such a package that provides PolicyStorage and
 UserStorage implementations that use an XML-RPC based server to provide remote
@@ -208,13 +237,13 @@ UserStorage implementations that use an XML-RPC based server to provide remote
 <div class="section" id="using-the-default-storage-implementations">
 <h2>Using the Default Storage Implementations<a class="headerlink" href="#using-the-default-storage-implementations" title="Permalink to this headline">¶</a></h2>
 <p>The default policy and user managers both (again by default) persist their data
-as pickles in local files called <code class="docutils literal"><span class="pre">ets_perms_policydb</span></code> and
-<code class="docutils literal"><span class="pre">ets_perms_userdb</span></code> respectively.  By default these are stored in the
-application&#8217;s home directory (ie. that returned by
-<code class="docutils literal"><span class="pre">ETSConfig.application_home</span></code>).</p>
-<p>Note that this directory is normally in the user&#8217;s own directory structure
+as pickles in local files called <code class="docutils literal notranslate"><span class="pre">ets_perms_policydb</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ets_perms_userdb</span></code> respectively.  By default these are stored in the
+application’s home directory (ie. that returned by
+<code class="docutils literal notranslate"><span class="pre">ETSConfig.application_home</span></code>).</p>
+<p>Note that this directory is normally in the user’s own directory structure
 whereas it needs to be available to all users of the application.</p>
-<p>If the <code class="docutils literal"><span class="pre">ETS_PERMS_DATA_DIR</span></code> environment variable is set then its value is
+<p>If the <code class="docutils literal notranslate"><span class="pre">ETS_PERMS_DATA_DIR</span></code> environment variable is set then its value is
 used instead.</p>
 <p>The directory must be writeable by all users of the application.</p>
 <p>It should be restated that the default implementations do <em>not</em> provide secure
@@ -226,13 +255,13 @@ environment and as working examples.</p>
 
           </div>
         </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+          </div>
+      <div class="spc-rightsidebar span3">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="../index.html">
-              <img class="logo" src="../_static/e-logo-rev.png" alt="Logo"/>
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
             </a></p>
-  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <h3><a href="../index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Permissions Framework - Introduction</a><ul>
 <li><a class="reference internal" href="#framework-concepts">Framework Concepts</a></li>
@@ -250,52 +279,50 @@ environment and as working examples.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="ApplicationAPI.html"
                         title="next chapter">Application API</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/permissions/Introduction.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/permissions/Introduction.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
-      <div class="clearer"></div>
+        </div>
+      </div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="../genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="../py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
-        <li class="right" >
-          <a href="ApplicationAPI.html" title="Application API"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="../appscripting/Introduction.html" title="Application Scripting Framework"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">apptools 4.4.0 documentation</a> &raquo;</li> 
-      </ul>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
     </div>
-    <div class="footer" role="contentinfo">
-        &copy; Copyright 2008-2016, Enthought.
-      Last updated on Feb 26, 2016.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
     </div>
   </body>
 </html>

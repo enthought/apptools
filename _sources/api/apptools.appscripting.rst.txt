@@ -1,0 +1,93 @@
+apptools.appscripting package
+=============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    apptools.appscripting.action
+
+Submodules
+----------
+
+apptools.appscripting.api module
+--------------------------------
+
+.. automodule:: apptools.appscripting.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.appscripting.bind\_event module
+----------------------------------------
+
+.. automodule:: apptools.appscripting.bind_event
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.appscripting.i\_bind\_event module
+-------------------------------------------
+
+.. automodule:: apptools.appscripting.i_bind_event
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.appscripting.i\_script\_manager module
+-----------------------------------------------
+
+.. automodule:: apptools.appscripting.i_script_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.appscripting.lazy\_namespace module
+--------------------------------------------
+
+.. automodule:: apptools.appscripting.lazy_namespace
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.appscripting.package\_globals module
+---------------------------------------------
+
+.. automodule:: apptools.appscripting.package_globals
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.appscripting.script\_manager module
+--------------------------------------------
+
+.. automodule:: apptools.appscripting.script_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.appscripting.scriptable module
+---------------------------------------
+
+.. automodule:: apptools.appscripting.scriptable
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.appscripting.scriptable\_type module
+---------------------------------------------
+
+.. automodule:: apptools.appscripting.scriptable_type
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.appscripting
+    :members:
+    :undoc-members:
+    :show-inheritance:
