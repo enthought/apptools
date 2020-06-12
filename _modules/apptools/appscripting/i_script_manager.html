@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.appscripting.i_script_manager &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.appscripting.i_script_manager</h1><div class="highlight"><pre>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2008, Riverbank Computing Limited</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Riverbank Computing Limited</span>
+<span class="c1"># Description: &lt;Enthought application scripting package component&gt;</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Interface</span><span class="p">,</span> <span class="n">Unicode</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">.i_bind_event</span> <span class="k">import</span> <span class="n">IBindEvent</span>
+
+
+<div class="viewcode-block" id="IScriptManager"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.i_script_manager.IScriptManager">[docs]</a><span class="k">class</span> <span class="nc">IScriptManager</span><span class="p">(</span><span class="n">Interface</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The script manager interface.  A script manager is responsible for the</span>
+<span class="sd">    recording of appropriately annotated user actions as scripts that can be</span>
+<span class="sd">    executed without user intervention at a later time.  Typically an</span>
+<span class="sd">    application would have a single script manager.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;IScriptManager&#39; interface ###########################################</span>
+
+    <span class="c1"># This event is fired whenever a scriptable object is bound or unbound.  It</span>
+    <span class="c1"># is intended to be used by an interactive Python shell to give the</span>
+    <span class="c1"># advanced user access to the scriptable objects.  If an object is created</span>
+    <span class="c1"># via a factory then the event is fired when the factory is called, and not</span>
+    <span class="c1"># when the factory is bound.</span>
+    <span class="n">bind_event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span><span class="n">IBindEvent</span><span class="p">)</span>
+
+    <span class="c1"># This is set if user actions are being recorded as a script.  It is</span>
+    <span class="c1"># maintained by the script manager.</span>
+    <span class="n">recording</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># This is the text of the script currently being recorded (or the last</span>
+    <span class="c1"># recorded script if none is currently being recorded).  It is updated</span>
+    <span class="c1"># automatically as the user performs actions.</span>
+    <span class="n">script</span> <span class="o">=</span> <span class="n">Unicode</span>
+
+    <span class="c1"># This event is fired when the recorded script changes.  The value of the</span>
+    <span class="c1"># event will be the ScriptManager instance.</span>
+    <span class="n">script_updated</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span><span class="n">Instance</span><span class="p">(</span><span class="s1">&#39;apptools.appscripting.api.IScriptManager&#39;</span><span class="p">))</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;IScriptManager&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+<div class="viewcode-block" id="IScriptManager.bind"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.i_script_manager.IScriptManager.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bind_policy</span><span class="o">=</span><span class="s1">&#39;unique&#39;</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">includes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">excludes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Bind obj to name and make (by default) its public methods and</span>
+<span class="sd">        traits (ie. those not beginning with an underscore) scriptable.  The</span>
+<span class="sd">        default value of name is the type of obj with the first character</span>
+<span class="sd">        forced to lower case.</span>
+
+<span class="sd">        bind_policy determines what happens if the name is already bound.  If</span>
+<span class="sd">        the policy is &#39;auto&#39; then a numerical suffix will be added to the name,</span>
+<span class="sd">        if necessary, to make it unique.  If the policy is &#39;unique&#39; then an</span>
+<span class="sd">        exception is raised.  If the policy is &#39;rebind&#39; then the previous</span>
+<span class="sd">        binding is discarded.  The default is &#39;unique&#39;</span>
+
+<span class="sd">        If api is given then it is a class, or a list of classes, that define</span>
+<span class="sd">        the attributes that will be made scriptable.</span>
+
+<span class="sd">        Otherwise if includes is given it is a list of names of attributes that</span>
+<span class="sd">        will be made scriptable.</span>
+
+<span class="sd">        Otherwise all the public attributes of scripted_type will be made</span>
+<span class="sd">        scriptable except those in the excludes list.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="IScriptManager.bind_factory"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.i_script_manager.IScriptManager.bind_factory">[docs]</a>    <span class="k">def</span> <span class="nf">bind_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bind_policy</span><span class="o">=</span><span class="s1">&#39;unique&#39;</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">includes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">excludes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Bind factory to name.  This does the same as the bind() method</span>
+<span class="sd">        except that it uses a factory that will be called later on to create</span>
+<span class="sd">        the object only if the object is needed.</span>
+
+<span class="sd">        See the documentation for bind() for a description of the remaining</span>
+<span class="sd">        arguments.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="IScriptManager.run"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.i_script_manager.IScriptManager.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">script</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Run the given script, either a string or a file-like object.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="IScriptManager.run_file"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.i_script_manager.IScriptManager.run_file">[docs]</a>    <span class="k">def</span> <span class="nf">run_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Run the given script file.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="IScriptManager.start_recording"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.i_script_manager.IScriptManager.start_recording">[docs]</a>    <span class="k">def</span> <span class="nf">start_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Start the recording of user actions.  The &#39;script&#39; trait is cleared</span>
+<span class="sd">        and all subsequent actions are added to &#39;script&#39;.  The &#39;recording&#39;</span>
+<span class="sd">        trait is updated appropriately.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="IScriptManager.stop_recording"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.i_script_manager.IScriptManager.stop_recording">[docs]</a>    <span class="k">def</span> <span class="nf">stop_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Stop the recording of user actions.  The &#39;recording&#39; trait is</span>
+<span class="sd">        updated appropriately.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

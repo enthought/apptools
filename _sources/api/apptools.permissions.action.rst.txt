@@ -1,0 +1,46 @@
+apptools.permissions.action package
+===================================
+
+Submodules
+----------
+
+apptools.permissions.action.api module
+--------------------------------------
+
+.. automodule:: apptools.permissions.action.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.action.login\_action module
+------------------------------------------------
+
+.. automodule:: apptools.permissions.action.login_action
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.action.logout\_action module
+-------------------------------------------------
+
+.. automodule:: apptools.permissions.action.logout_action
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.action.user\_menu\_manager module
+------------------------------------------------------
+
+.. automodule:: apptools.permissions.action.user_menu_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.permissions.action
+    :members:
+    :undoc-members:
+    :show-inheritance:

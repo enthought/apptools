@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.appscripting.script_manager &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.appscripting.script_manager</h1><div class="highlight"><pre>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2008, Riverbank Computing Limited</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Riverbank Computing Limited</span>
+<span class="c1"># Description: &lt;Enthought application scripting package component&gt;</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+
+
+<span class="c1"># Standard library imports.</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">types</span>
+<span class="kn">import</span> <span class="nn">weakref</span>
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Event</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> \
+        <span class="n">Instance</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Property</span><span class="p">,</span> <span class="n">provides</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Unicode</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">.bind_event</span> <span class="k">import</span> <span class="n">BindEvent</span>
+<span class="kn">from</span> <span class="nn">.i_bind_event</span> <span class="k">import</span> <span class="n">IBindEvent</span>
+<span class="kn">from</span> <span class="nn">.i_script_manager</span> <span class="k">import</span> <span class="n">IScriptManager</span>
+<span class="kn">from</span> <span class="nn">.lazy_namespace</span> <span class="k">import</span> <span class="n">add_to_namespace</span><span class="p">,</span> <span class="n">FactoryWrapper</span><span class="p">,</span> <span class="n">LazyNamespace</span>
+<span class="kn">from</span> <span class="nn">.scriptable_type</span> <span class="k">import</span> <span class="n">make_object_scriptable</span>
+
+
+<span class="nd">@provides</span><span class="p">(</span><span class="n">IScriptManager</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">_BoundObject</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The base class for any object that can be bound to a name.&quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;_BoundObject&#39; interface #############################################</span>
+
+    <span class="c1"># Set if the object was explicitly bound.</span>
+    <span class="n">explicitly_bound</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># The name the object is bound to.</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c1"># The object being bound.</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Any</span>
+
+
+<span class="k">class</span> <span class="nc">_ScriptObject</span><span class="p">(</span><span class="n">_BoundObject</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The _ScriptObject class encapsulates a scriptable object.&quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;_BoundObject&#39; interface #############################################</span>
+
+    <span class="c1"># The object being bound.</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Property</span>
+
+    <span class="c1">#### &#39;_ScriptObject&#39; interface ############################################</span>
+
+    <span class="c1"># The positional arguments passed to __init__ after being converted to</span>
+    <span class="c1"># strings.  A particular argument may be an exception if it couldn&#39;t be</span>
+    <span class="c1"># converted.</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">List</span>
+
+    <span class="c1"># The keyword arguments passed to __init__ after being converted to</span>
+    <span class="c1"># strings.  A particular argument may be an exception if it couldn&#39;t be</span>
+    <span class="c1"># converted.</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="n">Dict</span>
+
+    <span class="c1"># The id of the object.</span>
+    <span class="n">obj_id</span> <span class="o">=</span> <span class="n">Int</span>
+
+    <span class="c1"># A weak reference to the object.</span>
+    <span class="n">obj_ref</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1"># The type of the scriptable object.</span>
+    <span class="n">scripted_type</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Private interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_get_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The property getter.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj_ref</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">_ScriptCall</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The _ScriptCall class is the base class for all script calls. &quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;_ScriptCall&#39; interface ##############################################</span>
+
+    <span class="c1"># The name of the call.</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c1"># The scriptable object.</span>
+    <span class="n">so</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;_ScriptCall&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">as_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sm</span><span class="p">,</span> <span class="n">so_needed</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the string equivalent of the call, updated the list of</span>
+<span class="sd">        needed scriptable objects if required.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+<span class="k">class</span> <span class="nc">_ScriptTraitGet</span><span class="p">(</span><span class="n">_ScriptCall</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The _ScriptTraitGet class encapsulates a single call to the get of a</span>
+<span class="sd">    scriptable trait.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;_ScriptTraitGet&#39; interface ##########################################</span>
+
+    <span class="c1"># Set if the getter has side effects.</span>
+    <span class="n">has_side_effects</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># The result of the get.  Keeping a reference to it means that the memory</span>
+    <span class="c1"># can&#39;t get reused.</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;_ScriptCall&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">as_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sm</span><span class="p">,</span> <span class="n">so_needed</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the string equivalent of the call, updated the list of</span>
+<span class="sd">        needed scriptable objects if required.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Ignore if it is no longer bound.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rstr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">_results</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)]</span>
+
+            <span class="k">if</span> <span class="n">nr</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">rstr</span> <span class="o">=</span> <span class="s2">&quot;r</span><span class="si">%d</span><span class="s2"> = &quot;</span> <span class="o">%</span> <span class="n">nr</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">rstr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="c1"># Unless getter has side effects, if the result is not needed then</span>
+        <span class="c1"># don&#39;t bother including it in the script.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_side_effects</span> <span class="ow">and</span> <span class="n">rstr</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">so</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">arg_as_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">so</span><span class="p">,</span> <span class="n">so_needed</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rstr</span><span class="p">,</span> <span class="n">so</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_ScriptTraitSet</span><span class="p">(</span><span class="n">_ScriptCall</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The _ScriptTraitSet class encapsulates a single call to the set of a</span>
+<span class="sd">    scriptable trait.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;_ScriptTraitSet&#39; interface ##########################################</span>
+
+    <span class="c1"># The value the trait is set to.</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;_ScriptCall&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">as_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sm</span><span class="p">,</span> <span class="n">so_needed</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the string equivalent of the call, updated the list of</span>
+<span class="sd">        needed scriptable objects if required.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Ignore if it is no longer bound.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">so</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">arg_as_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">so</span><span class="p">,</span> <span class="n">so_needed</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">arg_as_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">so_needed</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2"> = </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">so</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">_ScriptMethod</span><span class="p">(</span><span class="n">_ScriptCall</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The _ScriptMethod class encapsulates a single call to a scriptable</span>
+<span class="sd">    method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;_ScriptMethod&#39; interface ############################################</span>
+
+    <span class="c1"># The positional arguments passed to the method after being converted to</span>
+    <span class="c1"># strings.  A particular argument may be an exception if it couldn&#39;t be</span>
+    <span class="c1"># converted.</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">List</span>
+
+    <span class="c1"># The keyword arguments passed to the method after being converted to</span>
+    <span class="c1"># strings.  A particular argument may be an exception if it couldn&#39;t be</span>
+    <span class="c1"># converted.</span>
+    <span class="n">kwargs</span> <span class="o">=</span> <span class="n">Dict</span>
+
+    <span class="c1"># The result of the method call.  Keeping a reference to it means that the</span>
+    <span class="c1"># memory can&#39;t get reused.</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;_ScriptCall&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">as_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sm</span><span class="p">,</span> <span class="n">so_needed</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the string equivalent of the call, updated the list of</span>
+<span class="sd">        needed scriptable objects if required.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Ignore if it is no longer bound.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">so</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">so</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rstr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(()):</span>
+            <span class="n">rlist</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">needed</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">:</span>
+                <span class="n">nr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">_results</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="n">r</span><span class="p">)]</span>
+
+                <span class="k">if</span> <span class="n">nr</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">rlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;r</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">nr</span><span class="p">)</span>
+                    <span class="n">needed</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">rlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">needed</span><span class="p">:</span>
+                <span class="n">rstr</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rlist</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; = &quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">rstr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">_results</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result</span><span class="p">)]</span>
+
+            <span class="k">if</span> <span class="n">nr</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">rstr</span> <span class="o">=</span> <span class="s2">&quot;r</span><span class="si">%d</span><span class="s2"> = &quot;</span> <span class="o">%</span> <span class="n">nr</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">rstr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">so</span><span class="p">:</span>
+            <span class="n">so</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">arg_as_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">so</span><span class="p">,</span> <span class="n">so_needed</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">so</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="n">args</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">args_as_string_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">so_needed</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s%s%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rstr</span><span class="p">,</span> <span class="n">so</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+
+
+<span class="k">class</span> <span class="nc">_FactoryObject</span><span class="p">(</span><span class="n">_BoundObject</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The _FactoryObject class wraps a factory that lazily creates</span>
+<span class="sd">    scriptable objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;_BoundObject&#39; interface #############################################</span>
+
+    <span class="c1"># The object being bound.</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">Property</span>
+
+    <span class="c1">#### &#39;_FactoryObject&#39; interface ###########################################</span>
+
+    <span class="c1"># The optional object that defines the scripting API.</span>
+    <span class="n">api</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1"># The scriptable object factory.</span>
+    <span class="n">factory</span> <span class="o">=</span> <span class="n">Callable</span>
+
+    <span class="c1"># The optional attribute include list.</span>
+    <span class="n">includes</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1"># The optional attribute exclude list.</span>
+    <span class="n">excludes</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Private interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_get_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The property getter.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">FactoryWrapper</span><span class="p">(</span><span class="n">factory</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="p">,</span>
+                <span class="n">includes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">includes</span><span class="p">,</span> <span class="n">excludes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">excludes</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ScriptManager"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.script_manager.ScriptManager">[docs]</a><span class="k">class</span> <span class="nc">ScriptManager</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The ScriptManager class is the default implementation of</span>
+<span class="sd">    IScriptManager.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+
+    <span class="c1">#### &#39;IScriptManager&#39; interface ###########################################</span>
+
+    <span class="c1"># This event is fired whenever a scriptable object is bound or unbound.  It</span>
+    <span class="c1"># is intended to be used by an interactive Python shell to give the</span>
+    <span class="c1"># advanced user access to the scriptable objects.  If an object is created</span>
+    <span class="c1"># via a factory then the event is fired when the factory is called, and not</span>
+    <span class="c1"># when the factory is bound.</span>
+    <span class="n">bind_event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span><span class="n">IBindEvent</span><span class="p">)</span>
+
+    <span class="c1"># This is set if user actions are being recorded as a script.  It is</span>
+    <span class="c1"># maintained by the script manager.</span>
+    <span class="n">recording</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># This is the text of the script currently being recorded (or the last</span>
+    <span class="c1"># recorded script if none is currently being recorded).  It is updated</span>
+    <span class="c1"># automatically as the user performs actions.</span>
+    <span class="n">script</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Unicode</span><span class="p">)</span>
+
+    <span class="c1"># This event is fired when the recorded script changes.  The value of the</span>
+    <span class="c1"># event will be the ScriptManager instance.</span>
+    <span class="n">script_updated</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span><span class="n">IScriptManager</span><span class="p">)</span>
+
+    <span class="c1">#### Private interface ####################################################</span>
+
+    <span class="c1"># The list of calls to scriptable calls.</span>
+    <span class="n">_calls</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Instance</span><span class="p">(</span><span class="n">_ScriptCall</span><span class="p">))</span>
+
+    <span class="c1"># The dictionary of bound names.  The value is the next numerical suffix</span>
+    <span class="c1"># to use when the binding policy is &#39;auto&#39;.</span>
+    <span class="n">_names</span> <span class="o">=</span> <span class="n">Dict</span>
+
+    <span class="c1"># The dictionary of _BoundObject instances keyed by the name the object is</span>
+    <span class="c1"># bound to.</span>
+    <span class="n">_namespace</span> <span class="o">=</span> <span class="n">Dict</span>
+
+    <span class="c1"># The next sequential result number.</span>
+    <span class="n">_next_result_nr</span> <span class="o">=</span> <span class="n">Int</span>
+
+    <span class="c1"># The results returned by previous scriptable calls.  The key is the id()</span>
+    <span class="c1"># of the result object.  The value is a two element tuple of the sequential</span>
+    <span class="c1"># result number (easier for the user to use than the id()) and the result</span>
+    <span class="c1"># object itself.</span>
+    <span class="n">_results</span> <span class="o">=</span> <span class="n">Dict</span>
+
+    <span class="c1"># The dictionary of _ScriptObject instances keyed by the object&#39;s id().</span>
+    <span class="n">_so_by_id</span> <span class="o">=</span> <span class="n">Dict</span>
+
+    <span class="c1"># The dictionary of _ScriptObject instances keyed by the a weak reference</span>
+    <span class="c1"># to the object.</span>
+    <span class="n">_so_by_ref</span> <span class="o">=</span> <span class="n">Dict</span>
+
+    <span class="c1"># The date and time when the script was recorded.</span>
+    <span class="n">_when_started</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;IScriptManager&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+<div class="viewcode-block" id="ScriptManager.bind"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.script_manager.ScriptManager.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bind_policy</span><span class="o">=</span><span class="s1">&#39;unique&#39;</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">includes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">excludes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Bind obj to name and make (by default) its public methods and</span>
+<span class="sd">        traits (ie. those not beginning with an underscore) scriptable.  The</span>
+<span class="sd">        default value of name is the type of obj with the first character</span>
+<span class="sd">        forced to lower case.  name may be a dotted name (eg. &#39;abc.def.xyz&#39;).</span>
+
+<span class="sd">        bind_policy determines what happens if the name is already bound.  If</span>
+<span class="sd">        the policy is &#39;auto&#39; then a numerical suffix will be added to the name,</span>
+<span class="sd">        if necessary, to make it unique.  If the policy is &#39;unique&#39; then an</span>
+<span class="sd">        exception is raised.  If the policy is &#39;rebind&#39; then the previous</span>
+<span class="sd">        binding is discarded.  The default is &#39;unique&#39;</span>
+
+<span class="sd">        If api is given then it is a class, or a list of classes, that define</span>
+<span class="sd">        the attributes that will be made scriptable.</span>
+
+<span class="sd">        Otherwise if includes is given it is a list of names of attributes that</span>
+<span class="sd">        will be made scriptable.</span>
+
+<span class="sd">        Otherwise all the public attributes of scripted_type will be made</span>
+<span class="sd">        scriptable except those in the excludes list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Register the object.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_object</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">bind_policy</span><span class="o">=</span><span class="n">bind_policy</span><span class="p">)</span>
+
+        <span class="c1"># Make it scriptable.</span>
+        <span class="n">make_object_scriptable</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="n">api</span><span class="p">,</span> <span class="n">includes</span><span class="o">=</span><span class="n">includes</span><span class="p">,</span>
+                <span class="n">excludes</span><span class="o">=</span><span class="n">excludes</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScriptManager.bind_factory"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.script_manager.ScriptManager.bind_factory">[docs]</a>    <span class="k">def</span> <span class="nf">bind_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bind_policy</span><span class="o">=</span><span class="s1">&#39;unique&#39;</span><span class="p">,</span> <span class="n">api</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">includes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">excludes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Bind factory to name.  This does the same as the bind() method</span>
+<span class="sd">        except that it uses a factory that will be called later on to create</span>
+<span class="sd">        the object only if the object is needed.</span>
+
+<span class="sd">        See the documentation for bind() for a description of the remaining</span>
+<span class="sd">        arguments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bind_policy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_namespace</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">_FactoryObject</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">factory</span><span class="o">=</span><span class="n">factory</span><span class="p">,</span>
+                <span class="n">api</span><span class="o">=</span><span class="n">api</span><span class="p">,</span> <span class="n">includes</span><span class="o">=</span><span class="n">includes</span><span class="p">,</span> <span class="n">excludes</span><span class="o">=</span><span class="n">excludes</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScriptManager.run"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.script_manager.ScriptManager.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">script</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Run the given script, either a string or a file-like object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Initialise the namespace with all explicitly bound objects.</span>
+        <span class="n">nspace</span> <span class="o">=</span> <span class="n">LazyNamespace</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">bo</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_namespace</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">bo</span><span class="o">.</span><span class="n">explicitly_bound</span><span class="p">:</span>
+                <span class="n">add_to_namespace</span><span class="p">(</span><span class="n">bo</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">nspace</span><span class="p">)</span>
+
+        <span class="n">exec</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">nspace</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScriptManager.run_file"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.script_manager.ScriptManager.run_file">[docs]</a>    <span class="k">def</span> <span class="nf">run_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Run the given script file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ScriptManager.start_recording"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.script_manager.ScriptManager.start_recording">[docs]</a>    <span class="k">def</span> <span class="nf">start_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Start the recording of user actions.  The &#39;script&#39; trait is cleared</span>
+<span class="sd">        and all subsequent actions are added to &#39;script&#39;.  The &#39;recording&#39;</span>
+<span class="sd">        trait is updated appropriately.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calls</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_next_result_nr</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_results</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">recording</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">script_updated</span> <span class="o">=</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ScriptManager.stop_recording"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.script_manager.ScriptManager.stop_recording">[docs]</a>    <span class="k">def</span> <span class="nf">stop_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Stop the recording of user actions.  The &#39;recording&#39; trait is</span>
+<span class="sd">        updated appropriately.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">recording</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;ScriptManager&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+<div class="viewcode-block" id="ScriptManager.record_method"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.script_manager.ScriptManager.record_method">[docs]</a>    <span class="k">def</span> <span class="nf">record_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Record the call of a method of a ScriptableObject instance and</span>
+<span class="sd">        return the result.  This is intended to be used only by the scriptable</span>
+<span class="sd">        decorator.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">recording</span><span class="p">:</span>
+            <span class="c1"># Record the arguments before the function has a chance to modify</span>
+            <span class="c1"># them.</span>
+            <span class="n">srec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_new_method</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_method</span><span class="p">(</span><span class="n">srec</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">script_updated</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="ScriptManager.record_trait_get"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.script_manager.ScriptManager.record_trait_get">[docs]</a>    <span class="k">def</span> <span class="nf">record_trait_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Record the get of a trait of a scriptable object.  This is intended</span>
+<span class="sd">        to be used only by the Scriptable trait getter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">recording</span><span class="p">:</span>
+            <span class="n">side_effects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_trait_get</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+
+            <span class="c1"># Don&#39;t needlessly fire the event if there are no side effects.</span>
+            <span class="k">if</span> <span class="n">side_effects</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">script_updated</span> <span class="o">=</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ScriptManager.record_trait_set"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.script_manager.ScriptManager.record_trait_set">[docs]</a>    <span class="k">def</span> <span class="nf">record_trait_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Record the set of a trait of a scriptable object.  This is intended</span>
+<span class="sd">        to be used only by the Scriptable trait getter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">recording</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_trait_set</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">script_updated</span> <span class="o">=</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="ScriptManager.new_object"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.script_manager.ScriptManager.new_object">[docs]</a>    <span class="k">def</span> <span class="nf">new_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">scripted_type</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">bind_policy</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Register a scriptable object and the arguments used to create it.</span>
+<span class="sd">        If no arguments were provided then assume the object is being</span>
+<span class="sd">        explicitly bound.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># The name defaults to the type name.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">scripted_type</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">+</span> <span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bind_policy</span><span class="p">)</span>
+
+        <span class="n">obj_id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="n">obj_ref</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gc_script_obj</span><span class="p">)</span>
+
+        <span class="n">so</span> <span class="o">=</span> <span class="n">_ScriptObject</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">obj_id</span><span class="o">=</span><span class="n">obj_id</span><span class="p">,</span> <span class="n">obj_ref</span><span class="o">=</span><span class="n">obj_ref</span><span class="p">,</span>
+                <span class="n">scripted_type</span><span class="o">=</span><span class="n">scripted_type</span><span class="p">)</span>
+
+        <span class="c1"># If we are told how to create the object then it must be implicitly</span>
+        <span class="c1"># bound.</span>
+        <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Convert each argument to its string representation if possible.</span>
+            <span class="c1"># Doing this now avoids problems with mutable arguments.</span>
+            <span class="n">so</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_scriptable_object_as_string</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">so</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scriptable_object_as_string</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+            <span class="n">so</span><span class="o">.</span><span class="n">explicitly_bound</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Remember the scriptable object via the different access methods.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_so_by_id</span><span class="p">[</span><span class="n">obj_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">so</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_so_by_ref</span><span class="p">[</span><span class="n">obj_ref</span><span class="p">]</span> <span class="o">=</span> <span class="n">so</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_namespace</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">so</span>
+
+        <span class="c1"># Note that if anything listening to this event doesn&#39;t use weak</span>
+        <span class="c1"># references then the object will be kept alive.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bind_event</span> <span class="o">=</span> <span class="n">BindEvent</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ScriptManager.args_as_string_list"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.script_manager.ScriptManager.args_as_string_list">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">args_as_string_list</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">,</span> <span class="n">so_needed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return a complete argument list from sets of positional and keyword</span>
+<span class="sd">        arguments.  Update the optional so_needed list for those arguments that</span>
+<span class="sd">        refer to a scriptable object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">so_needed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">so_needed</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">all_args</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">ScriptManager</span><span class="o">.</span><span class="n">arg_as_string</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">so_needed</span><span class="p">)</span>
+            <span class="n">all_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">ScriptManager</span><span class="o">.</span><span class="n">arg_as_string</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">so_needed</span><span class="p">)</span>
+            <span class="n">all_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">=</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">all_args</span></div>
+
+<div class="viewcode-block" id="ScriptManager.arg_as_string"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.script_manager.ScriptManager.arg_as_string">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">arg_as_string</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">so_needed</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the string representation of an argument.  Update the</span>
+<span class="sd">        so_needed list if the argument refers to a scriptable object.  Any</span>
+<span class="sd">        delayed conversion exception is handled here.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">arg</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">_ScriptObject</span><span class="p">):</span>
+            <span class="c1"># Check it hasn&#39;t been unbound.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">arg</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> has been unbound but is needed by the script&quot;</span> <span class="o">%</span> <span class="n">arg</span><span class="o">.</span><span class="n">obj_ref</span><span class="p">())</span>
+
+            <span class="c1"># Add it to the needed list if it isn&#39;t already there.</span>
+            <span class="k">if</span> <span class="n">arg</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">so_needed</span><span class="p">:</span>
+                <span class="n">so_needed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+
+            <span class="n">arg</span> <span class="o">=</span> <span class="n">arg</span><span class="o">.</span><span class="n">name</span>
+
+        <span class="k">return</span> <span class="n">arg</span></div>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Private interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_new_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return an object that encapsulates a call to a scriptable method.</span>
+<span class="sd">        _add_method() must be called to add it to the current script.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Convert each argument to its string representation if possible.</span>
+        <span class="c1"># Doing this now avoids problems with mutable arguments.</span>
+        <span class="n">nargs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_object_as_string</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="ow">is</span> <span class="n">types</span><span class="o">.</span><span class="n">FunctionType</span><span class="p">:</span>
+            <span class="n">so</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">so</span> <span class="o">=</span> <span class="n">nargs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">nargs</span> <span class="o">=</span> <span class="n">nargs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+        <span class="n">nkwargs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">nkwargs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_object_as_string</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">_ScriptMethod</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">so</span><span class="o">=</span><span class="n">so</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">nargs</span><span class="p">,</span>
+                <span class="n">kwargs</span><span class="o">=</span><span class="n">nkwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_add_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Add a method call (returned by _new_method()), with it&#39;s associated</span>
+<span class="sd">        result and ID, to the current script.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_script</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Assume that a tuple represents multiple returned values - not</span>
+            <span class="c1"># necessarily a valid assumption unless we make it a rule for</span>
+            <span class="c1"># scriptable functions.</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(()):</span>
+                <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_save_result</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_save_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+            <span class="n">entry</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="n">result</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_add_trait_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Add a call to a trait getter, with it&#39;s associated result and ID,</span>
+<span class="sd">        to the current script.  Return True if the get had side effects.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_script</span><span class="p">()</span>
+
+        <span class="n">side_effects</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">has_side_effects</span>
+
+        <span class="k">if</span> <span class="n">side_effects</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">side_effects</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">so</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_object_as_string</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_save_result</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_ScriptTraitGet</span><span class="p">(</span><span class="n">so</span><span class="o">=</span><span class="n">so</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span>
+                <span class="n">has_side_effects</span><span class="o">=</span><span class="n">side_effects</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">side_effects</span>
+
+    <span class="k">def</span> <span class="nf">_add_trait_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Add a call to a trait setter, with it&#39;s associated value and ID,</span>
+<span class="sd">        to the current script.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_script</span><span class="p">()</span>
+
+        <span class="n">so</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_object_as_string</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_object_as_string</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_ScriptTraitSet</span><span class="p">(</span><span class="n">so</span><span class="o">=</span><span class="n">so</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_unique_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bind_policy</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return a name that is guaranteed to be unique according to the bind</span>
+<span class="sd">        policy.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># See if the name is already is use.</span>
+        <span class="n">bo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_namespace</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">bo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_names</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">bind_policy</span> <span class="o">==</span> <span class="s1">&#39;auto&#39;</span><span class="p">:</span>
+            <span class="n">suff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_names</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_names</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">suff</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">suff</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">bind_policy</span> <span class="o">==</span> <span class="s1">&#39;rebind&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_unbind</span><span class="p">(</span><span class="n">bo</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s2"> is already bound to a scriptable object&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">_unbind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bo</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Unbind the given bound object.&quot;&quot;&quot;</span>
+
+        <span class="c1"># Tell everybody it is no longer bound.  Don&#39;t bother if it is a</span>
+        <span class="c1"># factory because the corresponding bound event wouldn&#39;t have been</span>
+        <span class="c1"># fired.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bo</span><span class="p">,</span> <span class="n">_FactoryObject</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bind_event</span> <span class="o">=</span> <span class="n">BindEvent</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">bo</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># Forget about it.</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_namespace</span><span class="p">[</span><span class="n">bo</span><span class="o">.</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">bo</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_gc_script_obj</span><span class="p">(</span><span class="n">obj_ref</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; The callback invoked when a scriptable object is garbage collected.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Avoid recursive imports.</span>
+        <span class="kn">from</span> <span class="nn">.package_globals</span> <span class="k">import</span> <span class="n">get_script_manager</span>
+
+        <span class="n">sm</span> <span class="o">=</span> <span class="n">get_script_manager</span><span class="p">()</span>
+        <span class="n">so</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">_so_by_ref</span><span class="p">[</span><span class="n">obj_ref</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">so</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="n">sm</span><span class="o">.</span><span class="n">_unbind</span><span class="p">(</span><span class="n">so</span><span class="p">)</span>
+
+        <span class="k">del</span> <span class="n">sm</span><span class="o">.</span><span class="n">_so_by_id</span><span class="p">[</span><span class="n">so</span><span class="o">.</span><span class="n">obj_id</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">sm</span><span class="o">.</span><span class="n">_so_by_ref</span><span class="p">[</span><span class="n">so</span><span class="o">.</span><span class="n">obj_ref</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_start_script</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Save when a script recording is started. &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_calls</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_when_started</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%c</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_object_as_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Convert an object to a string as it will appear in a script.  An</span>
+<span class="sd">        exception may be returned (not raised) if there was an error in the</span>
+<span class="sd">        conversion.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">obj_id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+        <span class="c1"># See if the argument is the result of a previous call.</span>
+        <span class="n">nr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_results</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">obj_id</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">nr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">nr</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">nr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_next_result_nr</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_next_result_nr</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="c1"># Key on the ID of the argument (which is hashable) rather than</span>
+                <span class="c1"># the argument itself (which might not be).</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_results</span><span class="p">[</span><span class="n">obj_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">nr</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="s2">&quot;r</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">nr</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scriptable_object_as_string</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_scriptable_object_as_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Convert an object to a string as it will appear in a script.  An</span>
+<span class="sd">        exception may be returned (not raised) if there was an error in the</span>
+<span class="sd">        conversion.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">obj_id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+        <span class="c1"># If it is a scriptable object we return the object and convert it to a</span>
+        <span class="c1"># string later when we know it is really needed.</span>
+        <span class="n">so</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_so_by_id</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">obj_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">so</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">so</span>
+
+        <span class="c1"># Use the repr result if it doesn&#39;t appear to be the generic response,</span>
+        <span class="c1"># ie. it doesn&#39;t contain its own address as a hex string.</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">hex</span><span class="p">(</span><span class="n">obj_id</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">s</span>
+
+        <span class="c1"># We don&#39;t know how to represent the argument as a string.  This is</span>
+        <span class="c1"># most likely because an appropriate __init__ hasn&#39;t been made</span>
+        <span class="c1"># scriptable.  We don&#39;t raise an exception until the user decides to</span>
+        <span class="c1"># convert the calls to a script.</span>
+        <span class="k">return</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;unable to create a script representation of </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">obj</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_save_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Save the result of a call to a scriptable method so that it can be</span>
+<span class="sd">        recognised later.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">id</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_results</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_results</span><span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="n">result</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_script</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Convert the current list of calls to a script. &quot;&quot;&quot;</span>
+
+        <span class="c1"># Handle the trivial case.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_calls</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="c1"># Generate the header.</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;# Script generated </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_when_started</span>
+
+        <span class="c1"># Generate the calls.</span>
+        <span class="n">so_needed</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">calls</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">call</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calls</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">call</span><span class="o">.</span><span class="n">as_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">so_needed</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">s</span><span class="p">:</span>
+                <span class="n">calls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+        <span class="n">calls</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">calls</span><span class="p">)</span>
+
+        <span class="c1"># Generate the scriptable object constructors.</span>
+        <span class="n">types_needed</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ctors</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">so</span> <span class="ow">in</span> <span class="n">so_needed</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">so</span><span class="o">.</span><span class="n">explicitly_bound</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">so_type</span> <span class="o">=</span> <span class="n">so</span><span class="o">.</span><span class="n">scripted_type</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args_as_string_list</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="n">so</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="n">ctors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> = </span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">so_type</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
+
+            <span class="c1"># See if a new import is needed.</span>
+            <span class="k">if</span> <span class="n">so_type</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">types_needed</span><span class="p">:</span>
+                <span class="n">types_needed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">so_type</span><span class="p">)</span>
+
+        <span class="n">ctors</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ctors</span><span class="p">)</span>
+
+        <span class="c1"># Generate the import statements.</span>
+        <span class="n">imports</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">so_type</span> <span class="ow">in</span> <span class="n">types_needed</span><span class="p">:</span>
+            <span class="n">imports</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;from </span><span class="si">%s</span><span class="s2"> import </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">so_type</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="n">so_type</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+
+        <span class="n">imports</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">imports</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">header</span><span class="p">,</span> <span class="n">imports</span><span class="p">,</span> <span class="n">ctors</span><span class="p">,</span> <span class="n">calls</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

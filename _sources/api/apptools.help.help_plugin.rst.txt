@@ -1,0 +1,93 @@
+apptools.help.help\_plugin package
+==================================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    apptools.help.help_plugin.action
+
+Submodules
+----------
+
+apptools.help.help\_plugin.api module
+-------------------------------------
+
+.. automodule:: apptools.help.help_plugin.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.help.help\_plugin.examples\_preferences module
+-------------------------------------------------------
+
+.. automodule:: apptools.help.help_plugin.examples_preferences
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.help.help\_plugin.help\_code module
+--------------------------------------------
+
+.. automodule:: apptools.help.help_plugin.help_code
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.help.help\_plugin.help\_doc module
+-------------------------------------------
+
+.. automodule:: apptools.help.help_plugin.help_doc
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.help.help\_plugin.help\_plugin module
+----------------------------------------------
+
+.. automodule:: apptools.help.help_plugin.help_plugin
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.help.help\_plugin.help\_submenu\_manager module
+--------------------------------------------------------
+
+.. automodule:: apptools.help.help_plugin.help_submenu_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.help.help\_plugin.i\_help\_code module
+-----------------------------------------------
+
+.. automodule:: apptools.help.help_plugin.i_help_code
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.help.help\_plugin.i\_help\_doc module
+----------------------------------------------
+
+.. automodule:: apptools.help.help_plugin.i_help_doc
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.help.help\_plugin.preferences\_pages module
+----------------------------------------------------
+
+.. automodule:: apptools.help.help_plugin.preferences_pages
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.help.help_plugin
+    :members:
+    :undoc-members:
+    :show-inheritance:

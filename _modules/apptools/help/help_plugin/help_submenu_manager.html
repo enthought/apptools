@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.help.help_plugin.help_submenu_manager &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../../index.html" >
+    <link rel="up" title="Module code" href="../../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.help.help_plugin.help_submenu_manager</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Managers for submenus of the Help menu.</span>
+
+<span class="sd">    :Copyright: 2008, Enthought Inc.</span>
+<span class="sd">    :License: BSD</span>
+<span class="sd">    :Author: Janet Swisher</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in AppTools/trunk/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+
+
+<span class="c1"># Standard library imports.</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">envisage.api</span> <span class="k">import</span> <span class="n">IExtensionPointUser</span><span class="p">,</span> <span class="n">IExtensionRegistry</span>
+<span class="kn">from</span> <span class="nn">pyface.action.api</span> <span class="k">import</span> <span class="n">Group</span><span class="p">,</span> <span class="n">MenuManager</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">provides</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Property</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">.action.doc_action</span> <span class="k">import</span> <span class="n">DocAction</span>
+<span class="kn">from</span> <span class="nn">.action.demo_action</span> <span class="k">import</span> <span class="n">DemoAction</span>
+<span class="kn">from</span> <span class="nn">.action.example_action</span> <span class="k">import</span> <span class="n">ExampleAction</span>
+<span class="kn">from</span> <span class="nn">.action.load_url_action</span> <span class="k">import</span> <span class="n">LoadURLAction</span>
+<span class="kn">from</span> <span class="nn">.examples_preferences</span> <span class="k">import</span> <span class="n">ExamplesPreferences</span>
+<span class="kn">from</span> <span class="nn">.i_help_doc</span> <span class="k">import</span> <span class="n">IHelpDoc</span>
+<span class="kn">from</span> <span class="nn">.i_help_code</span> <span class="k">import</span> <span class="n">IHelpCode</span>
+
+<span class="c1"># Logging.</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># This module&#39;s package.</span>
+<span class="n">PKG</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="vm">__name__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<div class="viewcode-block" id="HelpSubmenuManager"><a class="viewcode-back" href="../../../../api/apptools.help.help_plugin.html#apptools.help.help_plugin.help_submenu_manager.HelpSubmenuManager">[docs]</a><span class="nd">@provides</span><span class="p">(</span><span class="n">IExtensionPointUser</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">HelpSubmenuManager</span><span class="p">(</span><span class="n">MenuManager</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Base class for managers of submenus of the Help menu.</span>
+
+<span class="sd">        This class is adapted from</span>
+<span class="sd">        pyface.ui.workbench.action.view_menu_manager.ViewMenuManager.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="c1">### IExtensionPointUser interface</span>
+    <span class="n">extension_registry</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Instance</span><span class="p">(</span><span class="n">IExtensionRegistry</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">_get_extension_registry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">extension_registry</span>
+
+    <span class="c1">#### &#39;ActionManager&#39; interface ############################################</span>
+
+    <span class="c1"># All of the groups in the manager.</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Group</span><span class="p">)</span>
+
+    <span class="c1">#### &#39;Private&#39; interface ##################################################</span>
+
+    <span class="c1"># The group containing the actual actions.</span>
+    <span class="n">_item_group</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;ActionManager&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_groups_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Trait initializer. &quot;&quot;&quot;</span>
+
+        <span class="n">groups</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Add a group containing items for all contributed documents.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_item_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_item_group</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">window</span><span class="p">)</span>
+        <span class="n">groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_item_group</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">groups</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Private interface.</span>
+    <span class="c1">###########################################################################</span>
+    <span class="k">def</span> <span class="nf">_clear_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remove all items in a group. &quot;&quot;&quot;</span>
+
+        <span class="n">group</span><span class="o">.</span><span class="n">destroy</span><span class="p">()</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">_create_item_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates a group containing the items. &quot;&quot;&quot;</span>
+
+        <span class="n">group</span> <span class="o">=</span> <span class="n">Group</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_item_group</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">group</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">group</span>
+
+    <span class="k">def</span> <span class="nf">_initialize_item_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initializes a group containing the items. &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="DocumentsMenuManager"><a class="viewcode-back" href="../../../../api/apptools.help.help_plugin.html#apptools.help.help_plugin.help_submenu_manager.DocumentsMenuManager">[docs]</a><span class="k">class</span> <span class="nc">DocumentsMenuManager</span><span class="p">(</span><span class="n">HelpSubmenuManager</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Controls the &#39;Help/Documents&#39; menu.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;ActionManager&#39; interface ############################################</span>
+
+    <span class="c1"># The manager&#39;s unique identifier (if it has one).</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;Documents&#39;</span>
+
+    <span class="c1">#### &#39;MenuManager&#39; interface ##############################################</span>
+
+    <span class="c1"># The menu manager&#39;s name (if the manager is a sub-menu, this is what its</span>
+    <span class="c1"># label will be).</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;&amp;Documents&#39;</span>
+
+    <span class="c1">#### &#39;DocMenuManager&#39; interface ##########################################</span>
+
+    <span class="c1"># The HelpDocs for which this manager displays menu items.</span>
+    <span class="n">help_doc_list</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">IHelpDoc</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_help_doc_list_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extension_registry</span><span class="o">.</span><span class="n">get_extensions</span><span class="p">(</span><span class="n">PKG</span> <span class="o">+</span> <span class="s1">&#39;.help_docs&#39;</span><span class="p">)</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Private interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_initialize_item_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initializes a group containing the items. &quot;&quot;&quot;</span>
+
+        <span class="n">docs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">help_doc_list</span>
+        <span class="n">docs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">doc</span><span class="p">:</span> <span class="n">doc</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
+            <span class="c1">#logger.info(&#39;Adding Helpaction for &quot;%s&quot;, %s&#39; % (doc.label, str(doc)))</span>
+            <span class="n">group</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">DocAction</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">doc</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="DemosMenuManager"><a class="viewcode-back" href="../../../../api/apptools.help.help_plugin.html#apptools.help.help_plugin.help_submenu_manager.DemosMenuManager">[docs]</a><span class="k">class</span> <span class="nc">DemosMenuManager</span><span class="p">(</span><span class="n">HelpSubmenuManager</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Controls the &#39;Help/Demos&#39; menu.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;ActionManager&#39; interface ############################################</span>
+
+    <span class="c1"># The manager&#39;s unique identifier (if it has one).</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;Demos&#39;</span>
+
+    <span class="c1">#### &#39;MenuManager&#39; interface ##############################################</span>
+
+    <span class="c1"># The menu manager&#39;s name (if the manager is a sub-menu, this is what its</span>
+    <span class="c1"># label will be).</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;D&amp;emos&#39;</span>
+
+    <span class="c1">#### &#39;DemoMenuManager&#39; interface ##########################################</span>
+
+    <span class="c1"># The HelpCode for which this manager displays menu items.</span>
+    <span class="n">help_demo_list</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">IHelpCode</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_help_demo_list_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extension_registry</span><span class="o">.</span><span class="n">get_extensions</span><span class="p">(</span><span class="n">PKG</span> <span class="o">+</span> <span class="s1">&#39;.help_demos&#39;</span><span class="p">)</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Private interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_initialize_item_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initializes a group containing the items. &quot;&quot;&quot;</span>
+
+        <span class="n">demos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">help_demo_list</span>
+        <span class="n">demos</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">demo</span><span class="p">:</span> <span class="n">demo</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">demo</span> <span class="ow">in</span> <span class="n">demos</span><span class="p">:</span>
+            <span class="n">group</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">DemoAction</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">demo</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="ExamplesMenuManager"><a class="viewcode-back" href="../../../../api/apptools.help.help_plugin.html#apptools.help.help_plugin.help_submenu_manager.ExamplesMenuManager">[docs]</a><span class="k">class</span> <span class="nc">ExamplesMenuManager</span><span class="p">(</span><span class="n">HelpSubmenuManager</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Controls the &#39;Help/Examples&#39; menu.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;ActionManager&#39; interface ############################################</span>
+
+    <span class="c1"># The manager&#39;s unique identifier (if it has one).</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;Examples&#39;</span>
+
+    <span class="c1">#### &#39;MenuManager&#39; interface ##############################################</span>
+
+    <span class="c1"># The menu manager&#39;s name (if the manager is a sub-menu, this is what its</span>
+    <span class="c1"># label will be).</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;&amp;Examples&#39;</span>
+
+    <span class="c1">#### &#39;ExampleMenuManager&#39; interface ##########################################</span>
+
+    <span class="c1"># The HelpCode for which this manager displays menu items.</span>
+    <span class="n">help_example_list</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">IHelpCode</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_help_example_list_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extension_registry</span><span class="o">.</span><span class="n">get_extensions</span><span class="p">(</span><span class="n">PKG</span> <span class="o">+</span> <span class="s1">&#39;.help_examples&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Preferences for examples</span>
+    <span class="n">preferences</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">ExamplesPreferences</span><span class="p">,</span> <span class="p">())</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Private interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_initialize_item_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initializes a group containing the items. &quot;&quot;&quot;</span>
+
+        <span class="n">examples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">help_example_list</span>
+        <span class="n">examples</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">example</span><span class="p">:</span> <span class="n">example</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">ex</span> <span class="ow">in</span> <span class="n">examples</span><span class="p">:</span>
+            <span class="n">group</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">ExampleAction</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">ex</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">,</span>
+                                  <span class="n">preferences</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">preferences</span><span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="DownloadsMenuManager"><a class="viewcode-back" href="../../../../api/apptools.help.help_plugin.html#apptools.help.help_plugin.help_submenu_manager.DownloadsMenuManager">[docs]</a><span class="k">class</span> <span class="nc">DownloadsMenuManager</span><span class="p">(</span><span class="n">HelpSubmenuManager</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Controls the &#39;Help/Downloads&#39; or &#39;Downloads&#39;menu.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;ActionManager&#39; interface ############################################</span>
+
+    <span class="c1"># The manager&#39;s unique identifier (if it has one).</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;Downloads&#39;</span>
+
+    <span class="c1">#### &#39;MenuManager&#39; interface ##############################################</span>
+
+    <span class="c1"># The menu manager&#39;s name (if the manager is a sub-menu, this is what its</span>
+    <span class="c1"># label will be).</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;&amp;Downloads&#39;</span>
+
+    <span class="c1">#### &#39;DocMenuManager&#39; interface ##########################################</span>
+
+    <span class="c1"># The URLs for which this manager displays menu items.</span>
+    <span class="n">help_download_list</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">IHelpDoc</span><span class="p">,</span> <span class="n">allow_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_help_download_list_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">extension_registry</span><span class="o">.</span><span class="n">get_extensions</span><span class="p">(</span><span class="n">PKG</span> <span class="o">+</span> <span class="s1">&#39;.help_downloads&#39;</span><span class="p">)</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Private interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_initialize_item_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initializes a group containing the items. &quot;&quot;&quot;</span>
+
+        <span class="n">urls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">help_download_list</span>
+        <span class="c1">#docs.sort(None, lambda doc: doc.label)</span>
+
+        <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">:</span>
+            <span class="n">group</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">LoadURLAction</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">url</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span></div>
+<span class="c1">#### EOF ######################################################################</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

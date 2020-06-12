@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.permissions.secure_proxy &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.permissions.secure_proxy</h1><div class="highlight"><pre>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2007, Riverbank Computing Limited</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Riverbank Computing Limited</span>
+<span class="c1"># Description: &lt;Enthought permissions package component&gt;</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">traits.etsconfig.api</span> <span class="k">import</span> <span class="n">ETSConfig</span>
+<span class="kn">from</span> <span class="nn">traitsui.api</span> <span class="k">import</span> <span class="n">Handler</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">.adapter_base</span> <span class="k">import</span> <span class="n">AdapterBase</span>
+<span class="kn">from</span> <span class="nn">.package_globals</span> <span class="k">import</span> <span class="n">get_permissions_manager</span>
+
+
+<span class="c1"># Register the bundled adapters.</span>
+<span class="kn">from</span> <span class="nn">.adapters</span> <span class="k">import</span> <span class="n">pyface_action</span>
+
+<span class="k">if</span> <span class="n">ETSConfig</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">==</span> <span class="s1">&#39;wx&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.adapters</span> <span class="k">import</span> <span class="n">wx_window</span>
+<span class="k">elif</span> <span class="n">ETSConfig</span><span class="o">.</span><span class="n">toolkit</span> <span class="o">==</span> <span class="s1">&#39;qt4&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">.adapters</span> <span class="k">import</span> <span class="n">qt4_widget</span>
+
+
+<div class="viewcode-block" id="SecureProxy"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.secure_proxy.SecureProxy">[docs]</a><span class="k">class</span> <span class="nc">SecureProxy</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The SecureProxy class is a wrapper for an object whose enabled and</span>
+<span class="sd">    visible states can be managed.  It attaches one or more permissions to the</span>
+<span class="sd">    object and enables and shows the object only if those permissions allow it.</span>
+<span class="sd">    In all other respects it behaves exactly like the object.  It is based on</span>
+<span class="sd">    Tomer Filiba&#39;s Object Proxy cookbook recipe.&quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_ets&#39;</span><span class="p">,</span> <span class="s1">&#39;__weakref__&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proxied</span><span class="p">,</span> <span class="n">permissions</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialise the instance.  proxied is the object whose enabled and</span>
+<span class="sd">        visible states are managed according to the permissions of the current</span>
+<span class="sd">        user.  permissions is a list of permissions to attach to the object.</span>
+<span class="sd">        show is set if the proxied object should be visible when it is</span>
+<span class="sd">        disabled.&quot;&quot;&quot;</span>
+
+        <span class="n">adapter</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_ets&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Correct the current values.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">show</span><span class="p">:</span>
+            <span class="n">adapter</span><span class="o">.</span><span class="n">update_visible</span><span class="p">(</span><span class="n">adapter</span><span class="o">.</span><span class="n">get_visible</span><span class="p">())</span>
+
+        <span class="n">adapter</span><span class="o">.</span><span class="n">update_enabled</span><span class="p">(</span><span class="n">adapter</span><span class="o">.</span><span class="n">get_enabled</span><span class="p">())</span>
+
+    <span class="c1"># Proxying (special cases).</span>
+    <span class="k">def</span> <span class="nf">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_ets&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">proxied</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__delattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="nb">delattr</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_ets&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">proxied</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_ets&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__nonzero__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_ets&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">proxied</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_ets&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">proxied</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">repr</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_ets&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">proxied</span><span class="p">)</span>
+
+    <span class="c1"># Factories.</span>
+    <span class="n">_special_names</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;__abs__&#39;</span><span class="p">,</span> <span class="s1">&#39;__add__&#39;</span><span class="p">,</span> <span class="s1">&#39;__and__&#39;</span><span class="p">,</span> <span class="s1">&#39;__call__&#39;</span><span class="p">,</span> <span class="s1">&#39;__cmp__&#39;</span><span class="p">,</span> <span class="s1">&#39;__coerce__&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;__contains__&#39;</span><span class="p">,</span> <span class="s1">&#39;__delitem__&#39;</span><span class="p">,</span> <span class="s1">&#39;__delslice__&#39;</span><span class="p">,</span> <span class="s1">&#39;__div__&#39;</span><span class="p">,</span> <span class="s1">&#39;__divmod__&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;__eq__&#39;</span><span class="p">,</span> <span class="s1">&#39;__float__&#39;</span><span class="p">,</span> <span class="s1">&#39;__floordiv__&#39;</span><span class="p">,</span> <span class="s1">&#39;__ge__&#39;</span><span class="p">,</span> <span class="s1">&#39;__getitem__&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;__getslice__&#39;</span><span class="p">,</span> <span class="s1">&#39;__gt__&#39;</span><span class="p">,</span> <span class="s1">&#39;__hash__&#39;</span><span class="p">,</span> <span class="s1">&#39;__hex__&#39;</span><span class="p">,</span> <span class="s1">&#39;__iadd__&#39;</span><span class="p">,</span> <span class="s1">&#39;__iand__&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;__idiv__&#39;</span><span class="p">,</span> <span class="s1">&#39;__idivmod__&#39;</span><span class="p">,</span> <span class="s1">&#39;__ifloordiv__&#39;</span><span class="p">,</span> <span class="s1">&#39;__ilshift__&#39;</span><span class="p">,</span> <span class="s1">&#39;__imod__&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;__imul__&#39;</span><span class="p">,</span> <span class="s1">&#39;__int__&#39;</span><span class="p">,</span> <span class="s1">&#39;__invert__&#39;</span><span class="p">,</span> <span class="s1">&#39;__ior__&#39;</span><span class="p">,</span> <span class="s1">&#39;__ipow__&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;__irshift__&#39;</span><span class="p">,</span> <span class="s1">&#39;__isub__&#39;</span><span class="p">,</span> <span class="s1">&#39;__iter__&#39;</span><span class="p">,</span> <span class="s1">&#39;__itruediv__&#39;</span><span class="p">,</span> <span class="s1">&#39;__ixor__&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;__le__&#39;</span><span class="p">,</span> <span class="s1">&#39;__len__&#39;</span><span class="p">,</span> <span class="s1">&#39;__long__&#39;</span><span class="p">,</span> <span class="s1">&#39;__lshift__&#39;</span><span class="p">,</span> <span class="s1">&#39;__lt__&#39;</span><span class="p">,</span> <span class="s1">&#39;__mod__&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;__mul__&#39;</span><span class="p">,</span> <span class="s1">&#39;__ne__&#39;</span><span class="p">,</span> <span class="s1">&#39;__neg__&#39;</span><span class="p">,</span> <span class="s1">&#39;__oct__&#39;</span><span class="p">,</span> <span class="s1">&#39;__or__&#39;</span><span class="p">,</span> <span class="s1">&#39;__pos__&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;__pow__&#39;</span><span class="p">,</span> <span class="s1">&#39;__radd__&#39;</span><span class="p">,</span> <span class="s1">&#39;__rand__&#39;</span><span class="p">,</span> <span class="s1">&#39;__rdiv__&#39;</span><span class="p">,</span> <span class="s1">&#39;__rdivmod__&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;__reduce__&#39;</span><span class="p">,</span> <span class="s1">&#39;__reduce_ex__&#39;</span><span class="p">,</span> <span class="s1">&#39;__repr__&#39;</span><span class="p">,</span> <span class="s1">&#39;__reversed__&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;__rfloorfiv__&#39;</span><span class="p">,</span> <span class="s1">&#39;__rlshift__&#39;</span><span class="p">,</span> <span class="s1">&#39;__rmod__&#39;</span><span class="p">,</span> <span class="s1">&#39;__rmul__&#39;</span><span class="p">,</span> <span class="s1">&#39;__ror__&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;__rpow__&#39;</span><span class="p">,</span> <span class="s1">&#39;__rrshift__&#39;</span><span class="p">,</span> <span class="s1">&#39;__rshift__&#39;</span><span class="p">,</span> <span class="s1">&#39;__rsub__&#39;</span><span class="p">,</span> <span class="s1">&#39;__rtruediv__&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;__rxor__&#39;</span><span class="p">,</span> <span class="s1">&#39;__setitem__&#39;</span><span class="p">,</span> <span class="s1">&#39;__setslice__&#39;</span><span class="p">,</span> <span class="s1">&#39;__sub__&#39;</span><span class="p">,</span> <span class="s1">&#39;__truediv__&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;__xor__&#39;</span><span class="p">,</span> <span class="s1">&#39;next&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_ets_class_proxy</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">theclass</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates a proxy for the given class.&quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">make_method</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+            <span class="k">def</span> <span class="nf">method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+                <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_ets&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">proxied</span><span class="p">,</span> <span class="n">name</span><span class="p">)(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">method</span>
+
+        <span class="n">namespace</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_special_names</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">theclass</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+                <span class="n">namespace</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">make_method</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">theclass</span><span class="o">.</span><span class="vm">__name__</span><span class="p">),</span> <span class="p">(</span><span class="bp">cls</span><span class="p">,),</span>
+                <span class="n">namespace</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">proxied</span><span class="p">,</span> <span class="n">permissions</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply a set of permissions to an object.  This may be done by</span>
+<span class="sd">        creating a proxy or by modifying the object in situ depending on its</span>
+<span class="sd">        type.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Create the adapter.</span>
+        <span class="n">adapter</span> <span class="o">=</span> <span class="n">AdapterBase</span><span class="o">.</span><span class="n">factory</span><span class="p">(</span><span class="n">proxied</span><span class="p">,</span> <span class="n">permissions</span><span class="p">,</span> <span class="n">show</span><span class="p">)</span>
+
+        <span class="c1"># Try and adapt the object itself.</span>
+        <span class="n">adapted</span> <span class="o">=</span> <span class="n">adapter</span><span class="o">.</span><span class="n">adapt</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">adapted</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Create a wrapper for the object.  The cache is unique per</span>
+            <span class="c1"># deriving class to ensure there are no clashes with any</span>
+            <span class="c1"># sub-classes with the same name.</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">cache</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="s1">&#39;_ets_cache&#39;</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="n">_ets_cache</span> <span class="o">=</span> <span class="n">cache</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="n">pclass</span> <span class="o">=</span> <span class="n">proxied</span><span class="o">.</span><span class="vm">__class__</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">theclass</span> <span class="o">=</span> <span class="n">cache</span><span class="p">[</span><span class="n">pclass</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">cache</span><span class="p">[</span><span class="n">pclass</span><span class="p">]</span> <span class="o">=</span> <span class="n">theclass</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_ets_class_proxy</span><span class="p">(</span><span class="n">pclass</span><span class="p">)</span>
+
+            <span class="n">adapted</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="n">theclass</span><span class="p">)</span>
+
+            <span class="c1"># Save the adapter in the adapted object.</span>
+            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">adapted</span><span class="p">,</span> <span class="s1">&#39;_ets&#39;</span><span class="p">,</span> <span class="n">adapter</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Correct the current values.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">show</span><span class="p">:</span>
+                <span class="n">adapter</span><span class="o">.</span><span class="n">update_visible</span><span class="p">(</span><span class="n">adapter</span><span class="o">.</span><span class="n">get_visible</span><span class="p">())</span>
+
+            <span class="n">adapter</span><span class="o">.</span><span class="n">update_enabled</span><span class="p">(</span><span class="n">adapter</span><span class="o">.</span><span class="n">get_enabled</span><span class="p">())</span>
+
+            <span class="c1"># Save the adapter in the adapted object.</span>
+            <span class="n">adapted</span><span class="o">.</span><span class="n">_ets</span> <span class="o">=</span> <span class="n">adapter</span>
+
+        <span class="k">return</span> <span class="n">adapted</span></div>
+
+
+<div class="viewcode-block" id="SecureHandler"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.secure_proxy.SecureHandler">[docs]</a><span class="k">class</span> <span class="nc">SecureHandler</span><span class="p">(</span><span class="n">Handler</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The SecureHandler class is a sub-class of the TraitsUI Handler class</span>
+<span class="sd">    that ensures that the enabled and visible state of the items of a TraitsUI</span>
+<span class="sd">    view are updated when the user&#39;s authorisation state changes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialise the object.&quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">SecureHandler</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">traits</span><span class="p">)</span>
+
+        <span class="n">get_permissions_manager</span><span class="p">()</span><span class="o">.</span><span class="n">user_manager</span><span class="o">.</span><span class="n">on_trait_event</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_refresh</span><span class="p">,</span>
+                <span class="s1">&#39;user_authenticated&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SecureHandler.init_info"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.secure_proxy.SecureHandler.init_info">[docs]</a>    <span class="k">def</span> <span class="nf">init_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reimplemented to save the UIInfo object.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_info</span> <span class="o">=</span> <span class="n">info</span></div>
+
+    <span class="k">def</span> <span class="nf">_refresh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Invoked whenever the current user&#39;s authorisation state changes.&quot;&quot;&quot;</span>
+
+        <span class="c1"># FIXME: This is (currently) an internal method.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">_evaluate_when</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

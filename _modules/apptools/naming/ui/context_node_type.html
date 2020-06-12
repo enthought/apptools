@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.naming.ui.context_node_type &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../../index.html" >
+    <link rel="up" title="Module code" href="../../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.naming.ui.context_node_type</h1><div class="highlight"><pre>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2005, Enthought, Inc.</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Enthought, Inc.</span>
+<span class="c1"># Description: &lt;Enthought naming package component&gt;</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot; The node type for contexts in a naming system. &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">apptools.naming.api</span> <span class="k">import</span> <span class="n">Context</span>
+<span class="kn">from</span> <span class="nn">pyface.tree.api</span> <span class="k">import</span> <span class="n">NodeType</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">.context_monitor</span> <span class="k">import</span> <span class="n">ContextMonitor</span>
+
+
+<div class="viewcode-block" id="ContextNodeType"><a class="viewcode-back" href="../../../../api/apptools.naming.ui.html#apptools.naming.ui.context_node_type.ContextNodeType">[docs]</a><span class="k">class</span> <span class="nc">ContextNodeType</span><span class="p">(</span><span class="n">NodeType</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The node type for contexts in a naming system. &quot;&quot;&quot;</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;NodeType&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="c1"># &#39;node&#39; in this case is a &#39;Binding&#39; instance whose &#39;obj&#39; trait is a</span>
+    <span class="c1"># &#39;Context&#39; instance.</span>
+<div class="viewcode-block" id="ContextNodeType.is_type_for"><a class="viewcode-back" href="../../../../api/apptools.naming.ui.html#apptools.naming.ui.context_node_type.ContextNodeType.is_type_for">[docs]</a>    <span class="k">def</span> <span class="nf">is_type_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns True if this node type recognizes a node. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span> <span class="n">Context</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ContextNodeType.allows_children"><a class="viewcode-back" href="../../../../api/apptools.naming.ui.html#apptools.naming.ui.context_node_type.ContextNodeType.allows_children">[docs]</a>    <span class="k">def</span> <span class="nf">allows_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Does the node allow children (ie. a folder vs a file). &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="ContextNodeType.has_children"><a class="viewcode-back" href="../../../../api/apptools.naming.ui.html#apptools.naming.ui.context_node_type.ContextNodeType.has_children">[docs]</a>    <span class="k">def</span> <span class="nf">has_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns True if a node has children, otherwise False. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">list_names</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="ContextNodeType.get_children"><a class="viewcode-back" href="../../../../api/apptools.naming.ui.html#apptools.naming.ui.context_node_type.ContextNodeType.get_children">[docs]</a>    <span class="k">def</span> <span class="nf">get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the children of a node. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">list_bindings</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ContextNodeType.get_drag_value"><a class="viewcode-back" href="../../../../api/apptools.naming.ui.html#apptools.naming.ui.context_node_type.ContextNodeType.get_drag_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_drag_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get the value that is dragged for a node. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">obj</span></div>
+
+<div class="viewcode-block" id="ContextNodeType.is_editable"><a class="viewcode-back" href="../../../../api/apptools.naming.ui.html#apptools.naming.ui.context_node_type.ContextNodeType.is_editable">[docs]</a>    <span class="k">def</span> <span class="nf">is_editable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns True if the node is editable, otherwise False. &quot;&quot;&quot;</span>
+
+        <span class="c1"># You can&#39;t rename the root context!</span>
+        <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">context</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ContextNodeType.get_text"><a class="viewcode-back" href="../../../../api/apptools.naming.ui.html#apptools.naming.ui.context_node_type.ContextNodeType.get_text">[docs]</a>    <span class="k">def</span> <span class="nf">get_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the label text for a node. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span></div>
+
+<div class="viewcode-block" id="ContextNodeType.can_set_text"><a class="viewcode-back" href="../../../../api/apptools.naming.ui.html#apptools.naming.ui.context_node_type.ContextNodeType.can_set_text">[docs]</a>    <span class="k">def</span> <span class="nf">can_set_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns True if the node&#39;s label can be set. &quot;&quot;&quot;</span>
+
+        <span class="c1"># The parent context will NOT be None here (see &#39;is_editable&#39;).</span>
+        <span class="n">parent</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">context</span>
+
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">text</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">parent</span><span class="o">.</span><span class="n">list_names</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ContextNodeType.set_text"><a class="viewcode-back" href="../../../../api/apptools.naming.ui.html#apptools.naming.ui.context_node_type.ContextNodeType.set_text">[docs]</a>    <span class="k">def</span> <span class="nf">set_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets the label text for a node. &quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Setting text on&#39;</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">obj</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Context details&#39;</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="c1"># Do the rename in the naming system.</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># Update the binding.</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">text</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="ContextNodeType.get_monitor"><a class="viewcode-back" href="../../../../api/apptools.naming.ui.html#apptools.naming.ui.context_node_type.ContextNodeType.get_monitor">[docs]</a>    <span class="k">def</span> <span class="nf">get_monitor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a monitor that detects changes to a node. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">ContextMonitor</span><span class="p">(</span><span class="n">node</span><span class="o">=</span><span class="n">node</span><span class="p">)</span></div></div>
+
+<span class="c1">##### EOF #####################################################################</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

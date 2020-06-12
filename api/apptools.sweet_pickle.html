@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.sweet_pickle package &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools package" href="apptools.html" >
+    <link rel="next" title="apptools.template package" href="apptools.template.html" >
+    <link rel="prev" title="apptools.selection package" href="apptools.selection.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../api.html" >API documentation</a></li>
+          <li class="active"><a href="modules.html" >apptools</a></li>
+          <li class="active"><a href="apptools.html" accesskey="U">apptools package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.template.html" title="apptools.template package"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.selection.html" title="apptools.selection package"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="apptools-sweet-pickle-package">
+<h1>apptools.sweet_pickle package<a class="headerlink" href="#apptools-sweet-pickle-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-apptools.sweet_pickle.global_registry">
+<span id="apptools-sweet-pickle-global-registry-module"></span><h2>apptools.sweet_pickle.global_registry module<a class="headerlink" href="#module-apptools.sweet_pickle.global_registry" title="Permalink to this headline">¶</a></h2>
+<p>Manages a singleton updater that acts as a global registry.</p>
+<p>Our goal is to enable the apptools.sweet_pickle framework to
+understand how pickled data should be treated during unpickling so
+that the resulting object hierarchy reflects the current versions
+of the object’s classes -AND- that this should work no matter who
+is doing the unpickling.  This requires a global registry since
+there is no way to know in advance what objects are contained within
+a given pickle file, and thus no way to gather the required
+information to know how to treat the pickle data during unpickling.</p>
+<p>For example, a pickle of an Envisage project may contain many
+custom classes, instantiated at the behest of various plugins,
+which have gone through various versionings and refactorings.  But
+it is the project plugin that needs to unpickle these objects to
+‘load’ a project, not the other plugins that added those custom
+class instances into the project.</p>
+<p>This registry is used by the apptools.sweet_pickle framework’s
+unpickler only by default.   That is, only if no updater was
+explicitly provided.</p>
+<p>It is important that users interact with the registry through the
+provided methods.  If they do not, then the reference they receive
+will be the one that was in place at the time of the import which
+may or MAY NOT be the current repository due to the way this
+framework manages the repository.</p>
+<dl class="function">
+<dt id="apptools.sweet_pickle.global_registry.get_global_registry">
+<code class="descclassname">apptools.sweet_pickle.global_registry.</code><code class="descname">get_global_registry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/global_registry.html#get_global_registry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.global_registry.get_global_registry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the global registry in a manner that allows for lazy
+instantiation.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.sweet_pickle.placeholder">
+<span id="apptools-sweet-pickle-placeholder-module"></span><h2>apptools.sweet_pickle.placeholder module<a class="headerlink" href="#module-apptools.sweet_pickle.placeholder" title="Permalink to this headline">¶</a></h2>
+<p>An empty class that serves as a placeholder to map a class to when
+that class has been deleted as a result of a refactoring.</p>
+<dl class="class">
+<dt id="apptools.sweet_pickle.placeholder.PlaceHolder">
+<em class="property">class </em><code class="descclassname">apptools.sweet_pickle.placeholder.</code><code class="descname">PlaceHolder</code><a class="reference internal" href="../_modules/apptools/sweet_pickle/placeholder.html#PlaceHolder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.placeholder.PlaceHolder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>An empty class that serves as a placeholder to map a class to when
+that class has been deleted as a result of a refactoring.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.sweet_pickle.updater">
+<span id="apptools-sweet-pickle-updater-module"></span><h2>apptools.sweet_pickle.updater module<a class="headerlink" href="#module-apptools.sweet_pickle.updater" title="Permalink to this headline">¶</a></h2>
+<p>A record of refactorings to be performed during unpickling of objects.</p>
+<dl class="class">
+<dt id="apptools.sweet_pickle.updater.Updater">
+<em class="property">class </em><code class="descclassname">apptools.sweet_pickle.updater.</code><code class="descname">Updater</code><a class="reference internal" href="../_modules/apptools/sweet_pickle/updater.html#Updater"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.updater.Updater" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasPrivateTraits</span></code></p>
+<p>A record of refactorings to be performed during unpickling of objects.</p>
+<dl class="method">
+<dt id="apptools.sweet_pickle.updater.Updater.add_mapping">
+<code class="descname">add_mapping</code><span class="sig-paren">(</span><em>source_module</em>, <em>source_name</em>, <em>target_module</em>, <em>target_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/updater.html#Updater.add_mapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.updater.Updater.add_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a mapping from the class with the source name in the source
+module to the class with the target name in the target module.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.sweet_pickle.updater.Updater.add_mapping_to_class">
+<code class="descname">add_mapping_to_class</code><span class="sig-paren">(</span><em>source_module</em>, <em>source_name</em>, <em>target_class</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/updater.html#Updater.add_mapping_to_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.updater.Updater.add_mapping_to_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method to add a mapping, from the class with the
+source name in the source module to the target class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.sweet_pickle.updater.Updater.add_mappings">
+<code class="descname">add_mappings</code><span class="sig-paren">(</span><em>source_module</em>, <em>target_module</em>, <em>class_names</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/updater.html#Updater.add_mappings"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.updater.Updater.add_mappings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds mappings, from the specified source module to the specified
+target module, for each of the class names in the specified
+list.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.sweet_pickle.updater.Updater.add_state_function">
+<code class="descname">add_state_function</code><span class="sig-paren">(</span><em>module</em>, <em>name</em>, <em>target_version</em>, <em>function</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/updater.html#Updater.add_state_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.updater.Updater.add_state_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the specified function as a state function to be called to
+convert an instance of the class with the specified name within
+the specified module <em>TO</em> the specified version.</p>
+<p>Note that the framework handles calling of state functions to make
+the smallest version jumps possible.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.sweet_pickle.updater.Updater.add_state_function_for_class">
+<code class="descname">add_state_function_for_class</code><span class="sig-paren">(</span><em>klass</em>, <em>target_version</em>, <em>function</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/updater.html#Updater.add_state_function_for_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.updater.Updater.add_state_function_for_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience method to add the specified function as a state
+function to be called to convert an instance of the specified
+class <em>TO</em> the specified version.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.sweet_pickle.updater.Updater.declare_version_attribute">
+<code class="descname">declare_version_attribute</code><span class="sig-paren">(</span><em>module</em>, <em>name</em>, <em>attribute_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/updater.html#Updater.declare_version_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.updater.Updater.declare_version_attribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the specified attribute name as the version attribute for the
+class within the specified module with the specified name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.sweet_pickle.updater.Updater.declare_version_attribute_for_class">
+<code class="descname">declare_version_attribute_for_class</code><span class="sig-paren">(</span><em>klass</em>, <em>attribute_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/updater.html#Updater.declare_version_attribute_for_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.updater.Updater.declare_version_attribute_for_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Covenience method to add the specified attribute name as the
+version attribute for the specified class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.sweet_pickle.updater.Updater.get_version_attribute">
+<code class="descname">get_version_attribute</code><span class="sig-paren">(</span><em>module</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/updater.html#Updater.get_version_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.updater.Updater.get_version_attribute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the name of the version attribute for the class of the
+specified name within the specified module.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.sweet_pickle.updater.Updater.has_class_mapping">
+<code class="descname">has_class_mapping</code><span class="sig-paren">(</span><em>module</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/updater.html#Updater.has_class_mapping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.updater.Updater.has_class_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if this updater contains a class mapping for
+the class identified by the specified module and class name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.sweet_pickle.updater.Updater.has_state_function">
+<code class="descname">has_state_function</code><span class="sig-paren">(</span><em>module</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/updater.html#Updater.has_state_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.updater.Updater.has_state_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if this updater contains any state functions for
+the class identified by the specified module and class name.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.sweet_pickle.updater.Updater.merge_updater">
+<code class="descname">merge_updater</code><span class="sig-paren">(</span><em>updater</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/updater.html#Updater.merge_updater"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.updater.Updater.merge_updater" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merges the mappings and state functions from the specified updater
+into this updater.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.sweet_pickle.versioned_unpickler">
+<span id="apptools-sweet-pickle-versioned-unpickler-module"></span><h2>apptools.sweet_pickle.versioned_unpickler module<a class="headerlink" href="#module-apptools.sweet_pickle.versioned_unpickler" title="Permalink to this headline">¶</a></h2>
+<p>An unpickler that is tolerant of class refactorings, and implements a
+two-stage pickling process to make it possible to unpickle complicated Python
+object hierarchies where the unserialized state of an object depends on the
+state of other objects in the same pickle.</p>
+<dl class="class">
+<dt id="apptools.sweet_pickle.versioned_unpickler.NewUnpickler">
+<em class="property">class </em><code class="descclassname">apptools.sweet_pickle.versioned_unpickler.</code><code class="descname">NewUnpickler</code><span class="sig-paren">(</span><em>file</em>, <em>*</em>, <em>fix_imports=True</em>, <em>encoding='ASCII'</em>, <em>errors='strict'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/versioned_unpickler.html#NewUnpickler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.versioned_unpickler.NewUnpickler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pickle._Unpickler</span></code></p>
+<p>An unpickler that implements a two-stage pickling process to make it
+possible to unpickle complicated Python object hierarchies where the
+unserialized state of an object depends on the state of other objects in
+the same pickle.</p>
+<dl class="method">
+<dt id="apptools.sweet_pickle.versioned_unpickler.NewUnpickler.initialize">
+<code class="descname">initialize</code><span class="sig-paren">(</span><em>max_pass</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/versioned_unpickler.html#NewUnpickler.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.versioned_unpickler.NewUnpickler.initialize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="apptools.sweet_pickle.versioned_unpickler.NewUnpickler.load">
+<code class="descname">load</code><span class="sig-paren">(</span><em>max_pass=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/versioned_unpickler.html#NewUnpickler.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.versioned_unpickler.NewUnpickler.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pickled object representation from the open file.</p>
+<p>Return the reconstituted object hierarchy specified in the file.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="apptools.sweet_pickle.versioned_unpickler.NewUnpickler.load_build">
+<em class="property">classmethod </em><code class="descname">load_build</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/versioned_unpickler.html#NewUnpickler.load_build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.versioned_unpickler.NewUnpickler.load_build" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="apptools.sweet_pickle.versioned_unpickler.VersionedUnpickler">
+<em class="property">class </em><code class="descclassname">apptools.sweet_pickle.versioned_unpickler.</code><code class="descname">VersionedUnpickler</code><span class="sig-paren">(</span><em>file</em>, <em>**kws</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/versioned_unpickler.html#VersionedUnpickler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.versioned_unpickler.VersionedUnpickler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apptools.sweet_pickle.versioned_unpickler.NewUnpickler" title="apptools.sweet_pickle.versioned_unpickler.NewUnpickler"><code class="xref py py-class docutils literal notranslate"><span class="pre">apptools.sweet_pickle.versioned_unpickler.NewUnpickler</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>An unpickler that is tolerant of class refactorings.</p>
+<p>This class reads in a pickled file and applies the transforms
+specified in its updater to generate a new hierarchy of objects
+which are at the current version of the classes they are instances
+of.</p>
+<p>Note that the creation of an updater is kept out of this class to
+ensure that the class can be reused in different situations.
+However, if no updater is provided during construction, then the
+global registry updater will be used.</p>
+<dl class="method">
+<dt id="apptools.sweet_pickle.versioned_unpickler.VersionedUnpickler.find_class">
+<code class="descname">find_class</code><span class="sig-paren">(</span><em>module</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/versioned_unpickler.html#VersionedUnpickler.find_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.versioned_unpickler.VersionedUnpickler.find_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the class definition for the named class within the
+specified module.</p>
+<p>Overridden here to:</p>
+<ul class="simple">
+<li>Allow updaters to redirect to a different class, possibly
+within a different module.</li>
+<li>Ensure that any setstate hooks for the class are called
+when the instance of this class is unpickled.</li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.sweet_pickle.versioned_unpickler.VersionedUnpickler.modify_state">
+<code class="descname">modify_state</code><span class="sig-paren">(</span><em>obj</em>, <em>state</em>, <em>module</em>, <em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/versioned_unpickler.html#VersionedUnpickler.modify_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.versioned_unpickler.VersionedUnpickler.modify_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called to update the specified state dictionary, which represents
+the class of the specified name within the specified module, to
+complete the unpickling of the specified object.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.sweet_pickle.versioned_unpickler.load_build_with_meta_data">
+<code class="descclassname">apptools.sweet_pickle.versioned_unpickler.</code><code class="descname">load_build_with_meta_data</code><span class="sig-paren">(</span><em>self</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle/versioned_unpickler.html#load_build_with_meta_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.versioned_unpickler.load_build_with_meta_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called prior to the actual load_build() unpickling method which primes
+the state dictionary with meta-data.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.sweet_pickle">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-apptools.sweet_pickle" title="Permalink to this headline">¶</a></h2>
+<p>A pickle framework that supports unpickling of refactored versions of
+old classes. Part of the AppTools project of the Enthought Tool Suite.</p>
+<p>Beyond refactoring support, there are additional useful capabilities of
+this package:</p>
+<ul class="simple">
+<li>HasTraits objects are fully pickled when sweet_pickle.dump() or
+sweet_pickle.dumps() are called.  This means every trait’s value
+is pickled explicitly.  This allows improved self-consistency as
+values within unpickled objects correspond to the default trait
+values of the instance that was pickled rather than the default
+values of the current class definition.</li>
+<li>Multiple updaters can be registered to update state for any version
+of a class.  This is extremely useful when an instance being
+pickled and unpickled is the result of an addition of one or more
+Trait Categories to a class.  In that case, the Category contributor
+can also register a state function to update the Category’s traits
+through versioning.</li>
+</ul>
+<p>We have duplicated the API of the Python ‘pickle’ module within this
+package. Thus, users can simply import sweet_pickle in places where
+they previously used pickle or cPickle.  For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cPickle</span>          <span class="o">---&gt;</span>    <span class="kn">import</span> <span class="nn">apptools.sweet_pickle</span> <span class="k">as</span> <span class="nn">pickle</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>           <span class="n">s</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+<span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>                 <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Pickles generated by this package <em>can be</em> unpickled by standard pickle
+or cPickle, though you lose the benefit of the refactoring support during
+unpickling.</p>
+<p>As a result of the above, this package is a drop-in replacement for the
+Python ‘pickle’ module or ‘cPickle’ module and should be safe to use even
+if you never version or refactor your own classes.  In fact, we STRONGLY
+RECOMMEND that you use this framework for all of your pickle needs because
+you never know when one of the classes you encounter during unpickling has
+been versioned or otherwise refactored by someone else.</p>
+<p>See module ‘pickle’ for more basic information about pickling.</p>
+<p>The most common way to benefit from the versioning capabilities of this
+framework is to register class mappings and state modification functions
+with the global updater registry (more detail is below.)  However, you may
+also choose to explicitly instantiate an Unpickler and provide it with your
+own explicit definition of class mappings and state modification functions.
+We do not provide any help on the latter at this time.</p>
+<p>You can register class mappings and state modification functions with the
+global updater registry using the methods provided on the Updater instance
+that is the global registry.  You can get this instance by calling the
+‘get_global_registry’ function exposed through this package’s namespace.</p>
+<p>This framework has been designed so that you can register your class
+mappings and state modification functions during the import of the module
+or package that contained the original class.  However, you may also
+register your mappings and functions at any point such that the they are
+known to the framework prior to, or become known during the attempt to,
+unpickle the class they modify.</p>
+<p>The framework will call a __setstate__ method on the final target class
+of any unpickled instance.  It will not call __setstate__ methods on any
+beginning or intermediate classes within a chain of class mappings.</p>
+<p>A class mapping is used to redirect the unpickling of one class to return
+an instantiation of another class.  The classes can be in different
+modules, and the modules in different packages.  Mappings can be chained.
+For example, given the mappings:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">foo</span><span class="o">.</span><span class="n">bar</span><span class="o">.</span><span class="n">Bar</span> <span class="o">--&gt;</span> <span class="n">foo</span><span class="o">.</span><span class="n">baz</span><span class="o">.</span><span class="n">Baz</span>
+<span class="n">foo</span><span class="o">.</span><span class="n">baz</span><span class="o">.</span><span class="n">Baz</span> <span class="o">--&gt;</span> <span class="n">foo</span><span class="o">.</span><span class="n">Foo</span>
+</pre></div>
+</div>
+<p>An attempt to unpickle a foo.bar.Bar would actually generate a foo.Foo
+instance.</p>
+<p>A state modification function is called during the execution of the
+__setstate__ method during unpickling of an object of the type and version
+for which it was registered for.  The function must accept a single
+argument which is a state dictionary and must then return the modified
+state dictionary.  Additionally, the function should change the version
+variable within the state to represent the version the new state
+represents.  (The framework will assume an increment of one if this is
+not done.)  The framework ensures that state modification functions
+are chained appropriately to convert through multiple versions and/or class
+mappings.</p>
+<p>Note that refactorings that cause classes to be completed removed from
+the source code can be supported, without breaking unpickling of object
+hierarchies that include an instace of that class, by adding a mapping
+to the Placeholder class in the placeholder module.</p>
+<dl class="function">
+<dt id="apptools.sweet_pickle.dump">
+<code class="descclassname">apptools.sweet_pickle.</code><code class="descname">dump</code><span class="sig-paren">(</span><em>obj</em>, <em>file</em>, <em>protocol=2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle.html#dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.dump" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="apptools.sweet_pickle.dumps">
+<code class="descclassname">apptools.sweet_pickle.</code><code class="descname">dumps</code><span class="sig-paren">(</span><em>obj</em>, <em>protocol=2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle.html#dumps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.dumps" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="apptools.sweet_pickle.load">
+<code class="descclassname">apptools.sweet_pickle.</code><code class="descname">load</code><span class="sig-paren">(</span><em>file</em>, <em>max_pass=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle.html#load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="apptools.sweet_pickle.loads">
+<code class="descclassname">apptools.sweet_pickle.</code><code class="descname">loads</code><span class="sig-paren">(</span><em>str</em>, <em>max_pass=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/sweet_pickle.html#loads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.sweet_pickle.loads" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">apptools.sweet_pickle package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-apptools.sweet_pickle.global_registry">apptools.sweet_pickle.global_registry module</a></li>
+<li><a class="reference internal" href="#module-apptools.sweet_pickle.placeholder">apptools.sweet_pickle.placeholder module</a></li>
+<li><a class="reference internal" href="#module-apptools.sweet_pickle.updater">apptools.sweet_pickle.updater module</a></li>
+<li><a class="reference internal" href="#module-apptools.sweet_pickle.versioned_unpickler">apptools.sweet_pickle.versioned_unpickler module</a></li>
+<li><a class="reference internal" href="#module-apptools.sweet_pickle">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.selection.html"
+                        title="previous chapter">apptools.selection package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.template.html"
+                        title="next chapter">apptools.template package</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.sweet_pickle.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

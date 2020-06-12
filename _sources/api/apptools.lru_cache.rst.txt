@@ -1,0 +1,22 @@
+apptools.lru\_cache package
+===========================
+
+Submodules
+----------
+
+apptools.lru\_cache.lru\_cache module
+-------------------------------------
+
+.. automodule:: apptools.lru_cache.lru_cache
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.lru_cache
+    :members:
+    :undoc-members:
+    :show-inheritance:

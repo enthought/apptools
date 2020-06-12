@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.template.template_impl &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.template.template_impl</h1><div class="highlight"><pre>
+<span></span><span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  Defines the Template class, which provides a default implementation of the</span>
+<span class="c1">#  ITemplate interface that can be used when defining templatizable objects.</span>
+<span class="c1">#</span>
+<span class="c1">#  Written by: David C. Morrill</span>
+<span class="c1">#</span>
+<span class="c1">#  Date: 07/26/2007</span>
+<span class="c1">#</span>
+<span class="c1">#  (c) Copyright 2007 by Enthought, Inc.</span>
+<span class="c1">#</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot; Defines the Template class, which provides a default implementation of the</span>
+<span class="sd">    ITemplate interface that can be used when defining templatizable objects.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Imports:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<span class="kn">from</span> <span class="nn">traits.api</span> \
+    <span class="kn">import</span> <span class="nn">HasPrivateTraits</span><span class="o">,</span> <span class="nn">Undefined</span><span class="o">,</span> <span class="nn">provides</span>
+
+<span class="kn">from</span> <span class="nn">.itemplate</span> \
+    <span class="kn">import</span> <span class="nn">ITemplate</span>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Metadata filter for extracting &#39;object&#39; and &#39;datasource&#39; items:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="instance_or_datasource"><a class="viewcode-back" href="../../../api/apptools.template.html#apptools.template.template_impl.instance_or_datasource">[docs]</a><span class="k">def</span> <span class="nf">instance_or_datasource</span> <span class="p">(</span> <span class="n">value</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span> <span class="s1">&#39;instance&#39;</span><span class="p">,</span> <span class="s1">&#39;datasource&#39;</span> <span class="p">)</span></div>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Metadata filter for extracting traits with no &#39;template&#39; metadata:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="is_none"><a class="viewcode-back" href="../../../api/apptools.template.html#apptools.template.template_impl.is_none">[docs]</a><span class="k">def</span> <span class="nf">is_none</span> <span class="p">(</span> <span class="n">value</span> <span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span></div>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;Template&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="Template"><a class="viewcode-back" href="../../../api/apptools.template.html#apptools.template.template_impl.Template">[docs]</a><span class="nd">@provides</span><span class="p">(</span><span class="n">ITemplate</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Template</span> <span class="p">(</span> <span class="n">HasPrivateTraits</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Defines the Template class, which provides a default implementation of</span>
+<span class="sd">        the ITemplate interface that can be used when defining templatizable</span>
+<span class="sd">        objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#-- &#39;ITemplate&#39; Interface Implementation -----------------------------------</span>
+
+<div class="viewcode-block" id="Template.names_from_template"><a class="viewcode-back" href="../../../api/apptools.template.html#apptools.template.template_impl.Template.names_from_template">[docs]</a>    <span class="k">def</span> <span class="nf">names_from_template</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a list of **TemplateDataName** objects, one for each</span>
+<span class="sd">            bindable data source contained within the template. Each</span>
+<span class="sd">            **TemplateDataName** object supports unresolved bindings in</span>
+<span class="sd">            addition to resolved bindings. Also, a **TemplateDataName** may be</span>
+<span class="sd">            marked as *optional*, meaning the if the name remains unresolved,</span>
+<span class="sd">            the application can take an alternative action (e.g. omit the data</span>
+<span class="sd">            from a plot, or substitute default data, etc.).</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            A list of **TemplateDataName** objects, one for each bindable data</span>
+<span class="sd">            source contained in the template.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data_names</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Recursively propagate the request to all contained templatizable</span>
+        <span class="c1"># objects:</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;instance&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="nb">list</span> <span class="p">):</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="n">data_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">names_from_template</span><span class="p">()</span> <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">data_names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span> <span class="n">value</span><span class="o">.</span><span class="n">names_from_template</span><span class="p">()</span> <span class="p">)</span>
+
+        <span class="c1"># Add the bindings for all of our local data source objects:</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;datasource&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="nb">list</span> <span class="p">):</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="n">data_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">v</span><span class="o">.</span><span class="n">name_from_data_source</span><span class="p">()</span> <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">data_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">value</span><span class="o">.</span><span class="n">name_from_data_source</span><span class="p">()</span> <span class="p">)</span>
+
+        <span class="c1"># Return the list of TemplateDataName objects we collected:</span>
+        <span class="k">return</span> <span class="n">data_names</span></div>
+
+<div class="viewcode-block" id="Template.object_from_template"><a class="viewcode-back" href="../../../api/apptools.template.html#apptools.template.template_impl.Template.object_from_template">[docs]</a>    <span class="k">def</span> <span class="nf">object_from_template</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Activates the object from its template data.</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            The original object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Convert all our data source objects to &#39;live&#39; objects:</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;datasource&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="nb">list</span> <span class="p">):</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="n">v</span><span class="o">.</span><span class="n">object_from_template</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">object_from_template</span><span class="p">()</span>
+
+        <span class="c1"># Recursively propagate the request to all contained templatizable</span>
+        <span class="c1"># objects:</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;instance&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="nb">list</span> <span class="p">):</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="n">v</span><span class="o">.</span><span class="n">object_from_template</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">value</span><span class="o">.</span><span class="n">object_from_template</span><span class="p">()</span>
+
+        <span class="c1"># Reset all of our &#39;live&#39; objects to undefined:</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trait_names</span><span class="p">(</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;derived&#39;</span> <span class="p">):</span>
+            <span class="nb">setattr</span><span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">Undefined</span> <span class="p">)</span>
+
+        <span class="c1"># Return ourselves as the new, live version of the object:</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Template.template_from_object"><a class="viewcode-back" href="../../../api/apptools.template.html#apptools.template.template_impl.Template.template_from_object">[docs]</a>    <span class="k">def</span> <span class="nf">template_from_object</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a *templatized* version of the object that is safe for</span>
+<span class="sd">            serialization.</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            A new object of the same class as the original.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Mark all traits without &#39;template&#39; metadata as &#39;transient&#39;:</span>
+        <span class="k">for</span> <span class="n">trait</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">traits</span><span class="p">(</span> <span class="n">template</span> <span class="o">=</span> <span class="n">is_none</span> <span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">trait</span><span class="o">.</span><span class="n">transient</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Collect all of the data source and templatizable objects we contain:</span>
+        <span class="n">contents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">template</span> <span class="o">=</span> <span class="n">instance_or_datasource</span> <span class="p">)</span>
+
+        <span class="c1"># Convert them all to new objects in template form:</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">contents</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span> <span class="n">value</span><span class="p">,</span> <span class="nb">list</span> <span class="p">):</span>
+                <span class="n">contents</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="n">v</span><span class="o">.</span><span class="n">template_from_object</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span> <span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">contents</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">template_from_object</span><span class="p">()</span>
+
+        <span class="c1"># Add all of the simple values which can just be copied:</span>
+        <span class="n">contents</span><span class="o">.</span><span class="n">update</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="n">template</span> <span class="o">=</span> <span class="s1">&#39;copy&#39;</span> <span class="p">)</span> <span class="p">)</span>
+
+        <span class="c1"># Finally return a new instance of our class containing just the</span>
+        <span class="c1"># templatizable values:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span> <span class="o">**</span><span class="n">contents</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Template.activate_template"><a class="viewcode-back" href="../../../api/apptools.template.html#apptools.template.template_impl.Template.activate_template">[docs]</a>    <span class="k">def</span> <span class="nf">activate_template</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Converts all contained &#39;TDerived&#39; objects to real objects using the</span>
+<span class="sd">            template traits of the object. This method must be overridden in</span>
+<span class="sd">            subclasses.</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+apptools.naming.trait\_defs package
+===================================
+
+Submodules
+----------
+
+apptools.naming.trait\_defs.api module
+--------------------------------------
+
+.. automodule:: apptools.naming.trait_defs.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.naming.trait\_defs.naming\_traits module
+-------------------------------------------------
+
+.. automodule:: apptools.naming.trait_defs.naming_traits
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.naming.trait_defs
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.type_manager.hook &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.type_manager.hook</h1><div class="highlight"><pre>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2005, Enthought, Inc.</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Enthought, Inc.</span>
+<span class="c1"># Description: &lt;Enthought util package component&gt;</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot; Implementation of hooked methods. &quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="add_pre"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.hook.add_pre">[docs]</a><span class="k">def</span> <span class="nf">add_pre</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Adds a pre-hook to method &#39;method_name&#39; on class &#39;klass&#39;. &quot;&quot;&quot;</span>
+
+    <span class="n">_add_hook</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="add_post"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.hook.add_post">[docs]</a><span class="k">def</span> <span class="nf">add_post</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Adds a post-hook to method &#39;method_name&#39; on class &#39;klass&#39;. &quot;&quot;&quot;</span>
+
+    <span class="n">_add_hook</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="remove_pre"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.hook.remove_pre">[docs]</a><span class="k">def</span> <span class="nf">remove_pre</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Removes a pre-hook from method &#39;method_name&#39; on class &#39;klass&#39;. &quot;&quot;&quot;</span>
+
+    <span class="n">_remove_hook</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<div class="viewcode-block" id="remove_post"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.hook.remove_post">[docs]</a><span class="k">def</span> <span class="nf">remove_post</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Removes a post-hook from method &#39;method_name&#39; on class &#39;klass&#39;. &quot;&quot;&quot;</span>
+
+    <span class="n">_remove_hook</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span></div>
+
+<span class="c1">###############################################################################</span>
+<span class="c1"># Private functions.</span>
+<span class="c1">###############################################################################</span>
+
+<span class="k">def</span> <span class="nf">_add_hook</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">,</span> <span class="n">pre</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Adds a pre/post hook to method &#39;method_name&#39; on class &#39;klass&#39;. &quot;&quot;&quot;</span>
+
+    <span class="c1"># Get the method on the klass.</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">)</span>
+
+    <span class="c1"># Have we already hooked it?</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="s1">&#39;__pre__&#39;</span><span class="p">):</span>
+        <span class="n">hooked_method</span> <span class="o">=</span> <span class="n">method</span>
+
+    <span class="c1"># Obviously not!</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">def</span> <span class="nf">hooked_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">pre</span> <span class="ow">in</span> <span class="n">hooked_method</span><span class="o">.</span><span class="n">__pre__</span><span class="p">:</span>
+                <span class="n">pre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="n">method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">post</span> <span class="ow">in</span> <span class="n">hooked_method</span><span class="o">.</span><span class="n">__post__</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">result</span>
+
+        <span class="c1"># Python &lt; 2.4 does not allow this.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">hooked_method</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">method_name</span>
+
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">hooked_method</span><span class="o">.</span><span class="n">__pre__</span>  <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">hooked_method</span><span class="o">.</span><span class="n">__post__</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Is the original method actually defined on the class, or is it</span>
+        <span class="c1"># inherited?</span>
+        <span class="n">hooked_method</span><span class="o">.</span><span class="n">__inherited__</span> <span class="o">=</span> <span class="n">method_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">klass</span><span class="o">.</span><span class="vm">__dict__</span>
+
+        <span class="c1"># Save the original method...</span>
+        <span class="c1">#</span>
+        <span class="c1"># fixme: Twisted uses &#39;method.im_func&#39; instead of &#39;method&#39; here, but</span>
+        <span class="c1"># both seem to work just as well!</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="s1">&#39;__hooked__&#39;</span> <span class="o">+</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+
+        <span class="c1"># ... and put in the hooked one!</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">hooked_method</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">pre</span><span class="p">:</span>
+        <span class="n">hooked_method</span><span class="o">.</span><span class="n">__pre__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">callable</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">hooked_method</span><span class="o">.</span><span class="n">__post__</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">callable</span><span class="p">)</span>
+
+    <span class="k">return</span>
+
+<span class="k">def</span> <span class="nf">_remove_hook</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">,</span> <span class="n">pre</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Removes a pre/post hook from method &#39;method_name&#39; on class &#39;klass&#39;. &quot;&quot;&quot;</span>
+
+    <span class="c1"># Get the method on the klass.</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">klass</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">method_name</span><span class="p">]</span>
+
+    <span class="c1"># Is it actually hooked?</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="s1">&#39;__pre__&#39;</span><span class="p">):</span>
+        <span class="c1"># Remove the hook.</span>
+        <span class="k">if</span> <span class="n">pre</span><span class="p">:</span>
+            <span class="n">method</span><span class="o">.</span><span class="n">__pre__</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">callable</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">method</span><span class="o">.</span><span class="n">__post__</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">callable</span><span class="p">)</span>
+
+        <span class="c1"># If there are no more hooks left then cleanup.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">__pre__</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">__post__</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># If the method is inherited then just delete the hooked version.</span>
+            <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">__inherited__</span><span class="p">:</span>
+                <span class="nb">delattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">)</span>
+
+            <span class="c1"># Otherwise, reinstate the original method.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">original</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="s1">&#39;__hooked__&#39;</span> <span class="o">+</span> <span class="n">method_name</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">original</span><span class="p">)</span>
+
+            <span class="c1"># Remove the saved original method.</span>
+            <span class="nb">delattr</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="s1">&#39;__hooked__&#39;</span> <span class="o">+</span> <span class="n">method_name</span><span class="p">)</span>
+
+    <span class="k">return</span>
+
+<span class="c1">#### EOF ######################################################################</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.help.help_plugin.help_plugin &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../../index.html" >
+    <link rel="up" title="Module code" href="../../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.help.help_plugin.help_plugin</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; The definition of an Envisage plugin for online help.</span>
+
+<span class="sd">It assumes that the Workbench plugin is being used.</span>
+
+<span class="sd">    :Copyright: 2008, Enthought Inc.</span>
+<span class="sd">    :License: BSD</span>
+<span class="sd">    :Author: Janet Swisher</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in AppTools/trunk/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+
+<span class="c1"># Standard library imports.</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># Enthought libary imports</span>
+<span class="kn">from</span> <span class="nn">envisage.api</span> <span class="k">import</span> <span class="n">Plugin</span><span class="p">,</span> <span class="n">ExtensionPoint</span>
+<span class="kn">from</span> <span class="nn">envisage.ui.action.api</span> <span class="k">import</span> <span class="n">ActionSet</span><span class="p">,</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Menu</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Str</span>
+
+<span class="c1"># Local imports</span>
+<span class="kn">from</span> <span class="nn">.help_code</span> <span class="k">import</span> <span class="n">HelpCode</span>
+<span class="kn">from</span> <span class="nn">.help_doc</span> <span class="k">import</span> <span class="n">HelpDoc</span>
+<span class="kn">from</span> <span class="nn">.i_help_code</span> <span class="k">import</span> <span class="n">IHelpCode</span>
+<span class="kn">from</span> <span class="nn">.i_help_doc</span> <span class="k">import</span> <span class="n">IHelpDoc</span>
+
+<span class="c1"># Logging.</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">HELP_MENU</span> <span class="o">=</span> <span class="s1">&#39;MenuBar/Help&#39;</span>
+<span class="n">DOCS_MENU</span> <span class="o">=</span> <span class="s1">&#39;Documents&#39;</span>
+<span class="n">DOCS_GROUP</span> <span class="o">=</span> <span class="s1">&#39;DocsGroup&#39;</span>
+<span class="n">DEMOS_MENU</span> <span class="o">=</span> <span class="s1">&#39;Demos&#39;</span>
+<span class="n">DEMOS_GROUP</span> <span class="o">=</span> <span class="s1">&#39;DemosGroup&#39;</span>
+<span class="n">EXAMPLES_MENU</span> <span class="o">=</span> <span class="s1">&#39;Examples&#39;</span>
+<span class="n">EXAMPLES_GROUP</span> <span class="o">=</span> <span class="s1">&#39;ExamplesGroup&#39;</span>
+<span class="n">DOWNLOADS_MENU</span> <span class="o">=</span> <span class="s1">&#39;Downloads&#39;</span>
+
+<span class="c1"># This module&#39;s package.</span>
+<span class="n">PKG</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="vm">__name__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+
+<span class="c1">################################################################################</span>
+<span class="c1"># The plugin</span>
+<span class="c1">################################################################################</span>
+<div class="viewcode-block" id="HelpPlugin"><a class="viewcode-back" href="../../../../api/apptools.help.help_plugin.html#apptools.help.help_plugin.help_plugin.HelpPlugin">[docs]</a><span class="k">class</span> <span class="nc">HelpPlugin</span><span class="p">(</span><span class="n">Plugin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A Help plugin for Envisage Workbench applications.</span>
+
+<span class="sd">    This plugin displays items on the Workbench Help menu, based on</span>
+<span class="sd">    contributions from itself or other plugins.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># IDs of extension points this plugin offers.</span>
+    <span class="n">HELP_DOCS</span> <span class="o">=</span> <span class="n">PKG</span> <span class="o">+</span> <span class="s1">&#39;.help_docs&#39;</span>
+    <span class="n">HELP_DEMOS</span> <span class="o">=</span> <span class="n">PKG</span> <span class="o">+</span> <span class="s1">&#39;.help_demos&#39;</span>
+    <span class="n">HELP_EXAMPLES</span> <span class="o">=</span> <span class="n">PKG</span> <span class="o">+</span> <span class="s1">&#39;.help_examples&#39;</span>
+    <span class="n">HELP_DOWNLOADS</span> <span class="o">=</span> <span class="n">PKG</span> <span class="o">+</span> <span class="s1">&#39;.help_downloads&#39;</span>
+
+    <span class="c1"># IDs of extension points this plugin contributes to.</span>
+    <span class="n">WORKBENCH_ACTION_SETS</span><span class="o">=</span><span class="s1">&#39;envisage.ui.workbench.action_sets&#39;</span>
+    <span class="n">PREFERENCES</span>       <span class="o">=</span> <span class="s1">&#39;envisage.preferences&#39;</span>
+    <span class="n">PREFERENCES_PAGES</span> <span class="o">=</span> <span class="s1">&#39;envisage.ui.workbench.preferences_pages&#39;</span>
+
+    <span class="c1">#### &#39;IPlugin&#39; interface ##################################################</span>
+
+    <span class="c1"># The plugin&#39;s unique identifier.</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="s1">&#39;apptools.help.help_plugin&#39;</span>
+
+    <span class="c1"># The plugin&#39;s name (suitable for displaying to the user).</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Help Plugin&#39;</span>
+
+    <span class="c1">#### public &#39;HelpPlugin&#39; interface ########################################</span>
+
+    <span class="c1"># List of menu names added to the main toolbar by this plugin</span>
+    <span class="c1"># (These are placed before the &#39;Help&#39; Menu).</span>
+    <span class="n">menus</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Str</span><span class="p">)</span>
+
+    <span class="c1">#### Extension points offered by this plugin ##############################</span>
+
+    <span class="n">help_docs</span> <span class="o">=</span> <span class="n">ExtensionPoint</span><span class="p">(</span>
+        <span class="n">List</span><span class="p">(</span><span class="n">IHelpDoc</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="n">HELP_DOCS</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">        A help doc is defined by a preference node that specifies a UI label,</span>
+<span class="s2">        a filename for the document, and a (path to a) viewer for viewing the</span>
+<span class="s2">        document.</span>
+
+<span class="s2">        Each contribution to this extension point must be an instance of a</span>
+<span class="s2">        class that implements IHelpDoc. The easiest way to do this is to</span>
+<span class="s2">        create an instance of  `apptools.help.help_plugin.api.HelpDoc`.</span>
+
+<span class="s2">        So, to contribute a help doc:</span>
+
+<span class="s2">        1. Create a preferences file for your plugin if it doesn&#39;t already</span>
+<span class="s2">           have one. (Be sure to contribute your preferences file to the</span>
+<span class="s2">           `envisage.preferences` extension point.)</span>
+
+<span class="s2">        2. Define a unique &quot;node&quot; (section heading) in your preferences file</span>
+<span class="s2">           for each document, and specify values for the &#39;label&#39;, &#39;viewer&#39;,</span>
+<span class="s2">           and &#39;filename&#39; settings. (Use &#39;browser&#39; as the value of &#39;viewer&#39; if</span>
+<span class="s2">           the document can be viewed in a web browser.)</span>
+
+<span class="s2">        3. For each document, contribute a HelpDoc to this extension point,</span>
+<span class="s2">           and specify its *preferences_path* as the corresponding node</span>
+<span class="s2">           name from your preferences file.</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">help_demos</span> <span class="o">=</span> <span class="n">ExtensionPoint</span><span class="p">(</span>
+        <span class="n">List</span><span class="p">(</span><span class="n">IHelpCode</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="n">HELP_DEMOS</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">        A help demo is a Python program that is run when it is selected from</span>
+<span class="s2">        the Help&gt;Demos submenu. It is defined by a preference node that</span>
+<span class="s2">        specifies a UI label and a filename for the demo entry point.</span>
+
+<span class="s2">        Each contribution to this extension point must be an instance of a</span>
+<span class="s2">        class that implements IHelpCode. The easiest way to do this is to</span>
+<span class="s2">        create an instance of  `apptools.help.help_plugin.api.HelpCode`.</span>
+
+<span class="s2">        So, to contribute a help demo:</span>
+
+<span class="s2">        1. Create a preferences file for your plugin if it doesn&#39;t already</span>
+<span class="s2">           have one. (Be sure to contribute your preferences file to the</span>
+<span class="s2">           `envisage.preferences` extension point.)</span>
+
+<span class="s2">        2. Define a unique &quot;node&quot; (section heading) in your preferences file</span>
+<span class="s2">           for each demo, and specify values for the &#39;label&#39; and &#39;filename&#39;</span>
+<span class="s2">           settings. (Note that the same preferences section can be used for</span>
+<span class="s2">           a help demo and a help example.)</span>
+
+<span class="s2">        3. For each demo, contribute a HelpDemo to this extension point,</span>
+<span class="s2">           and specify its *preferences_path* as the corresponding node</span>
+<span class="s2">           name from your preferences file.</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">help_examples</span> <span class="o">=</span> <span class="n">ExtensionPoint</span><span class="p">(</span>
+        <span class="n">List</span><span class="p">(</span><span class="n">IHelpCode</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="n">HELP_EXAMPLES</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">        A help example is a Python file that is opened for viewing when it is</span>
+<span class="s2">        selected from the Help&gt;Examples submenu. It is defined by a preference</span>
+<span class="s2">        node that specifies a UI label and a filename for the primary example</span>
+<span class="s2">        file.</span>
+
+<span class="s2">        Each contribution to this extension point must be an instance of a</span>
+<span class="s2">        class that implements IHelpCode. The easiest way to do this is to</span>
+<span class="s2">        create an instance of `apptools.help.help_plugin.api.HelpCode`.</span>
+
+<span class="s2">        So, to contribute a help example:</span>
+
+<span class="s2">        1. Create a preferences file for your plugin if it doesn&#39;t already</span>
+<span class="s2">           have one. (Be sure to contribute your preferences file to the</span>
+<span class="s2">           `envisage.preferences` extension point.)</span>
+
+<span class="s2">        2. Define a unique &quot;node&quot; (section heading) in your preferences file</span>
+<span class="s2">           for each example, and specify values for the &#39;label&#39; and &#39;filename&#39;</span>
+<span class="s2">           settings. (Note that the same preferences section can be used for</span>
+<span class="s2">           a help demo and a help example.)</span>
+
+<span class="s2">        3. For each example, contribute a HelpCode to this extension point,</span>
+<span class="s2">           and specify its *preferences_path* as the corresponding node</span>
+<span class="s2">           name from your preferences file.</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">help_downloads</span> <span class="o">=</span> <span class="n">ExtensionPoint</span><span class="p">(</span>
+        <span class="n">List</span><span class="p">(</span><span class="n">IHelpDoc</span><span class="p">),</span> <span class="nb">id</span><span class="o">=</span><span class="n">HELP_DOWNLOADS</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+
+<span class="s2">        A help download is a url that is opened in a browser for viewing when it</span>
+<span class="s2">        is selected from the Help&gt;Downloads submenu. It is defined by a</span>
+<span class="s2">        preference node that specifies a UI label and a url for the download.</span>
+
+<span class="s2">        Each contribution to this extension point must be an instance of a</span>
+<span class="s2">        class that implements IHelpDoc, and has the url trait set to True. The</span>
+<span class="s2">        easiest way to do this is to create an instance of</span>
+<span class="s2">        `apptools.help.help_plugin.api.HelpDoc`.</span>
+
+<span class="s2">        So, to contribute a help doc:</span>
+
+<span class="s2">        1. Create a preferences file for your plugin if it doesn&#39;t already</span>
+<span class="s2">           have one. (Be sure to contribute your preferences file to the</span>
+<span class="s2">           `envisage.preferences` extension point.)</span>
+
+<span class="s2">        2. Define a unique &quot;node&quot; (section heading) in your preferences file</span>
+<span class="s2">           for each url, and specify values for the &#39;label&#39; and &#39;filename&#39;</span>
+<span class="s2">           settings. Also set &#39;url&#39; to True.</span>
+
+<span class="s2">        3. For each document, contribute a HelpDoc to this extension point,</span>
+<span class="s2">           and specify its *preferences_path* as the corresponding node</span>
+<span class="s2">           name from your preferences file.</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># FIXME: Ideally, there should be an extension point to allow plugins to</span>
+    <span class="c1">#        offer editors to display examples (e.g., TextEditorPlugin or</span>
+    <span class="c1">#        RemoteEditorPlugin). For now, examples open in an external editor</span>
+    <span class="c1">#        launched with subprocess.Popen. The user can set the editor</span>
+    <span class="c1">#        command in the Examples preferences page.</span>
+
+
+    <span class="c1">###### Contributions to extension points made by this plugin ######</span>
+
+    <span class="n">help_action_sets</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">contributes_to</span><span class="o">=</span><span class="n">WORKBENCH_ACTION_SETS</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_help_action_sets_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a list containing an action set class whose **actions**</span>
+<span class="sd">            correspond to the help docs in the help_docs extension point.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">extension_point_mapping</span> <span class="o">=</span> <span class="p">{</span>
+                                <span class="n">DOCS_MENU</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">help_docs</span><span class="p">,</span>
+                                <span class="n">EXAMPLES_MENU</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">help_examples</span><span class="p">,</span>
+                                <span class="n">DEMOS_MENU</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">help_demos</span><span class="p">,</span>
+                                <span class="n">DOWNLOADS_MENU</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">help_downloads</span><span class="p">}</span>
+
+        <span class="c1"># Construct traits for the action set</span>
+        <span class="n">ns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;apptools.help.help_plugin.help_action_set&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Help Plugin ActionSet&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;groups&#39;</span><span class="p">:</span> <span class="p">[</span> <span class="n">Group</span><span class="p">(</span> <span class="nb">id</span><span class="o">=</span><span class="n">DOCS_GROUP</span><span class="p">,</span> <span class="n">before</span><span class="o">=</span><span class="s1">&#39;AboutGroup&#39;</span><span class="p">,</span>
+                                 <span class="n">path</span><span class="o">=</span><span class="n">HELP_MENU</span> <span class="p">)</span> <span class="p">]</span>
+              <span class="p">}</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="n">menu_name</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span> <span class="ow">in</span> <span class="n">extension_point_mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">menu</span> <span class="o">=</span> <span class="n">Menu</span><span class="p">(</span> <span class="n">name</span> <span class="o">=</span> <span class="n">menu_name</span><span class="p">,</span>
+                             <span class="n">class_name</span> <span class="o">=</span>
+                             <span class="n">PKG</span> <span class="o">+</span> <span class="s1">&#39;.help_submenu_manager:</span><span class="si">%s</span><span class="s1">MenuManager&#39;</span> <span class="o">%</span>
+                             <span class="n">menu_name</span> <span class="p">)</span>
+                <span class="k">if</span> <span class="n">menu_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">menus</span><span class="p">:</span>
+                    <span class="n">menu</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;MenuBar&#39;</span>
+                    <span class="n">menu</span><span class="o">.</span><span class="n">before</span> <span class="o">=</span> <span class="s1">&#39;Help&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">menu</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">HELP_MENU</span>
+                    <span class="n">menu</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">DOCS_GROUP</span>
+
+                <span class="c1"># Append the menu.</span>
+                <span class="n">ns</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;menus&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">menu</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="s1">&#39;SPLHelpActionSet&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">ActionSet</span><span class="p">,),</span> <span class="n">ns</span><span class="p">)]</span>
+
+    <span class="n">preferences</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">contributes_to</span><span class="o">=</span><span class="n">PREFERENCES</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_preferences_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;pkgfile://</span><span class="si">%s</span><span class="s1">/preferences.ini&#39;</span> <span class="o">%</span> <span class="n">PKG</span><span class="p">]</span>
+
+    <span class="n">preferences_pages</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">contributes_to</span><span class="o">=</span><span class="n">PREFERENCES_PAGES</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_preferences_pages_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">apptools.help.help_plugin.preferences_pages</span> <span class="k">import</span> \
+            <span class="n">DocumentsPreferencesPage</span><span class="p">,</span> <span class="n">DemosPreferencesPage</span><span class="p">,</span> \
+            <span class="n">ExamplesPreferencesPage</span><span class="p">,</span> <span class="n">HelpDocPreferencesPage</span><span class="p">,</span> \
+            <span class="n">HelpDemoPreferencesPage</span><span class="p">,</span> <span class="n">HelpExamplePreferencesPage</span>
+        <span class="n">pages</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">help_docs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">pages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DocumentsPreferencesPage</span><span class="p">)</span>
+            <span class="n">pages</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">[</span> <span class="nb">type</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">preferences_path</span> <span class="o">+</span> <span class="s1">&#39;PreferencesPage&#39;</span><span class="p">,</span>
+                              <span class="p">(</span><span class="n">HelpDocPreferencesPage</span><span class="p">,),</span>
+                              <span class="p">{</span><span class="s1">&#39;preferences_path&#39;</span><span class="p">:</span> <span class="n">doc</span><span class="o">.</span><span class="n">preferences_path</span><span class="p">},</span>
+                             <span class="p">)</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">help_docs</span>
+                <span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">help_demos</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">pages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">DemosPreferencesPage</span><span class="p">)</span>
+            <span class="n">pages</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">[</span> <span class="nb">type</span><span class="p">(</span><span class="n">demo</span><span class="o">.</span><span class="n">preferences_path</span> <span class="o">+</span> <span class="s1">&#39;PreferencesPage&#39;</span><span class="p">,</span>
+                              <span class="p">(</span><span class="n">HelpDemoPreferencesPage</span><span class="p">,),</span>
+                              <span class="p">{</span><span class="s1">&#39;preferences_path&#39;</span><span class="p">:</span> <span class="n">demo</span><span class="o">.</span><span class="n">preferences_path</span><span class="p">},</span>
+                             <span class="p">)</span> <span class="k">for</span> <span class="n">demo</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">help_demos</span>
+                <span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">help_examples</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">pages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ExamplesPreferencesPage</span><span class="p">)</span>
+            <span class="n">pages</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="p">[</span> <span class="nb">type</span><span class="p">(</span><span class="n">example</span><span class="o">.</span><span class="n">preferences_path</span> <span class="o">+</span> <span class="s1">&#39;PreferencesPage&#39;</span><span class="p">,</span>
+                              <span class="p">(</span><span class="n">HelpExamplePreferencesPage</span><span class="p">,),</span>
+                              <span class="p">{</span><span class="s1">&#39;preferences_path&#39;</span><span class="p">:</span> <span class="n">example</span><span class="o">.</span><span class="n">preferences_path</span><span class="p">},</span>
+                             <span class="p">)</span> <span class="k">for</span> <span class="n">example</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">help_examples</span>
+                <span class="p">])</span>
+        <span class="k">return</span> <span class="n">pages</span></div>
+
+    <span class="c1">#my_help_demos = List(contributes_to=HELP_DEMOS)</span>
+    <span class="c1">#def _my_help_demos_default(self):</span>
+    <span class="c1">#    return [HelpCode( preferences_path=PKG + &#39;.TraitsDemo&#39;),</span>
+    <span class="c1">#           ]</span>
+
+    <span class="c1">#my_help_examples = List(contributes_to=HELP_EXAMPLES)</span>
+    <span class="c1">#def _my_help_examples_default(self):</span>
+    <span class="c1">#    return [HelpCode( preferences_path=PKG + &#39;.AcmeLab&#39;),</span>
+    <span class="c1">#           ]</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

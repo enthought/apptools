@@ -1,0 +1,38 @@
+apptools.logger.agent package
+=============================
+
+Submodules
+----------
+
+apptools.logger.agent.attachments module
+----------------------------------------
+
+.. automodule:: apptools.logger.agent.attachments
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.logger.agent.quality\_agent\_mailer module
+---------------------------------------------------
+
+.. automodule:: apptools.logger.agent.quality_agent_mailer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.logger.agent.quality\_agent\_view module
+-------------------------------------------------
+
+.. automodule:: apptools.logger.agent.quality_agent_view
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.logger.agent
+    :members:
+    :undoc-members:
+    :show-inheritance:

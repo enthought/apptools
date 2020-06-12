@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.help.help_plugin.help_doc &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../../index.html" >
+    <link rel="up" title="Module code" href="../../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.help.help_plugin.help_doc</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; The help doc implementation.</span>
+
+<span class="sd">    :Copyright: 2008, Enthought Inc.</span>
+<span class="sd">    :License: BSD</span>
+<span class="sd">    :Author: Janet Swisher</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in AppTools/trunk/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Either</span><span class="p">,</span> <span class="n">File</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">provides</span><span class="p">,</span> <span class="n">Bool</span>
+
+<span class="kn">from</span> <span class="nn">apptools.preferences.api</span> <span class="k">import</span> <span class="n">PreferencesHelper</span>
+<span class="kn">from</span> <span class="nn">.i_help_doc</span> <span class="k">import</span> <span class="n">IHelpDoc</span>
+
+
+<div class="viewcode-block" id="HelpDoc"><a class="viewcode-back" href="../../../../api/apptools.help.help_plugin.html#apptools.help.help_plugin.help_doc.HelpDoc">[docs]</a><span class="nd">@provides</span><span class="p">(</span><span class="n">IHelpDoc</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">HelpDoc</span><span class="p">(</span><span class="n">PreferencesHelper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The implementation for help docs.</span>
+
+<span class="sd">    A help doc is defined by a UI label, a filename, and a viewer program.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="c1">#### IHelpDoc interface / Preferences ######################################</span>
+
+    <span class="c1"># NOTE: This class inherits preferences_path from PreferencesHelper.</span>
+
+    <span class="c1"># The UI label for the help doc, which appears in menus or dialogs.</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c1"># The path to the document, which can be full, or relative to the Python</span>
+    <span class="c1"># installation directory (sys.prefix).</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">File</span>
+
+    <span class="c1"># Is this a url?</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># The program to use to view the document. &#39;browser&#39; means the platform</span>
+    <span class="c1"># default web browser. Otherwise, it is a command to run, which may be</span>
+    <span class="c1"># in the program search path of the current environment, or an absolute</span>
+    <span class="c1"># path to a program.</span>
+    <span class="n">viewer</span> <span class="o">=</span> <span class="n">Either</span><span class="p">(</span><span class="s1">&#39;browser&#39;</span><span class="p">,</span> <span class="n">Str</span><span class="p">)</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

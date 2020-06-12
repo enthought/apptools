@@ -1,0 +1,118 @@
+apptools.type\_manager package
+==============================
+
+Submodules
+----------
+
+apptools.type\_manager.abstract\_adapter\_factory module
+--------------------------------------------------------
+
+.. automodule:: apptools.type_manager.abstract_adapter_factory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.type\_manager.abstract\_factory module
+-----------------------------------------------
+
+.. automodule:: apptools.type_manager.abstract_factory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.type\_manager.abstract\_type\_system module
+----------------------------------------------------
+
+.. automodule:: apptools.type_manager.abstract_type_system
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.type\_manager.adaptable module
+---------------------------------------
+
+.. automodule:: apptools.type_manager.adaptable
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.type\_manager.adapter module
+-------------------------------------
+
+.. automodule:: apptools.type_manager.adapter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.type\_manager.adapter\_factory module
+----------------------------------------------
+
+.. automodule:: apptools.type_manager.adapter_factory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.type\_manager.adapter\_manager module
+----------------------------------------------
+
+.. automodule:: apptools.type_manager.adapter_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.type\_manager.api module
+---------------------------------
+
+.. automodule:: apptools.type_manager.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.type\_manager.factory module
+-------------------------------------
+
+.. automodule:: apptools.type_manager.factory
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.type\_manager.hook module
+----------------------------------
+
+.. automodule:: apptools.type_manager.hook
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.type\_manager.python\_type\_system module
+--------------------------------------------------
+
+.. automodule:: apptools.type_manager.python_type_system
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.type\_manager.type\_manager module
+-------------------------------------------
+
+.. automodule:: apptools.type_manager.type_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.type\_manager.util module
+----------------------------------
+
+.. automodule:: apptools.type_manager.util
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.type_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:

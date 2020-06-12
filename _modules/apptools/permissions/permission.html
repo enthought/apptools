@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.permissions.permission &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.permissions.permission</h1><div class="highlight"><pre>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2008, Riverbank Computing Limited</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Riverbank Computing Limited</span>
+<span class="c1"># Description: &lt;Enthought permissions package component&gt;</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Property</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Unicode</span>
+
+<span class="c1"># Locals imports.</span>
+<span class="kn">from</span> <span class="nn">.package_globals</span> <span class="k">import</span> <span class="n">get_permissions_manager</span>
+
+
+<div class="viewcode-block" id="Permission"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.permission.Permission">[docs]</a><span class="k">class</span> <span class="nc">Permission</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A permission is the link between an application action and the current</span>
+<span class="sd">    user - if the user has a permission attached to the action then the user is</span>
+<span class="sd">    allowed to perform that action.&quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;Permission&#39; interface ###############################################</span>
+
+    <span class="c1"># The id of the permission.  By convention a dotted format is used for the</span>
+    <span class="c1"># id with the id of the application being the first part.</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c1"># A user friendly description of the permission.</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">Unicode</span>
+
+    <span class="c1"># Set if the current user has this permission.  This is typically used with</span>
+    <span class="c1"># the enabled_when and visible_when traits of a TraitsUI Item object when</span>
+    <span class="c1"># the permission instance has been placed in the TraitsUI context.</span>
+    <span class="n">granted</span> <span class="o">=</span> <span class="n">Property</span>
+
+    <span class="c1"># Set if the permission should be granted automatically when bootstrapping.</span>
+    <span class="c1"># This is normally only ever set for permissions related to user management</span>
+    <span class="c1"># and permissions.  The user manager determines exactly what is meant by</span>
+    <span class="c1"># &quot;bootstrapping&quot; but it is usually when it determines that no user or</span>
+    <span class="c1"># permissions information has been defined.</span>
+    <span class="n">bootstrap</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Set if the permission has been defined by application code rather than as</span>
+    <span class="c1"># a result of loading the policy database.</span>
+    <span class="n">application_defined</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;object&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialise the object.&quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">Permission</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">traits</span><span class="p">)</span>
+
+        <span class="c1"># Register the permission.</span>
+        <span class="n">get_permissions_manager</span><span class="p">()</span><span class="o">.</span><span class="n">policy_manager</span><span class="o">.</span><span class="n">register_permission</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a user friendly representation.&quot;&quot;&quot;</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span>
+
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Trait handlers.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_get_granted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check the user has this permission.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">get_permissions_manager</span><span class="p">()</span><span class="o">.</span><span class="n">check_permissions</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ManagePolicyPermission"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.permission.ManagePolicyPermission">[docs]</a><span class="k">class</span> <span class="nc">ManagePolicyPermission</span><span class="p">(</span><span class="n">Permission</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The standard permission for managing permissions policies.&quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;Permission&#39; interface ###############################################</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s1">&#39;ets.permissions.manage_policy&#39;</span><span class="p">)</span>
+
+    <span class="n">description</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;Manage permissions policy&quot;</span><span class="p">)</span>
+
+    <span class="n">bootstrap</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ManageUsersPermission"><a class="viewcode-back" href="../../../api/apptools.permissions.html#apptools.permissions.permission.ManageUsersPermission">[docs]</a><span class="k">class</span> <span class="nc">ManageUsersPermission</span><span class="p">(</span><span class="n">Permission</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The standard permission for managing permissions users.&quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;Permission&#39; interface ###############################################</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s1">&#39;ets.permissions.manage_users&#39;</span><span class="p">)</span>
+
+    <span class="n">description</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;Manage users&quot;</span><span class="p">)</span>
+
+    <span class="n">bootstrap</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.type_manager.type_manager &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.type_manager.type_manager</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; A type manager. &quot;&quot;&quot;</span>
+
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Property</span><span class="p">,</span> <span class="n">Str</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">.abstract_type_system</span> <span class="k">import</span> <span class="n">AbstractTypeSystem</span>
+<span class="kn">from</span> <span class="nn">.adapter_manager</span> <span class="k">import</span> <span class="n">AdapterManager</span>
+<span class="kn">from</span> <span class="nn">.factory</span> <span class="k">import</span> <span class="n">Factory</span>
+<span class="kn">from</span> <span class="nn">.hook</span> <span class="k">import</span> <span class="n">add_pre</span><span class="p">,</span> <span class="n">add_post</span><span class="p">,</span> <span class="n">remove_pre</span><span class="p">,</span> <span class="n">remove_post</span>
+<span class="kn">from</span> <span class="nn">.python_type_system</span> <span class="k">import</span> <span class="n">PythonTypeSystem</span>
+
+
+<div class="viewcode-block" id="TypeManager"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.type_manager.TypeManager">[docs]</a><span class="k">class</span> <span class="nc">TypeManager</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A type manager.</span>
+
+<span class="sd">    The type manager allows for objects to be created/adapted to a particular</span>
+<span class="sd">    type.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;TypeManager&#39; interface ##############################################</span>
+
+    <span class="c1"># The adapter manager looks after errr, all adapters.</span>
+    <span class="n">adapter_manager</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Instance</span><span class="p">(</span><span class="n">AdapterManager</span><span class="p">))</span>
+
+    <span class="c1"># The type manager&#39;s globally unique identifier (only required if you have</span>
+    <span class="c1"># more than one type manager of course!).</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c1"># The parent type manager.</span>
+    <span class="c1">#</span>
+    <span class="c1"># By default this is None, but you can use it to set up a hierarchy of</span>
+    <span class="c1"># type managers. If a type manager fails to adapt or create an object of</span>
+    <span class="c1"># some target class then it will give its parent a chance to do so.</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="s1">&#39;TypeManager&#39;</span><span class="p">)</span>
+
+    <span class="c1"># The type system used by the manager (it determines &#39;is_a&#39; relationships</span>
+    <span class="c1"># and type MROs etc).</span>
+    <span class="c1">#</span>
+    <span class="c1"># By default we use standard Python semantics.</span>
+    <span class="n">type_system</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">AbstractTypeSystem</span><span class="p">,</span> <span class="n">PythonTypeSystem</span><span class="p">())</span>
+
+    <span class="c1">#### Private interface ####################################################</span>
+
+    <span class="c1"># The adapter manager looks after errr, all adapters.</span>
+    <span class="n">_adapter_manager</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">AdapterManager</span><span class="p">)</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;TypeManager&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="c1">#### Properties ###########################################################</span>
+
+    <span class="k">def</span> <span class="nf">_get_adapter_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the adapter manager. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapter_manager</span>
+
+    <span class="c1">#### Methods ##############################################################</span>
+
+<div class="viewcode-block" id="TypeManager.object_as"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.type_manager.TypeManager.object_as">[docs]</a>    <span class="k">def</span> <span class="nf">object_as</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">target_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adapts or creates an object of the target class.</span>
+
+<span class="sd">        Returns None if no appropriate adapter or factory is available.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the object is already an instance of the target class then we</span>
+        <span class="c1"># simply return it.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_system</span><span class="o">.</span><span class="n">is_a</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">target_class</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">obj</span>
+
+        <span class="c1"># If the object is a factory that creates instances of the target class</span>
+        <span class="c1"># then ask it to produce one.</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_factory_for</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">target_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">target_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+        <span class="c1"># Otherwise, see if the object can be adapted to the target class.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapter_manager</span><span class="o">.</span><span class="n">adapt</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">target_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+        <span class="c1"># If this type manager couldn&#39;t do the job, then give its parent a go!</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">object_as</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">target_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    <span class="c1"># Adapters.</span>
+<div class="viewcode-block" id="TypeManager.register_adapters"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.type_manager.TypeManager.register_adapters">[docs]</a>    <span class="k">def</span> <span class="nf">register_adapters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">adaptee_class</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Registers an adapter factory.</span>
+
+<span class="sd">        &#39;adaptee_class&#39; can be either a class or the name of a class.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_adapter_manager</span><span class="o">.</span><span class="n">register_adapters</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">adaptee_class</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="TypeManager.unregister_adapters"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.type_manager.TypeManager.unregister_adapters">[docs]</a>    <span class="k">def</span> <span class="nf">unregister_adapters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Unregisters an adapter factory. &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_adapter_manager</span><span class="o">.</span><span class="n">unregister_adapters</span><span class="p">(</span><span class="n">factory</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="TypeManager.register_instance_adapters"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.type_manager.TypeManager.register_instance_adapters">[docs]</a>    <span class="k">def</span> <span class="nf">register_instance_adapters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Registers an adapter factory for an individual instance.</span>
+
+<span class="sd">        A factory can be in exactly one manager (as it uses the manager&#39;s type</span>
+<span class="sd">        system).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_adapter_manager</span><span class="o">.</span><span class="n">register_instance_adapters</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="TypeManager.unregister_instance_adapters"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.type_manager.TypeManager.unregister_instance_adapters">[docs]</a>    <span class="k">def</span> <span class="nf">unregister_instance_adapters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Unregisters an adapter factory for an individual instance.</span>
+
+<span class="sd">        A factory can be in exactly one manager (as it uses the manager&#39;s type</span>
+<span class="sd">        system).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_adapter_manager</span><span class="o">.</span><span class="n">unregister_instance_adapters</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="TypeManager.register_type_adapters"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.type_manager.TypeManager.register_type_adapters">[docs]</a>    <span class="k">def</span> <span class="nf">register_type_adapters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">,</span> <span class="n">adaptee_class</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Registers an adapter factory.</span>
+
+<span class="sd">        &#39;adaptee_class&#39; can be either a class or the name of a class.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_adapter_manager</span><span class="o">.</span><span class="n">register_type_adapters</span><span class="p">(</span><span class="n">factory</span><span class="p">,</span> <span class="n">adaptee_class</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="TypeManager.unregister_type_adapters"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.type_manager.TypeManager.unregister_type_adapters">[docs]</a>    <span class="k">def</span> <span class="nf">unregister_type_adapters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">factory</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Unregisters an adapter factory. &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_adapter_manager</span><span class="o">.</span><span class="n">unregister_type_adapters</span><span class="p">(</span><span class="n">factory</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+    <span class="c1"># Categories.</span>
+    <span class="c1">#</span>
+    <span class="c1"># Currently, there is no technical reason why we have this convenience</span>
+    <span class="c1"># method to add categories. However, it may well turn out to be useful to</span>
+    <span class="c1"># track all categories added via the type manager.</span>
+<div class="viewcode-block" id="TypeManager.add_category"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.type_manager.TypeManager.add_category">[docs]</a>    <span class="k">def</span> <span class="nf">add_category</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">klass</span><span class="p">,</span> <span class="n">category_class</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adds a category to a class. &quot;&quot;&quot;</span>
+
+        <span class="n">klass</span><span class="o">.</span><span class="n">add_trait_category</span><span class="p">(</span><span class="n">category_class</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+    <span class="c1"># Hooks.</span>
+    <span class="c1">#</span>
+    <span class="c1"># Currently, there is no technical reason why we have these convenience</span>
+    <span class="c1"># methods to add and remove hooks. However, it may well turn out to be</span>
+    <span class="c1"># useful to track all hooks added via the type manager.</span>
+<div class="viewcode-block" id="TypeManager.add_pre"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.type_manager.TypeManager.add_pre">[docs]</a>    <span class="k">def</span> <span class="nf">add_pre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adds a pre-hook to method &#39;method_name&#39; on class &#39;klass. &quot;&quot;&quot;</span>
+
+        <span class="n">add_pre</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="TypeManager.add_post"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.type_manager.TypeManager.add_post">[docs]</a>    <span class="k">def</span> <span class="nf">add_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adds a post-hook to method &#39;method_name&#39; on class &#39;klass. &quot;&quot;&quot;</span>
+
+        <span class="n">add_post</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="TypeManager.remove_pre"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.type_manager.TypeManager.remove_pre">[docs]</a>    <span class="k">def</span> <span class="nf">remove_pre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Removes a pre-hook to method &#39;method_name&#39; on class &#39;klass. &quot;&quot;&quot;</span>
+
+        <span class="n">remove_pre</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="TypeManager.remove_post"><a class="viewcode-back" href="../../../api/apptools.type_manager.html#apptools.type_manager.type_manager.TypeManager.remove_post">[docs]</a>    <span class="k">def</span> <span class="nf">remove_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Removes a post-hook to method &#39;method_name&#39; on class &#39;klass. &quot;&quot;&quot;</span>
+
+        <span class="n">remove_post</span><span class="p">(</span><span class="n">klass</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">callable</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Private interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="c1">#### Initializers #########################################################</span>
+
+    <span class="k">def</span> <span class="nf">__adapter_manager_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initializes the &#39;_adapter_manager&#39; trait. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">AdapterManager</span><span class="p">(</span><span class="n">type_system</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">type_system</span><span class="p">)</span>
+
+    <span class="c1">#### Methods ##############################################################</span>
+
+    <span class="k">def</span> <span class="nf">_is_factory_for</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">target_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns True iff the object is a factory for the target class. &quot;&quot;&quot;</span>
+
+        <span class="n">is_factory_for</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_system</span><span class="o">.</span><span class="n">is_a</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Factory</span><span class="p">)</span> \
+                         <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">can_create</span><span class="p">(</span><span class="n">target_class</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">is_factory_for</span></div>
+
+<span class="c1">#### EOF ######################################################################</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

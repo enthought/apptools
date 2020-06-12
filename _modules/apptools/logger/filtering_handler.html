@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.logger.filtering_handler &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.logger.filtering_handler</h1><div class="highlight"><pre>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2005, Enthought, Inc.</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Enthought, Inc.</span>
+<span class="c1"># Description: &lt;Enthought pyface package component&gt;</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+<span class="sd">&quot;&quot;&quot; A log handler that allows filtering of messages by origin. &quot;&quot;&quot;</span>
+
+
+<span class="c1"># Standard library imports.</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">import</span> <span class="nn">logging</span><span class="o">,</span> <span class="nn">inspect</span><span class="o">,</span> <span class="nn">os</span>
+
+<span class="c1"># Local imports.</span>
+<span class="c1">#</span>
+<span class="c1"># fixme: This module was just copied over from &#39;envisage.core&#39; (so</span>
+<span class="c1"># that we don&#39;t rely on Envisage here!). Where should this module go?</span>
+<span class="kn">from</span> <span class="nn">.util</span> <span class="k">import</span> <span class="n">get_module_name</span>
+
+
+<div class="viewcode-block" id="FilteringHandler"><a class="viewcode-back" href="../../../api/apptools.logger.html#apptools.logger.filtering_handler.FilteringHandler">[docs]</a><span class="k">class</span> <span class="nc">FilteringHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A log handler that allows filtering of messages by origin.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    ::</span>
+
+<span class="sd">        from apptools.logger.api import DebugHandler, logger</span>
+
+<span class="sd">        handler = FilteringHandler(</span>
+<span class="sd">            include = {</span>
+<span class="sd">                &#39;envisage.core&#39; : True</span>
+<span class="sd">            },</span>
+
+<span class="sd">            exclude = {</span>
+<span class="sd">                &#39;envisage.core.application&#39; : False</span>
+<span class="sd">            }</span>
+<span class="sd">        )</span>
+
+<span class="sd">        logger.addHandler(handler)</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+
+<span class="sd">    The boolean value specified for each name in the include and exclude</span>
+<span class="sd">    dictionaries indicates whether or not the include or exclude should pertain</span>
+<span class="sd">    to any sub-packages and modules.</span>
+
+<span class="sd">    The above example includes all log messages from anything contained in, or</span>
+<span class="sd">    under the &#39;envisage.core&#39; package, EXCEPT for any log messages</span>
+<span class="sd">    from the &#39;envisage.core.application&#39; module.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;object&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates a new handler. &quot;&quot;&quot;</span>
+
+        <span class="c1"># Base class constructor.</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># Packages or modules to include.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include</span> <span class="o">=</span> <span class="n">include</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">include</span> <span class="ow">or</span> <span class="p">{}</span>
+
+        <span class="c1"># Packages or modules to exclude.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exclude</span> <span class="o">=</span> <span class="n">exclude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">exclude</span> <span class="ow">or</span> <span class="p">{}</span>
+
+        <span class="k">return</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;Handler&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+<div class="viewcode-block" id="FilteringHandler.emit"><a class="viewcode-back" href="../../../api/apptools.logger.html#apptools.logger.filtering_handler.FilteringHandler.emit">[docs]</a>    <span class="k">def</span> <span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Emits a log record. &quot;&quot;&quot;</span>
+
+        <span class="c1"># Get the name of the module that the logger was called from.</span>
+        <span class="n">module_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_module_name</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">include</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_include</span><span class="p">(</span><span class="n">module_name</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exclude</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_exclude</span><span class="p">(</span><span class="n">module_name</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">filtered_emit</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;Handler&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+<div class="viewcode-block" id="FilteringHandler.filtered_emit"><a class="viewcode-back" href="../../../api/apptools.logger.html#apptools.logger.filtering_handler.FilteringHandler.filtered_emit">[docs]</a>    <span class="k">def</span> <span class="nf">filtered_emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Emits a log record if it has not been filtered. &quot;&quot;&quot;</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">getMessage</span><span class="p">())</span>
+
+        <span class="k">return</span></div>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Private interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_get_module_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the module that the logger was actually called from. &quot;&quot;&quot;</span>
+
+        <span class="c1"># fixem: Ahem.... what can I say... this gets us to the actual caller!</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span>
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_back</span><span class="o">.</span><span class="n">f_back</span><span class="o">.</span><span class="n">f_back</span><span class="o">.</span><span class="n">f_back</span><span class="o">.</span><span class="n">f_back</span><span class="o">.</span><span class="n">f_back</span><span class="o">.</span><span class="n">f_back</span>
+
+        <span class="c1"># This returns a tuple containing the last 5 elements of the frame</span>
+        <span class="c1"># record which are:-</span>
+        <span class="c1">#</span>
+        <span class="c1"># - the filename</span>
+        <span class="c1"># - the line number</span>
+        <span class="c1"># - the function name</span>
+        <span class="c1"># - the list of lines of context from the source code</span>
+        <span class="c1"># - the index of the current line within that list</span>
+        <span class="n">filename</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">funcname</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getframeinfo</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+
+        <span class="c1"># The plugin definition&#39;s location is the directory containing the</span>
+        <span class="c1"># module that it is defined in.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="c1"># We can&#39;t use &#39;inspect.getmodulename&#39; here as it gets confused because</span>
+        <span class="c1"># of our import hook in Envisage 8^(</span>
+        <span class="c1">#</span>
+        <span class="c1"># e.g. for the core plugin definition:-</span>
+        <span class="c1">#</span>
+        <span class="c1"># using inspect -&gt; &#39;core_plugin_definition&#39;</span>
+        <span class="c1"># using ours    -&gt; &#39;envisage.core.core_plugin_definition&#39;</span>
+        <span class="k">return</span> <span class="n">get_module_name</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_include</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Is the module name in the include set? &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">item</span><span class="p">,</span> <span class="n">include_children</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">include</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="n">module_name</span><span class="p">:</span>
+                <span class="n">include</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+
+            <span class="k">elif</span> <span class="n">include_children</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_child_of</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
+                <span class="n">include</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">include</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="n">include</span>
+
+    <span class="k">def</span> <span class="nf">_exclude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Is the module name in the exclude set? &quot;&quot;&quot;</span>
+
+        <span class="k">for</span> <span class="n">item</span><span class="p">,</span> <span class="n">exclude_children</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exclude</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">item</span> <span class="o">==</span> <span class="n">module_name</span><span class="p">:</span>
+                <span class="n">exclude</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+
+            <span class="k">elif</span> <span class="n">exclude_children</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_child_of</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
+                <span class="n">exclude</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">exclude</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="n">exclude</span>
+
+    <span class="k">def</span> <span class="nf">_is_child_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Is &#39;y&#39; a child symbol of &#39;x&#39;?</span>
+
+<span class="sd">        e.g.</span>
+
+<span class="sd">        &#39;foo.bar.baz&#39; (y) is a child of &#39;foo.bar&#39; (x)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="n">x_atoms</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+            <span class="n">y_atoms</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+
+            <span class="n">is_child_of</span> <span class="o">=</span> <span class="n">y_atoms</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">x_atoms</span><span class="p">)]</span> <span class="o">==</span> <span class="n">x_atoms</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">is_child_of</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="n">is_child_of</span></div>
+
+<span class="c1">#### EOF ######################################################################</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.template.impl.any_context_data_name_item &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../../index.html" >
+    <link rel="up" title="Module code" href="../../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.template.impl.any_context_data_name_item</h1><div class="highlight"><pre>
+<span></span><span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  An abstract base class implementation of the ITemplateDataNameItem interface</span>
+<span class="c1">#  that looks for specified sub-contexts in its input context and if one match</span>
+<span class="c1">#  is found, outputs that context; otherwise if more than one match is found it</span>
+<span class="c1">#  outputs a context containing all matching sub-contexts found.</span>
+<span class="c1">#</span>
+<span class="c1">#  Written by: David C. Morrill</span>
+<span class="c1">#</span>
+<span class="c1">#  Date: 07/29/2007</span>
+<span class="c1">#</span>
+<span class="c1">#  (c) Copyright 2007 by Enthought, Inc.</span>
+<span class="c1">#</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot; An abstract base class implementation of the ITemplateDataNameItem interface</span>
+<span class="sd">    that looks for specified sub-contexts in its input context and if one match</span>
+<span class="sd">    is found, outputs that context; otherwise if more than one match is found it</span>
+<span class="sd">    outputs a context containing all matching sub-contexts found.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Imports:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<span class="kn">from</span> <span class="nn">traits.api</span> \
+    <span class="kn">import</span> <span class="nn">HasPrivateTraits</span><span class="o">,</span> <span class="nn">Instance</span><span class="o">,</span> <span class="nn">Property</span><span class="o">,</span> <span class="nn">provides</span><span class="o">,</span> <span class="nn">on_trait_change</span>
+
+<span class="kn">from</span> <span class="nn">apptools.template.itemplate_data_context</span> \
+    <span class="kn">import</span> <span class="nn">ITemplateDataContext</span>
+
+<span class="kn">from</span> <span class="nn">apptools.template.itemplate_data_name_item</span> \
+    <span class="kn">import</span> <span class="nn">ITemplateDataNameItem</span>
+
+<span class="kn">from</span> <span class="nn">apptools.template.template_impl</span> \
+    <span class="kn">import</span> <span class="nn">Template</span>
+
+<span class="kn">from</span> <span class="nn">.template_data_context</span> \
+    <span class="kn">import</span> <span class="nn">TemplateDataContext</span>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;AnyContextDataNameItem&#39; class:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="AnyContextDataNameItem"><a class="viewcode-back" href="../../../../api/apptools.template.impl.html#apptools.template.impl.any_context_data_name_item.AnyContextDataNameItem">[docs]</a><span class="nd">@provides</span><span class="p">(</span><span class="n">ITemplateDataNameItem</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">AnyContextDataNameItem</span> <span class="p">(</span> <span class="n">Template</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; An abstract base class implementation of the ITemplateDataNameItem</span>
+<span class="sd">        interface that looks for specified sub-contexts in its input context</span>
+<span class="sd">        and if one match is found, outputs that context; otherwise if more than</span>
+<span class="sd">        one match is found it outputs a context containing all matching</span>
+<span class="sd">        sub-contexts found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#-- &#39;ITemplateDataNameItem&#39; Interface Implementation -----------------------</span>
+
+    <span class="c1"># The data context which this data name item should match against:</span>
+    <span class="n">input_data_context</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span> <span class="n">ITemplateDataContext</span> <span class="p">)</span>
+
+    <span class="c1"># The data context containing the data values and/or contexts this data</span>
+    <span class="c1"># name item matches:</span>
+    <span class="n">output_data_context</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span> <span class="n">ITemplateDataContext</span> <span class="p">)</span>
+
+    <span class="c1"># The ITemplateChoice instance representing the current settings of the</span>
+    <span class="c1"># data name item. This value must be read/write, and must be overridden by</span>
+    <span class="c1"># sublasses.</span>
+    <span class="n">data_name_item_choice</span> <span class="o">=</span> <span class="n">Property</span>
+
+    <span class="c1"># The alternative choices the user has for the data name item settings for</span>
+    <span class="c1"># the current input data context. The list may be empty, in which case the</span>
+    <span class="c1"># user cannot change the settings of the data name item. This value can be</span>
+    <span class="c1"># read only, and must be overridden by subclasses.</span>
+    <span class="n">data_name_item_choices</span> <span class="o">=</span> <span class="n">Property</span>
+
+    <span class="c1">#-- Private Traits ---------------------------------------------------------</span>
+
+    <span class="c1"># The current input data context:</span>
+    <span class="n">current_input_data_context</span> <span class="o">=</span> <span class="n">Property</span>
+
+    <span class="c1">#-- Partially Abstract Methods (Can be overridden in subclasses) -----------</span>
+
+<div class="viewcode-block" id="AnyContextDataNameItem.filter"><a class="viewcode-back" href="../../../../api/apptools.template.impl.html#apptools.template.impl.any_context_data_name_item.AnyContextDataNameItem.filter">[docs]</a>    <span class="k">def</span> <span class="nf">filter</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">context</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns **True** if the specified *context* called *name* should be</span>
+<span class="sd">            included in the output context; and **False** otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+    <span class="c1">#-- Property Implementations -----------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_get_data_name_item_choice</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">_set_data_name_item_choice</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">value</span> <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">_get_data_name_item_choices</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">_get_current_input_data_context</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_data_context</span>
+
+    <span class="c1">#-- Trait Event Handlers ---------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_input_data_context_changed</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Handles the &#39;input_data_context&#39; trait being changed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs_changed</span><span class="p">()</span>
+
+    <span class="c1">#-- Private Methods --------------------------------------------------------</span>
+
+<div class="viewcode-block" id="AnyContextDataNameItem.inputs_changed"><a class="viewcode-back" href="../../../../api/apptools.template.impl.html#apptools.template.impl.any_context_data_name_item.AnyContextDataNameItem.inputs_changed">[docs]</a>    <span class="k">def</span> <span class="nf">inputs_changed</span> <span class="p">(</span> <span class="bp">self</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Handles any of the input values being changed. May be called by</span>
+<span class="sd">            subclasses.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">output_context</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">input_context</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_data_context</span>
+        <span class="k">if</span> <span class="n">input_context</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">contexts</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="c1"># Process each name/context in the input data contexts, and only add</span>
+            <span class="c1"># those that match the subclass&#39;s filter to the output context:</span>
+            <span class="nb">filter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter</span>
+            <span class="n">gdc</span>    <span class="o">=</span> <span class="n">input_context</span><span class="o">.</span><span class="n">get_data_context</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">input_context</span><span class="o">.</span><span class="n">data_contexts</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">filter</span><span class="p">(</span> <span class="n">name</span><span class="p">,</span> <span class="n">gdc</span><span class="p">(</span> <span class="n">name</span> <span class="p">)</span> <span class="p">):</span>
+                    <span class="n">contexts</span><span class="p">[</span> <span class="n">name</span> <span class="p">]</span> <span class="o">=</span> <span class="n">context</span>
+
+            <span class="c1"># If the result set is not empty, create an output context for it:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span> <span class="n">contexts</span> <span class="p">)</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">output_context</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">output_context</span> <span class="o">=</span> <span class="n">TemplateDataContext</span><span class="p">(</span>
+                    <span class="n">data_context_path</span> <span class="o">=</span> <span class="n">input_context</span><span class="o">.</span><span class="n">data_context_path</span><span class="p">,</span>
+                    <span class="n">data_context_name</span> <span class="o">=</span> <span class="n">input_context</span><span class="o">.</span><span class="n">data_context_name</span><span class="p">,</span>
+                    <span class="n">contexts</span>          <span class="o">=</span> <span class="n">contexts</span> <span class="p">)</span>
+
+        <span class="c1"># Set the new output context:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_data_context</span> <span class="o">=</span> <span class="n">output_context</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

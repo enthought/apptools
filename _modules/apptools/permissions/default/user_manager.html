@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.permissions.default.user_manager &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../../index.html" >
+    <link rel="up" title="Module code" href="../../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.permissions.default.user_manager</h1><div class="highlight"><pre>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2008, Riverbank Computing Limited</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Riverbank Computing Limited</span>
+<span class="c1"># Description: &lt;Enthought permissions package component&gt;</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">pyface.action.api</span> <span class="k">import</span> <span class="n">Action</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">Event</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">provides</span><span class="p">,</span> \
+        <span class="n">Instance</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Unicode</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">apptools.permissions.i_user</span> <span class="k">import</span> <span class="n">IUser</span>
+<span class="kn">from</span> <span class="nn">apptools.permissions.i_user_manager</span> <span class="k">import</span> <span class="n">IUserManager</span>
+<span class="kn">from</span> <span class="nn">apptools.permissions.package_globals</span> <span class="k">import</span> <span class="n">get_permissions_manager</span>
+<span class="kn">from</span> <span class="nn">apptools.permissions.permission</span> <span class="k">import</span> <span class="n">ManageUsersPermission</span>
+<span class="kn">from</span> <span class="nn">.i_user_database</span> <span class="k">import</span> <span class="n">IUserDatabase</span>
+
+
+<div class="viewcode-block" id="UserManager"><a class="viewcode-back" href="../../../../api/apptools.permissions.default.html#apptools.permissions.default.user_manager.UserManager">[docs]</a><span class="nd">@provides</span><span class="p">(</span><span class="n">IUserManager</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UserManager</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The default user manager implementation.&quot;&quot;&quot;</span>
+
+
+
+    <span class="c1">#### &#39;IUserManager&#39; interface #############################################</span>
+
+    <span class="n">management_actions</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Instance</span><span class="p">(</span><span class="n">Action</span><span class="p">))</span>
+
+    <span class="n">user</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">IUser</span><span class="p">)</span>
+
+    <span class="n">user_actions</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Instance</span><span class="p">(</span><span class="n">Action</span><span class="p">))</span>
+
+    <span class="n">user_authenticated</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span><span class="n">IUser</span><span class="p">)</span>
+
+    <span class="c1">#### &#39;UserManager&#39; interface ##############################################</span>
+
+    <span class="c1"># The user database.</span>
+    <span class="n">user_db</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">IUserDatabase</span><span class="p">)</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;IUserManager&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+<div class="viewcode-block" id="UserManager.bootstrapping"><a class="viewcode-back" href="../../../../api/apptools.permissions.default.html#apptools.permissions.default.user_manager.UserManager.bootstrapping">[docs]</a>    <span class="k">def</span> <span class="nf">bootstrapping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if we are bootstrapping, ie. no users have been defined.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_db</span><span class="o">.</span><span class="n">bootstrapping</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="UserManager.authenticate_user"><a class="viewcode-back" href="../../../../api/apptools.permissions.default.html#apptools.permissions.default.user_manager.UserManager.authenticate_user">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Authenticate the user.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_db</span><span class="o">.</span><span class="n">authenticate_user</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">authenticated</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1"># Tell the policy manager before everybody else.</span>
+            <span class="n">get_permissions_manager</span><span class="p">()</span><span class="o">.</span><span class="n">policy_manager</span><span class="o">.</span><span class="n">load_policy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_authenticated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span></div>
+
+<div class="viewcode-block" id="UserManager.unauthenticate_user"><a class="viewcode-back" href="../../../../api/apptools.permissions.default.html#apptools.permissions.default.user_manager.UserManager.unauthenticate_user">[docs]</a>    <span class="k">def</span> <span class="nf">unauthenticate_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Unauthenticate the user.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">authenticated</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_db</span><span class="o">.</span><span class="n">unauthenticate_user</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">authenticated</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="c1"># Tell the policy manager before everybody else.</span>
+            <span class="n">get_permissions_manager</span><span class="p">()</span><span class="o">.</span><span class="n">policy_manager</span><span class="o">.</span><span class="n">load_policy</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">user_authenticated</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="UserManager.matching_user"><a class="viewcode-back" href="../../../../api/apptools.permissions.default.html#apptools.permissions.default.user_manager.UserManager.matching_user">[docs]</a>    <span class="k">def</span> <span class="nf">matching_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Select a user.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_db</span><span class="o">.</span><span class="n">matching_user</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Trait handlers.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_management_actions_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the list of management actions.&quot;&quot;&quot;</span>
+
+        <span class="kn">from</span> <span class="nn">apptools.permissions.secure_proxy</span> <span class="k">import</span> <span class="n">SecureProxy</span>
+
+        <span class="n">user_db</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_db</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">perm</span> <span class="o">=</span> <span class="n">ManageUsersPermission</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">user_db</span><span class="o">.</span><span class="n">can_add_user</span><span class="p">:</span>
+            <span class="n">act</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;&amp;Add a User...&quot;</span><span class="p">,</span> <span class="n">on_perform</span><span class="o">=</span><span class="n">user_db</span><span class="o">.</span><span class="n">add_user</span><span class="p">)</span>
+            <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SecureProxy</span><span class="p">(</span><span class="n">act</span><span class="p">,</span> <span class="n">permissions</span><span class="o">=</span><span class="p">[</span><span class="n">perm</span><span class="p">],</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">user_db</span><span class="o">.</span><span class="n">can_modify_user</span><span class="p">:</span>
+            <span class="n">act</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;&amp;Modify a User...&quot;</span><span class="p">,</span>
+                    <span class="n">on_perform</span><span class="o">=</span><span class="n">user_db</span><span class="o">.</span><span class="n">modify_user</span><span class="p">)</span>
+            <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SecureProxy</span><span class="p">(</span><span class="n">act</span><span class="p">,</span> <span class="n">permissions</span><span class="o">=</span><span class="p">[</span><span class="n">perm</span><span class="p">],</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">user_db</span><span class="o">.</span><span class="n">can_delete_user</span><span class="p">:</span>
+            <span class="n">act</span> <span class="o">=</span> <span class="n">Action</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;&amp;Delete a User...&quot;</span><span class="p">,</span>
+                    <span class="n">on_perform</span><span class="o">=</span><span class="n">user_db</span><span class="o">.</span><span class="n">delete_user</span><span class="p">)</span>
+            <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SecureProxy</span><span class="p">(</span><span class="n">act</span><span class="p">,</span> <span class="n">permissions</span><span class="o">=</span><span class="p">[</span><span class="n">perm</span><span class="p">],</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">actions</span>
+
+    <span class="k">def</span> <span class="nf">_user_actions_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the list of user actions.&quot;&quot;&quot;</span>
+
+        <span class="n">actions</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_db</span><span class="o">.</span><span class="n">can_change_password</span><span class="p">:</span>
+            <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_ChangePasswordAction</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">actions</span>
+
+    <span class="k">def</span> <span class="nf">_user_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the default current user.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_db</span><span class="o">.</span><span class="n">user_factory</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_user_db_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the default user database.&quot;&quot;&quot;</span>
+
+        <span class="c1"># Defer to an external user database if there is one.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">apptools.permissions.external.user_database</span> <span class="k">import</span> <span class="n">UserDatabase</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">apptools.permissions.default.user_database</span> <span class="k">import</span> <span class="n">UserDatabase</span>
+
+        <span class="k">return</span> <span class="n">UserDatabase</span><span class="p">()</span></div>
+
+
+<span class="k">class</span> <span class="nc">_ChangePasswordAction</span><span class="p">(</span><span class="n">Action</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;An action that allows the current user to change their password.  It</span>
+<span class="sd">    isn&#39;t exported through actions/api.py because it is specific to this user</span>
+<span class="sd">    manager implementation.&quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;Action&#39; interface ###################################################</span>
+
+    <span class="n">enabled</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Unicode</span><span class="p">(</span><span class="s2">&quot;&amp;Change Password...&quot;</span><span class="p">)</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;object&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialise the object.&quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">_ChangePasswordAction</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">traits</span><span class="p">)</span>
+
+        <span class="n">get_permissions_manager</span><span class="p">()</span><span class="o">.</span><span class="n">user_manager</span><span class="o">.</span><span class="n">on_trait_event</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_refresh_enabled</span><span class="p">,</span> <span class="s1">&#39;user_authenticated&#39;</span><span class="p">)</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;Action&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">perform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Perform the action.&quot;&quot;&quot;</span>
+
+        <span class="n">um</span> <span class="o">=</span> <span class="n">get_permissions_manager</span><span class="p">()</span><span class="o">.</span><span class="n">user_manager</span>
+        <span class="n">um</span><span class="o">.</span><span class="n">user_db</span><span class="o">.</span><span class="n">change_password</span><span class="p">(</span><span class="n">um</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Private interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_refresh_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Invoked whenever the current user&#39;s authorisation state changes.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

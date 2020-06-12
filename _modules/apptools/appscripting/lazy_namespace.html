@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.appscripting.lazy_namespace &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.appscripting.lazy_namespace</h1><div class="highlight"><pre>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2008, Riverbank Computing Limited</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Riverbank Computing Limited</span>
+<span class="c1"># Description: &lt;Enthought application scripting package component&gt;</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">HasTraits</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">.bind_event</span> <span class="k">import</span> <span class="n">BindEvent</span>
+<span class="kn">from</span> <span class="nn">.package_globals</span> <span class="k">import</span> <span class="n">get_script_manager</span>
+<span class="kn">from</span> <span class="nn">.scriptable_type</span> <span class="k">import</span> <span class="n">make_object_scriptable</span>
+
+
+<div class="viewcode-block" id="FactoryWrapper"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.lazy_namespace.FactoryWrapper">[docs]</a><span class="k">class</span> <span class="nc">FactoryWrapper</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The FactoryWrapper class wraps a factory for an object.&quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;FactoryWrapper&#39; interface ###########################################</span>
+
+    <span class="c1"># The optional object that defines the scripting API.</span>
+    <span class="n">api</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1"># The object factory.</span>
+    <span class="n">factory</span> <span class="o">=</span> <span class="n">Callable</span>
+
+    <span class="c1"># The optional attribute include list.</span>
+    <span class="n">includes</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1"># The optional attribute exclude list.</span>
+    <span class="n">excludes</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;FactoryWrapper&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+<div class="viewcode-block" id="FactoryWrapper.create_scriptable_object"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.lazy_namespace.FactoryWrapper.create_scriptable_object">[docs]</a>    <span class="k">def</span> <span class="nf">create_scriptable_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Invoke the factory to create the object then make it scriptable.&quot;&quot;&quot;</span>
+
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">factory</span><span class="p">()</span>
+
+        <span class="n">sm</span> <span class="o">=</span> <span class="n">get_script_manager</span><span class="p">()</span>
+        <span class="n">sm</span><span class="o">.</span><span class="n">bind_event</span> <span class="o">=</span> <span class="n">BindEvent</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">)</span>
+
+        <span class="n">make_object_scriptable</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">api</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">includes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">excludes</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">obj</span></div></div>
+
+
+<span class="k">class</span> <span class="nc">_LazyNode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The _LazyNode class implements a node in a lazy namespace that will</span>
+<span class="sd">    automatically invoke a factory if one is referenced.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">_LazyNode</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">FactoryWrapper</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">create_scriptable_object</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span>
+
+
+<div class="viewcode-block" id="LazyNamespace"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.lazy_namespace.LazyNamespace">[docs]</a><span class="k">class</span> <span class="nc">LazyNamespace</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The LazyNamespace class implements a lazy namespace that will</span>
+<span class="sd">    automatically invoke a factory if one is referenced.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">LazyNamespace</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">FactoryWrapper</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">create_scriptable_object</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="add_to_namespace"><a class="viewcode-back" href="../../../api/apptools.appscripting.html#apptools.appscripting.lazy_namespace.add_to_namespace">[docs]</a><span class="k">def</span> <span class="nf">add_to_namespace</span><span class="p">(</span><span class="n">so</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">nspace</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add a named scriptable object (or a factory for one) to a lazy</span>
+<span class="sd">    namespace.  If a name is a dotted name then intermediary nodes in the</span>
+<span class="sd">    namespace are created as required.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">save_obj</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nspace</span><span class="p">,</span> <span class="n">LazyNamespace</span><span class="p">):</span>
+            <span class="n">nspace</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">nspace</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nspace</span><span class="p">,</span> <span class="n">LazyNamespace</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">next_nspace</span> <span class="o">=</span> <span class="n">nspace</span><span class="p">[</span><span class="n">part</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">next_nspace</span> <span class="o">=</span> <span class="n">_LazyNode</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nspace</span><span class="p">,</span> <span class="n">_LazyNode</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">next_nspace</span> <span class="o">=</span> <span class="n">nspace</span><span class="p">[</span><span class="n">part</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">next_nspace</span> <span class="o">=</span> <span class="n">_LazyNode</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NameError</span>
+
+        <span class="n">save_obj</span><span class="p">(</span><span class="n">next_nspace</span><span class="p">,</span> <span class="n">part</span><span class="p">)</span>
+        <span class="n">nspace</span> <span class="o">=</span> <span class="n">next_nspace</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nspace</span><span class="p">,</span> <span class="p">(</span><span class="n">LazyNamespace</span><span class="p">,</span> <span class="n">_LazyNode</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">NameError</span>
+
+    <span class="n">save_obj</span><span class="p">(</span><span class="n">so</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.preferences.ui.preferences_page &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../../index.html" >
+    <link rel="up" title="Module code" href="../../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.preferences.ui.preferences_page</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; A page in a preferences dialog. &quot;&quot;&quot;</span>
+
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">apptools.preferences.api</span> <span class="k">import</span> <span class="n">PreferencesHelper</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">provides</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">.i_preferences_page</span> <span class="k">import</span> <span class="n">IPreferencesPage</span>
+
+
+<div class="viewcode-block" id="PreferencesPage"><a class="viewcode-back" href="../../../../api/apptools.preferences.ui.html#apptools.preferences.ui.preferences_page.PreferencesPage">[docs]</a><span class="nd">@provides</span><span class="p">(</span><span class="n">IPreferencesPage</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">PreferencesPage</span><span class="p">(</span><span class="n">PreferencesHelper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A page in a preferences dialog. &quot;&quot;&quot;</span>
+
+
+
+    <span class="c1">#### &#39;IPreferencesPage&#39; interface #########################################</span>
+
+    <span class="c1"># The page&#39;s category (e.g. &#39;General/Appearance&#39;). The empty string means</span>
+    <span class="c1"># that this is a top-level page.</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c1"># DEPRECATED: The help_id was never fully implemented, and it&#39;s been</span>
+    <span class="c1"># over two years (now 4/2009).  The original goal was for the the Help</span>
+    <span class="c1"># button to automatically appear and connect to a help page with a</span>
+    <span class="c1"># help_id.  Not removing the trait right now to avoid breaking code</span>
+    <span class="c1"># that may be checking for this.</span>
+    <span class="c1">#</span>
+    <span class="c1"># Use PreferencesManager.show_help and trait show_help metadata instead.</span>
+    <span class="n">help_id</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c1"># The page name (this is what is shown in the preferences dialog.</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c1">#### Private interface ####################################################</span>
+
+    <span class="c1"># The traits UI that represents the page.</span>
+    <span class="n">_ui</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1"># A dictionary containing the traits that have been changed since the</span>
+    <span class="c1"># last call to &#39;apply&#39;.</span>
+    <span class="n">_changed</span> <span class="o">=</span> <span class="n">Dict</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;IPreferencesPage&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+<div class="viewcode-block" id="PreferencesPage.apply"><a class="viewcode-back" href="../../../../api/apptools.preferences.ui.html#apptools.preferences.ui.preferences_page.PreferencesPage.apply">[docs]</a>    <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Apply the page&#39;s preferences. &quot;&quot;&quot;</span>
+
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_path</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_changed</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_preference_trait</span><span class="p">(</span><span class="n">trait_name</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">),</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_changed</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="k">return</span></div>
+
+    <span class="c1"># fixme: We would like to be able to have the following API so that</span>
+    <span class="c1"># developers are not forced into using traits UI for their preferences</span>
+    <span class="c1"># pages, but at the moment I can&#39;t work out how to do it!</span>
+<span class="c1">##     def create_control(self, parent):</span>
+<span class="c1">##         &quot;&quot;&quot; Create the toolkit-specific control that represents the page. &quot;&quot;&quot;</span>
+
+<span class="c1">##         if self._ui is None:</span>
+<span class="c1">##             self._ui = self.edit_traits(parent=parent, kind=&#39;subpanel&#39;)</span>
+
+<span class="c1">##         return self._ui.control</span>
+
+<span class="c1">##     def destroy_control(self):</span>
+<span class="c1">##         &quot;&quot;&quot; Destroy the toolkit-specific control that represents the page. &quot;&quot;&quot;</span>
+
+<span class="c1">##         if self._ui is not None:</span>
+<span class="c1">##             self._ui.dispose()</span>
+<span class="c1">##             self._ui = None</span>
+
+<span class="c1">##         return</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Private interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="c1">#### Trait change handlers ################################################</span>
+
+    <span class="k">def</span> <span class="nf">_anytrait_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Static trait change handler.</span>
+
+<span class="sd">        This is an important override! In the base-class when a trait is</span>
+<span class="sd">        changed the preferences node is updated too. Here, we stop that from</span>
+<span class="sd">        happening and just make a note of what changes have been made. The</span>
+<span class="sd">        preferences node gets updated when the &#39;apply&#39; method is called.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the trait was a list or dict &#39;_items&#39; trait then just treat it as</span>
+        <span class="c1"># if the entire list or dict was changed.</span>
+        <span class="k">if</span> <span class="n">trait_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;_items&#39;</span><span class="p">):</span>
+            <span class="n">trait_name</span> <span class="o">=</span> <span class="n">trait_name</span><span class="p">[:</span><span class="o">-</span><span class="mi">6</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_preference_trait</span><span class="p">(</span><span class="n">trait_name</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_changed</span><span class="p">[</span><span class="n">trait_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_preference_trait</span><span class="p">(</span><span class="n">trait_name</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_changed</span><span class="p">[</span><span class="n">trait_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">new</span>
+
+        <span class="k">return</span>
+
+    <span class="c1"># fixme: Pretty much duplicated in &#39;PreferencesHelper&#39; (except for the</span>
+    <span class="c1"># class name of course!).</span>
+    <span class="k">def</span> <span class="nf">_is_preference_trait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return True if a trait represents a preference value. &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">trait_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">trait_name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span> \
+           <span class="ow">or</span> <span class="n">trait_name</span> <span class="ow">in</span> <span class="n">PreferencesPage</span><span class="o">.</span><span class="n">class_traits</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<span class="c1">#### EOF ######################################################################</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

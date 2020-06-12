@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.template.itemplate_data_context &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.template.itemplate_data_context</h1><div class="highlight"><pre>
+<span></span><span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  Defines the ITemplateDataContext interface for accessing a named collection</span>
+<span class="c1">#  of data that can be bound to a templatized object when converting it to a</span>
+<span class="c1">#  &#39;live&#39; set of objects.</span>
+<span class="c1">#</span>
+<span class="c1">#  Written by: David C. Morrill</span>
+<span class="c1">#</span>
+<span class="c1">#  Date: 07/26/2007</span>
+<span class="c1">#</span>
+<span class="c1">#  (c) Copyright 2007 by Enthought, Inc.</span>
+<span class="c1">#</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot; Defines the ITemplateDataContext interface for accessing a named collection</span>
+<span class="sd">    of data that can be bound to a templatized object when converting it to a</span>
+<span class="sd">    &#39;live&#39; set of objects.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  Imports:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<span class="kn">from</span> <span class="nn">traits.api</span>\
+    <span class="kn">import</span> <span class="nn">Interface</span><span class="o">,</span> <span class="nn">List</span><span class="o">,</span> <span class="nn">Str</span>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;ITemplateDataContext&#39; interface:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="ITemplateDataContext"><a class="viewcode-back" href="../../../api/apptools.template.html#apptools.template.itemplate_data_context.ITemplateDataContext">[docs]</a><span class="k">class</span> <span class="nc">ITemplateDataContext</span> <span class="p">(</span> <span class="n">Interface</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Defines the ITemplateDataContext interface for accessing a named</span>
+<span class="sd">        collection of data that can be bound to a templatized object when</span>
+<span class="sd">        converting it to a &#39;live&#39; set of objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># The path to this data context (does not include the &#39;data_context_name&#39;):</span>
+    <span class="n">data_context_path</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c1"># The name of the data context:</span>
+    <span class="n">data_context_name</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c1"># A list of the names of the data values in this context:</span>
+    <span class="n">data_context_values</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">Str</span> <span class="p">)</span>
+
+    <span class="c1"># The list of the names of the sub-contexts of this context:</span>
+    <span class="n">data_contexts</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span> <span class="n">Str</span> <span class="p">)</span>
+
+<div class="viewcode-block" id="ITemplateDataContext.get_data_context_value"><a class="viewcode-back" href="../../../api/apptools.template.html#apptools.template.itemplate_data_context.ITemplateDataContext.get_data_context_value">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_context_value</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the data value with the specified *name*. Raises a</span>
+<span class="sd">            **ITemplateDataContextError** if *name* is not defined as a data</span>
+<span class="sd">            value in the context.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            name : A string specifying the name of the context data value to</span>
+<span class="sd">                be returned.</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            The data value associated with *name* in the context. The type of</span>
+<span class="sd">            the data is application dependent.</span>
+
+<span class="sd">            Raises **ITemplateDataContextError** if *name* is not associated</span>
+<span class="sd">            with a data value in the context.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="ITemplateDataContext.get_data_context"><a class="viewcode-back" href="../../../api/apptools.template.html#apptools.template.itemplate_data_context.ITemplateDataContext.get_data_context">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_context</span> <span class="p">(</span> <span class="bp">self</span><span class="p">,</span> <span class="n">name</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the **ITemplateDataContext** value associated with the</span>
+<span class="sd">            specified *name*. Raises **ITemplateDataContextError** if *name* is</span>
+<span class="sd">            not defined as a data context in the context.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            name : A string specifying the name of the data context to be</span>
+<span class="sd">                returned.</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            The **ITemplateDataContext** associated with *name* in the context.</span>
+
+<span class="sd">            Raises **ITemplateDataContextError** if *name* is not associated</span>
+<span class="sd">            with a data context in the context.</span>
+<span class="sd">        &quot;&quot;&quot;</span></div></div>
+
+<span class="c1">#-------------------------------------------------------------------------------</span>
+<span class="c1">#  &#39;ITemplateDataContextError&#39; exception:</span>
+<span class="c1">#-------------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="ITemplateDataContextError"><a class="viewcode-back" href="../../../api/apptools.template.html#apptools.template.itemplate_data_context.ITemplateDataContextError">[docs]</a><span class="k">class</span> <span class="nc">ITemplateDataContextError</span> <span class="p">(</span> <span class="ne">Exception</span> <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The exception class associated with the **ITemplateDataContext**</span>
+<span class="sd">        interface.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

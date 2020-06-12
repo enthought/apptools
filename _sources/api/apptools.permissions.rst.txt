@@ -1,0 +1,95 @@
+apptools.permissions package
+============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    apptools.permissions.action
+    apptools.permissions.adapters
+    apptools.permissions.default
+
+Submodules
+----------
+
+apptools.permissions.adapter\_base module
+-----------------------------------------
+
+.. automodule:: apptools.permissions.adapter_base
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.api module
+-------------------------------
+
+.. automodule:: apptools.permissions.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.i\_policy\_manager module
+----------------------------------------------
+
+.. automodule:: apptools.permissions.i_policy_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.i\_user module
+-----------------------------------
+
+.. automodule:: apptools.permissions.i_user
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.i\_user\_manager module
+--------------------------------------------
+
+.. automodule:: apptools.permissions.i_user_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.package\_globals module
+--------------------------------------------
+
+.. automodule:: apptools.permissions.package_globals
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.permission module
+--------------------------------------
+
+.. automodule:: apptools.permissions.permission
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.permissions\_manager module
+------------------------------------------------
+
+.. automodule:: apptools.permissions.permissions_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.permissions.secure\_proxy module
+-----------------------------------------
+
+.. automodule:: apptools.permissions.secure_proxy
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.permissions
+    :members:
+    :undoc-members:
+    :show-inheritance:

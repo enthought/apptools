@@ -1,0 +1,77 @@
+apptools.preferences package
+============================
+
+Subpackages
+-----------
+
+.. toctree::
+
+    apptools.preferences.ui
+
+Submodules
+----------
+
+apptools.preferences.api module
+-------------------------------
+
+.. automodule:: apptools.preferences.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.preferences.i\_preferences module
+------------------------------------------
+
+.. automodule:: apptools.preferences.i_preferences
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.preferences.package\_globals module
+--------------------------------------------
+
+.. automodule:: apptools.preferences.package_globals
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.preferences.preference\_binding module
+-----------------------------------------------
+
+.. automodule:: apptools.preferences.preference_binding
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.preferences.preferences module
+---------------------------------------
+
+.. automodule:: apptools.preferences.preferences
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.preferences.preferences\_helper module
+-----------------------------------------------
+
+.. automodule:: apptools.preferences.preferences_helper
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.preferences.scoped\_preferences module
+-----------------------------------------------
+
+.. automodule:: apptools.preferences.scoped_preferences
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.preferences
+    :members:
+    :undoc-members:
+    :show-inheritance:

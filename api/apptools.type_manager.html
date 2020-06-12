@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.type_manager package &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools package" href="apptools.html" >
+    <link rel="next" title="apptools.type_registry package" href="apptools.type_registry.html" >
+    <link rel="prev" title="apptools.template.test package" href="apptools.template.test.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../api.html" >API documentation</a></li>
+          <li class="active"><a href="modules.html" >apptools</a></li>
+          <li class="active"><a href="apptools.html" accesskey="U">apptools package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.type_registry.html" title="apptools.type_registry package"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.template.test.html" title="apptools.template.test package"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="apptools-type-manager-package">
+<h1>apptools.type_manager package<a class="headerlink" href="#apptools-type-manager-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-apptools.type_manager.abstract_adapter_factory">
+<span id="apptools-type-manager-abstract-adapter-factory-module"></span><h2>apptools.type_manager.abstract_adapter_factory module<a class="headerlink" href="#module-apptools.type_manager.abstract_adapter_factory" title="Permalink to this headline">¶</a></h2>
+<p>Abstract base class for all adapter factories.</p>
+<dl class="class">
+<dt id="apptools.type_manager.abstract_adapter_factory.AbstractAdapterFactory">
+<em class="property">class </em><code class="descclassname">apptools.type_manager.abstract_adapter_factory.</code><code class="descname">AbstractAdapterFactory</code><a class="reference internal" href="../_modules/apptools/type_manager/abstract_adapter_factory.html#AbstractAdapterFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.abstract_adapter_factory.AbstractAdapterFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>Abstract base class for all adapter factories.</p>
+<p>Adapter factories define behavioural extensions for classes.</p>
+<dl class="method">
+<dt id="apptools.type_manager.abstract_adapter_factory.AbstractAdapterFactory.adapt">
+<code class="descname">adapt</code><span class="sig-paren">(</span><em>adaptee</em>, <em>target_class</em>, <em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/abstract_adapter_factory.html#AbstractAdapterFactory.adapt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.abstract_adapter_factory.AbstractAdapterFactory.adapt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an adapter that adapts an object to the target class.</p>
+<p>Returns None if the factory cannot produce such an adapter.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.type_manager.abstract_factory">
+<span id="apptools-type-manager-abstract-factory-module"></span><h2>apptools.type_manager.abstract_factory module<a class="headerlink" href="#module-apptools.type_manager.abstract_factory" title="Permalink to this headline">¶</a></h2>
+<p>Abstract base class for all object factories.</p>
+<dl class="class">
+<dt id="apptools.type_manager.abstract_factory.AbstractFactory">
+<em class="property">class </em><code class="descclassname">apptools.type_manager.abstract_factory.</code><code class="descname">AbstractFactory</code><a class="reference internal" href="../_modules/apptools/type_manager/abstract_factory.html#AbstractFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.abstract_factory.AbstractFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>Abstract base class for all object factories.</p>
+<dl class="method">
+<dt id="apptools.type_manager.abstract_factory.AbstractFactory.create">
+<code class="descname">create</code><span class="sig-paren">(</span><em>target_class</em>, <em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/abstract_factory.html#AbstractFactory.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.abstract_factory.AbstractFactory.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an object of the specified target class.</p>
+<p>Returns None if the factory cannot produce an object of the target
+class.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.type_manager.abstract_type_system">
+<span id="apptools-type-manager-abstract-type-system-module"></span><h2>apptools.type_manager.abstract_type_system module<a class="headerlink" href="#module-apptools.type_manager.abstract_type_system" title="Permalink to this headline">¶</a></h2>
+<p>The abstract base class for type systems.</p>
+<dl class="class">
+<dt id="apptools.type_manager.abstract_type_system.AbstractTypeSystem">
+<em class="property">class </em><code class="descclassname">apptools.type_manager.abstract_type_system.</code><code class="descname">AbstractTypeSystem</code><a class="reference internal" href="../_modules/apptools/type_manager/abstract_type_system.html#AbstractTypeSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.abstract_type_system.AbstractTypeSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>The abstract base class for type systems.</p>
+<p>A type system is responsible for:-</p>
+<ol class="arabic simple">
+<li>Determining whether an object is of a particular type.</li>
+<li>Determining the MRO of a type.</li>
+</ol>
+<p>See ‘PythonTypeSystem’ for an implementation with standard Python
+semantics.</p>
+<dl class="method">
+<dt id="apptools.type_manager.abstract_type_system.AbstractTypeSystem.get_mro">
+<code class="descname">get_mro</code><span class="sig-paren">(</span><em>type</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/abstract_type_system.html#AbstractTypeSystem.get_mro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.abstract_type_system.AbstractTypeSystem.get_mro" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the MRO of a type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.abstract_type_system.AbstractTypeSystem.is_a">
+<code class="descname">is_a</code><span class="sig-paren">(</span><em>obj</em>, <em>type</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/abstract_type_system.html#AbstractTypeSystem.is_a"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.abstract_type_system.AbstractTypeSystem.is_a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is an object an instance of the specified type?</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.type_manager.adaptable">
+<span id="apptools-type-manager-adaptable-module"></span><h2>apptools.type_manager.adaptable module<a class="headerlink" href="#module-apptools.type_manager.adaptable" title="Permalink to this headline">¶</a></h2>
+<p>The base class for adaptable objects.</p>
+<dl class="class">
+<dt id="apptools.type_manager.adaptable.Adaptable">
+<em class="property">class </em><code class="descclassname">apptools.type_manager.adaptable.</code><code class="descname">Adaptable</code><a class="reference internal" href="../_modules/apptools/type_manager/adaptable.html#Adaptable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.adaptable.Adaptable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>The base class for adaptable objects.</p>
+<dl class="method">
+<dt id="apptools.type_manager.adaptable.Adaptable.adapt">
+<code class="descname">adapt</code><span class="sig-paren">(</span><em>target_class</em>, <em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/adaptable.html#Adaptable.adapt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.adaptable.Adaptable.adapt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the factory can produce an appropriate adapter.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.type_manager.adapter">
+<span id="apptools-type-manager-adapter-module"></span><h2>apptools.type_manager.adapter module<a class="headerlink" href="#module-apptools.type_manager.adapter" title="Permalink to this headline">¶</a></h2>
+<p>A default adapter class.</p>
+<dl class="class">
+<dt id="apptools.type_manager.adapter.Adapter">
+<em class="property">class </em><code class="descclassname">apptools.type_manager.adapter.</code><code class="descname">Adapter</code><a class="reference internal" href="../_modules/apptools/type_manager/adapter.html#Adapter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.adapter.Adapter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>A default adapter class.</p>
+<p>This comes in handy when using the default ‘AdapterFactory’ as it expects
+the adpter class to have an ‘adaptee’ trait.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.type_manager.adapter_factory">
+<span id="apptools-type-manager-adapter-factory-module"></span><h2>apptools.type_manager.adapter_factory module<a class="headerlink" href="#module-apptools.type_manager.adapter_factory" title="Permalink to this headline">¶</a></h2>
+<p>An adapter factory.</p>
+<dl class="class">
+<dt id="apptools.type_manager.adapter_factory.AdapterFactory">
+<em class="property">class </em><code class="descclassname">apptools.type_manager.adapter_factory.</code><code class="descname">AdapterFactory</code><a class="reference internal" href="../_modules/apptools/type_manager/adapter_factory.html#AdapterFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.adapter_factory.AdapterFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apptools.type_manager.abstract_adapter_factory.AbstractAdapterFactory" title="apptools.type_manager.abstract_adapter_factory.AbstractAdapterFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">apptools.type_manager.abstract_adapter_factory.AbstractAdapterFactory</span></code></a></p>
+<p>An adapter factory.</p>
+<p>This implementation provides the common case where the factory adapts
+exactly one type of object to exactly one target type using exactly one
+adapter.</p>
+<p>This class requires the adapter class to have an ‘adaptee’ trait. The
+default ‘Adapter’ class provides exactly that.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.type_manager.adapter_manager">
+<span id="apptools-type-manager-adapter-manager-module"></span><h2>apptools.type_manager.adapter_manager module<a class="headerlink" href="#module-apptools.type_manager.adapter_manager" title="Permalink to this headline">¶</a></h2>
+<p>A manager for adapter factories.</p>
+<dl class="class">
+<dt id="apptools.type_manager.adapter_manager.AdapterManager">
+<em class="property">class </em><code class="descclassname">apptools.type_manager.adapter_manager.</code><code class="descname">AdapterManager</code><a class="reference internal" href="../_modules/apptools/type_manager/adapter_manager.html#AdapterManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.adapter_manager.AdapterManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>A manager for adapter factories.</p>
+<dl class="method">
+<dt id="apptools.type_manager.adapter_manager.AdapterManager.adapt">
+<code class="descname">adapt</code><span class="sig-paren">(</span><em>adaptee</em>, <em>target_class</em>, <em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/adapter_manager.html#AdapterManager.adapt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.adapter_manager.AdapterManager.adapt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an adapter that adapts an object to the target class.</p>
+<p>‘adaptee’ is the object that we want to adapt.
+‘target_class’ is the class that the adaptee should be adapted to.</p>
+<p>Returns None if no such adapter exists.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.adapter_manager.AdapterManager.register_adapters">
+<code class="descname">register_adapters</code><span class="sig-paren">(</span><em>factory</em>, <em>adaptee_class</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/adapter_manager.html#AdapterManager.register_adapters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.adapter_manager.AdapterManager.register_adapters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers an adapter factory.</p>
+<p>‘adaptee_class’ can be either a class object or the name of a class.</p>
+<p>A factory can be in exactly one manager (as it uses the manager’s type
+system).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.adapter_manager.AdapterManager.register_instance_adapters">
+<code class="descname">register_instance_adapters</code><span class="sig-paren">(</span><em>factory</em>, <em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/adapter_manager.html#AdapterManager.register_instance_adapters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.adapter_manager.AdapterManager.register_instance_adapters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers an instance-scope adapter factory.</p>
+<p>A factory can be in exactly one manager (as it uses the manager’s type
+system).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.adapter_manager.AdapterManager.register_type_adapters">
+<code class="descname">register_type_adapters</code><span class="sig-paren">(</span><em>factory</em>, <em>adaptee_class</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/adapter_manager.html#AdapterManager.register_type_adapters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.adapter_manager.AdapterManager.register_type_adapters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a type-scope adapter factory.</p>
+<p>‘adaptee_class’ can be either a class object or the name of a class.</p>
+<p>A factory can be in exactly one manager (as it uses the manager’s type
+system).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.adapter_manager.AdapterManager.unregister_adapters">
+<code class="descname">unregister_adapters</code><span class="sig-paren">(</span><em>factory</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/adapter_manager.html#AdapterManager.unregister_adapters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.adapter_manager.AdapterManager.unregister_adapters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregisters an adapter factory.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.adapter_manager.AdapterManager.unregister_instance_adapters">
+<code class="descname">unregister_instance_adapters</code><span class="sig-paren">(</span><em>factory</em>, <em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/adapter_manager.html#AdapterManager.unregister_instance_adapters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.adapter_manager.AdapterManager.unregister_instance_adapters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregisters an instance scope adapter factory.</p>
+<p>A factory can be in exactly one manager (as it uses the manager’s type
+system).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.adapter_manager.AdapterManager.unregister_type_adapters">
+<code class="descname">unregister_type_adapters</code><span class="sig-paren">(</span><em>factory</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/adapter_manager.html#AdapterManager.unregister_type_adapters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.adapter_manager.AdapterManager.unregister_type_adapters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregisters a type-scope adapter factory.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.type_manager.api">
+<span id="apptools-type-manager-api-module"></span><h2>apptools.type_manager.api module<a class="headerlink" href="#module-apptools.type_manager.api" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-apptools.type_manager.factory">
+<span id="apptools-type-manager-factory-module"></span><h2>apptools.type_manager.factory module<a class="headerlink" href="#module-apptools.type_manager.factory" title="Permalink to this headline">¶</a></h2>
+<p>A generic object factory.</p>
+<dl class="class">
+<dt id="apptools.type_manager.factory.Factory">
+<em class="property">class </em><code class="descclassname">apptools.type_manager.factory.</code><code class="descname">Factory</code><a class="reference internal" href="../_modules/apptools/type_manager/factory.html#Factory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.factory.Factory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apptools.type_manager.abstract_factory.AbstractFactory" title="apptools.type_manager.abstract_factory.AbstractFactory"><code class="xref py py-class docutils literal notranslate"><span class="pre">apptools.type_manager.abstract_factory.AbstractFactory</span></code></a></p>
+<p>A generic object factory.</p>
+<p>This implementation of the abstract factory interface provides for the
+common scenario where the factory produces objects of exactly one type.</p>
+<dl class="method">
+<dt id="apptools.type_manager.factory.Factory.can_create">
+<code class="descname">can_create</code><span class="sig-paren">(</span><em>target_class</em>, <em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/factory.html#Factory.can_create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.factory.Factory.can_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the factory can create objects of a class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.factory.Factory.create">
+<code class="descname">create</code><span class="sig-paren">(</span><em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/factory.html#Factory.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.factory.Factory.create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates an object!</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.type_manager.hook">
+<span id="apptools-type-manager-hook-module"></span><h2>apptools.type_manager.hook module<a class="headerlink" href="#module-apptools.type_manager.hook" title="Permalink to this headline">¶</a></h2>
+<p>Implementation of hooked methods.</p>
+<dl class="function">
+<dt id="apptools.type_manager.hook.add_post">
+<code class="descclassname">apptools.type_manager.hook.</code><code class="descname">add_post</code><span class="sig-paren">(</span><em>klass</em>, <em>method_name</em>, <em>callable</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/hook.html#add_post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.hook.add_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a post-hook to method ‘method_name’ on class ‘klass’.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.type_manager.hook.add_pre">
+<code class="descclassname">apptools.type_manager.hook.</code><code class="descname">add_pre</code><span class="sig-paren">(</span><em>klass</em>, <em>method_name</em>, <em>callable</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/hook.html#add_pre"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.hook.add_pre" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a pre-hook to method ‘method_name’ on class ‘klass’.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.type_manager.hook.remove_post">
+<code class="descclassname">apptools.type_manager.hook.</code><code class="descname">remove_post</code><span class="sig-paren">(</span><em>klass</em>, <em>method_name</em>, <em>callable</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/hook.html#remove_post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.hook.remove_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a post-hook from method ‘method_name’ on class ‘klass’.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.type_manager.hook.remove_pre">
+<code class="descclassname">apptools.type_manager.hook.</code><code class="descname">remove_pre</code><span class="sig-paren">(</span><em>klass</em>, <em>method_name</em>, <em>callable</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/hook.html#remove_pre"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.hook.remove_pre" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a pre-hook from method ‘method_name’ on class ‘klass’.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.type_manager.python_type_system">
+<span id="apptools-type-manager-python-type-system-module"></span><h2>apptools.type_manager.python_type_system module<a class="headerlink" href="#module-apptools.type_manager.python_type_system" title="Permalink to this headline">¶</a></h2>
+<p>A type system with standard(ish) Python semantics.</p>
+<dl class="class">
+<dt id="apptools.type_manager.python_type_system.PythonObject">
+<em class="property">class </em><code class="descclassname">apptools.type_manager.python_type_system.</code><code class="descname">PythonObject</code><a class="reference internal" href="../_modules/apptools/type_manager/python_type_system.html#PythonObject"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.python_type_system.PythonObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The root type in the type system.</p>
+<p>fixme: Python is currently a bit broken as it has dual type hierarchies,
+one for old-style and one for new-style classes. This class is used to
+create a fake root to unify them.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="apptools.type_manager.python_type_system.PythonTypeSystem">
+<em class="property">class </em><code class="descclassname">apptools.type_manager.python_type_system.</code><code class="descname">PythonTypeSystem</code><a class="reference internal" href="../_modules/apptools/type_manager/python_type_system.html#PythonTypeSystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.python_type_system.PythonTypeSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apptools.type_manager.abstract_type_system.AbstractTypeSystem" title="apptools.type_manager.abstract_type_system.AbstractTypeSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">apptools.type_manager.abstract_type_system.AbstractTypeSystem</span></code></a></p>
+<p>A type system with standard(ish) Python semantics.</p>
+<dl class="method">
+<dt id="apptools.type_manager.python_type_system.PythonTypeSystem.get_mro">
+<code class="descname">get_mro</code><span class="sig-paren">(</span><em>type</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/python_type_system.html#PythonTypeSystem.get_mro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.python_type_system.PythonTypeSystem.get_mro" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the MRO of a type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.python_type_system.PythonTypeSystem.is_a">
+<code class="descname">is_a</code><span class="sig-paren">(</span><em>obj</em>, <em>type</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/python_type_system.html#PythonTypeSystem.is_a"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.python_type_system.PythonTypeSystem.is_a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Is an object and instance of the specified type?</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.type_manager.type_manager">
+<span id="apptools-type-manager-type-manager-module"></span><h2>apptools.type_manager.type_manager module<a class="headerlink" href="#module-apptools.type_manager.type_manager" title="Permalink to this headline">¶</a></h2>
+<p>A type manager.</p>
+<dl class="class">
+<dt id="apptools.type_manager.type_manager.TypeManager">
+<em class="property">class </em><code class="descclassname">apptools.type_manager.type_manager.</code><code class="descname">TypeManager</code><a class="reference internal" href="../_modules/apptools/type_manager/type_manager.html#TypeManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.type_manager.TypeManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>A type manager.</p>
+<p>The type manager allows for objects to be created/adapted to a particular
+type.</p>
+<dl class="method">
+<dt id="apptools.type_manager.type_manager.TypeManager.add_category">
+<code class="descname">add_category</code><span class="sig-paren">(</span><em>klass</em>, <em>category_class</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/type_manager.html#TypeManager.add_category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.type_manager.TypeManager.add_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a category to a class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.type_manager.TypeManager.add_post">
+<code class="descname">add_post</code><span class="sig-paren">(</span><em>klass</em>, <em>method_name</em>, <em>callable</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/type_manager.html#TypeManager.add_post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.type_manager.TypeManager.add_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a post-hook to method ‘method_name’ on class ‘klass.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.type_manager.TypeManager.add_pre">
+<code class="descname">add_pre</code><span class="sig-paren">(</span><em>klass</em>, <em>method_name</em>, <em>callable</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/type_manager.html#TypeManager.add_pre"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.type_manager.TypeManager.add_pre" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a pre-hook to method ‘method_name’ on class ‘klass.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.type_manager.TypeManager.object_as">
+<code class="descname">object_as</code><span class="sig-paren">(</span><em>obj</em>, <em>target_class</em>, <em>*args</em>, <em>**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/type_manager.html#TypeManager.object_as"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.type_manager.TypeManager.object_as" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adapts or creates an object of the target class.</p>
+<p>Returns None if no appropriate adapter or factory is available.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.type_manager.TypeManager.register_adapters">
+<code class="descname">register_adapters</code><span class="sig-paren">(</span><em>factory</em>, <em>adaptee_class</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/type_manager.html#TypeManager.register_adapters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.type_manager.TypeManager.register_adapters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers an adapter factory.</p>
+<p>‘adaptee_class’ can be either a class or the name of a class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.type_manager.TypeManager.register_instance_adapters">
+<code class="descname">register_instance_adapters</code><span class="sig-paren">(</span><em>factory</em>, <em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/type_manager.html#TypeManager.register_instance_adapters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.type_manager.TypeManager.register_instance_adapters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers an adapter factory for an individual instance.</p>
+<p>A factory can be in exactly one manager (as it uses the manager’s type
+system).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.type_manager.TypeManager.register_type_adapters">
+<code class="descname">register_type_adapters</code><span class="sig-paren">(</span><em>factory</em>, <em>adaptee_class</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/type_manager.html#TypeManager.register_type_adapters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.type_manager.TypeManager.register_type_adapters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers an adapter factory.</p>
+<p>‘adaptee_class’ can be either a class or the name of a class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.type_manager.TypeManager.remove_post">
+<code class="descname">remove_post</code><span class="sig-paren">(</span><em>klass</em>, <em>method_name</em>, <em>callable</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/type_manager.html#TypeManager.remove_post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.type_manager.TypeManager.remove_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a post-hook to method ‘method_name’ on class ‘klass.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.type_manager.TypeManager.remove_pre">
+<code class="descname">remove_pre</code><span class="sig-paren">(</span><em>klass</em>, <em>method_name</em>, <em>callable</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/type_manager.html#TypeManager.remove_pre"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.type_manager.TypeManager.remove_pre" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a pre-hook to method ‘method_name’ on class ‘klass.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.type_manager.TypeManager.unregister_adapters">
+<code class="descname">unregister_adapters</code><span class="sig-paren">(</span><em>factory</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/type_manager.html#TypeManager.unregister_adapters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.type_manager.TypeManager.unregister_adapters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregisters an adapter factory.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.type_manager.TypeManager.unregister_instance_adapters">
+<code class="descname">unregister_instance_adapters</code><span class="sig-paren">(</span><em>factory</em>, <em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/type_manager.html#TypeManager.unregister_instance_adapters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.type_manager.TypeManager.unregister_instance_adapters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregisters an adapter factory for an individual instance.</p>
+<p>A factory can be in exactly one manager (as it uses the manager’s type
+system).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.type_manager.type_manager.TypeManager.unregister_type_adapters">
+<code class="descname">unregister_type_adapters</code><span class="sig-paren">(</span><em>factory</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/type_manager.html#TypeManager.unregister_type_adapters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.type_manager.TypeManager.unregister_type_adapters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregisters an adapter factory.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.type_manager.util">
+<span id="apptools-type-manager-util-module"></span><h2>apptools.type_manager.util module<a class="headerlink" href="#module-apptools.type_manager.util" title="Permalink to this headline">¶</a></h2>
+<p>Useful functions to do with types!</p>
+<p>fixme: I don’t really like collections of functions, but I’m not sure where
+these should go? Class methods on ‘TypeManager’?</p>
+<dl class="function">
+<dt id="apptools.type_manager.util.get_classes">
+<code class="descclassname">apptools.type_manager.util.</code><code class="descname">get_classes</code><span class="sig-paren">(</span><em>hierarchy</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/util.html#get_classes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.util.get_classes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Walks a class hierarchy and returns all of the classes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.type_manager.util.sort_by_class_tree">
+<code class="descclassname">apptools.type_manager.util.</code><code class="descname">sort_by_class_tree</code><span class="sig-paren">(</span><em>objs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/type_manager/util.html#sort_by_class_tree"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.type_manager.util.sort_by_class_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sorts a list of objects by their class tree.</p>
+<p>Each item in the list should inherit from a common base class.</p>
+<p>The list is returned ordered from the most specific to the least specific.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.type_manager">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-apptools.type_manager" title="Permalink to this headline">¶</a></h2>
+<p>Manages type extensions, including factories to generate adapters, and
+hooks for methods and functions. Part of the AppTools project of the
+Enthought Tool Suite.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">apptools.type_manager package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-apptools.type_manager.abstract_adapter_factory">apptools.type_manager.abstract_adapter_factory module</a></li>
+<li><a class="reference internal" href="#module-apptools.type_manager.abstract_factory">apptools.type_manager.abstract_factory module</a></li>
+<li><a class="reference internal" href="#module-apptools.type_manager.abstract_type_system">apptools.type_manager.abstract_type_system module</a></li>
+<li><a class="reference internal" href="#module-apptools.type_manager.adaptable">apptools.type_manager.adaptable module</a></li>
+<li><a class="reference internal" href="#module-apptools.type_manager.adapter">apptools.type_manager.adapter module</a></li>
+<li><a class="reference internal" href="#module-apptools.type_manager.adapter_factory">apptools.type_manager.adapter_factory module</a></li>
+<li><a class="reference internal" href="#module-apptools.type_manager.adapter_manager">apptools.type_manager.adapter_manager module</a></li>
+<li><a class="reference internal" href="#module-apptools.type_manager.api">apptools.type_manager.api module</a></li>
+<li><a class="reference internal" href="#module-apptools.type_manager.factory">apptools.type_manager.factory module</a></li>
+<li><a class="reference internal" href="#module-apptools.type_manager.hook">apptools.type_manager.hook module</a></li>
+<li><a class="reference internal" href="#module-apptools.type_manager.python_type_system">apptools.type_manager.python_type_system module</a></li>
+<li><a class="reference internal" href="#module-apptools.type_manager.type_manager">apptools.type_manager.type_manager module</a></li>
+<li><a class="reference internal" href="#module-apptools.type_manager.util">apptools.type_manager.util module</a></li>
+<li><a class="reference internal" href="#module-apptools.type_manager">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.template.test.html"
+                        title="previous chapter">apptools.template.test package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.type_registry.html"
+                        title="next chapter">apptools.type_registry package</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.type_manager.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

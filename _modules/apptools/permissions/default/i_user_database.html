@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.permissions.default.i_user_database &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../../index.html" >
+    <link rel="up" title="Module code" href="../../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.permissions.default.i_user_database</h1><div class="highlight"><pre>
+<span></span><span class="c1">#------------------------------------------------------------------------------</span>
+<span class="c1"># Copyright (c) 2008, Riverbank Computing Limited</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in enthought/LICENSE.txt and may be redistributed only</span>
+<span class="c1"># under the conditions described in the aforementioned license.  The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="c1">#</span>
+<span class="c1"># Author: Riverbank Computing Limited</span>
+<span class="c1"># Description: &lt;Enthought permissions package component&gt;</span>
+<span class="c1">#------------------------------------------------------------------------------</span>
+
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">Interface</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">.i_user_storage</span> <span class="k">import</span> <span class="n">IUserStorage</span>
+
+
+<div class="viewcode-block" id="IUserDatabase"><a class="viewcode-back" href="../../../../api/apptools.permissions.default.html#apptools.permissions.default.i_user_database.IUserDatabase">[docs]</a><span class="k">class</span> <span class="nc">IUserDatabase</span><span class="p">(</span><span class="n">Interface</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;The interface to be implemented by a user database for the default user</span>
+<span class="sd">    manager.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Set if the implementation supports changing a user&#39;s password.</span>
+    <span class="n">can_change_password</span> <span class="o">=</span> <span class="n">Bool</span>
+
+    <span class="c1"># Set if the implementation supports adding users.</span>
+    <span class="n">can_add_user</span> <span class="o">=</span> <span class="n">Bool</span>
+
+    <span class="c1"># Set if the implementation supports modifying users.</span>
+    <span class="n">can_modify_user</span> <span class="o">=</span> <span class="n">Bool</span>
+
+    <span class="c1"># Set if the implementation supports deleting users.</span>
+    <span class="n">can_delete_user</span> <span class="o">=</span> <span class="n">Bool</span>
+
+    <span class="c1"># The user data storage.</span>
+    <span class="n">user_storage</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">IUserStorage</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IUserDatabase.bootstrapping"><a class="viewcode-back" href="../../../../api/apptools.permissions.default.html#apptools.permissions.default.i_user_database.IUserDatabase.bootstrapping">[docs]</a>    <span class="k">def</span> <span class="nf">bootstrapping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if the user database is bootstrapping.  Typically this</span>
+<span class="sd">        is when no users have been defined.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="IUserDatabase.authenticate_user"><a class="viewcode-back" href="../../../../api/apptools.permissions.default.html#apptools.permissions.default.i_user_database.IUserDatabase.authenticate_user">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Authenticate the given user and return True if successful.  user</span>
+<span class="sd">        implements IUser.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="IUserDatabase.unauthenticate_user"><a class="viewcode-back" href="../../../../api/apptools.permissions.default.html#apptools.permissions.default.i_user_database.IUserDatabase.unauthenticate_user">[docs]</a>    <span class="k">def</span> <span class="nf">unauthenticate_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Unauthenticate the given user and return True if successful.  user</span>
+<span class="sd">        implements IUser.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="IUserDatabase.change_password"><a class="viewcode-back" href="../../../../api/apptools.permissions.default.html#apptools.permissions.default.i_user_database.IUserDatabase.change_password">[docs]</a>    <span class="k">def</span> <span class="nf">change_password</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Change a user&#39;s password in the database.  This only needs to be</span>
+<span class="sd">        reimplemented if &#39;can_change_password&#39; is True.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="IUserDatabase.add_user"><a class="viewcode-back" href="../../../../api/apptools.permissions.default.html#apptools.permissions.default.i_user_database.IUserDatabase.add_user">[docs]</a>    <span class="k">def</span> <span class="nf">add_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a user account to the database.  This only needs to be</span>
+<span class="sd">        reimplemented if &#39;can_add_user&#39; is True.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="IUserDatabase.modify_user"><a class="viewcode-back" href="../../../../api/apptools.permissions.default.html#apptools.permissions.default.i_user_database.IUserDatabase.modify_user">[docs]</a>    <span class="k">def</span> <span class="nf">modify_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Modify a user account in the database.  This only needs to be</span>
+<span class="sd">        reimplemented if &#39;can_modify_user&#39; is True.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="IUserDatabase.delete_user"><a class="viewcode-back" href="../../../../api/apptools.permissions.default.html#apptools.permissions.default.i_user_database.IUserDatabase.delete_user">[docs]</a>    <span class="k">def</span> <span class="nf">delete_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Delete a user account from the database.  This only needs to be</span>
+<span class="sd">        reimplemented if &#39;can_delete_user&#39; is True.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="IUserDatabase.matching_user"><a class="viewcode-back" href="../../../../api/apptools.permissions.default.html#apptools.permissions.default.i_user_database.IUserDatabase.matching_user">[docs]</a>    <span class="k">def</span> <span class="nf">matching_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return an object that implements IUser for the user selected based</span>
+<span class="sd">        on the given name.  If there was no user selected then return None.</span>
+<span class="sd">        How the name is interpreted (eg. as a regular expression) is determined</span>
+<span class="sd">        by the user database.  Note that the blob attribute of the user will</span>
+<span class="sd">        not be set.&quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="IUserDatabase.user_factory"><a class="viewcode-back" href="../../../../api/apptools.permissions.default.html#apptools.permissions.default.i_user_database.IUserDatabase.user_factory">[docs]</a>    <span class="k">def</span> <span class="nf">user_factory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a new object that implements the IUser interface.&quot;&quot;&quot;</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

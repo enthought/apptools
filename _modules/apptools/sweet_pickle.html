@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.sweet_pickle &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../genindex.html" >
+    <link rel="search" title="Search" href="../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../index.html" >
+    <link rel="up" title="Module code" href="../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <h1>Source code for apptools.sweet_pickle</h1><div class="highlight"><pre>
+<span></span><span class="c1">#-----------------------------------------------------------------------------</span>
+<span class="c1">#</span>
+<span class="c1">#  Copyright (c) 2006 by Enthought, Inc.</span>
+<span class="c1">#  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#  Author: Dave Peterson &lt;dpeterson@enthought.com&gt;</span>
+<span class="c1">#</span>
+<span class="c1">#-----------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot; A pickle framework that supports unpickling of refactored versions of</span>
+<span class="sd">    old classes. Part of the AppTools project of the Enthought Tool Suite.</span>
+
+<span class="sd">    Beyond refactoring support, there are additional useful capabilities of</span>
+<span class="sd">    this package:</span>
+
+<span class="sd">    - HasTraits objects are fully pickled when sweet_pickle.dump() or</span>
+<span class="sd">      sweet_pickle.dumps() are called.  This means every trait&#39;s value</span>
+<span class="sd">      is pickled explicitly.  This allows improved self-consistency as</span>
+<span class="sd">      values within unpickled objects correspond to the default trait</span>
+<span class="sd">      values of the instance that was pickled rather than the default</span>
+<span class="sd">      values of the current class definition.</span>
+<span class="sd">    - Multiple updaters can be registered to update state for any version</span>
+<span class="sd">      of a class.  This is extremely useful when an instance being</span>
+<span class="sd">      pickled and unpickled is the result of an addition of one or more</span>
+<span class="sd">      Trait Categories to a class.  In that case, the Category contributor</span>
+<span class="sd">      can also register a state function to update the Category&#39;s traits</span>
+<span class="sd">      through versioning.</span>
+
+
+<span class="sd">    We have duplicated the API of the Python &#39;pickle&#39; module within this</span>
+<span class="sd">    package. Thus, users can simply import sweet_pickle in places where</span>
+<span class="sd">    they previously used pickle or cPickle.  For example::</span>
+
+<span class="sd">        import cPickle          ---&gt;    import apptools.sweet_pickle as pickle</span>
+<span class="sd">        s = pickle.dumps(obj)           s = pickle.dumps(obj)</span>
+<span class="sd">        pickle.loads(s)                 pickle.loads(s)</span>
+
+<span class="sd">    Pickles generated by this package *can be* unpickled by standard pickle</span>
+<span class="sd">    or cPickle, though you lose the benefit of the refactoring support during</span>
+<span class="sd">    unpickling.</span>
+
+<span class="sd">    As a result of the above, this package is a drop-in replacement for the</span>
+<span class="sd">    Python &#39;pickle&#39; module or &#39;cPickle&#39; module and should be safe to use even</span>
+<span class="sd">    if you never version or refactor your own classes.  In fact, we STRONGLY</span>
+<span class="sd">    RECOMMEND that you use this framework for all of your pickle needs because</span>
+<span class="sd">    you never know when one of the classes you encounter during unpickling has</span>
+<span class="sd">    been versioned or otherwise refactored by someone else.</span>
+
+<span class="sd">    See module &#39;pickle&#39; for more basic information about pickling.</span>
+
+
+<span class="sd">    The most common way to benefit from the versioning capabilities of this</span>
+<span class="sd">    framework is to register class mappings and state modification functions</span>
+<span class="sd">    with the global updater registry (more detail is below.)  However, you may</span>
+<span class="sd">    also choose to explicitly instantiate an Unpickler and provide it with your</span>
+<span class="sd">    own explicit definition of class mappings and state modification functions.</span>
+<span class="sd">    We do not provide any help on the latter at this time.</span>
+
+<span class="sd">    You can register class mappings and state modification functions with the</span>
+<span class="sd">    global updater registry using the methods provided on the Updater instance</span>
+<span class="sd">    that is the global registry.  You can get this instance by calling the</span>
+<span class="sd">    &#39;get_global_registry&#39; function exposed through this package&#39;s namespace.</span>
+
+<span class="sd">    This framework has been designed so that you can register your class</span>
+<span class="sd">    mappings and state modification functions during the import of the module</span>
+<span class="sd">    or package that contained the original class.  However, you may also</span>
+<span class="sd">    register your mappings and functions at any point such that the they are</span>
+<span class="sd">    known to the framework prior to, or become known during the attempt to,</span>
+<span class="sd">    unpickle the class they modify.</span>
+
+<span class="sd">    The framework will call a __setstate__ method on the final target class</span>
+<span class="sd">    of any unpickled instance.  It will not call __setstate__ methods on any</span>
+<span class="sd">    beginning or intermediate classes within a chain of class mappings.</span>
+
+
+<span class="sd">    A class mapping is used to redirect the unpickling of one class to return</span>
+<span class="sd">    an instantiation of another class.  The classes can be in different</span>
+<span class="sd">    modules, and the modules in different packages.  Mappings can be chained.</span>
+<span class="sd">    For example, given the mappings::</span>
+
+<span class="sd">        foo.bar.Bar --&gt; foo.baz.Baz</span>
+<span class="sd">        foo.baz.Baz --&gt; foo.Foo</span>
+
+<span class="sd">    An attempt to unpickle a foo.bar.Bar would actually generate a foo.Foo</span>
+<span class="sd">    instance.</span>
+
+<span class="sd">    A state modification function is called during the execution of the</span>
+<span class="sd">    __setstate__ method during unpickling of an object of the type and version</span>
+<span class="sd">    for which it was registered for.  The function must accept a single</span>
+<span class="sd">    argument which is a state dictionary and must then return the modified</span>
+<span class="sd">    state dictionary.  Additionally, the function should change the version</span>
+<span class="sd">    variable within the state to represent the version the new state</span>
+<span class="sd">    represents.  (The framework will assume an increment of one if this is</span>
+<span class="sd">    not done.)  The framework ensures that state modification functions</span>
+<span class="sd">    are chained appropriately to convert through multiple versions and/or class</span>
+<span class="sd">    mappings.</span>
+
+<span class="sd">    Note that refactorings that cause classes to be completed removed from</span>
+<span class="sd">    the source code can be supported, without breaking unpickling of object</span>
+<span class="sd">    hierarchies that include an instace of that class, by adding a mapping</span>
+<span class="sd">    to the Placeholder class in the placeholder module.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">##############################################################################</span>
+<span class="c1"># Implement the Python pickle package API</span>
+<span class="c1">##############################################################################</span>
+
+<span class="c1"># Expose our custom pickler as the standard Unpickler</span>
+<span class="kn">from</span> <span class="nn">.versioned_unpickler</span> <span class="k">import</span> <span class="n">VersionedUnpickler</span> <span class="k">as</span> <span class="n">Unpickler</span>
+
+<span class="c1"># Use our custom unpickler to load from files</span>
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">max_pass</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Unpickler</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">max_pass</span><span class="p">)</span></div>
+
+<span class="c1"># Use our custom unpickler to load from strings</span>
+<div class="viewcode-block" id="loads"><a class="viewcode-back" href="../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.loads">[docs]</a><span class="k">def</span> <span class="nf">loads</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">max_pass</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">BytesIO</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Unpickler</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">max_pass</span><span class="p">)</span></div>
+
+<span class="c1"># We don&#39;t customize the Python pickler, though we do use the cPickle module</span>
+<span class="c1"># for improved performance.</span>
+<span class="kn">from</span> <span class="nn">six.moves.cPickle</span> <span class="k">import</span> <span class="n">Pickler</span>
+
+<span class="c1"># Implement the dump and dumps methods so that all traits in a HasTraits object</span>
+<span class="c1"># get included in the pickle.</span>
+<div class="viewcode-block" id="dump"><a class="viewcode-back" href="../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.dump">[docs]</a><span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">_flush_traits</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">six.moves.cPickle</span> <span class="k">import</span> <span class="n">dump</span> <span class="k">as</span> <span class="n">d</span>
+    <span class="k">return</span> <span class="n">d</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="dumps"><a class="viewcode-back" href="../../api/apptools.sweet_pickle.html#apptools.sweet_pickle.dumps">[docs]</a><span class="k">def</span> <span class="nf">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="n">_flush_traits</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">six.moves.cPickle</span> <span class="k">import</span> <span class="n">dumps</span> <span class="k">as</span> <span class="n">ds</span>
+    <span class="k">return</span> <span class="n">ds</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span></div>
+
+<span class="c1"># We don&#39;t customize exceptions so just map to the Python pickle package</span>
+<span class="kn">from</span> <span class="nn">pickle</span> <span class="k">import</span> <span class="n">PickleError</span><span class="p">,</span> <span class="n">PicklingError</span><span class="p">,</span> <span class="n">UnpicklingError</span>
+
+
+<span class="c1">##############################################################################</span>
+<span class="c1"># Allow retrieval of the global registry</span>
+<span class="c1">##############################################################################</span>
+
+<span class="kn">from</span> <span class="nn">.global_registry</span> <span class="k">import</span> <span class="n">get_global_registry</span>
+
+
+<span class="c1">##############################################################################</span>
+<span class="c1"># Expose our Updater class so users can explicitly create their own.</span>
+<span class="c1">##############################################################################</span>
+
+<span class="kn">from</span> <span class="nn">.updater</span> <span class="k">import</span> <span class="n">Updater</span>
+
+
+<span class="c1">##############################################################################</span>
+<span class="c1"># Method to ensure that all traits on a has traits object are included in a</span>
+<span class="c1"># pickle.</span>
+<span class="c1">##############################################################################</span>
+
+<span class="k">def</span> <span class="nf">_flush_traits</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;trait_names&#39;</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">traits</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;trait&#39;</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                    <span class="k">pass</span>
+
+
+<span class="c1">### EOF ######################################################################</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>
