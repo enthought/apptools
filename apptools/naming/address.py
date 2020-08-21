@@ -31,5 +31,3 @@ class Address(HasTraits):
 
     # The actual content.
     content = Any
-
-#### EOF ######################################################################

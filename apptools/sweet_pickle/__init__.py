@@ -166,6 +166,3 @@ def _flush_traits(obj):
                     getattr(obj, name)
                 except AttributeError:
                     pass
-
-
-### EOF ######################################################################

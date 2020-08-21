@@ -338,5 +338,3 @@ class File(HasPrivateTraits):
         shutil.move(self.path, destination.path)
 
         return
-
-#### EOF ######################################################################

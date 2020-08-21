@@ -177,5 +177,3 @@ class InstanceContextAdapter(ContextAdapter):
             matches = False
 
         return matches
-
-#### EOF ######################################################################

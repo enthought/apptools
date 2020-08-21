@@ -110,7 +110,3 @@ def upgrade_project(pickle_filename, updater_path, project_version, application_
         first_time = False
 
     return latest_file
-
-
-### EOF #################################################################
-

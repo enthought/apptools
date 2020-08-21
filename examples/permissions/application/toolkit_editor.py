@@ -61,5 +61,3 @@ class ToolkitEditor(Editor):
         """Return an informal string representation of the object."""
 
         return ETSConfig.toolkit + " Editor"
-
-#### EOF ######################################################################

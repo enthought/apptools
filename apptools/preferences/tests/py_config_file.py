@@ -260,5 +260,3 @@ class _Namespace(object):
                 print(indent, name, ':', value)
 
         return
-
-#### EOF ######################################################################

@@ -191,5 +191,3 @@ class FilteringHandler(logging.Handler):
             is_child_of = False
 
         return is_child_of
-
-#### EOF ######################################################################

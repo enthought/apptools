@@ -34,5 +34,3 @@ if __name__ == '__main__':
     context.path = os.getcwd()
     print('Context', context, context.path)
     print('Names', context.list_names(''))
-
-##### EOF #####################################################################

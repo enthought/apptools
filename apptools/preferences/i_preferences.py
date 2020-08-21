@@ -170,5 +170,3 @@ class IPreferences(Interface):
         This includes any changes to the node's descendants.
 
         """
-
-#### EOF ######################################################################

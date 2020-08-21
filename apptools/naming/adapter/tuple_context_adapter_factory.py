@@ -30,5 +30,3 @@ class TupleContextAdapterFactory(ContextAdapterFactory):
         )
 
         return adapter
-
-#### EOF ######################################################################

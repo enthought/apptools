@@ -106,5 +106,3 @@ class Binding(HasTraits):
             namespace_name = self.name
 
         return namespace_name
-
-#### EOF ######################################################################

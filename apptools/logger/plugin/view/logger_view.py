@@ -181,5 +181,3 @@ class LoggerView(TraitsUIView):
             return ''
         else:
             return self.activated.getMessage()
-
-#### EOF ######################################################################

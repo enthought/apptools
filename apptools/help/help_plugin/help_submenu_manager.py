@@ -262,4 +262,3 @@ class DownloadsMenuManager(HelpSubmenuManager):
                 )
 
         return
-#### EOF ######################################################################

@@ -56,5 +56,3 @@ class OperationNotSupportedError(NamingError):
     """ The context does support the requested operation.
 
     """
-
-#### EOF ######################################################################

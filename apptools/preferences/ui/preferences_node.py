@@ -98,5 +98,3 @@ class PreferencesNode(TreeItem):
             child.dump(indent+'  ')
 
         return
-
-#### EOF ######################################################################

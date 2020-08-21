@@ -94,5 +94,3 @@ class ContextNodeType(NodeType):
         """ Returns a monitor that detects changes to a node. """
 
         return ContextMonitor(node=node)
-
-##### EOF #####################################################################

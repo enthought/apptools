@@ -521,5 +521,3 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual( names[0], 'sub/sub sub' )
 
         return
-
-#### EOF ######################################################################

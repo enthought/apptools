@@ -240,5 +240,3 @@ class FolderTestCase(unittest.TestCase):
         self.assertEqual(f.exists, False)
 
         return
-
-#### EOF ######################################################################

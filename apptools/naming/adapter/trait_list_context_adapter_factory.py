@@ -37,5 +37,3 @@ class TraitListContextAdapterFactory(ContextAdapterFactory):
         )
 
         return adapter
-
-#### EOF ######################################################################

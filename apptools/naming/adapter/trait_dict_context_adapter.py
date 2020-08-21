@@ -34,5 +34,3 @@ class TraitDictContextAdapter(DictContextAdapter):
         """ Returns the name of the context within its own namespace. """
 
         return self.context.namespace_name + '/' + self.trait_name
-
-#### EOF ######################################################################

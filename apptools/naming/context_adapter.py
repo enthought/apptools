@@ -31,5 +31,3 @@ class ContextAdapter(Context):
 
     # The context that the object is in.
     context = Instance(Context)
-
-#### EOF ######################################################################

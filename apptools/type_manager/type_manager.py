@@ -213,5 +213,3 @@ class TypeManager(HasTraits):
                          and obj.can_create(target_class, *args, **kw)
 
         return is_factory_for
-
-#### EOF ######################################################################

@@ -576,5 +576,3 @@ class PyFSContext(DirContext, Referenceable):
         self.name, ext = os.path.splitext(basename)
 
         return
-
-#### EOF ######################################################################

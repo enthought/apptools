@@ -41,5 +41,3 @@ class ContextAdapterFactory(AdapterFactory):
         )
 
         return adapter
-
-#### EOF ######################################################################

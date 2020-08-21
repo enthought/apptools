@@ -31,5 +31,3 @@ class AbstractTypeSystem(HasTraits):
         """ Returns the MRO of a type. """
 
         raise NotImplementedError
-
-#### EOF ######################################################################

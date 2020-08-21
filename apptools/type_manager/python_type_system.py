@@ -36,5 +36,3 @@ class PythonTypeSystem(AbstractTypeSystem):
         """ Returns the MRO of a type. """
 
         return list(inspect.getmro(type)) + [PythonObject]
-
-#### EOF ######################################################################

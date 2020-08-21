@@ -298,6 +298,3 @@ class Updater(HasPrivateTraits):
         for o in event.added:
             logger.debug('Detected [%s] added to version_attribute_map in ' + \
                 '[%s]', o, self)
-
-
-### EOF ######################################################################
