@@ -94,7 +94,9 @@ dependencies = {
     "traitsui",
     "configobj",
     "coverage",
-    "pytables",
+    # This version is pinned due to the latest build causing failures on the
+    # travis CI see issue traitsui/#1156.
+    "pytables==3.5.1-4",
     "pandas",
     "pyface",
     "nose",
