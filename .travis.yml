@@ -13,7 +13,7 @@ matrix:
     - env: RUNTIME=3.6
     - os: osx
       env: RUNTIME=3.6
-    fast_finish: true
+  fast_finish: true
 
 cache:
   directories:
