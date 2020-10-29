@@ -25,9 +25,10 @@ before_install:
   - if [[ ${TRAVIS_OS_NAME} == 'osx' ]]; then ./install-edm-osx.sh; export PATH="${PATH}:/usr/local/bin"; fi
   - edm install -y wheel click coverage
 install:
-  - edm run -- python etstool.py install --runtime=${RUNTIME} || exit
   - if [[ ${TRAVIS_EVENT_TYPE} == 'cron' ]]; then
-      edm run -- python etstool.py install ${RUNTIME} --source || exit;
+      edm run -- python etstool.py install --runtime=${RUNTIME} --source || exit;
+    else
+      edm run -- python etstool.py install --runtime=${RUNTIME} || exit;
     fi
 script:
   - edm run -- python etstool.py test --runtime=${RUNTIME} || exit
