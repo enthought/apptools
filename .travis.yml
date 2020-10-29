@@ -7,14 +7,11 @@ env:
   global:
     - INSTALL_EDM_VERSION=2.0.0
       PYTHONUNBUFFERED="1"
-    - TRAVIS_EVENT_TYPE='cron' 
 
 matrix:
   include:
     - env: RUNTIME=3.6
-    - os: osx
-      env: RUNTIME=3.6
-    fast_finish: true
+  fast_finish: true
 
 cache:
   directories:
@@ -23,7 +20,6 @@ cache:
 before_install:
   - mkdir -p "${HOME}/.cache/download"
   - if [[ ${TRAVIS_OS_NAME} == 'linux' ]]; then ./install-edm-linux.sh; export PATH="${HOME}/edm/bin:${PATH}"; fi
-  - if [[ ${TRAVIS_OS_NAME} == 'osx' ]]; then ./install-edm-osx.sh; export PATH="${PATH}:/usr/local/bin"; fi
   - edm install -y wheel click coverage
 install:
   - if [[ ${TRAVIS_EVENT_TYPE} == 'cron' ]]; then
