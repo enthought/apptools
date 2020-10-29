@@ -180,7 +180,7 @@ def test(runtime, environment):
     environ = {}
     environ['PYTHONUNBUFFERED'] = "1"
     commands = [
-        "edm run -e {environment} -- coverage run -p -m nose.core -v apptools --nologcapture"]
+        "edm run -e {environment} -- python -X faulthandler -m coverage run -p -m nose.core -v apptools --nologcapture"]
 
     # We run in a tempdir to avoid accidentally picking up wrong apptools
     # code from a local dir.  We need to ensure a good .coveragerc is in
