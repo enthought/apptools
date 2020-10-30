@@ -20,7 +20,7 @@ import weakref
 
 # Enthought library imports.
 from traits.api import Any, Bool, Callable, Dict, Event, HasTraits, \
-        implements, Instance, Int, List, Property, Str
+        Instance, Int, List, Property, provides, Str
 
 # Local imports.
 from .bind_event import BindEvent

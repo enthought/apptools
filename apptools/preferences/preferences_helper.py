@@ -182,5 +182,3 @@ class PreferencesHelper(HasTraits):
             return False
 
         return True
-
-#### EOF ######################################################################

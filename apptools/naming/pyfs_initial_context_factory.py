@@ -47,5 +47,3 @@ class PyFSInitialContextFactory(InitialContextFactory):
         environment[PyFSContext.OBJECT_SERIALIZERS] = object_serializers
 
         return PyFSContext(path=r'', environment=environment)
-
-#### EOF ######################################################################

@@ -175,5 +175,3 @@ class DirContext(Context):
             del self._attributes[name]
 
         return
-
-#### EOF ######################################################################

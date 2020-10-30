@@ -32,5 +32,3 @@ class InitialContextFactory(HasTraits):
         """ Creates an initial context for beginning name resolution. """
 
         return Context(environment=environment)
-
-#### EOF ######################################################################

@@ -72,5 +72,3 @@ class ObjectNodeType(NodeType):
         node.name = text
 
         return
-
-##### EOF #####################################################################

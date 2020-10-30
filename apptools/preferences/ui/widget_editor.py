@@ -100,5 +100,3 @@ class WidgetEditor(EditorFactory):
     custom_editor   = simple_editor
     text_editor     = simple_editor
     readonly_editor = simple_editor
-
-#### EOF ######################################################################

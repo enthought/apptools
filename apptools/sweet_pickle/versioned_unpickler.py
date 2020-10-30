@@ -505,7 +505,3 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
         # Otherwise, we simply remove our setstate.
         else:
             delattr(klass, _SETSTATE_NAME)
-
-
-### EOF ######################################################################
-

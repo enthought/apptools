@@ -173,5 +173,3 @@ def bind_preference(obj, trait_name, preference_path, preferences=None):
         traits['preferences'] = preferences
 
     return PreferenceBinding(**traits)
-
-#### EOF ######################################################################

@@ -300,5 +300,3 @@ class PreferencesManager(HasTraits):
                 parent = parent.lookup(component)
 
         return parent
-
-#### EOF ######################################################################

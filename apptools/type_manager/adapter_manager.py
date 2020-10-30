@@ -249,5 +249,3 @@ class AdapterManager(HasTraits):
         """ Returns the full class name for a class. """
 
         return "%s.%s" % (klass.__module__, klass.__name__)
-
-#### EOF ######################################################################

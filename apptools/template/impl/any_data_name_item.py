@@ -46,14 +46,13 @@ from .helper \
 #  'AnyDataNameItem' class:
 #-------------------------------------------------------------------------------
 
+@provides(ITemplateDataNameItem)
 class AnyDataNameItem ( Template ):
     """ An abstract base class implementation of the ITemplateDataNameItem
         interface that looks for all specified values in its input context or
         optionally any of its sub-contexts and outputs a context containing all
         such values found.
     """
-
-    implements ( ITemplateDataNameItem )
 
     #-- 'ITemplateDataNameItem' Interface Implementation -----------------------
 
@@ -204,4 +203,3 @@ class AnyDataNameItem ( Template ):
                     data_context_name = input_context.data_context_name,
                     values            = values,
                     contexts          = contexts )
-

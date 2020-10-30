@@ -32,12 +32,11 @@ from apptools.template.itemplate_data_source \
 #  'TemplateDataSource' class:
 #-------------------------------------------------------------------------------
 
+@provides(ITemplateDataSource)
 class TemplateDataSource ( TemplateDataName ):
     """ A concrete implementation of the ITemplateDataSource interface based on
         the implementation of the TemplateDataName class.
     """
-
-    implements( ITemplateDataSource )
 
     #-- ITemplateDataSource Interface Implementation ---------------------------
 
@@ -51,4 +50,3 @@ class TemplateDataSource ( TemplateDataName ):
             source object requires.
         """
         return self
-

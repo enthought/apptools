@@ -15,5 +15,3 @@ class TupleContextAdapter(ListContextAdapter):
 
     # The object that we are adapting.
     adaptee = Tuple
-
-#### EOF ######################################################################

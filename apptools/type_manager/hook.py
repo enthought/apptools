@@ -130,5 +130,3 @@ def _remove_hook(klass, method_name, callable, pre):
             delattr(klass, '__hooked__' + method_name)
 
     return
-
-#### EOF ######################################################################

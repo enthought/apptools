@@ -187,7 +187,3 @@ class DynamicContext(Context):
             in traits]
 
         return result
-
-
-### EOF ######################################################################
-

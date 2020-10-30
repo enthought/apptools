@@ -43,5 +43,3 @@ class PyObjectFactory(ObjectFactory):
                 obj = context._context_factory(name, state)
 
         return obj
-
-### EOF #######################################################################

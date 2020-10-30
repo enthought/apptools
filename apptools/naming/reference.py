@@ -46,5 +46,3 @@ class Reference(HasPrivateTraits):
 
     # The class name of the object factory.
     factory_class_name = Str
-
-#### EOF ######################################################################

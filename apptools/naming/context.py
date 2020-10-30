@@ -768,5 +768,3 @@ class Context(HasTraits):
             adapter = None
 
         return adapter
-
-#### EOF ######################################################################

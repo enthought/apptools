@@ -42,6 +42,7 @@ from .template_data_context \
 #  'AnyContextDataNameItem' class:
 #-------------------------------------------------------------------------------
 
+@provides(ITemplateDataNameItem)
 class AnyContextDataNameItem ( Template ):
     """ An abstract base class implementation of the ITemplateDataNameItem
         interface that looks for specified sub-contexts in its input context
@@ -49,8 +50,6 @@ class AnyContextDataNameItem ( Template ):
         one match is found it outputs a context containing all matching
         sub-contexts found.
     """
-
-    implements ( ITemplateDataNameItem )
 
     #-- 'ITemplateDataNameItem' Interface Implementation -----------------------
 
@@ -137,4 +136,3 @@ class AnyContextDataNameItem ( Template ):
 
         # Set the new output context:
         self.output_data_context = output_context
-

@@ -93,5 +93,3 @@ class Explorer(SplitApplicationWindow):
         python_shell.execute_command('from apptools.naming.api import *')
 
         return python_shell.control
-
-##### EOF #####################################################################

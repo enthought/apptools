@@ -30,5 +30,3 @@ class IPreferencesPage(Interface):
 
 ##     def destroy_control(self, parent):
 ##         """ Destroy the toolkit-specific control that represents the page. """
-
-#### EOF ######################################################################

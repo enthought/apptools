@@ -202,5 +202,3 @@ class PyContext(Context, Referenceable):
         """ Create a sub-context. """
 
         return self.__class__(namespace=namespace)
-
-#### EOF ######################################################################

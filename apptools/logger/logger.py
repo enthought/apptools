@@ -91,6 +91,3 @@ def add_log_queue_handler(logger, level=None, formatter=None):
     log_queue_handler.setFormatter(formatter)
     logger.addHandler(log_queue_handler)
     return log_queue_handler
-
-
-#### EOF ######################################################################

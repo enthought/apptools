@@ -49,5 +49,3 @@ class NamingNodeManager(NodeManager):
             hash_value = id(obj)
 
         return hash_value
-
-##### EOF #####################################################################

@@ -28,5 +28,3 @@ class Referenceable(HasPrivateTraits):
 
     # The object's reference suitable for binding in a naming context.
     reference = Instance(Reference)
-
-#### EOF ######################################################################

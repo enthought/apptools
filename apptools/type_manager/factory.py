@@ -37,5 +37,3 @@ class Factory(AbstractFactory):
         """ Creates an object! """
 
         return self.target_class(*args, **kw)
-
-#### EOF ######################################################################

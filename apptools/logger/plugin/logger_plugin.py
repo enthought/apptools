@@ -110,6 +110,3 @@ class LoggerPlugin(Plugin):
         # Record the created view on the service.
         service.plugin_view = view
         return view
-
-
-#### EOF ######################################################################

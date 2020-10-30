@@ -84,5 +84,3 @@ class AbstractAdapterFactory(HasTraits):
         )
 
         return message
-
-#### EOF ######################################################################

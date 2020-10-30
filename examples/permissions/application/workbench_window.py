@@ -131,5 +131,3 @@ class ExampleWorkbenchWindow(WorkbenchWindow):
         """Create a new person."""
 
         self.workbench.edit(Person(name='New', age=100))
-
-#### EOF ######################################################################

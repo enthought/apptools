@@ -30,5 +30,3 @@ class NamingEvent(HasTraits):
 
     # The new binding.
     new_binding = Instance(Binding)
-
-#### EOF ######################################################################

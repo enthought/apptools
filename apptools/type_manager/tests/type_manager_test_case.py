@@ -417,5 +417,3 @@ class TypeManagerTestCase(unittest.TestCase):
         self.assertEqual(bar.blargle(), 'Foo.foogle.fred')
 
         return
-
-#### EOF ######################################################################

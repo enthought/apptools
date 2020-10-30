@@ -34,14 +34,13 @@ from apptools.template.itemplate_data_context \
 #  'TemplateDataContext' class:
 #-------------------------------------------------------------------------------
 
+@provides(ITemplateDataContext)
 class TemplateDataContext ( HasPrivateTraits ):
     """ A concrete implementation of the ITemplateDataContext interface
         intended to be used for creating the *output_data_context* value of an
         **ITemplateDataNameItem** implementation (although they are not
         required to use it).
     """
-
-    implements( ITemplateDataContext )
 
     #-- 'ITemplateDataContext' Interface Traits --------------------------------
 
@@ -123,4 +122,3 @@ class TemplateDataContext ( HasPrivateTraits ):
             return self.context[ name ]
         except:
             raise ITemplateDataContextError( "Context '%s' not found." % name )
-

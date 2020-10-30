@@ -52,5 +52,3 @@ class NamingTreeModel(NodeTreeModel):
         node_manager.add_node_type(ObjectNodeType())
 
         return node_manager
-
-##### EOF #####################################################################

@@ -97,7 +97,3 @@ _global_registry = None
 
 # The lock used to make access to the global singleton thread safe
 _global_registry_lock = _thread.allocate_lock()
-
-
-#### EOF #####################################################################
-

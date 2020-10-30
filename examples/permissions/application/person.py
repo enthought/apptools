@@ -40,5 +40,3 @@ class Person(HasTraits):
         """Return an informal string representation of the object."""
 
         return self.name
-
-#### EOF ######################################################################

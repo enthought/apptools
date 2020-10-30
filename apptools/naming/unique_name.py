@@ -29,7 +29,3 @@ def make_unique_name(base, existing=[], format="%s_%s"):
         count += 1
 
     return name
-
-
-#### EOF ####################################################################
-

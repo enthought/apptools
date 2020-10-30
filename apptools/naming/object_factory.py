@@ -39,5 +39,3 @@ class ObjectFactory(HasTraits):
         """
 
         raise NotImplementedError
-
-### EOF #######################################################################

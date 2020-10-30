@@ -43,13 +43,12 @@ def is_none ( value ):
 #  'Template' class:
 #-------------------------------------------------------------------------------
 
+@provides(ITemplate)
 class Template ( HasPrivateTraits ):
     """ Defines the Template class, which provides a default implementation of
         the ITemplate interface that can be used when defining templatizable
         objects.
     """
-
-    implements( ITemplate )
 
     #-- 'ITemplate' Interface Implementation -----------------------------------
 
@@ -159,4 +158,3 @@ class Template ( HasPrivateTraits ):
             None
         """
         raise NotImplementedError
-

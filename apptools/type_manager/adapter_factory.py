@@ -56,5 +56,3 @@ class AdapterFactory(AbstractAdapterFactory):
         """
 
         return self.adapter_class(adaptee=adaptee, *args, **kw)
-
-#### EOF ######################################################################

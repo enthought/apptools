@@ -96,5 +96,3 @@ class ObjectSerializer(HasTraits):
         f.close()
 
         return actual_path
-
-### EOF #######################################################################

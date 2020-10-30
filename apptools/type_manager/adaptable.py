@@ -32,5 +32,3 @@ class Adaptable(HasTraits):
             adapter = None
 
         return adapter
-
-#### EOF ######################################################################
