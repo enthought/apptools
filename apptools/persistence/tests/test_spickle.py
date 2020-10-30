@@ -13,8 +13,7 @@ from pickle import dumps
 try:
     from apptools.persistence import spickle
 except ImportError:
-    import nose
-    raise nose.SkipTest('spickle is not supported with Python3')
+    raise unittest.SkipTest('spickle is not supported with Python3')
 
 from traits.api import HasTraits, Float, Int
 
