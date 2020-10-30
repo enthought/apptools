@@ -18,7 +18,7 @@
 from apptools.naming.api import *
 
 # Local imports.
-from context_test_case import ContextTestCase
+from .test_context import ContextTestCase
 
 
 class DirContextTestCase(ContextTestCase):
