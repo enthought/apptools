@@ -19,53 +19,53 @@ class LRUCacheTestCase(unittest.TestCase):
             c[i] = str(i)
 
         expected = [(0, '0'), (1, '1'), (2, '2')]
-        assert_equal(expected, dropped)
+        self.assertEqual(expected, dropped)
 
     def test_cache_len(self):
         c = LRUCache(2)
-        assert_equal(0, len(c))
-        assert_equal(2, c.size)
+        self.assertEqual(0, len(c))
+        self.assertEqual(2, c.size)
         c[0] = None
-        assert_equal(1, len(c))
-        assert_equal(2, c.size)
+        self.assertEqual(1, len(c))
+        self.assertEqual(2, c.size)
         c[1] = None
-        assert_equal(2, len(c))
-        assert_equal(2, c.size)
+        self.assertEqual(2, len(c))
+        self.assertEqual(2, c.size)
         c[2] = None
-        assert_equal(2, len(c))
-        assert_equal(2, c.size)
+        self.assertEqual(2, len(c))
+        self.assertEqual(2, c.size)
 
     def test_cache_resize(self):
         c = LRUCache(1)
         c[0] = 0
         c[1] = 1
 
-        assert_equal(1, len(c))
-        assert_equal(1, c.size)
+        self.assertEqual(1, len(c))
+        self.assertEqual(1, c.size)
         assert 0 not in c
         assert 1 in c
 
         c.size = 3
-        assert_equal(1, len(c))
-        assert_equal(3, c.size)
+        self.assertEqual(1, len(c))
+        self.assertEqual(3, c.size)
         assert 1 in c
 
         c[2] = 2
-        assert_equal(2, len(c))
-        assert_equal(3, c.size)
+        self.assertEqual(2, len(c))
+        self.assertEqual(3, c.size)
         assert 1 in c
         assert 2 in c
 
         c[3] = 3
-        assert_equal(3, len(c))
-        assert_equal(3, c.size)
+        self.assertEqual(3, len(c))
+        self.assertEqual(3, c.size)
         assert 1 in c
         assert 2 in c
         assert 3 in c
 
         c[4] = 4
-        assert_equal(3, len(c))
-        assert_equal(3, c.size)
+        self.assertEqual(3, len(c))
+        self.assertEqual(3, c.size)
         assert 1 not in c
         assert 2 in c
         assert 3 in c
@@ -73,60 +73,60 @@ class LRUCacheTestCase(unittest.TestCase):
 
     def test_cache_items(self):
         c = LRUCache(2)
-        assert_equal([], c.items())
+        self.assertEqual([], c.items())
 
         c[0] = str(0)
         c[1] = str(1)
         c[2] = str(2)
 
         expected = [(1, '1'), (2, '2')]
-        assert_equal(expected, sorted(c.items()))
+        self.assertEqual(expected, sorted(c.items()))
 
     def test_cache_idempotency(self):
         c = LRUCache(2)
         c[1] = 1
-        assert_equal(1, len(c))
+        self.assertEqual(1, len(c))
         c[1] = 1
-        assert_equal(1, len(c))
+        self.assertEqual(1, len(c))
 
         c[2] = 2
-        assert_equal(2, len(c))
+        self.assertEqual(2, len(c))
         c[1] = 1
-        assert_equal(2, len(c))
+        self.assertEqual(2, len(c))
         c[2] = 2
-        assert_equal(2, len(c))
+        self.assertEqual(2, len(c))
 
         c[3] = 3
-        assert_equal(2, len(c))
+        self.assertEqual(2, len(c))
         c[3] = 3
-        assert_equal(2, len(c))
+        self.assertEqual(2, len(c))
 
     def test_cache_keys_values(self):
         c = LRUCache(2)
-        assert_equal([], c.items())
+        self.assertEqual([], c.items())
 
         c[0] = str(0)
         c[1] = str(1)
         c[2] = str(2)
 
         expected = [1, 2]
-        assert_equal(expected, sorted(c.keys()))
-        assert_equal([str(val) for val in expected], sorted(c.values()))
+        self.assertEqual(expected, sorted(c.keys()))
+        self.assertEqual([str(val) for val in expected], sorted(c.values()))
 
     def test_cache_clear(self):
         c = LRUCache(2)
         for i in range(c.size):
             c[i] = i
-        assert_equal(c.size, len(c))
+        self.assertEqual(c.size, len(c))
         c.clear()
-        assert_equal(0, len(c))
+        self.assertEqual(0, len(c))
 
     def test_cache_get(self):
         c = LRUCache(2)
         for i in range(c.size):
             c[i] = i
-        assert_equal(0, c.get(0))
-        assert_equal(None, c.get(c.size))
+        self.assertEqual(0, c.get(0))
+        self.assertEqual(None, c.get(c.size))
 
     def test_updated_event(self):
         c = LRUCache(2)
@@ -136,17 +136,17 @@ class LRUCacheTestCase(unittest.TestCase):
         c.on_trait_change(lambda x: events.append(x), 'updated')
 
         c[0] = 0
-        assert_equal(sorted(events), [[0]])
+        self.assertEqual(sorted(events), [[0]])
 
         c[1] = 1
-        assert_equal(sorted(events), [[0], [0, 1]])
+        self.assertEqual(sorted(events), [[0], [0, 1]])
 
         c[2] = 2
-        assert_equal(sorted(events), [[0], [0, 1], [1, 2]])
+        self.assertEqual(sorted(events), [[0], [0, 1], [1, 2]])
 
         # Getting items doesn't fire anything
         c[1]
-        assert_equal(sorted(events), [[0], [0, 1], [1, 2]])
+        self.assertEqual(sorted(events), [[0], [0, 1], [1, 2]])
 
         c.get(3)
-        assert_equal(sorted(events), [[0], [0, 1], [1, 2]])
+        self.assertEqual(sorted(events), [[0], [0, 1], [1, 2]])
