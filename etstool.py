@@ -99,6 +99,7 @@ dependencies = {
     "pytables",
     "pandas",
     "pyface",
+    "nose",
     "mock",
     "enthought_sphinx_theme",
     "sphinx",
