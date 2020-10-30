@@ -104,6 +104,17 @@ dependencies = {
 }
 
 
+# Dependencies we install from source for cron tests
+source_dependencies = {
+    "pyface",
+    "traits",
+    "traitsui",
+}
+
+
+github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
+
+
 @click.group()
 def cli():
     pass
@@ -112,7 +123,12 @@ def cli():
 @cli.command()
 @click.option('--runtime', default='3.6')
 @click.option('--environment', default=None)
-def install(runtime, environment):
+@click.option(
+    "--source/--no-source",
+    default=False,
+    help="Install ETS packages from source",
+)
+def install(runtime, environment, source):
     """ Install project and dependencies into a clean EDM environment.
 
     """
@@ -130,6 +146,26 @@ def install(runtime, environment):
 
     click.echo("Creating environment '{environment}'".format(**parameters))
     execute(commands, parameters)
+
+    if source:
+        # Remove EDM ETS packages and install them from source
+        cmd_fmt = (
+            "edm plumbing remove-package "
+            "--environment {environment} --force "
+        )
+        commands = [cmd_fmt + source_pkg for source_pkg in source_dependencies]
+        execute(commands, parameters)
+        source_pkgs = [
+            github_url_fmt.format(pkg) for pkg in source_dependencies
+        ]
+        commands = [
+            "python -m pip install {pkg} --no-deps".format(pkg=pkg)
+            for pkg in source_pkgs
+        ]
+        commands = [
+            "edm run -e {environment} -- " + command for command in commands
+        ]
+        execute(commands, parameters)
     click.echo('Done install')
 
 
