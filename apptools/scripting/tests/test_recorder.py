@@ -457,6 +457,3 @@ class TestRecorder(unittest.TestCase):
         lines = f.readlines()
         self.assertEqual(expect, lines)
         f.close()
-
-if __name__ == '__main__':
-    unittest.main()

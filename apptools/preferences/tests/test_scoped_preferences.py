@@ -12,7 +12,7 @@ from pkg_resources import resource_filename
 from apptools.preferences.api import Preferences, ScopedPreferences
 
 # Local imports.
-from .preferences_test_case import PreferencesTestCase
+from .test_preferences import PreferencesTestCase
 
 
 # This module's package.
@@ -451,8 +451,3 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         self.assertRaises(ValueError, p.get, 'bogus/acme.ui.bgcolor')
 
         return
-
-
-# Entry point for stand-alone testing.
-if __name__ == '__main__':
-    unittest.main()

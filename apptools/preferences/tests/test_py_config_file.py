@@ -169,8 +169,3 @@ class PyConfigFileTestCase(unittest.TestCase):
         self.assertEqual(180, config['acme.ui']['blimey'])
 
         return
-
-
-# Entry point for stand-alone testing.
-if __name__ == '__main__':
-    unittest.main()

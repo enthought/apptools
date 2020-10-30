@@ -155,7 +155,3 @@ class StateFunctionTestCase(unittest.TestCase):
                 self.assertEqual(values[i], getattr(obj, name),
                     'Obj [%s] attribute [%s] has [%s] instead of [%s]' % \
                     (obj, name, values[i], getattr(obj, name)))
-
-
-if __name__ == "__main__":
-    unittest.main()

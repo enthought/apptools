@@ -114,8 +114,3 @@ class TestVersionRegistry(unittest.TestCase):
         self.assertEqual(h.calls, [('upgrade', state, 0),
                                    ('upgrade1', state, 1),
                                    ('upgrade', state.a, 0)])
-
-
-
-if __name__ == "__main__":
-    unittest.main()

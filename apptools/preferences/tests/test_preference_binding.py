@@ -328,9 +328,3 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual('red', listener.new)
 
         return
-
-        
-
-# Entry point for stand-alone testing.
-if __name__ == '__main__':
-    unittest.main()
