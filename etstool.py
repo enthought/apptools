@@ -193,7 +193,7 @@ def test(runtime, environment):
     click.echo('Done test')
 
 @cli.command()
-@click.option('--runtime', default='6')
+@click.option('--runtime', default='3.6')
 @click.option('--environment', default=None)
 def docs(runtime, environment):
     """ Build HTML documentation. """
