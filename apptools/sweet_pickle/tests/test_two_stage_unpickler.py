@@ -9,8 +9,11 @@
 
 # Test cases.
 from __future__ import print_function
+
 import random
 import pickle
+import unittest
+
 import apptools.sweet_pickle as sweet_pickle
 
 ########################################
@@ -61,33 +64,34 @@ class B(object):
         self.set_a(self.a_ref)
 
 
-def test_generic():
-    print('\nRunning generic test...')
+class GenericTestCase(unittest.TestCase):
+    def test_generic(self):
+        print('\nRunning generic test...')
 
-    a = A()
-    b = B()
-    a.x = random.randint(1, 100)
-    b.set_a(a)
-    a.set_b(b)
-    value = a.x
+        a = A()
+        b = B()
+        a.x = random.randint(1, 100)
+        b.set_a(a)
+        a.set_b(b)
+        value = a.x
 
-    # This will fail, even though we have a __setstate__ method.
-    s = pickle.dumps(a)
-    new_a = pickle.loads(s)
-    try:
-        print('\ta.x: %s' % new_a.x)
-        print('\ta.b_ref.y: %s' % new_a.b_ref.y)
-    except Exception as msg:
-        print('\t%s' % 'Expected Error'.center(75,'*'))
-        print('\t%s' % msg)
-        print('\t%s' % ('*'*75))
+        # This will fail, even though we have a __setstate__ method.
+        s = pickle.dumps(a)
+        new_a = pickle.loads(s)
+        try:
+            print('\ta.x: %s' % new_a.x)
+            print('\ta.b_ref.y: %s' % new_a.b_ref.y)
+        except Exception as msg:
+            print('\t%s' % 'Expected Error'.center(75,'*'))
+            print('\t%s' % msg)
+            print('\t%s' % ('*'*75))
 
-    # This will work!
-    s = pickle.dumps(a)
-    new_a = sweet_pickle.loads(s)
-    assert new_a.x == new_a.b_ref.y == value
+        # This will work!
+        s = pickle.dumps(a)
+        new_a = sweet_pickle.loads(s)
+        assert new_a.x == new_a.b_ref.y == value
 
-    print('Generic test succesfull.\n\n')
+        print('Generic test succesfull.\n\n')
 
 
 ########################################
@@ -150,27 +154,28 @@ class Application(object):
         print('\t%s' % self.reader.data)
 
 
-def test_toy_app():
-    print('\nRunning toy app test...')
+class ToyAppTestCase(unittest.TestCase):
+    def test_toy_app(self):
+        print('\nRunning toy app test...')
 
-    a = Application()
-    a.finder.find()
-    a.get()
-    s = pickle.dumps(a)
-    b = pickle.loads(s)
-    # Won't work.
-    try:
-        b.get()
-    except Exception as msg:
-        print('\t%s' % 'Expected Error'.center(75,'*'))
-        print('\t%s' % msg)
-        print('\t%s' % ('*'*75))
+        a = Application()
+        a.finder.find()
+        a.get()
+        s = pickle.dumps(a)
+        b = pickle.loads(s)
+        # Won't work.
+        try:
+            b.get()
+        except Exception as msg:
+            print('\t%s' % 'Expected Error'.center(75,'*'))
+            print('\t%s' % msg)
+            print('\t%s' % ('*'*75))
 
-    # Works fine.
-    c = sweet_pickle.loads(s)
-    c.get()
+        # Works fine.
+        c = sweet_pickle.loads(s)
+        c.get()
 
-    print('Toy app test succesfull.\n\n')
+        print('Toy app test succesfull.\n\n')
 
 
 if __name__ == '__main__':
