@@ -5,8 +5,6 @@ from __future__ import division
 
 import unittest
 
-from nose.tools import assert_equal
-
 from ..lru_cache import LRUCache
 
 
