@@ -119,7 +119,3 @@ class TestFilePath(unittest.TestCase):
         state = state_pickler.load_state(s)
         self.assertEqual(state.f.abs_pth,
                          join(cwd, 'foo', 't.vtk'))
-
-
-if __name__ == "__main__":
-    unittest.main()

@@ -201,6 +201,3 @@ class FileTestCase(unittest.TestCase):
         self.assertEqual(f.exists, False)
 
         return
-
-if __name__ == "__main__":
-    unittest.main()

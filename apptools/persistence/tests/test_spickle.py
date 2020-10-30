@@ -61,7 +61,3 @@ class TestStatePickler(unittest.TestCase):
         st = spickle.get_state(f)
         g = spickle.state2object(st)
         self._test_object(g)
-
-
-if __name__ == "__main__":
-    unittest.main()

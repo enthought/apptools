@@ -451,8 +451,3 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         self.assertRaises(ValueError, p.get, 'bogus/acme.ui.bgcolor')
 
         return
-
-
-# Entry point for stand-alone testing.
-if __name__ == '__main__':
-    unittest.main()

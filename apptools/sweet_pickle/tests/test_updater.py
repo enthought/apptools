@@ -320,7 +320,3 @@ class UpdaterTestCase(unittest.TestCase):
             count = counts[classes_key]
             self.assertEqual(count,
                 self.registry._state_function_classes[classes_key])
-
-
-if __name__ == "__main__":
-    unittest.main()

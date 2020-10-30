@@ -44,7 +44,3 @@ class TestListSelection(unittest.TestCase):
         with self.assertRaises(ValueError):
             ListSelection.from_available_items(
                 provider_id='foo', selected=selected, all_items=all_items)
-
-
-if __name__ == '__main__':
-    unittest.main()

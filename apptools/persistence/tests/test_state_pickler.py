@@ -463,7 +463,3 @@ class TestDictPickler(unittest.TestCase):
             state_pickler.dump(obj, filepath)
         finally:
             os.remove(filepath)
-
-
-if __name__ == "__main__":
-    unittest.main()
