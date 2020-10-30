@@ -84,6 +84,8 @@ from contextlib import contextmanager
 
 import click
 
+DEFAULT_RUNTIME = "3.6"
+
 supported_runtimes = [
     '2.7',
     '3.5',
@@ -121,7 +123,7 @@ def cli():
 
 
 @cli.command()
-@click.option('--runtime', default='3.6')
+@click.option('--runtime', default=DEFAULT_RUNTIME)
 @click.option('--environment', default=None)
 @click.option(
     "--source/--no-source",
@@ -170,7 +172,7 @@ def install(runtime, environment, source):
 
 
 @cli.command()
-@click.option('--runtime', default='3.6')
+@click.option('--runtime', default=DEFAULT_RUNTIME)
 @click.option('--environment', default=None)
 def test(runtime, environment):
     """ Run the test suite in a given environment.
@@ -193,7 +195,7 @@ def test(runtime, environment):
     click.echo('Done test')
 
 @cli.command()
-@click.option('--runtime', default='3.6')
+@click.option('--runtime', default=DEFAULT_RUNTIME)
 @click.option('--environment', default=None)
 def docs(runtime, environment):
     """ Build HTML documentation. """
@@ -220,7 +222,7 @@ def docs(runtime, environment):
     execute(commands, parameters)
 
 @cli.command()
-@click.option('--runtime', default='3.6')
+@click.option('--runtime', default=DEFAULT_RUNTIME)
 @click.option('--environment', default=None)
 def cleanup(runtime, environment):
     """ Remove a development environment.
@@ -236,7 +238,7 @@ def cleanup(runtime, environment):
 
 
 @cli.command(name='test-clean')
-@click.option('--runtime', default='3.6')
+@click.option('--runtime', default=DEFAULT_RUNTIME)
 def test_clean(runtime):
     """ Run tests in a clean environment, cleaning up afterwards
 
@@ -249,7 +251,7 @@ def test_clean(runtime):
         cleanup(args=args, standalone_mode=False)
 
 @cli.command()
-@click.option('--runtime', default='3.6')
+@click.option('--runtime', default=DEFAULT_RUNTIME)
 @click.option('--environment', default=None)
 def update(runtime, environment):
     """ Update/Reinstall package into environment.
