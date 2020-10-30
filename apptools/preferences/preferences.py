@@ -585,5 +585,3 @@ class Preferences(HasTraits):
             child.dump(indent)
 
         return
-
-#### EOF ######################################################################

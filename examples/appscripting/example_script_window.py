@@ -116,5 +116,3 @@ class ExampleScriptWindow(WorkbenchWindow):
             print(script, end="")
         else:
             print("Script empty")
-
-#### EOF ######################################################################

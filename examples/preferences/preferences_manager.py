@@ -90,5 +90,3 @@ if __name__ == '__main__':
 
     # Save the preferences...
     get_default_preferences().flush()
-
-#### EOF ######################################################################

@@ -37,5 +37,3 @@ class NullHandler(logging.Handler):
         """ Emits a log record. """
 
         pass
-
-#### EOF ######################################################################

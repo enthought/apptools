@@ -90,6 +90,3 @@ class LoggerPreferencesPage(PreferencesPage):
             ),
         ),
     )
-
-
-#### EOF ######################################################################

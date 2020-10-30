@@ -231,5 +231,3 @@ class VersionedUnpickler(NewUnpickler):
         #print("importing %s %s" % (name, module))
         module = __import__(module, globals(), locals(), [name])
         return vars(module)[name]
-
-### EOF #################################################################

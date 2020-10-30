@@ -122,5 +122,3 @@ class DirContextTestCase(ContextTestCase):
         self.assertEqual(attributes['colour'], 'blue')
 
         return
-
-#### EOF ######################################################################

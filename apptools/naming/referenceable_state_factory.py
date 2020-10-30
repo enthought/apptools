@@ -37,5 +37,3 @@ class ReferenceableStateFactory(StateFactory):
             state = obj.reference
 
         return state
-
-### EOF #######################################################################

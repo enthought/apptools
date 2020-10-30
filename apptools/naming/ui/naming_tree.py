@@ -70,5 +70,3 @@ class NamingTree(NodeTree):
             binding = None
 
         return binding
-
-##### EOF #####################################################################

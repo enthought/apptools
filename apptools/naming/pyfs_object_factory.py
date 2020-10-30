@@ -39,5 +39,3 @@ class PyFSObjectFactory(ObjectFactory):
                 obj = File(state.addresses[0].content)
 
         return obj
-
-### EOF #######################################################################

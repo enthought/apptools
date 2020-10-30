@@ -39,5 +39,3 @@ class StateFactory(HasPrivateTraits):
         """
 
         raise NotImplementedError
-
-### EOF #######################################################################

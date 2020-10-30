@@ -117,5 +117,3 @@ class PreferencesPage(PreferencesHelper):
             return False
 
         return True
-
-#### EOF ######################################################################

@@ -37,5 +37,3 @@ class TraitDictContextAdapterFactory(ContextAdapterFactory):
         )
 
         return adapter
-
-#### EOF ######################################################################

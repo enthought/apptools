@@ -395,5 +395,3 @@ class PyFSContextTestCase(unittest.TestCase):
         self.assertEqual(sub.namespace_name, 'data/sub')
 
         return
-
-#### EOF ######################################################################

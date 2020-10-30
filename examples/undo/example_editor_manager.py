@@ -138,5 +138,3 @@ class ExampleEditorManager(EditorManager):
             raise NotImplementedError, "unsupported toolkit: %s" % tk_name
 
         return ed
-
-#### EOF ######################################################################

@@ -79,6 +79,3 @@ class LogQueueHandler(Handler):
                 pass
         self.dirty = True
         return
-
-
-## EOF ##################################################################

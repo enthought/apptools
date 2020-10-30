@@ -32,5 +32,3 @@ class PyContextTestCase(ContextTestCase):
         """ Creates the context that we are testing. """
 
         return PyContext(namespace={})
-
-#### EOF ######################################################################

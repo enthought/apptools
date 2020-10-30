@@ -460,5 +460,3 @@ class ScopedPreferences(Preferences):
             child.dump(indent)
 
         return
-
-#### EOF ######################################################################

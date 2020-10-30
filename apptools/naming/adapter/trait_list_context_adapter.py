@@ -62,5 +62,3 @@ class TraitListContextAdapter(ListContextAdapter):
             collection = getattr(obj, components[-1])
 
         return collection
-
-#### EOF ######################################################################

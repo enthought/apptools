@@ -45,5 +45,3 @@ class PyFSStateFactory(StateFactory):
                 )
 
         return state
-
-### EOF #######################################################################

@@ -67,5 +67,3 @@ class AbstractFactory(HasTraits):
         )
 
         return message
-
-#### EOF ######################################################################

@@ -86,5 +86,3 @@ class NamingManager(HasTraits):
 
 # Singleton instance.
 naming_manager = NamingManager()
-
-### EOF #######################################################################

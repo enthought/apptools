@@ -355,5 +355,3 @@ class QualityAgentView(Dialog):
 
     def _smtp_server_default(self):
         return self.service.preferences.smtp_server
-
-####### EOF #############################################################

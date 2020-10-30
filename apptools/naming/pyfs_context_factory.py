@@ -38,5 +38,3 @@ class PyFSContextFactory(ObjectFactory):
                     obj = context._context_factory(name, path)
 
         return obj
-
-### EOF #######################################################################
