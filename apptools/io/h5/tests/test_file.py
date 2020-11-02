@@ -68,7 +68,8 @@ class FileTestCase(unittest.TestCase):
         array = np.arange(3)
         with open_h5file(H5_TEST_FILE, mode='w') as h5:
             h5.create_array('/array', array)
-            testing.assert_raises(NameError, h5.__getitem__, '/not_there')
+            with self.assertRaises(NameError):
+                h5['/not_there']
 
     def test_iteritems(self):
         node_paths = ['/foo', '/bar', '/baz']
@@ -149,13 +150,15 @@ class FileTestCase(unittest.TestCase):
     def test_shape_only_raises(self):
         shape = (3, 4)
         with open_h5file(H5_TEST_FILE, mode='w') as h5:
-            testing.assert_raises(ValueError, h5.create_array, '/array', shape)
+            with self.assertRaises(ValueError):
+                h5.create_array('/array', shape)
 
     def test_create_duplicate_array_raises(self):
         array = np.arange(3)
         with open_h5file(H5_TEST_FILE, mode='w', delete_existing=False) as h5:
             h5.create_array('/array', array)
-            testing.assert_raises(ValueError, h5.create_array, '/array', array)
+            with self.assertRaises(ValueError):
+                h5.create_array('/array', array)
 
     def test_delete_existing_array_with_H5File(self):
         old_array = np.arange(3)
@@ -259,12 +262,13 @@ class FileTestCase(unittest.TestCase):
             group.remove_group('group')
             assert node_path not in h5
 
-    @testing.raises(ValueError)
     def test_remove_group_with_remove_node(self):
         node_path = '/group'
         with open_h5file(H5_TEST_FILE, mode='w') as h5:
             h5.create_group(node_path)
-            h5.remove_node(node_path)  # Groups should be removed w/ `remove_group`
+            with self.assertRaises(ValueError):
+                # Groups should be removed w/ `remove_group`
+                h5.remove_node(node_path)
 
     def test_remove_node_with_H5File(self):
         with open_h5file(H5_TEST_FILE, mode='w', delete_existing=True) as h5:
@@ -284,9 +288,12 @@ class FileTestCase(unittest.TestCase):
 
     def test_read_mode_raises_on_nonexistent_file(self):
         cm = open_h5file('_nonexistent_.h5', mode='r')
-        testing.assert_raises(IOError, cm.__enter__)
+        with self.assertRaises(IOError):
+            cm.__enter__()
+
         cm = open_h5file('_nonexistent_.h5', mode='r+')
-        testing.assert_raises(IOError, cm.__enter__)
+        with self.assertRaises(IOError):
+            cm.__enter__()
 
     def test_cleanup(self):
         with open_h5file(H5_TEST_FILE, mode='w') as h5:
@@ -476,13 +483,13 @@ class FileTestCase(unittest.TestCase):
 
     def test_bad_node_name(self):
         with open_h5file(H5_TEST_FILE, mode='w') as h5:
-            testing.assert_raises(ValueError, h5.create_array,
-                                '/attrs', np.zeros(3))
+            with self.assertRaises(ValueError):
+                h5.create_array('/attrs', np.zeros(3))
 
     def test_bad_group_name(self):
         with open_h5file(H5_TEST_FILE, mode='w') as h5:
-            testing.assert_raises(ValueError, h5.create_array,
-                                '/attrs/array', np.zeros(3))
+            with self.assertRaises(ValueError):
+                h5.create_array('/attrs/array', np.zeros(3))
 
     def test_create_dict_with_H5File(self):
         data = {'a': 1}
@@ -527,7 +534,3 @@ class FileTestCase(unittest.TestCase):
 
             group.remove_node('table')
             assert node_path not in h5
-
-
-if __name__ == '__main__':
-    testing.run_module_suite()

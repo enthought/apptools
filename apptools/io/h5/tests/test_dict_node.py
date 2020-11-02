@@ -1,7 +1,7 @@
 import unittest
 
 import numpy as np
-from numpy.testing import raises, assert_allclose
+from numpy.testing import assert_allclose
 import six
 
 from ..dict_node import H5DictNode
@@ -148,12 +148,12 @@ class DictNodeTestCase(unittest.TestCase):
             assert 'a' not in h5dict_from_disk
             assert h5dict_from_disk['b'] == 2
 
-    @raises(KeyError)
     def test_undefined_key(self):
         with temp_h5_file() as h5:
             data = dict(a='int')
             h5dict = H5DictNode.add_to_h5file(h5, NODE, data)
-            del h5dict['b']
+            with self.assertRaises(KeyError):
+                del h5dict['b']
 
     def test_basic_dtypes(self):
         with temp_h5_file() as h5:
@@ -178,14 +178,9 @@ class DictNodeTestCase(unittest.TestCase):
             assert sub_dict['b'] == 1
             assert sub_dict['c'] == 2
 
-    @raises(AssertionError)
     def test_wrap_self_raises_error(self):
         with temp_h5_file() as h5:
             H5DictNode.add_to_h5file(h5, NODE)
             node = h5[NODE]
-            H5DictNode(node)
-
-
-if __name__ == '__main__':
-    from numpy import testing
-    testing.run_module_suite()
+            with self.assertRaises(AssertionError):
+                H5DictNode(node)
