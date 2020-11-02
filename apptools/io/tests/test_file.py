@@ -161,7 +161,8 @@ class FileTestCase(unittest.TestCase):
         # Create the file.
         f.create_file(content)
         self.assertEqual(f.exists, True)
-        self.assertEqual(open(f.path).read(), content)
+        with open(f.path) as file:
+            self.assertEqual(file.read(), content)
 
         # Try to create it again.
         self.assertRaises(ValueError, f.create_file, content)
