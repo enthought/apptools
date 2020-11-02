@@ -109,7 +109,7 @@ class PyFSContextTestCase(unittest.TestCase):
         f = PyFSContext(path='other')
         context.bind('sub/other', f)
         self.assertEqual(len(sub.list_bindings('')), 3)
-        self.assert_(f.path in context.lookup('sub/other').path)
+        self.assertTrue(f.path in context.lookup('sub/other').path)
 
         # Bind a Python object.
         context.bind('sub/a', 1)
@@ -248,7 +248,7 @@ class PyFSContextTestCase(unittest.TestCase):
         # Create a sub-context.
         a = context.create_subcontext('sub/a')
         self.assertEqual(len(sub.list_bindings('')), 1)
-        self.assert_(os.path.isdir(os.path.join(sub.path, 'a')))
+        self.assertTrue(os.path.isdir(os.path.join(sub.path, 'a')))
 
         # Try to bind it again.
         self.assertRaises(
@@ -277,7 +277,7 @@ class PyFSContextTestCase(unittest.TestCase):
         # Destroy it.
         context.destroy_subcontext('sub/a')
         self.assertEqual(len(sub.list_bindings('')), 0)
-        self.assert_(not os.path.isdir(os.path.join(sub.path, 'a')))
+        self.assertTrue(not os.path.isdir(os.path.join(sub.path, 'a')))
 
         # Bind a name.
         context.bind('sub/a', 1)
@@ -303,7 +303,7 @@ class PyFSContextTestCase(unittest.TestCase):
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
-        self.assert_(isinstance(sub, DirContext))
+        self.assertTrue(isinstance(sub, DirContext))
 
         #### Generic name resolution tests ####
 
@@ -338,7 +338,7 @@ class PyFSContextTestCase(unittest.TestCase):
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
-        self.assert_(isinstance(sub, DirContext))
+        self.assertTrue(isinstance(sub, DirContext))
 
         #### Generic name resolution tests ####
 
@@ -389,7 +389,7 @@ class PyFSContextTestCase(unittest.TestCase):
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
-        self.assert_(isinstance(sub, DirContext))
+        self.assertTrue(isinstance(sub, DirContext))
 
         self.assertEqual(context.namespace_name, 'data')
         self.assertEqual(sub.namespace_name, 'data/sub')
