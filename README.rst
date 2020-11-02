@@ -6,10 +6,6 @@ apptools: application tools
     :target: https://travis-ci.org/enthought/apptools
     :alt: Build status
 
-.. image:: https://codecov.io/github/enthought/apptools/coverage.svg?branch=master
-    :target: https://codecov.io/github/enthought/apptools?branch=master
-    :alt: Coverage report
-
 Documentation: http://docs.enthought.com/apptools
 
 Source Code: http://www.github.com/enthought/apptools
