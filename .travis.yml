@@ -32,8 +32,6 @@ script:
 
 after_success:
   - edm run -- coverage combine
-  - edm run -- pip install codecov
-  - edm run -- codecov
 
 notifications:
   email:
