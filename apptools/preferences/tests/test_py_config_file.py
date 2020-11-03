@@ -101,7 +101,7 @@ class PyConfigFileTestCase(unittest.TestCase):
 
         config.save(tmp)
         try:
-            self.assert_(os.path.exists(tmp))
+            self.assertTrue(os.path.exists(tmp))
 
             # Make sure we can read the file back in and that we get the same
             # values!

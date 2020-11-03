@@ -43,7 +43,7 @@ class DirContextTestCase(ContextTestCase):
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
-        self.assert_(isinstance(sub, DirContext))
+        self.assertTrue(isinstance(sub, DirContext))
 
         #### Generic name resolution tests ####
 
@@ -78,7 +78,7 @@ class DirContextTestCase(ContextTestCase):
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
-        self.assert_(isinstance(sub, DirContext))
+        self.assertTrue(isinstance(sub, DirContext))
 
         #### Generic name resolution tests ####
 

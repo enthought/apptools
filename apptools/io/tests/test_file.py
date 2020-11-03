@@ -58,7 +58,7 @@ class FileTestCase(unittest.TestCase):
         # Properties of a non-existent file.
         f = File('data/bogus.xx')
 
-        self.assert_(os.path.abspath(os.path.curdir) in f.absolute_path)
+        self.assertTrue(os.path.abspath(os.path.curdir) in f.absolute_path)
         self.assertEqual(f.children, None)
         self.assertEqual(f.ext, '.xx')
         self.assertEqual(f.exists, False)
@@ -70,14 +70,14 @@ class FileTestCase(unittest.TestCase):
         self.assertEqual(f.name, 'bogus')
         self.assertEqual(f.parent.path, 'data')
         self.assertEqual(f.path, 'data/bogus.xx')
-        self.assert_(os.path.abspath(os.path.curdir) in f.url)
+        self.assertTrue(os.path.abspath(os.path.curdir) in f.url)
         self.assertEqual(str(f), 'File(%s)' % f.path)
 
         # Properties of an existing file.
         f = File('data/foo.txt')
         f.create_file()
 
-        self.assert_(os.path.abspath(os.path.curdir) in f.absolute_path)
+        self.assertTrue(os.path.abspath(os.path.curdir) in f.absolute_path)
         self.assertEqual(f.children, None)
         self.assertEqual(f.ext, '.txt')
         self.assertEqual(f.exists, True)
@@ -89,7 +89,7 @@ class FileTestCase(unittest.TestCase):
         self.assertEqual(f.name, 'foo')
         self.assertEqual(f.parent.path, 'data')
         self.assertEqual(f.path, 'data/foo.txt')
-        self.assert_(os.path.abspath(os.path.curdir) in f.url)
+        self.assertTrue(os.path.abspath(os.path.curdir) in f.url)
 
         # Make it readonly.
         os.chmod(f.path, stat.S_IRUSR)
@@ -161,7 +161,8 @@ class FileTestCase(unittest.TestCase):
         # Create the file.
         f.create_file(content)
         self.assertEqual(f.exists, True)
-        self.assertEqual(open(f.path).read(), content)
+        with open(f.path) as file:
+            self.assertEqual(file.read(), content)
 
         # Try to create it again.
         self.assertRaises(ValueError, f.create_file, content)

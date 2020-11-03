@@ -59,7 +59,7 @@ class FolderTestCase(unittest.TestCase):
         # Properties of a non-existent folder.
         f = File('data/bogus')
 
-        self.assert_(os.path.abspath(os.path.curdir) in f.absolute_path)
+        self.assertTrue(os.path.abspath(os.path.curdir) in f.absolute_path)
         self.assertEqual(f.children, None)
         self.assertEqual(f.ext, '')
         self.assertEqual(f.exists, False)
@@ -71,14 +71,14 @@ class FolderTestCase(unittest.TestCase):
         self.assertEqual(f.name, 'bogus')
         self.assertEqual(f.parent.path, 'data')
         self.assertEqual(f.path, 'data/bogus')
-        self.assert_(os.path.abspath(os.path.curdir) in f.url)
+        self.assertTrue(os.path.abspath(os.path.curdir) in f.url)
         self.assertEqual(str(f), 'File(%s)' % f.path)
 
         # Properties of an existing folder.
         f = File('data/sub')
         f.create_folder()
 
-        self.assert_(os.path.abspath(os.path.curdir) in f.absolute_path)
+        self.assertTrue(os.path.abspath(os.path.curdir) in f.absolute_path)
         self.assertEqual(len(f.children), 0)
         self.assertEqual(f.ext, '')
         self.assertEqual(f.exists, True)
@@ -90,7 +90,7 @@ class FolderTestCase(unittest.TestCase):
         self.assertEqual(f.name, 'sub')
         self.assertEqual(f.parent.path, 'data')
         self.assertEqual(f.path, 'data/sub')
-        self.assert_(os.path.abspath(os.path.curdir) in f.url)
+        self.assertTrue(os.path.abspath(os.path.curdir) in f.url)
 
         # Make it readonly.
         os.chmod(f.path, stat.S_IRUSR)
@@ -108,7 +108,7 @@ class FolderTestCase(unittest.TestCase):
         init = File('data/package/__init__.py')
         init.create_file()
 
-        self.assert_(os.path.abspath(os.path.curdir) in f.absolute_path)
+        self.assertTrue(os.path.abspath(os.path.curdir) in f.absolute_path)
         self.assertEqual(len(f.children), 1)
         self.assertEqual(f.ext, '')
         self.assertEqual(f.exists, True)
@@ -120,7 +120,7 @@ class FolderTestCase(unittest.TestCase):
         self.assertEqual(f.name, 'package')
         self.assertEqual(f.parent.path, 'data')
         self.assertEqual(f.path, 'data/package')
-        self.assert_(os.path.abspath(os.path.curdir) in f.url)
+        self.assertTrue(os.path.abspath(os.path.curdir) in f.url)
 
         return
 
