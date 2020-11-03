@@ -182,7 +182,7 @@ def test(runtime, environment):
     environ['PYTHONUNBUFFERED'] = "1"
     commands = [
         "edm run -e {environment} -- python -W default -m coverage run -p -m "
-         "unittest discover -v apptools"
+        "unittest discover -v apptools"
     ]
 
     # We run in a tempdir to avoid accidentally picking up wrong apptools
