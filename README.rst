@@ -19,7 +19,6 @@ The apptools project includes a set of packages that Enthought has found
 useful in creating a number of applications.  They implement functionality
 that is commonly needed by many applications
 
-- **apptools.appscripting**: Framework for scripting applications.
 - **apptools.help**: Provides a plugin for displaying documents and examples
   and running demos in Envisage Workbench applications.
 - **apptools.io**: Provides an abstraction for files and folders in a file
