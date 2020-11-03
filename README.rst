@@ -41,7 +41,6 @@ that is commonly needed by many applications
 - **apptools.sweet_pickle**: Handles class-level versioning, to support
   loading of saved data that exist over several generations of internal class
   structures.
-- **apptools.template**: Supports creating templatizable object hierarchies.
 - **apptools.type_manager**: Manages type extensions, including factories
   to generate adapters, and hooks for methods and functions.
 - **apptools.undo**: Supports undoing and scripting application commands.
