@@ -27,9 +27,6 @@ that is commonly needed by many applications
 - **apptools.logger**: Convenience functions for creating logging handlers
 - **apptools.naming**: Manages naming contexts, supporting non-string data
   types and scoped preferences
-- **apptools.permissions**: Supports limiting access to parts of an
-  application unless the user is appropriately authorised (not full-blown
-  security).
 - **apptools.persistence**: Supports pickling the state of a Python object
   to a dictionary, which can then be flexibly applied in restoring the state of
   the object.

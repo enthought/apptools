@@ -6,10 +6,6 @@ AppTools Documentation
     :glob:
 
     appscripting/*
-    permissions/Introduction
-    permissions/ApplicationAPI
-    permissions/DefaultPolicyManagerDataAPI
-    permissions/DefaultUserManagerDataAPI
     preferences/*
     scripting/*
     undo/*
