@@ -109,7 +109,7 @@ class PyFSContextTestCase(unittest.TestCase):
         f = PyFSContext(path='other')
         context.bind('sub/other', f)
         self.assertEqual(len(sub.list_bindings('')), 3)
-        self.assertTrue(f.path in context.lookup('sub/other').path)
+        self.assertIn(f.path, context.lookup('sub/other').path)
 
         # Bind a Python object.
         context.bind('sub/a', 1)
@@ -303,7 +303,7 @@ class PyFSContextTestCase(unittest.TestCase):
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
-        self.assertTrue(isinstance(sub, DirContext))
+        self.assertIsInstance(sub, DirContext)
 
         #### Generic name resolution tests ####
 
@@ -338,7 +338,7 @@ class PyFSContextTestCase(unittest.TestCase):
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
-        self.assertTrue(isinstance(sub, DirContext))
+        self.assertIsInstance(sub, DirContext)
 
         #### Generic name resolution tests ####
 
@@ -389,7 +389,7 @@ class PyFSContextTestCase(unittest.TestCase):
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
-        self.assertTrue(isinstance(sub, DirContext))
+        self.assertIsInstance(sub, DirContext)
 
         self.assertEqual(context.namespace_name, 'data')
         self.assertEqual(sub.namespace_name, 'data/sub')
