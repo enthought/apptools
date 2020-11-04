@@ -40,7 +40,3 @@ install:
 test_script:
   - sh: edm run -- python etstool.py test --runtime="${RUNTIME}"
   - cmd: edm run -- python etstool.py test --runtime=%runtime%
-on_success:
-  - edm run -- coverage combine
-  - edm run -- pip install codecov
-  - edm run -- codecov

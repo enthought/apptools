@@ -43,7 +43,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         """ Called immediately after each test method has been called. """
 
         # Remove the temporary directory.
-        os.removedirs(self.tmpdir)
+        os.rmdir(self.tmpdir)
 
         return
 
@@ -61,7 +61,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         # Try a simple path.
         node = p.node('acme')
-        self.assertNotEqual(None, node)
+        self.assertIsNotNone(node)
         self.assertEqual('acme', node.name)
         self.assertEqual('acme', node.path)
         self.assertEqual(p.node('application/'), node.parent)
@@ -71,14 +71,14 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         # Try a nested path.
         node = p.node('acme.ui')
-        self.assertNotEqual(None, node)
+        self.assertIsNotNone(node)
         self.assertEqual('ui', node.name)
         self.assertEqual('acme.ui', node.path)
         self.assertEqual(p.node('application/acme'), node.parent)
 
         # And just to be sure, a really nested path.
         node = p.node('acme.ui.splash_screen')
-        self.assertNotEqual(None, node)
+        self.assertIsNotNone(node)
         self.assertEqual('splash_screen', node.name)
         self.assertEqual('acme.ui.splash_screen', node.path)
         self.assertEqual(p.node('application/acme.ui'), node.parent)
@@ -103,7 +103,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         p.save()
 
         # Make sure a file was written.
-        self.assertEqual(True, os.path.exists(tmp))
+        self.assertTrue(os.path.exists(tmp))
 
         # Load the 'ini' file into a new preferences node and make sure the
         # preference is in there.
@@ -147,8 +147,8 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         p = self.preferences
 
         # Make sure the default built-in scopes get created.
-        self.assertEqual(True, p.node_exists('application/'))
-        self.assertEqual(True, p.node_exists('default/'))
+        self.assertTrue(p.node_exists('application/'))
+        self.assertTrue(p.node_exists('default/'))
 
         return
 
@@ -256,7 +256,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         # Try a simple path.
         node = p.node('default/acme')
-        self.assertNotEqual(None, node)
+        self.assertIsNotNone(node)
         self.assertEqual('acme', node.name)
         self.assertEqual('acme', node.path)
         self.assertEqual(p.node('default/'), node.parent)
@@ -266,14 +266,14 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         # Try a nested path.
         node = p.node('default/acme.ui')
-        self.assertNotEqual(None, node)
+        self.assertIsNotNone(node)
         self.assertEqual('ui', node.name)
         self.assertEqual('acme.ui', node.path)
         self.assertEqual(p.node('default/acme'), node.parent)
 
         # And just to be sure, a really nested path.
         node = p.node('default/acme.ui.splash_screen')
-        self.assertNotEqual(None, node)
+        self.assertIsNotNone(node)
         self.assertEqual('splash_screen', node.name)
         self.assertEqual('acme.ui.splash_screen', node.path)
         self.assertEqual(p.node('default/acme.ui'), node.parent)
@@ -285,11 +285,11 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
 
         p = self.preferences
 
-        self.assertEqual(True, p.node_exists())
-        self.assertEqual(False, p.node_exists('default/acme'))
+        self.assertTrue(p.node_exists())
+        self.assertFalse(p.node_exists('default/acme'))
 
         p.node('default/acme')
-        self.assertEqual(True, p.node_exists('default/acme'))
+        self.assertTrue(p.node_exists('default/acme'))
 
         return
 
@@ -394,7 +394,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         p.set('default/acme.ui.bgcolor', 'blue')
         self.assertEqual(p.node('default/acme.ui'), listener.node)
         self.assertEqual('bgcolor', listener.key)
-        self.assertEqual(None, listener.old)
+        self.assertIsNone(listener.old)
         self.assertEqual('blue', listener.new)
 
         # Set it to another value to make sure we get the 'old' value
@@ -429,7 +429,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         p.set('default/acme.ui.bgcolor', 'blue')
         self.assertEqual(p.node('default/acme.ui'), listener.node)
         self.assertEqual('bgcolor', listener.key)
-        self.assertEqual(None, listener.old)
+        self.assertIsNone(listener.old)
         self.assertEqual('blue', listener.new)
 
         # Remove the listener.
@@ -439,7 +439,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         listener.node = None
 
         p.set('default/acme.ui.bgcolor', 'blue')
-        self.assertEqual(None, listener.node)
+        self.assertIsNone(listener.node)
 
         return
 

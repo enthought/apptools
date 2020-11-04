@@ -40,7 +40,7 @@ class PreferencesTestCase(unittest.TestCase):
         """ Called immediately after each test method has been called. """
 
         # Remove the temporary directory.
-        os.removedirs(self.tmpdir)
+        os.rmdir(self.tmpdir)
 
         return
 
@@ -147,9 +147,9 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # Try non-existent names to get the default-default!
-        self.assertEqual(None, p.get('bogus'))
-        self.assertEqual(None, p.get('acme.bogus'))
-        self.assertEqual(None, p.get('acme.ui.bogus'))
+        self.assertIsNone(p.get('bogus'))
+        self.assertIsNone(p.get('acme.bogus'))
+        self.assertIsNone(p.get('acme.ui.bogus'))
 
         # Try non-existent names to get the specified default.
         self.assertEqual('a value', p.get('bogus', 'a value'))
@@ -210,7 +210,7 @@ class PreferencesTestCase(unittest.TestCase):
 
         # Try a simple path.
         node = p.node('acme')
-        self.assertNotEqual(None, node)
+        self.assertIsNotNone(node)
         self.assertEqual('acme', node.name)
         self.assertEqual('acme', node.path)
         self.assertEqual(p, node.parent)
@@ -220,14 +220,14 @@ class PreferencesTestCase(unittest.TestCase):
 
         # Try a nested path.
         node = p.node('acme.ui')
-        self.assertNotEqual(None, node)
+        self.assertIsNotNone(node)
         self.assertEqual('ui', node.name)
         self.assertEqual('acme.ui', node.path)
         self.assertEqual(p.node('acme'), node.parent)
 
         # And just to be sure, a really nested path.
         node = p.node('acme.ui.splash_screen')
-        self.assertNotEqual(None, node)
+        self.assertIsNotNone(node)
         self.assertEqual('splash_screen', node.name)
         self.assertEqual('acme.ui.splash_screen', node.path)
         self.assertEqual(p.node('acme.ui'), node.parent)
@@ -239,11 +239,11 @@ class PreferencesTestCase(unittest.TestCase):
 
         p = self.preferences
 
-        self.assertEqual(True, p.node_exists())
-        self.assertEqual(False, p.node_exists('acme'))
+        self.assertTrue(p.node_exists())
+        self.assertFalse(p.node_exists('acme'))
 
         p.node('acme')
-        self.assertEqual(True, p.node_exists('acme'))
+        self.assertTrue(p.node_exists('acme'))
 
         return
 
@@ -302,8 +302,8 @@ class PreferencesTestCase(unittest.TestCase):
 
         # Clear all preferences from the node.
         p.clear('acme.ui')
-        self.assertEqual(None, p.get('acme.ui.bgcolor'))
-        self.assertEqual(None, p.get('acme.ui.width'))
+        self.assertIsNone(p.get('acme.ui.bgcolor'))
+        self.assertIsNone(p.get('acme.ui.width'))
         self.assertEqual(0, len(p.keys('acme.ui')))
 
         return
@@ -319,11 +319,11 @@ class PreferencesTestCase(unittest.TestCase):
 
         # Remove it.
         p.remove('acme.ui.bgcolor')
-        self.assertEqual(None, p.get('acme.ui.bgcolor'))
+        self.assertIsNone(p.get('acme.ui.bgcolor'))
 
         # Make sure we can't remove nodes!
         p.remove('acme.ui')
-        self.assertEqual(True, p.node_exists('acme.ui'))
+        self.assertTrue(p.node_exists('acme.ui'))
 
         return
 
@@ -536,7 +536,7 @@ class PreferencesTestCase(unittest.TestCase):
         p.set('acme.ui.bgcolor', 'blue')
         self.assertEqual(p.node('acme.ui'), listener.node)
         self.assertEqual('bgcolor', listener.key)
-        self.assertEqual(None, listener.old)
+        self.assertIsNone(listener.old)
         self.assertEqual('blue', listener.new)
 
         # Set it to another value to make sure we get the 'old' value
@@ -571,7 +571,7 @@ class PreferencesTestCase(unittest.TestCase):
         p.set('acme.ui.bgcolor', 'blue')
         self.assertEqual(p.node('acme.ui'), listener.node)
         self.assertEqual('bgcolor', listener.key)
-        self.assertEqual(None, listener.old)
+        self.assertIsNone(listener.old)
         self.assertEqual('blue', listener.new)
 
         # Remove the listener.
@@ -581,7 +581,7 @@ class PreferencesTestCase(unittest.TestCase):
         listener.node = None
 
         p.set('acme.ui.bgcolor', 'blue')
-        self.assertEqual(None, listener.node)
+        self.assertIsNone(listener.node)
 
         return
 
@@ -607,7 +607,7 @@ class PreferencesTestCase(unittest.TestCase):
         p.set('acme.ui.bgcolor', 'blue')
         self.assertEqual(p.node('acme.ui'), listener.node)
         self.assertEqual('bgcolor', listener.key)
-        self.assertEqual(None, listener.old)
+        self.assertIsNone(listener.old)
         self.assertEqual('blue', listener.new)
 
         # Clear out the listener.
@@ -615,6 +615,6 @@ class PreferencesTestCase(unittest.TestCase):
 
         # Set the same value and make sure the listener *doesn't* get called.
         p.set('acme.ui.bgcolor', 'blue')
-        self.assertEqual(None, listener.node)
+        self.assertIsNone(listener.node)
 
         return
