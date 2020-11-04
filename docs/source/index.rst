@@ -5,7 +5,6 @@ AppTools Documentation
     :maxdepth: 2
     :glob:
 
-    appscripting/*
     preferences/*
     scripting/*
     undo/*

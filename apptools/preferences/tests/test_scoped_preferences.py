@@ -43,7 +43,7 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
         """ Called immediately after each test method has been called. """
 
         # Remove the temporary directory.
-        os.removedirs(self.tmpdir)
+        os.rmdir(self.tmpdir)
 
         return
 

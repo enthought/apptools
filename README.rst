@@ -6,10 +6,6 @@ apptools: application tools
     :target: https://travis-ci.org/enthought/apptools
     :alt: Build status
 
-.. image:: https://codecov.io/github/enthought/apptools/coverage.svg?branch=master
-    :target: https://codecov.io/github/enthought/apptools?branch=master
-    :alt: Coverage report
-
 Documentation: http://docs.enthought.com/apptools
 
 Source Code: http://www.github.com/enthought/apptools
@@ -19,7 +15,6 @@ The apptools project includes a set of packages that Enthought has found
 useful in creating a number of applications.  They implement functionality
 that is commonly needed by many applications
 
-- **apptools.appscripting**: Framework for scripting applications.
 - **apptools.help**: Provides a plugin for displaying documents and examples
   and running demos in Envisage Workbench applications.
 - **apptools.io**: Provides an abstraction for files and folders in a file
@@ -38,7 +33,6 @@ that is commonly needed by many applications
 - **apptools.sweet_pickle**: Handles class-level versioning, to support
   loading of saved data that exist over several generations of internal class
   structures.
-- **apptools.template**: Supports creating templatizable object hierarchies.
 - **apptools.type_manager**: Manages type extensions, including factories
   to generate adapters, and hooks for methods and functions.
 - **apptools.undo**: Supports undoing and scripting application commands.

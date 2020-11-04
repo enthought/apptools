@@ -211,7 +211,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
 
         # Clean up!
         os.remove(tmp)
-        os.removedirs(tmpdir)
+        os.rmdir(tmpdir)
 
         return
 
