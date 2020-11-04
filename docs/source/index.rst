@@ -5,10 +5,6 @@ AppTools Documentation
     :maxdepth: 2
     :glob:
 
-    permissions/Introduction
-    permissions/ApplicationAPI
-    permissions/DefaultPolicyManagerDataAPI
-    permissions/DefaultUserManagerDataAPI
     preferences/*
     scripting/*
     undo/*
