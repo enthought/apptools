@@ -373,7 +373,7 @@ def build_changelog(ctx):
 
         for filename in file_paths:
             with open(filename, "r", encoding="utf-8") as fp:
-                contents.append(fp.read())
+                contents.append("* " + fp.read())
 
     # Prepend content to the changelog file.
 
