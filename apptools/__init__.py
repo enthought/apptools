@@ -2,12 +2,8 @@
 # All rights reserved.
 
 try:
-    from apptools._version import full_version as __version__
+    from apptools.version import version as __version__
 except ImportError:
-    __version__ = 'not-built'
-
-__requires__ = [
-    'configobj',
-    'six',
-    'traitsui',
-]
+    # If we get here, we're using a source tree that hasn't been created via
+    # the setup script.
+    __version__ = "unknown"
