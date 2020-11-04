@@ -1,0 +1,1 @@
+Remove ``template`` subpackage (#173)
