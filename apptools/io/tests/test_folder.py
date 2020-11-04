@@ -174,11 +174,11 @@ class FolderTestCase(unittest.TestCase):
         """ folder creation """
 
         f = File('data/sub')
-        self.assertFalse(f.exists, False)
+        self.assertFalse(f.exists)
 
         # Create the folder.
         f.create_folder()
-        self.assertTrue(f.exists, True)
+        self.assertTrue(f.exists)
 
         parent = File('data')
         self.assertEqual(len(parent.children), 1)
