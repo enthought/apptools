@@ -659,8 +659,8 @@ class Recorder(HasTraits):
     def _is_arbitrary_object(self, object):
         """Return True if the object is an arbitrary non-primitive object.
 
-        As done in appscripting, we assume that if the hex id of the object is
-        in its string representation then it is an arbitrary object.
+        We assume that if the hex id of the object is in its string
+        representation then it is an arbitrary object.
         """
         ob_id = id(object)
         orepr = repr(object)

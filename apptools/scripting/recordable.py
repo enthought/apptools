@@ -18,9 +18,6 @@ def recordable(func):
 
     This will record the function only if the global recorder has been
     set via a `set_recorder` function call.
-
-    This is almost entirely copied from the
-    apptools.appscripting.scriptable.scriptable decorator.
     """
 
     def _wrapper(*args, **kw):
