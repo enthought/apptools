@@ -1,6 +1,15 @@
 Apptools CHANGELOG
 ==================
 
+Version 5.0.0
+~~~~~~~~~~~~~
+
+Released : XX XX XXXX
+
+* Remove appscripting subpackage (#172)
+* Remove template subpackage (#173)
+* Remove permissions subpackage (#175)
+
 Version 4.5.0
 ~~~~~~~~~~~~~
 
