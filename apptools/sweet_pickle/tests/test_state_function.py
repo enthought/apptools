@@ -96,7 +96,7 @@ class StateFunctionTestCase(unittest.TestCase):
         # trait defaults because nothing overwrote the values.)
         start = Foo()
         end = sweet_pickle.loads(sweet_pickle.dumps(start))
-        self.assertEqual(True, isinstance(end, Baz))
+        self.assertIsInstance(end, Baz)
         self._assertAttributes(end, 1, (False, 1, 1, 'foo'))
         self._assertAttributes(end, 2, None)
         self._assertAttributes(end, 3, (False, 3, 3, 'baz'))
@@ -107,7 +107,7 @@ class StateFunctionTestCase(unittest.TestCase):
         # on Baz converted the Bar attributes to Baz attributes.)
         start = Bar()
         end = sweet_pickle.loads(sweet_pickle.dumps(start))
-        self.assertEqual(True, isinstance(end, Baz))
+        self.assertIsInstance(end, Baz)
         self._assertAttributes(end, 2, None)
         self._assertAttributes(end, 3, (True, 2, 2, 'bar'))
 
@@ -124,7 +124,7 @@ class StateFunctionTestCase(unittest.TestCase):
         # the third class with the appropriate attribute values.
         start = Foo()
         end = sweet_pickle.loads(sweet_pickle.dumps(start))
-        self.assertEqual(True, isinstance(end, Baz))
+        self.assertIsInstance(end, Baz)
         self._assertAttributes(end, 1, None)
         self._assertAttributes(end, 2, None)
         self._assertAttributes(end, 3, (False, 1, 1, 'foo'))
@@ -133,7 +133,7 @@ class StateFunctionTestCase(unittest.TestCase):
         # the third class.
         start = Bar()
         end = sweet_pickle.loads(sweet_pickle.dumps(start))
-        self.assertEqual(True, isinstance(end, Baz))
+        self.assertIsInstance(end, Baz)
         self._assertAttributes(end, 2, None)
         self._assertAttributes(end, 3, (True, 2, 2, 'bar'))
 

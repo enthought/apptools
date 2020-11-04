@@ -90,10 +90,10 @@ class ClassMappingTestCase(unittest.TestCase):
         # the third class.
         start = Foo()
         end = sweet_pickle.loads(sweet_pickle.dumps(start))
-        self.assertEqual(True, isinstance(end, Baz))
+        self.assertIsInstance(end, Baz)
 
         # Validate that unpickling the second class gives us an instance of
         # the third class.
         start = Bar()
         end = sweet_pickle.loads(sweet_pickle.dumps(start))
-        self.assertEqual(True, isinstance(end, Baz))
+        self.assertIsInstance(end, Baz)

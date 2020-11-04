@@ -84,7 +84,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual('blue', acme_ui.bgcolor)
         self.assertEqual(50, acme_ui.width)
         self.assertEqual(1.0, acme_ui.ratio)
-        self.assertEqual(True, acme_ui.visible)
+        self.assertTrue(acme_ui.visible)
 
         # Make sure we can set the preference via the helper...
         acme_ui.bgcolor = 'yellow'
@@ -146,7 +146,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual('blue', acme_ui.bgcolor)
         self.assertEqual(50, acme_ui.width)
         self.assertEqual(1.0, acme_ui.ratio)
-        self.assertEqual(True, acme_ui.visible)
+        self.assertTrue(acme_ui.visible)
 
         return
 
@@ -178,7 +178,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual('blue', acme_ui.bgcolor)
         self.assertEqual(50, acme_ui.width)
         self.assertEqual(1.0, acme_ui.ratio)
-        self.assertEqual(True, acme_ui.visible)
+        self.assertTrue(acme_ui.visible)
 
         # Make a change to one of the preference values.
         p.set('acme.ui.bgcolor', 'yellow')
@@ -207,7 +207,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual('yellow', acme_ui.bgcolor)
         self.assertEqual(50, acme_ui.width)
         self.assertEqual(1.0, acme_ui.ratio)
-        self.assertEqual(True, acme_ui.visible)
+        self.assertTrue(acme_ui.visible)
 
         # Clean up!
         os.remove(tmp)
@@ -247,7 +247,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual('', acme_ui.bgcolor)
         self.assertEqual(50, acme_ui.width)
         self.assertEqual(0.0, acme_ui.ratio)
-        self.assertEqual(True, acme_ui.visible)
+        self.assertTrue(acme_ui.visible)
 
         return
 
@@ -286,7 +286,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual('blue', acme_ui.bgcolor)
         self.assertEqual(50, acme_ui.width)
         self.assertEqual(1.0, acme_ui.ratio)
-        self.assertEqual(True, acme_ui.visible)
+        self.assertTrue(acme_ui.visible)
 
         # Change the width via the preferences node. This should cause the
         # ratio to get set via the static trait change handler on the helper.

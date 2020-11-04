@@ -114,7 +114,7 @@ class TypeManagerTestCase(unittest.TestCase):
         bar = self.type_manager.object_as(b, Bar)
 
         # The type manager should simply return the same object.
-        self.assertTrue(bar is b)
+        self.assertIs(bar, b)
 
         return
 
@@ -128,7 +128,7 @@ class TypeManagerTestCase(unittest.TestCase):
         bar = self.type_manager.object_as(foo, Bar)
 
         # There should be no way to adapt a Foo to a Bar.
-        self.assertEqual(bar, None)
+        self.assertIsNone(bar)
 
         return
 
@@ -152,7 +152,7 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # Adapt it to a Bar.
         bar = self.type_manager.object_as(foo, Bar)
-        self.assertNotEqual(bar, None)
+        self.assertIsNotNone(bar)
         self.assertEqual(bar.blargle(), 'Foo.foogle.fred')
 
         return
@@ -172,7 +172,7 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # Adapt it to a Bar.
         bar = self.type_manager.object_as(foo, Bar)
-        self.assertNotEqual(bar, None)
+        self.assertIsNotNone(bar)
         self.assertEqual(bar.blargle(), 'Foo.foogle.fred')
 
         # Remove the adapter.
@@ -184,7 +184,7 @@ class TypeManagerTestCase(unittest.TestCase):
         bar = self.type_manager.object_as(foo, Bar)
 
         # There should be no way to adapt a Foo to a Bar.
-        self.assertEqual(bar, None)
+        self.assertIsNone(bar)
 
         return
 
@@ -199,7 +199,7 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # Adapt it to a Bar.
         bar = self.type_manager.object_as(foo, Bar)
-        self.assertNotEqual(bar, None)
+        self.assertIsNotNone(bar)
         self.assertEqual(bar.blargle(), 'Foo.foogle.fred')
 
         return
@@ -215,7 +215,7 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # Adapt it to a Bar.
         bar = self.type_manager.object_as(sub, Bar)
-        self.assertNotEqual(bar, None)
+        self.assertIsNotNone(bar)
         self.assertEqual(bar.blargle(), 'Sub.foogle.fred')
 
         return
@@ -235,7 +235,7 @@ class TypeManagerTestCase(unittest.TestCase):
         bar = self.type_manager.object_as(foo, Bar)
 
         # There should be no way to adapt a Foo to a Bar.
-        self.assertEqual(bar, None)
+        self.assertIsNone(bar)
 
         return
 
@@ -254,7 +254,7 @@ class TypeManagerTestCase(unittest.TestCase):
         bar = self.type_manager.object_as(foo, Bar)
 
         # There should be no way to adapt a Foo to a Bar.
-        self.assertEqual(bar, None)
+        self.assertIsNone(bar)
 
         return
 
@@ -271,7 +271,7 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # Adapt it to a Bar.
         bar = self.type_manager.object_as(foo, Bar)
-        self.assertNotEqual(bar, None)
+        self.assertIsNotNone(bar)
         self.assertEqual(bar.blargle(), 'Foo.foogle.fred')
 
         # Unregister the adapter.
@@ -281,7 +281,7 @@ class TypeManagerTestCase(unittest.TestCase):
         bar = self.type_manager.object_as(foo, Bar)
 
         # There should be no way to adapt a Foo to a Bar.
-        self.assertEqual(bar, None)
+        self.assertIsNone(bar)
 
         return
 
@@ -293,7 +293,7 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # Try to create a Bar using the factory.
         bar = self.type_manager.object_as(factory, Bar, name='joe')
-        self.assertNotEqual(bar, None)
+        self.assertIsNotNone(bar)
         self.assertEqual(bar.blargle(), 'Bar.blargle.joe')
 
         return
@@ -367,14 +367,14 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # Prove that it does not override 'foogle'!
         method = EmptySubOfFoo.__dict__.get('foogle')
-        self.assertEqual(method, None)
+        self.assertIsNone(method)
 
         # Hook a method.
         self.type_manager.add_pre(EmptySubOfFoo, 'foogle', hook)
 
         # Make sure that the method was added to the class dictionary.
         method = EmptySubOfFoo.__dict__.get('foogle')
-        self.assertNotEqual(method, None)
+        self.assertIsNotNone(method)
 
         # Call the method that we have hooked.
         esof.foogle()
@@ -394,7 +394,7 @@ class TypeManagerTestCase(unittest.TestCase):
         # Make sure that we didn't put the original method back onto
         # 'EmptySubOfFoo'(since it didn't override it in the first place).
         method = EmptySubOfFoo.__dict__.get('foogle')
-        self.assertEqual(method, None)
+        self.assertIsNone(method)
 
         return
 
@@ -413,7 +413,7 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # Adapt it to a Bar.
         bar = type_manager.object_as(foo, Bar)
-        self.assertNotEqual(bar, None)
+        self.assertIsNotNone(bar)
         self.assertEqual(bar.blargle(), 'Foo.foogle.fred')
 
         return
