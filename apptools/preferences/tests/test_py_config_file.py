@@ -122,7 +122,7 @@ class PyConfigFileTestCase(unittest.TestCase):
         finally:
             # Clean up!
             os.remove(tmp)
-            os.rmdirs(tmpdir)
+            os.rmdir(tmpdir)
 
         return
 
