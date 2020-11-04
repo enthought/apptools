@@ -1,7 +1,3 @@
-* Take a critical look at whether apptools.template should be in this project.
-  It appears to be adding a lot of dependencies the other packages do not need.
-  For now, its use is controlled through an extra.
-
 * Refactor the state_pickler.py module to break the need to import
   tvtk at all.
 
