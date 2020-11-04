@@ -10,11 +10,12 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 
-# Enthought library imports.
-from doc_action import DocAction
+# Local imports.
+from .doc_action import DocAction
 
 # This module's parent package.
 PARENT = '.'.join(__name__.split('.')[:-2])
+
 
 class LoadURLAction(DocAction):
     """ Workbench Action for displaying a url in a web browser.

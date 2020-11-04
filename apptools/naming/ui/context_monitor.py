@@ -106,5 +106,3 @@ class ContextMonitor(NodeMonitor):
         self.fire_structure_changed()
 
         return
-
-##### EOF #####################################################################

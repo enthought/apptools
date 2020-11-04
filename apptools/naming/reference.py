@@ -18,7 +18,7 @@
 from traits.api import Any, HasPrivateTraits, List, Str
 
 # Local imports.
-from address import Address
+from .address import Address
 
 
 class Reference(HasPrivateTraits):
@@ -46,5 +46,3 @@ class Reference(HasPrivateTraits):
 
     # The class name of the object factory.
     factory_class_name = Str
-
-#### EOF ######################################################################

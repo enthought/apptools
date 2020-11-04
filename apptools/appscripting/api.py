@@ -12,9 +12,9 @@
 # Description: <Enthought application scripting package component>
 #------------------------------------------------------------------------------
 
-from scriptable_type import create_scriptable_type, make_object_scriptable
-from i_bind_event import IBindEvent
-from i_script_manager import IScriptManager
-from package_globals import get_script_manager, set_script_manager
-from script_manager import ScriptManager
-from scriptable import scriptable, Scriptable
+from .scriptable_type import create_scriptable_type, make_object_scriptable
+from .i_bind_event import IBindEvent
+from .i_script_manager import IScriptManager
+from .package_globals import get_script_manager, set_script_manager
+from .script_manager import ScriptManager
+from .scriptable import scriptable, Scriptable

@@ -159,7 +159,7 @@ class TestRecorder(unittest.TestCase):
         toy.type = 'rat'
         self.assertEqual(tape.lines[-1], "child.toy.type = 'teddy'")
 
-        #print tape.script
+        #print(tape.script)
 
         # Stop recording.
         n = len(tape.lines)
@@ -457,6 +457,3 @@ class TestRecorder(unittest.TestCase):
         lines = f.readlines()
         self.assertEqual(expect, lines)
         f.close()
-
-if __name__ == '__main__':
-    unittest.main()

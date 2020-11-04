@@ -18,7 +18,7 @@
 from traits.api import HasTraits
 
 # Local imports.
-from context import Context
+from .context import Context
 
 
 class InitialContextFactory(HasTraits):
@@ -32,5 +32,3 @@ class InitialContextFactory(HasTraits):
         """ Creates an initial context for beginning name resolution. """
 
         return Context(environment=environment)
-
-#### EOF ######################################################################

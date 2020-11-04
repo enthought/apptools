@@ -53,5 +53,3 @@ class Baz(HasTraits):
                     del state[old]
             state['_enthought_pickle_version'] = 3
         self.__dict__.update(state)
-
-### EOF ######################################################################

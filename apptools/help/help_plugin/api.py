@@ -9,8 +9,8 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 # Thanks for using Enthought open source!
 
-from help_code import HelpCode
-from help_doc import HelpDoc
-from help_plugin import HelpPlugin
-from i_help_code import IHelpCode
-from i_help_doc import IHelpDoc
+from .help_code import HelpCode
+from .help_doc import HelpDoc
+from .help_plugin import HelpPlugin
+from .i_help_code import IHelpCode
+from .i_help_doc import IHelpDoc

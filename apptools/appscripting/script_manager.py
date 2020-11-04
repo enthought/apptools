@@ -20,14 +20,14 @@ import weakref
 
 # Enthought library imports.
 from traits.api import Any, Bool, Callable, Dict, Event, HasTraits, \
-        implements, Instance, Int, List, Property, Str, Unicode
+        Instance, Int, List, Property, provides, Str, Unicode
 
 # Local imports.
-from bind_event import BindEvent
-from i_bind_event import IBindEvent
-from i_script_manager import IScriptManager
-from lazy_namespace import add_to_namespace, FactoryWrapper, LazyNamespace
-from scriptable_type import make_object_scriptable
+from .bind_event import BindEvent
+from .i_bind_event import IBindEvent
+from .i_script_manager import IScriptManager
+from .lazy_namespace import add_to_namespace, FactoryWrapper, LazyNamespace
+from .scriptable_type import make_object_scriptable
 
 
 @provides(IScriptManager)
@@ -405,11 +405,11 @@ class ScriptManager(HasTraits):
 
         # Initialise the namespace with all explicitly bound objects.
         nspace = LazyNamespace()
-        for name, bo in self._namespace.iteritems():
+        for name, bo in self._namespace.items():
             if bo.explicitly_bound:
                 add_to_namespace(bo.obj, name, nspace)
 
-        exec script in nspace
+        exec(script, nspace)
 
     def run_file(self, file_name):
         """ Run the given script file.
@@ -510,7 +510,7 @@ class ScriptManager(HasTraits):
             # Doing this now avoids problems with mutable arguments.
             so.args = [self._scriptable_object_as_string(a) for a in args]
 
-            for n, value in kwargs.iteritems():
+            for n, value in kwargs.items():
                 so.kwargs[n] = self._scriptable_object_as_string(value)
 
             so.explicitly_bound = False
@@ -540,7 +540,7 @@ class ScriptManager(HasTraits):
             s = ScriptManager.arg_as_string(arg, so_needed)
             all_args.append(s)
 
-        for name, value in kwargs.iteritems():
+        for name, value in kwargs.items():
             s = ScriptManager.arg_as_string(value, so_needed)
             all_args.append('%s=%s' % (name, s))
 
@@ -589,10 +589,10 @@ class ScriptManager(HasTraits):
             nargs = nargs[1:]
 
         nkwargs = {}
-        for name, value in kwargs.iteritems():
+        for name, value in kwargs.items():
             nkwargs[name] = self._object_as_string(value)
 
-        return _ScriptMethod(name=func.func_name, so=so, args=nargs,
+        return _ScriptMethod(name=func.__name__, so=so, args=nargs,
                 kwargs=nkwargs)
 
     def _add_method(self, entry, result):
@@ -691,7 +691,7 @@ class ScriptManager(HasTraits):
         """
 
         # Avoid recursive imports.
-        from package_globals import get_script_manager
+        from .package_globals import get_script_manager
 
         sm = get_script_manager()
         so = sm._so_by_ref[obj_ref]

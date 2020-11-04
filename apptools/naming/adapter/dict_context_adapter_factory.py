@@ -5,7 +5,7 @@
 from apptools.naming.api import ContextAdapterFactory
 
 # Local imports.
-from dict_context_adapter import DictContextAdapter
+from .dict_context_adapter import DictContextAdapter
 
 
 class DictContextAdapterFactory(ContextAdapterFactory):
@@ -30,5 +30,3 @@ class DictContextAdapterFactory(ContextAdapterFactory):
         )
 
         return adapter
-
-#### EOF ######################################################################

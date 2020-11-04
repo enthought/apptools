@@ -39,6 +39,3 @@ def custom_excepthook(type, value, traceback):
     logger.error(msg)
 
     return
-
-
-## EOF ##################################################################

@@ -25,5 +25,3 @@ def set_default_preferences(default_preferences):
 
     # For convenience.
     return _default_preferences
-
-#### EOF ######################################################################

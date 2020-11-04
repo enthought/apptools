@@ -1,3 +1,6 @@
+import six
+
+
 def get_mro(obj_class):
     """ Get a reasonable method resolution order of a class and its
     superclasses for both old-style and new-style classes.
@@ -54,7 +57,7 @@ class TypeRegistry(object):
         obj : object
             The object to register.
         """
-        if isinstance(typ, basestring):
+        if isinstance(typ, six.string_types):
             # Check the cached types.
             for cls in self.type_map:
                 if _mod_name_key(cls) == typ:
@@ -97,7 +100,7 @@ class TypeRegistry(object):
         ------
         KeyError if the type is not registered.
         """
-        if isinstance(typ, basestring):
+        if isinstance(typ, six.string_types):
             if typ not in self.name_map:
                 # We may have it cached in the type map. We will have to
                 # iterate over all of the types to check.
@@ -204,7 +207,7 @@ class TypeRegistry(object):
                     return objs
 
         # None of the concrete superclasses. Check the ABCs.
-        for abstract, objs in self.abc_map.iteritems():
+        for abstract, objs in self.abc_map.items():
             if issubclass(typ, abstract) and objs:
                 return objs
 

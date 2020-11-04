@@ -20,7 +20,7 @@ from pyface.tree.api import NodeTree
 from traits.api import Instance
 
 # Local imports.
-from naming_tree_model import NamingTreeModel
+from .naming_tree_model import NamingTreeModel
 
 
 class NamingTree(NodeTree):
@@ -70,5 +70,3 @@ class NamingTree(NodeTree):
             binding = None
 
         return binding
-
-##### EOF #####################################################################

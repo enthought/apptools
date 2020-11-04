@@ -7,7 +7,7 @@ from traits.api import List, Str
 from apptools.type_manager import PythonObject
 
 # Local imports.
-from instance_context_adapter import InstanceContextAdapter
+from .instance_context_adapter import InstanceContextAdapter
 
 
 class InstanceContextAdapterFactory(ContextAdapterFactory):
@@ -47,5 +47,3 @@ class InstanceContextAdapterFactory(ContextAdapterFactory):
         )
 
         return adapter
-
-#### EOF ######################################################################

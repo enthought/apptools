@@ -104,5 +104,3 @@ class DictContextAdapter(ContextAdapter):
         """ Lists the names bound in this context. """
 
         return [str(key) for key in self.adaptee]
-
-#### EOF ######################################################################

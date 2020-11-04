@@ -1,8 +1,10 @@
 # Standard library imports
-from cStringIO import StringIO
 import logging
 import os
 import zipfile
+
+# Third-party library imports
+from io import BytesIO
 
 # Enthought library imports
 from pyface.workbench.api import View as WorkbenchView
@@ -108,7 +110,7 @@ class LoggerService(HasTraits):
             message.attach(msg)
 
         if include_userdata and len(self.mail_files) != 0:
-            f = StringIO()
+            f = BytesIO()
             zf = zipfile.ZipFile(f, 'w')
             for mf in self.mail_files:
                 mf(zf)
@@ -132,7 +134,7 @@ class LoggerService(HasTraits):
             #server.set_debuglevel(1)
             server.sendmail(fromaddr, toaddrs + ccaddrs, message.as_string())
             server.quit()
-        except Exception, e:
+        except Exception as e:
             logger.exception("Problem sending error report")
 
     #### Traits stuff #########################################################

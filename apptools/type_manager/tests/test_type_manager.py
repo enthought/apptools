@@ -114,7 +114,7 @@ class TypeManagerTestCase(unittest.TestCase):
         bar = self.type_manager.object_as(b, Bar)
 
         # The type manager should simply return the same object.
-        self.assert_(bar is b)
+        self.assertTrue(bar is b)
 
         return
 
@@ -417,5 +417,3 @@ class TypeManagerTestCase(unittest.TestCase):
         self.assertEqual(bar.blargle(), 'Foo.foogle.fred')
 
         return
-
-#### EOF ######################################################################

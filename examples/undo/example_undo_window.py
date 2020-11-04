@@ -136,5 +136,3 @@ class ExampleUndoWindow(WorkbenchWindow):
                         action.checked = (action.data.style == action.id)
                 else:
                     action.enabled = False
-
-#### EOF ######################################################################

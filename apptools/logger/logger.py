@@ -22,7 +22,7 @@ from logging.handlers import RotatingFileHandler
 from traits.util.api import deprecated
 
 # Local imports.
-from log_queue_handler import LogQueueHandler
+from .log_queue_handler import LogQueueHandler
 
 
 # The default logging level.
@@ -91,6 +91,3 @@ def add_log_queue_handler(logger, level=None, formatter=None):
     log_queue_handler.setFormatter(formatter)
     logger.addHandler(log_queue_handler)
     return log_queue_handler
-
-
-#### EOF ######################################################################

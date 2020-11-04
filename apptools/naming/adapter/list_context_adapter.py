@@ -173,5 +173,3 @@ class ListContextAdapter(ContextAdapter):
             raise SystemError('no binding with name %s' % name)
 
         return binding
-
-#### EOF ######################################################################

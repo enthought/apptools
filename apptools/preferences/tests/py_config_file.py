@@ -1,4 +1,7 @@
 """ A Python based configuration file with hierarchical sections. """
+from __future__ import print_function
+
+import six
 
 
 class PyConfigFile(dict):
@@ -121,7 +124,7 @@ class PyConfigFile(dict):
 
         """
 
-        if isinstance(file_or_filename, basestring):
+        if isinstance(file_or_filename, six.string_types):
             f = open(file_or_filename, mode)
 
         else:
@@ -167,7 +170,7 @@ class PyConfigFile(dict):
         #
         # [acme.blargle]
         # blitzel = acme.foo.bar + acme.foo.baz
-        exec section_body in self._namespaces, section
+        exec(section_body, self._namespaces, section)
 
         # The '__builtins__' dictionary gets added to 'self._namespaces' as
         # by the call to 'exec'. However, we want 'self._namespaces' to only
@@ -201,7 +204,7 @@ class PyConfigFile(dict):
         """ Pretty print the 'dotted' namespaces. """
 
         for name, value in self._namespaces.items():
-            print 'Namespace:', name
+            print('Namespace:', name)
             value.pretty_print('  ')
 
         return
@@ -250,12 +253,10 @@ class _Namespace(object):
 
         for name, value in self.__dict__.items():
             if isinstance(value, _Namespace):
-                print indent, 'Namespace:', name
+                print(indent, 'Namespace:', name)
                 value.pretty_print(indent + '  ')
 
             else:
-                print indent, name, ':', value
+                print(indent, name, ':', value)
 
         return
-
-#### EOF ######################################################################

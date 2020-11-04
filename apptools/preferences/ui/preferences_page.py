@@ -6,7 +6,7 @@ from apptools.preferences.api import PreferencesHelper
 from traits.api import Any, Dict, Str, provides
 
 # Local imports.
-from i_preferences_page import IPreferencesPage
+from .i_preferences_page import IPreferencesPage
 
 
 @provides(IPreferencesPage)
@@ -117,5 +117,3 @@ class PreferencesPage(PreferencesHelper):
             return False
 
         return True
-
-#### EOF ######################################################################

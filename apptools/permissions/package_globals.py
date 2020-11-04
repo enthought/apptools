@@ -24,7 +24,7 @@ def get_permissions_manager():
     global _permissions_manager
 
     if _permissions_manager is None:
-        from permissions_manager import PermissionsManager
+        from .permissions_manager import PermissionsManager
 
         _permissions_manager = PermissionsManager()
 

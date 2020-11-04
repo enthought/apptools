@@ -142,5 +142,3 @@ class TreeItem(HasTraits):
         self.insert(index + 1, child)
 
         return (index, child)
-
-#### EOF ######################################################################

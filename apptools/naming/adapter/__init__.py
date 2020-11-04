@@ -1,1 +1,1 @@
-from api import *
+from apptools.naming.adapter.api import *

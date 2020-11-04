@@ -15,7 +15,7 @@
 
 
 # Local imports.
-from context import Context
+from .context import Context
 
 
 def InitialContext(environment):
@@ -58,5 +58,3 @@ def _import_symbol(symbol_path):
     symbol = getattr(module, symbol_name)
 
     return symbol
-
-#### EOF ######################################################################

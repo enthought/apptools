@@ -12,8 +12,6 @@
 # Description: <Enthought undo package component>
 #------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
 # Enthought library imports.
 from pyface.action.api import Action
 from traits.api import Any, Callable, Instance

@@ -22,5 +22,3 @@ class SecuredDebugView(DebugView):
         control = DebugView.create_control(self, parent)
 
         return SecureProxy(control, permissions=[DebugViewPerm])
-
-#### EOF ######################################################################

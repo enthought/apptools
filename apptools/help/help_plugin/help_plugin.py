@@ -14,7 +14,6 @@ It assumes that the Workbench plugin is being used.
 
 # Standard library imports.
 import logging
-import new
 
 # Enthought libary imports
 from envisage.api import Plugin, ExtensionPoint
@@ -22,10 +21,10 @@ from envisage.ui.action.api import ActionSet, Group, Menu
 from traits.api import Instance, List, Str
 
 # Local imports
-from help_code import HelpCode
-from help_doc import HelpDoc
-from i_help_code import IHelpCode
-from i_help_doc import IHelpDoc
+from .help_code import HelpCode
+from .help_doc import HelpDoc
+from .i_help_code import IHelpCode
+from .i_help_doc import IHelpDoc
 
 # Logging.
 logger = logging.getLogger(__name__)
@@ -235,7 +234,7 @@ class HelpPlugin(Plugin):
                 # Append the menu.
                 ns.setdefault('menus', []).append(menu)
 
-        return [new.classobj('SPLHelpActionSet', (ActionSet,), ns)]
+        return [type('SPLHelpActionSet', (ActionSet,), ns)]
 
     preferences = List(contributes_to=PREFERENCES)
     def _preferences_default(self):
@@ -251,7 +250,7 @@ class HelpPlugin(Plugin):
         if len(self.help_docs) > 0:
             pages.append(DocumentsPreferencesPage)
             pages.extend(
-                [ new.classobj(doc.preferences_path + 'PreferencesPage',
+                [ type(doc.preferences_path + 'PreferencesPage',
                               (HelpDocPreferencesPage,),
                               {'preferences_path': doc.preferences_path},
                              ) for doc in self.help_docs
@@ -259,7 +258,7 @@ class HelpPlugin(Plugin):
         if len(self.help_demos) > 0:
             pages.append(DemosPreferencesPage)
             pages.extend(
-                [ new.classobj(demo.preferences_path + 'PreferencesPage',
+                [ type(demo.preferences_path + 'PreferencesPage',
                               (HelpDemoPreferencesPage,),
                               {'preferences_path': demo.preferences_path},
                              ) for demo in self.help_demos
@@ -267,7 +266,7 @@ class HelpPlugin(Plugin):
         if len(self.help_examples) > 0:
             pages.append(ExamplesPreferencesPage)
             pages.extend(
-                [ new.classobj(example.preferences_path + 'PreferencesPage',
+                [ type(example.preferences_path + 'PreferencesPage',
                               (HelpExamplePreferencesPage,),
                               {'preferences_path': example.preferences_path},
                              ) for example in self.help_examples

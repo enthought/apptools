@@ -20,13 +20,13 @@ from pyface.action.api import Group, MenuManager
 from traits.api import Any, provides, Instance, List, Property
 
 # Local imports.
-from action.doc_action import DocAction
-from action.demo_action import DemoAction
-from action.example_action import ExampleAction
-from action.load_url_action import LoadURLAction
-from examples_preferences import ExamplesPreferences
-from i_help_doc import IHelpDoc
-from i_help_code import IHelpCode
+from .action.doc_action import DocAction
+from .action.demo_action import DemoAction
+from .action.example_action import ExampleAction
+from .action.load_url_action import LoadURLAction
+from .examples_preferences import ExamplesPreferences
+from .i_help_doc import IHelpDoc
+from .i_help_code import IHelpCode
 
 # Logging.
 logger = logging.getLogger(__name__)
@@ -262,4 +262,3 @@ class DownloadsMenuManager(HelpSubmenuManager):
                 )
 
         return
-#### EOF ######################################################################

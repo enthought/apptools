@@ -18,8 +18,8 @@
 from traits.api import Dict
 
 # Local imports.
-from context import Context
-from exception import NameNotFoundError, NotContextError
+from .context import Context
+from .exception import NameNotFoundError, NotContextError
 
 
 class DirContext(Context):
@@ -175,5 +175,3 @@ class DirContext(Context):
             del self._attributes[name]
 
         return
-
-#### EOF ######################################################################

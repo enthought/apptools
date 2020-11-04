@@ -20,7 +20,7 @@
 from traits.api \
     import Event
 
-from itemplate \
+from .itemplate \
     import ITemplate
 
 #-------------------------------------------------------------------------------

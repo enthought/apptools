@@ -5,7 +5,7 @@
 from traits.api import Any
 
 # Local imports.
-from abstract_factory import AbstractFactory
+from .abstract_factory import AbstractFactory
 
 
 class Factory(AbstractFactory):
@@ -37,5 +37,3 @@ class Factory(AbstractFactory):
         """ Creates an object! """
 
         return self.target_class(*args, **kw)
-
-#### EOF ######################################################################

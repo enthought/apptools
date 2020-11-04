@@ -9,7 +9,7 @@ from os.path import join
 from pkg_resources import resource_filename
 
 # Enthought library imports.
-from py_config_file import PyConfigFile
+from .py_config_file import PyConfigFile
 
 
 # This module's package.
@@ -101,7 +101,7 @@ class PyConfigFileTestCase(unittest.TestCase):
 
         config.save(tmp)
         try:
-            self.assert_(os.path.exists(tmp))
+            self.assertTrue(os.path.exists(tmp))
 
             # Make sure we can read the file back in and that we get the same
             # values!
@@ -169,10 +169,3 @@ class PyConfigFileTestCase(unittest.TestCase):
         self.assertEqual(180, config['acme.ui']['blimey'])
 
         return
-
-
-# Entry point for stand-alone testing.
-if __name__ == '__main__':
-    unittest.main()
-
-#### EOF ######################################################################

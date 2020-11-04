@@ -6,8 +6,8 @@ import re
 import subprocess
 from setuptools import setup, find_packages
 
-MAJOR = 4
-MINOR = 5
+MAJOR = 5
+MINOR = 0
 MICRO = 0
 
 IS_RELEASED = False
@@ -123,6 +123,7 @@ if __name__ == "__main__":
               """.splitlines() if len(c.strip()) > 0],
           description='application tools',
           long_description=open('README.rst').read(),
+          long_description_content_type="text/x-rst",
           include_package_data=True,
           package_data={'apptools': ['help/help_plugin/*.ini',
                                      'help/help_plugin/action/images/*.png',
@@ -137,5 +138,4 @@ if __name__ == "__main__":
           packages=find_packages(),
           platforms=["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
           zip_safe=False,
-          use_2to3=True
           )

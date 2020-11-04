@@ -5,7 +5,7 @@
 from traits.api import HasTraits, Instance
 
 # Local imports.
-from adapter_manager import AdapterManager
+from .adapter_manager import AdapterManager
 
 
 class Adaptable(HasTraits):
@@ -32,5 +32,3 @@ class Adaptable(HasTraits):
             adapter = None
 
         return adapter
-
-#### EOF ######################################################################

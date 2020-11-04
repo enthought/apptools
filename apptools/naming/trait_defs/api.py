@@ -10,4 +10,4 @@
 #
 #------------------------------------------------------------------------------
 
-from naming_traits import NamingInstance
+from .naming_traits import NamingInstance

@@ -20,9 +20,9 @@ from pyface.tree.api import NodeTreeModel
 from traits.api import Instance
 
 # Local imports.
-from context_node_type import ContextNodeType
-from naming_node_manager import NamingNodeManager
-from object_node_type import ObjectNodeType
+from .context_node_type import ContextNodeType
+from .naming_node_manager import NamingNodeManager
+from .object_node_type import ObjectNodeType
 
 
 class NamingTreeModel(NodeTreeModel):
@@ -52,5 +52,3 @@ class NamingTreeModel(NodeTreeModel):
         node_manager.add_node_type(ObjectNodeType())
 
         return node_manager
-
-##### EOF #####################################################################

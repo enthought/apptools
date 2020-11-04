@@ -55,5 +55,3 @@ def get_classes(hierarchy):
             classes.extend(get_classes(item))
 
     return classes
-
-#### EOF ######################################################################

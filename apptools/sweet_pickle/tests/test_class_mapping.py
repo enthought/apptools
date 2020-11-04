@@ -97,10 +97,3 @@ class ClassMappingTestCase(unittest.TestCase):
         start = Bar()
         end = sweet_pickle.loads(sweet_pickle.dumps(start))
         self.assertEqual(True, isinstance(end, Baz))
-
-
-if __name__ == "__main__":
-    unittest.main()
-
-
-### EOF ######################################################################

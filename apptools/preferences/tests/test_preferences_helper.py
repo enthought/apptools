@@ -541,10 +541,3 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('50', helper.width)
 
         return
-
-
-# Entry point for stand-alone testing.
-if __name__ == '__main__':
-    unittest.main()
-
-#### EOF ######################################################################

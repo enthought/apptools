@@ -18,17 +18,15 @@
 from traits.api \
     import HasPrivateTraits, Str, provides
 
-from itemplate_choice \
+from .itemplate_choice \
     import ITemplateChoice
 
 #-------------------------------------------------------------------------------
 #  'TemplateChoice' class:
 #-------------------------------------------------------------------------------
 
+@provides(ITemplateChoice)
 class TemplateChoice ( HasPrivateTraits ):
-
-    implements ( ITemplateChoice )
 
     # The user interface string for this choice:
     choice_value = Str
-

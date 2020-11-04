@@ -18,7 +18,7 @@
 from traits.api import Any, Dict, Instance, Property, Str
 
 # Local imports.
-from context import Context
+from .context import Context
 
 
 class ContextAdapter(Context):
@@ -31,5 +31,3 @@ class ContextAdapter(Context):
 
     # The context that the object is in.
     context = Instance(Context)
-
-#### EOF ######################################################################

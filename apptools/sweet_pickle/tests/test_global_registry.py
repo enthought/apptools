@@ -74,10 +74,3 @@ class GlobalRegistryTestCase(unittest.TestCase):
         self.assertEqual(self.registry, sweet_pickle.get_global_registry())
         self.assertEqual(self.registry, sweet_pickle.get_global_registry())
         self.assertEqual(self.registry, sweet_pickle.get_global_registry())
-
-
-if __name__ == "__main__":
-    unittest.main()
-
-
-### EOF ######################################################################

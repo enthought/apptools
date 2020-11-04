@@ -5,7 +5,7 @@
 from traits.api import Dict, Property, Str
 
 # Local imports.
-from dict_context_adapter import DictContextAdapter
+from .dict_context_adapter import DictContextAdapter
 
 
 class TraitDictContextAdapter(DictContextAdapter):
@@ -34,5 +34,3 @@ class TraitDictContextAdapter(DictContextAdapter):
         """ Returns the name of the context within its own namespace. """
 
         return self.context.namespace_name + '/' + self.trait_name
-
-#### EOF ######################################################################

@@ -20,25 +20,23 @@
 from traits.api \
     import Event, provides
 
-from template_impl \
+from .template_impl \
     import Template
 
-from imutable_template \
+from .imutable_template \
     import IMutableTemplate
 
 #-------------------------------------------------------------------------------
 #  'MutableTemplate' class:
 #-------------------------------------------------------------------------------
 
+@provides(IMutableTemplate)
 class MutableTemplate ( Template ):
     """ A concrete base class that implements the IMutableTemplate interface.
     """
-
-    implements( IMutableTemplate )
 
     #-- IMutableTemplate Interface Implementation ------------------------------
 
     # An event fired when the template mutates (i.e. changes in some way that
     # may affect the number of data sources it exposes, and so on):
     template_mutated = Event
-

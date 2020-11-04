@@ -88,7 +88,7 @@ def create_email_message(fromaddr, toaddrs, ccaddrs, subject, priority,
         """
         try:
             entries = []
-            for key, value in os.environ.iteritems():
+            for key, value in os.environ.items():
                 entries.append('%30s : %s\n' % (key, value))
 
             ctype = 'application/octet-stream'

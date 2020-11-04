@@ -176,5 +176,3 @@ class HelpExamplePreferencesPage(PreferencesPage):
         Item('filename', show_label=True),
         Label("Filename can be absolute, or relative to the Python directory."),
     )
-
-#### EOF ######################################################################

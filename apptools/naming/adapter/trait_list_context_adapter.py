@@ -5,7 +5,7 @@
 from traits.api import Any, List, Property, Str
 
 # Local imports.
-from list_context_adapter import ListContextAdapter
+from .list_context_adapter import ListContextAdapter
 
 
 class TraitListContextAdapter(ListContextAdapter):
@@ -62,5 +62,3 @@ class TraitListContextAdapter(ListContextAdapter):
             collection = getattr(obj, components[-1])
 
         return collection
-
-#### EOF ######################################################################

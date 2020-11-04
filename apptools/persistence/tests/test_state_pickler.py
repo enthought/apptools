@@ -6,6 +6,7 @@
 # License: BSD Style.
 
 import base64
+import pickle
 import unittest
 import math
 import os
@@ -13,7 +14,7 @@ import tempfile
 
 import numpy
 
-from traits.api import Bool, Int, Long, Array, Float, Complex, Any, \
+from traits.api import Bool, Int, Array, Float, Complex, Any, \
     Str, Unicode, Instance, Tuple, List, Dict, HasTraits
 
 try:
@@ -63,7 +64,7 @@ class TestClassic:
 class TestTraits(HasTraits):
     b = Bool(False)
     i = Int(7)
-    l = Long(12345678901234567890)
+    l = Int(12345678901234567890)
     f = Float(math.pi)
     c = Complex(complex(1.01234, 2.3))
     n = Any
@@ -151,7 +152,7 @@ class TestDictPickler(unittest.TestCase):
         junk = state_pickler.gunzip_string(
             decodestring(data[num_attr]['data'])
         )
-        num = numpy.loads(junk)
+        num = pickle.loads(junk)
         self.assertEqual(numpy.alltrue(numpy.ravel(num == obj.numeric)), 1)
 
         self.assertTrue(data['ref']['type'] in ['reference', 'numeric'])
@@ -462,7 +463,3 @@ class TestDictPickler(unittest.TestCase):
             state_pickler.dump(obj, filepath)
         finally:
             os.remove(filepath)
-
-
-if __name__ == "__main__":
-    unittest.main()

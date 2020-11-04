@@ -17,7 +17,7 @@
 from traits.api import Any, HasTraits, provides, Str
 
 # Local imports.
-from i_bind_event import IBindEvent
+from .i_bind_event import IBindEvent
 
 
 @provides(IBindEvent)

@@ -62,7 +62,7 @@ class ContextTestCase(unittest.TestCase):
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
-        self.assert_(isinstance(sub, Context))
+        self.assertTrue(isinstance(sub, Context))
 
         # Make sure that the sub-context is empty.
         self.assertEqual(len(sub.list_bindings('')), 0)
@@ -93,7 +93,7 @@ class ContextTestCase(unittest.TestCase):
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
-        self.assert_(isinstance(sub, Context))
+        self.assertTrue(isinstance(sub, Context))
 
         # Make sure that the sub-context is empty.
         self.assertEqual(len(sub.list_bindings('')), 0)
@@ -151,7 +151,7 @@ class ContextTestCase(unittest.TestCase):
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
-        self.assert_(isinstance(sub, Context))
+        self.assertTrue(isinstance(sub, Context))
 
         # Make sure that the sub-context is empty.
         self.assertEqual(len(sub.list_bindings('')), 0)
@@ -521,5 +521,3 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual( names[0], 'sub/sub sub' )
 
         return
-
-#### EOF ######################################################################

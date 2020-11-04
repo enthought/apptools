@@ -15,13 +15,13 @@
 
 
 # Local imports.
-from context import Context
-from initial_context_factory import InitialContextFactory
-from object_serializer import ObjectSerializer
-from pyfs_context import PyFSContext
-from pyfs_context_factory import PyFSContextFactory
-from pyfs_object_factory import PyFSObjectFactory
-from pyfs_state_factory import PyFSStateFactory
+from .context import Context
+from .initial_context_factory import InitialContextFactory
+from .object_serializer import ObjectSerializer
+from .pyfs_context import PyFSContext
+from .pyfs_context_factory import PyFSContextFactory
+from .pyfs_object_factory import PyFSObjectFactory
+from .pyfs_state_factory import PyFSStateFactory
 
 
 class PyFSInitialContextFactory(InitialContextFactory):
@@ -47,5 +47,3 @@ class PyFSInitialContextFactory(InitialContextFactory):
         environment[PyFSContext.OBJECT_SERIALIZERS] = object_serializers
 
         return PyFSContext(path=r'', environment=environment)
-
-#### EOF ######################################################################

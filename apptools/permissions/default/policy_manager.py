@@ -22,9 +22,9 @@ from traits.api import Dict, HasTraits, provides, Instance, List
 from apptools.permissions.i_policy_manager import IPolicyManager
 from apptools.permissions.permission import ManagePolicyPermission, Permission
 from apptools.permissions.secure_proxy import SecureProxy
-from i_policy_storage import IPolicyStorage, PolicyStorageError
-from role_assignment import role_assignment
-from role_definition import role_definition
+from .i_policy_storage import IPolicyStorage, PolicyStorageError
+from .role_assignment import role_assignment
+from .role_definition import role_definition
 
 
 @provides(IPolicyManager)
@@ -77,7 +77,7 @@ class PolicyManager(HasTraits):
         # Get the user's policy.
         try:
             user_name, perm_ids = self.policy_storage.get_policy(user.name)
-        except PolicyStorageError, e:
+        except PolicyStorageError as e:
             error(None, str(e))
             return
 
@@ -93,12 +93,12 @@ class PolicyManager(HasTraits):
     def register_permission(self, permission):
         """Register the given permission."""
 
-        if self.permissions.has_key(permission.id):
+        if permission.id in self.permissions:
             other = self.permissions[permission.id]
 
             if other.application_defined:
                 if permission.application_defined:
-                    raise KeyError, 'permission "%s" has already been defined' % permission.id
+                    raise KeyError('permission "%s" has already been defined' % permission.id)
 
                 # Use the description from the policy manager, if there is
                 # one, in preference to the application supplied one.
@@ -113,7 +113,7 @@ class PolicyManager(HasTraits):
             else:
                 # This should never happen if the policy manager is working
                 # properly.
-                raise KeyError, 'permission "%s" has already been defined by the same policy manager' % permission.id
+                raise KeyError('permission "%s" has already been defined by the same policy manager' % permission.id)
         else:
             self.permissions[permission.id] = permission
 

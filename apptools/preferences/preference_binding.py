@@ -5,6 +5,9 @@
 from traits.api import Any, HasTraits, Instance, Str, Undefined
 from traits.api import Unicode
 
+# Third-party librart imports.
+import six
+
 # Local imports.
 from .i_preferences import IPreferences
 from .package_globals import get_default_preferences
@@ -101,7 +104,7 @@ class PreferenceBinding(HasTraits):
 
         # If the trait type is 'Unicode' then we convert the raw value.
         elif type(handler) is Unicode:
-            value = unicode(value)
+            value = six.text_type(value)
 
         # Otherwise, we eval it!
         else:
@@ -170,5 +173,3 @@ def bind_preference(obj, trait_name, preference_path, preferences=None):
         traits['preferences'] = preferences
 
     return PreferenceBinding(**traits)
-
-#### EOF ######################################################################

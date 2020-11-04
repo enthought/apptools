@@ -25,7 +25,7 @@ from apptools.help.help_plugin.examples_preferences import \
     ExamplesPreferences
 
 # Local import
-from util import get_sys_prefix_relative_filename
+from .util import get_sys_prefix_relative_filename
 
 # Logging.
 logger = logging.getLogger(__name__)
@@ -71,7 +71,7 @@ class ExampleAction(WorkbenchAction):
                     # Run the editor, passing it the filename
                     try:
                         Popen([self.preferences.editor, filename])
-                    except OSError, err:
+                    except OSError as err:
                         logger.error(
                         'Could not execute program for Example "%s":\n\n ' \
                         % self.my_help_code.label + str(err) + '\n\nTry ' +\

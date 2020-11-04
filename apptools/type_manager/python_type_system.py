@@ -5,7 +5,7 @@
 import inspect
 
 # Local imports.
-from abstract_type_system import AbstractTypeSystem
+from .abstract_type_system import AbstractTypeSystem
 
 
 class PythonObject:
@@ -36,5 +36,3 @@ class PythonTypeSystem(AbstractTypeSystem):
         """ Returns the MRO of a type. """
 
         return list(inspect.getmro(type)) + [PythonObject]
-
-#### EOF ######################################################################

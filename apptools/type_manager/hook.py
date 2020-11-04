@@ -71,7 +71,7 @@ def _add_hook(klass, method_name, callable, pre):
 
         # Python < 2.4 does not allow this.
         try:
-            hooked_method.func_name = method_name
+            hooked_method.__name__ = method_name
 
         except:
             pass
@@ -81,7 +81,7 @@ def _add_hook(klass, method_name, callable, pre):
 
         # Is the original method actually defined on the class, or is it
         # inherited?
-        hooked_method.__inherited__ = not klass.__dict__.has_key(method_name)
+        hooked_method.__inherited__ = method_name not in klass.__dict__
 
         # Save the original method...
         #
@@ -130,5 +130,3 @@ def _remove_hook(klass, method_name, callable, pre):
             delattr(klass, '__hooked__' + method_name)
 
     return
-
-#### EOF ######################################################################

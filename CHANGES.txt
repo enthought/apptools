@@ -1,6 +1,27 @@
 Apptools CHANGELOG
 ==================
 
+Version 4.5.0
+~~~~~~~~~~~~~
+
+Released : 10 October 2019
+
+* Add missing `long_description_content_type` field in setup. (#108)
+* Remove use of `2to3`. (#90)
+* Use etstool for CI tasks. Setup travis macos and appveyor CI. (#92)
+* Temporarily change cwd when running tests. (#104)
+* Update broken imports. (#95)
+* Add `six` to requirements. (#101)
+* Remove one more use of the deprecated `set` method. (#103)
+* Use `trait_set` instead of the now deprecated `set` method. (#82)
+* Address one more numpy deprecation warning. (#100)
+* Address numpy deprecation warnings. (#83)
+* Test the package on Python 3.5, 3.6 on CI. (#78)
+* Fix mismatched pyface and traitsui requirements. (#73)
+* Drop support for Python 2.6. (#63)
+* Fix `state_pickler.dump` on Python 2. (#61)
+* Fix a few spelling mistakes in documentation. (#87)
+
 Version 4.4.0
 ~~~~~~~~~~~~~
 

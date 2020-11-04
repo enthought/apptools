@@ -12,8 +12,6 @@
 # Description: <Enthought undo package component>
 #------------------------------------------------------------------------------
 
-from __future__ import absolute_import
-
 # Enthought library imports.
 from traits.api import Bool, Event, Instance, Int, Interface, Unicode
 

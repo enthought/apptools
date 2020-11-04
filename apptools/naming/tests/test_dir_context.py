@@ -18,7 +18,7 @@
 from apptools.naming.api import *
 
 # Local imports.
-from context_test_case import ContextTestCase
+from .test_context import ContextTestCase
 
 
 class DirContextTestCase(ContextTestCase):
@@ -43,7 +43,7 @@ class DirContextTestCase(ContextTestCase):
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
-        self.assert_(isinstance(sub, DirContext))
+        self.assertTrue(isinstance(sub, DirContext))
 
         #### Generic name resolution tests ####
 
@@ -78,7 +78,7 @@ class DirContextTestCase(ContextTestCase):
         # Convenience.
         context = self.context
         sub = self.context.lookup('sub')
-        self.assert_(isinstance(sub, DirContext))
+        self.assertTrue(isinstance(sub, DirContext))
 
         #### Generic name resolution tests ####
 
@@ -122,5 +122,3 @@ class DirContextTestCase(ContextTestCase):
         self.assertEqual(attributes['colour'], 'blue')
 
         return
-
-#### EOF ######################################################################

@@ -69,8 +69,8 @@ class RecorderWithUI(Recorder):
         """Called from the CloseHandler when the UI is closed. This
         method basically stops the recording.
         """
-        from util import stop_recording
-        from package_globals import get_recorder
+        from .util import stop_recording
+        from .package_globals import get_recorder
 
         if get_recorder() is self:
             stop_recording(self.root, save=False)

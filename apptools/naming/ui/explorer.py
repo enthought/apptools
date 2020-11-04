@@ -20,7 +20,7 @@ from pyface.api import PythonShell, SplitApplicationWindow
 from traits.api import Float, Instance, Str
 
 # Local imports.
-from naming_tree import NamingTree
+from .naming_tree import NamingTree
 
 
 # Factory function for exploring a Python namespace.
@@ -93,5 +93,3 @@ class Explorer(SplitApplicationWindow):
         python_shell.execute_command('from apptools.naming.api import *')
 
         return python_shell.control
-
-##### EOF #####################################################################

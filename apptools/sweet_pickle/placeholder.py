@@ -23,7 +23,3 @@ class PlaceHolder(HasTraits):
     """ An empty class that serves as a placeholder to map a class to when
         that class has been deleted as a result of a refactoring.
     """
-
-
-### EOF ######################################################################
-

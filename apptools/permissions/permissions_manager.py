@@ -17,8 +17,8 @@
 from traits.api import Bool, HasTraits, Instance
 
 # Local imports.
-from i_policy_manager import IPolicyManager
-from i_user_manager import IUserManager
+from .i_policy_manager import IPolicyManager
+from .i_user_manager import IUserManager
 
 
 class PermissionsManager(HasTraits):

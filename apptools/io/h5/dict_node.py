@@ -213,8 +213,12 @@ class H5DictNode(object):
 
         # Remove stored arrays which are no longer in the data dictionary.
         pyt_children = group._v_children
+        nodes_to_remove = []
         for key in pyt_children.keys():
             if key not in data:
-                pyt_file.remove_node(group, key)
+                nodes_to_remove.append(key)
+
+        for key in nodes_to_remove:
+            pyt_file.remove_node(group, key)
 
         return out_data

@@ -137,5 +137,3 @@ def get_zip_path(filename):
             zippath = tail
 
     return zippath
-
-#### EOF ######################################################################

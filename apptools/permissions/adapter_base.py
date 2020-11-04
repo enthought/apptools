@@ -17,8 +17,8 @@
 from traits.api import Any, Bool, HasTraits, Instance, List
 
 # Local imports.
-from package_globals import get_permissions_manager
-from permission import Permission
+from .package_globals import get_permissions_manager
+from .permission import Permission
 
 
 class AdapterBase(HasTraits):
@@ -63,7 +63,7 @@ class AdapterBase(HasTraits):
             if isinstance(proxied, object_type):
                 break
         else:
-            raise TypeError, "no SecureProxy adapter registered for %s" % proxied
+            raise TypeError("no SecureProxy adapter registered for %s" % proxied)
 
         adapter = adapter_type(proxied=proxied, permissions=permissions,
                 show=show)

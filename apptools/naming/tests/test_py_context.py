@@ -18,7 +18,7 @@
 from apptools.naming.api import PyContext
 
 # Local imports.
-from context_test_case import ContextTestCase
+from .test_context import ContextTestCase
 
 
 class PyContextTestCase(ContextTestCase):
@@ -32,5 +32,3 @@ class PyContextTestCase(ContextTestCase):
         """ Creates the context that we are testing. """
 
         return PyContext(namespace={})
-
-#### EOF ######################################################################
