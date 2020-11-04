@@ -29,10 +29,6 @@ install:
     fi
 script:
   - edm run -- python etstool.py test --runtime=${RUNTIME} || exit
-
-after_success:
-  - edm run -- coverage combine
-
 notifications:
   email:
     - travis-ci@enthought.com
