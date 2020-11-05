@@ -1,6 +1,6 @@
-import numpy
+import unittest
 
-from traits.testing.unittest_tools import unittest
+import numpy
 
 from apptools.selection.api import ListSelection
 

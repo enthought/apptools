@@ -1,5 +1,6 @@
+import unittest
+
 from traits.api import Any, Event, HasTraits, List, provides, Str
-from traits.testing.unittest_tools import unittest
 
 from apptools.selection.api import (
     IDConflictError, ISelection, ISelectionProvider, ListenerNotConnectedError,
