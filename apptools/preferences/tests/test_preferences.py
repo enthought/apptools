@@ -42,8 +42,6 @@ class PreferencesTestCase(unittest.TestCase):
         # Remove the temporary directory.
         os.rmdir(self.tmpdir)
 
-        return
-
     ###########################################################################
     # Tests.
     ###########################################################################
@@ -57,8 +55,6 @@ class PreferencesTestCase(unittest.TestCase):
         set_default_preferences(self.preferences)
         self.assertEqual(self.preferences, get_default_preferences())
 
-        return
-
     def test_get_and_set_str(self):
         """ get and set str """
 
@@ -67,8 +63,6 @@ class PreferencesTestCase(unittest.TestCase):
         # Set a string preference.
         p.set('acme.ui.bgcolor', 'blue')
         self.assertEqual('blue', p.get('acme.ui.bgcolor'))
-
-        return
 
     def test_get_and_set_int(self):
         """ get and set int """
@@ -80,8 +74,6 @@ class PreferencesTestCase(unittest.TestCase):
         p.set('acme.ui.width', 50)
         self.assertEqual('50', p.get('acme.ui.width'))
 
-        return
-
     def test_get_and_set_float(self):
         """ get and set float """
 
@@ -91,8 +83,6 @@ class PreferencesTestCase(unittest.TestCase):
         # manager *always* returns preference values as strings.
         p.set('acme.ui.ratio', 1.0)
         self.assertEqual('1.0', p.get('acme.ui.ratio'))
-
-        return
 
     def test_get_and_set_bool(self):
         """ get and set bool """
@@ -104,8 +94,6 @@ class PreferencesTestCase(unittest.TestCase):
         p.set('acme.ui.visible', True)
         self.assertEqual('True', p.get('acme.ui.visible'))
 
-        return
-
     def test_get_and_set_list_of_str(self):
         """ get and set list of str """
 
@@ -115,8 +103,6 @@ class PreferencesTestCase(unittest.TestCase):
         # manager *always* returns preference values as strings.
         p.set('acme.ui.names', ['fred', 'wilma', 'barney'])
         self.assertEqual("['fred', 'wilma', 'barney']", p.get('acme.ui.names'))
-
-        return
 
     def test_get_and_set_list_of_int(self):
         """ get and set list of int """
@@ -128,8 +114,6 @@ class PreferencesTestCase(unittest.TestCase):
         p.set('acme.ui.offsets', [1, 2, 3])
         self.assertEqual('[1, 2, 3]', p.get('acme.ui.offsets'))
 
-        return
-
     def test_empty_path(self):
         """ empty path """
 
@@ -138,8 +122,6 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertRaises(ValueError, p.get, '')
         self.assertRaises(ValueError, p.remove, '')
         self.assertRaises(ValueError, p.set, '', 'a value')
-
-        return
 
     def test_default_values(self):
         """ default values """
@@ -155,8 +137,6 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual('a value', p.get('bogus', 'a value'))
         self.assertEqual('a value', p.get('acme.bogus', 'a value'))
         self.assertEqual('a value', p.get('acme.ui.bogus', 'a value'))
-
-        return
 
     def test_keys(self):
         """ keys """
@@ -198,8 +178,6 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual([], p.keys('bogus.blargle'))
         self.assertEqual([], p.keys('bogus.blargle.foogle'))
 
-        return
-
     def test_node(self):
         """ node """
 
@@ -232,8 +210,6 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual('acme.ui.splash_screen', node.path)
         self.assertEqual(p.node('acme.ui'), node.parent)
 
-        return
-
     def test_node_exists(self):
         """ node exists """
 
@@ -244,8 +220,6 @@ class PreferencesTestCase(unittest.TestCase):
 
         p.node('acme')
         self.assertTrue(p.node_exists('acme'))
-
-        return
 
     def test_node_names(self):
         """ node names """
@@ -287,8 +261,6 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual([], p.node_names('bogus.blargle'))
         self.assertEqual([], p.node_names('bogus.blargle.foogle'))
 
-        return
-
     def test_clear(self):
         """ clear """
 
@@ -306,8 +278,6 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertIsNone(p.get('acme.ui.width'))
         self.assertEqual(0, len(p.keys('acme.ui')))
 
-        return
-
     def test_remove(self):
         """ remove """
 
@@ -324,8 +294,6 @@ class PreferencesTestCase(unittest.TestCase):
         # Make sure we can't remove nodes!
         p.remove('acme.ui')
         self.assertTrue(p.node_exists('acme.ui'))
-
-        return
 
     def test_flush(self):
         """ flush """
@@ -365,8 +333,6 @@ class PreferencesTestCase(unittest.TestCase):
             # Clean up!
             os.remove(tmp)
 
-        return
-
     def test_load(self):
         """ load """
 
@@ -385,8 +351,6 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
         self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
         self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
-
-        return
 
     def test_load_with_filename_trait_set(self):
         """ load with filename trait set """
@@ -423,8 +387,6 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
         self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
         self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
-
-        return
 
     def test_save(self):
         """ save """
@@ -472,8 +434,6 @@ class PreferencesTestCase(unittest.TestCase):
             # Clean up!
             os.remove(tmp)
 
-        return
-
     def SKIPtest_dump(self):
         """ dump """
 
@@ -485,8 +445,6 @@ class PreferencesTestCase(unittest.TestCase):
         # Load the preferences from an 'ini' file.
         p.load(self.example)
         p.dump()
-
-        return
 
     def test_get_inherited(self):
         """ get inherited """
@@ -512,8 +470,6 @@ class PreferencesTestCase(unittest.TestCase):
         p.remove('bgcolor')
         self.assertEqual(None, p.get('acme.ui.bgcolor', inherit=True))
 
-        return
-
     def test_add_listener(self):
         """ add listener """
 
@@ -526,8 +482,6 @@ class PreferencesTestCase(unittest.TestCase):
             listener.key  = key
             listener.old  = old
             listener.new  = new
-
-            return
 
         # Add a listener.
         p.add_preferences_listener(listener, 'acme.ui')
@@ -547,8 +501,6 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual('blue', listener.old)
         self.assertEqual('red', listener.new)
 
-        return
-
     def test_remove_listener(self):
         """ remove listener """
 
@@ -561,8 +513,6 @@ class PreferencesTestCase(unittest.TestCase):
             listener.key  = key
             listener.old  = old
             listener.new  = new
-
-            return
 
         # Add a listener.
         p.add_preferences_listener(listener, 'acme.ui')
@@ -583,8 +533,6 @@ class PreferencesTestCase(unittest.TestCase):
         p.set('acme.ui.bgcolor', 'blue')
         self.assertIsNone(listener.node)
 
-        return
-
     def test_set_with_same_value(self):
         """ set with same value """
 
@@ -597,8 +545,6 @@ class PreferencesTestCase(unittest.TestCase):
             listener.key  = key
             listener.old  = old
             listener.new  = new
-
-            return
 
         # Add a listener.
         p.add_preferences_listener(listener, 'acme.ui')
@@ -616,5 +562,3 @@ class PreferencesTestCase(unittest.TestCase):
         # Set the same value and make sure the listener *doesn't* get called.
         p.set('acme.ui.bgcolor', 'blue')
         self.assertIsNone(listener.node)
-
-        return
