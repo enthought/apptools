@@ -64,7 +64,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         """ Called immediately after each test method has been called. """
 
         # Remove the temporary directory.
-        os.removedirs(self.tmpdir)
+        os.rmdir(self.tmpdir)
 
         return
 
@@ -267,6 +267,8 @@ class PreferencesHelperTestCase(unittest.TestCase):
         finally:
             # Clean up!
             os.remove(tmp)
+        
+        return
 
     def test_no_preferences_path(self):
         """ no preferences path """
