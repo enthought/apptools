@@ -299,9 +299,9 @@ class TestRecorder(unittest.TestCase):
     def test_recorder_and_ignored(self):
         "Test if recorder trait is set and private traits are ignored."
         t = Test()
-        self.assertEqual(t.recorder, None)
-        self.assertEqual(t._ignore, False)
-        self.assertEqual(t.ignore_, False)
+        self.assertIsNone(t.recorder)
+        self.assertFalse(t._ignore)
+        self.assertFalse(t.ignore_)
         tape = Recorder()
         tape.register(t)
         tape.recording = True
@@ -457,6 +457,3 @@ class TestRecorder(unittest.TestCase):
         lines = f.readlines()
         self.assertEqual(expect, lines)
         f.close()
-
-if __name__ == '__main__':
-    unittest.main()

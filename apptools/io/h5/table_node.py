@@ -1,5 +1,5 @@
 import numpy as np
-from pandas import DataFrame
+
 import six
 from tables.table import Table as PyTablesTable
 
@@ -115,7 +115,10 @@ class H5TableNode(object):
         """ Return table data as a pandas `DataFrame`.
 
         XXX: This does not work if the table contains a multidimensional column
+
+        This method requires pandas to have been installed in the environment.
         """
+        from pandas import DataFrame
         # Slicing rows gives a numpy struct array, which DataFrame understands.
         return DataFrame(self.ix[:])
 

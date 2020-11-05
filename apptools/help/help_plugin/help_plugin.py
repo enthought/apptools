@@ -272,13 +272,3 @@ class HelpPlugin(Plugin):
                              ) for example in self.help_examples
                 ])
         return pages
-
-    #my_help_demos = List(contributes_to=HELP_DEMOS)
-    #def _my_help_demos_default(self):
-    #    return [HelpCode( preferences_path=PKG + '.TraitsDemo'),
-    #           ]
-
-    #my_help_examples = List(contributes_to=HELP_EXAMPLES)
-    #def _my_help_examples_default(self):
-    #    return [HelpCode( preferences_path=PKG + '.AcmeLab'),
-    #           ]

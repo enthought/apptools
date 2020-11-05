@@ -268,7 +268,3 @@ class TestSelectionService(unittest.TestCase):
         with self.assertRaises(ValueError):
             service.set_selection(provider_id, new_selection,
                                   ignore_missing=False)
-
-
-if __name__ == '__main__':
-    unittest.main()

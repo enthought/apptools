@@ -13,8 +13,7 @@ from pickle import dumps
 try:
     from apptools.persistence import spickle
 except ImportError:
-    import nose
-    raise nose.SkipTest('spickle is not supported with Python3')
+    raise unittest.SkipTest('spickle is not supported with Python3')
 
 from traits.api import HasTraits, Float, Int
 
@@ -61,7 +60,3 @@ class TestStatePickler(unittest.TestCase):
         st = spickle.get_state(f)
         g = spickle.state2object(st)
         self._test_object(g)
-
-
-if __name__ == "__main__":
-    unittest.main()

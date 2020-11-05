@@ -6,8 +6,8 @@ import re
 import subprocess
 from setuptools import setup, find_packages
 
-MAJOR = 4
-MINOR = 6
+MAJOR = 5
+MINOR = 0
 MICRO = 0
 
 IS_RELEASED = False
@@ -138,4 +138,5 @@ if __name__ == "__main__":
           packages=find_packages(),
           platforms=["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
           zip_safe=False,
-          )
+          python_requires=">=3.6",
+    )

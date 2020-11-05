@@ -155,7 +155,7 @@ class TestDictPickler(unittest.TestCase):
         num = pickle.loads(junk)
         self.assertEqual(numpy.alltrue(numpy.ravel(num == obj.numeric)), 1)
 
-        self.assertTrue(data['ref']['type'] in ['reference', 'numeric'])
+        self.assertIn(data['ref']['type'], ['reference', 'numeric'])
         if data['ref']['type'] == 'numeric':
             self.assertEqual(data['numeric']['type'], 'reference')
         else:
@@ -176,11 +176,11 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(state.inst.__metadata__['type'], 'instance')
 
         tup = state.tuple
-        self.assertEqual(state.tuple.has_instance, True)
+        self.assertTrue(state.tuple.has_instance)
         self.assertEqual(tup[:-1], obj.tuple[:-1])
         self.assertEqual(tup[-1].a, 't')
         lst = state.list
-        self.assertEqual(state.list.has_instance, True)
+        self.assertTrue(state.list.has_instance)
         self.assertEqual(lst[:-1], obj.list[:-1])
         # Make sure the reference is the same
         self.assertEqual(id(state.inst), id(lst[-1]))
@@ -189,10 +189,10 @@ class TestDictPickler(unittest.TestCase):
 
         pure_lst = state.pure_list
         self.assertEqual(pure_lst, obj.pure_list)
-        self.assertEqual(state.pure_list.has_instance, False)
+        self.assertFalse(state.pure_list.has_instance)
 
         dct = state.dict
-        self.assertEqual(dct.has_instance, True)
+        self.assertTrue(dct.has_instance)
         self.assertEqual(dct['a'], obj.dict['a'])
         self.assertEqual(dct['b'], obj.dict['b'])
         self.assertEqual(dct['ref'].__metadata__['type'], 'instance')
@@ -244,7 +244,7 @@ class TestDictPickler(unittest.TestCase):
 
         self.assertEqual(state.dict, state1.dict)
 
-        self.assertEqual((state1.numeric == state.numeric).all(), True)
+        self.assertTrue((state1.numeric == state.numeric).all())
         self.assertEqual(id(state.ref), id(state.numeric))
         self.assertEqual(id(state1.ref), id(state1.numeric))
 
@@ -253,16 +253,16 @@ class TestDictPickler(unittest.TestCase):
         """Test to check has_instance correctness."""
         a = A()
         r = state_pickler.get_state(a)
-        self.assertEqual(r.__metadata__['has_instance'], True)
+        self.assertTrue(r.__metadata__['has_instance'])
         l = [1, a]
         r = state_pickler.get_state(l)
-        self.assertEqual(r.has_instance, True)
-        self.assertEqual(r[1].__metadata__['has_instance'], True)
+        self.assertTrue(r.has_instance)
+        self.assertTrue(r[1].__metadata__['has_instance'])
         d = {'a': l, 'b': 1}
         r = state_pickler.get_state(d)
-        self.assertEqual(r.has_instance, True)
-        self.assertEqual(r['a'].has_instance, True)
-        self.assertEqual(r['a'][1].__metadata__['has_instance'], True)
+        self.assertTrue(r.has_instance)
+        self.assertTrue(r['a'].has_instance)
+        self.assertTrue(r['a'][1].__metadata__['has_instance'])
 
         class B:
 
@@ -271,9 +271,9 @@ class TestDictPickler(unittest.TestCase):
 
         b = B()
         r = state_pickler.get_state(b)
-        self.assertEqual(r.__metadata__['has_instance'], True)
-        self.assertEqual(r.a.has_instance, True)
-        self.assertEqual(r.a[1].__metadata__['has_instance'], True)
+        self.assertTrue(r.__metadata__['has_instance'])
+        self.assertTrue(r.a.has_instance)
+        self.assertTrue(r.a[1].__metadata__['has_instance'])
 
     def test_pickle_classic(self):
         """Test if classic classes can be pickled."""
@@ -330,7 +330,7 @@ class TestDictPickler(unittest.TestCase):
         last = []
         state_pickler.set_state(t1, res, ignore=ignore, first=first, last=last)
         # Only 'b' should have been set.
-        self.assertEqual(t1.b, True)
+        self.assertTrue(t1.b)
         # Rest are unchanged.
         self.assertEqual(t1.i, 7)
         self.assertEqual(t1.s, 'String')
@@ -411,7 +411,7 @@ class TestDictPickler(unittest.TestCase):
         # If this just completes without error, we are good.
         state = state_pickler.get_state(data)
         # The two should be the same object.
-        self.assertTrue(state[0] is state[1])
+        self.assertIs(state[0], state[1])
         numpy.testing.assert_allclose(state[0], num)
 
     def test_state_is_saveable(self):
@@ -463,7 +463,3 @@ class TestDictPickler(unittest.TestCase):
             state_pickler.dump(obj, filepath)
         finally:
             os.remove(filepath)
-
-
-if __name__ == "__main__":
-    unittest.main()

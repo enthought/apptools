@@ -29,12 +29,6 @@ install:
     fi
 script:
   - edm run -- python etstool.py test --runtime=${RUNTIME} || exit
-
-after_success:
-  - edm run -- coverage combine
-  - edm run -- pip install codecov
-  - edm run -- codecov
-
 notifications:
   email:
     - travis-ci@enthought.com
