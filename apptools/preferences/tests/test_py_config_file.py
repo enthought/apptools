@@ -30,12 +30,8 @@ class PyConfigFileTestCase(unittest.TestCase):
         self.example = resource_filename(PKG, 'py_config_example.ini')
         self.example_2 = resource_filename(PKG, 'py_config_example_2.ini')
 
-        return
-
     def tearDown(self):
         """ Called immediately after each test method has been called. """
-
-        return
 
     ###########################################################################
     # Tests.
@@ -58,8 +54,6 @@ class PyConfigFileTestCase(unittest.TestCase):
         self.assertEqual(90, config['tds.foogle']['joe'])
         self.assertEqual("meerkat", config['simples']['animal'])
 
-        return
-
     def test_load_from_file(self):
         """ load from file """
 
@@ -76,8 +70,6 @@ class PyConfigFileTestCase(unittest.TestCase):
         self.assertEqual(100, config['acme.ui.other']['wilma'])
         self.assertEqual(90, config['tds.foogle']['joe'])
         self.assertEqual("meerkat", config['simples']['animal'])
-
-        return
 
     def test_save(self):
         """ save """
@@ -124,8 +116,6 @@ class PyConfigFileTestCase(unittest.TestCase):
             os.remove(tmp)
             os.rmdir(tmpdir)
 
-        return
-
     def test_load_multiple_files(self):
         """ load multiple files """
 
@@ -167,5 +157,3 @@ class PyConfigFileTestCase(unittest.TestCase):
 
         # ... and that the new ones can refer to the old ones!
         self.assertEqual(180, config['acme.ui']['blimey'])
-
-        return

@@ -59,15 +59,11 @@ class PreferencesHelperTestCase(unittest.TestCase):
         # A temporary directory that can safely be written to.
         self.tmpdir = tempfile.mkdtemp()
 
-        return
-
     def tearDown(self):
         """ Called immediately after each test method has been called. """
 
         # Remove the temporary directory.
         shutil.rmtree(self.tmpdir)
-
-        return
 
     ###########################################################################
     # Tests.
@@ -128,8 +124,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('yellow', bgcolor_listener.old)
         self.assertEqual('red', bgcolor_listener.new)
 
-        return
-
     def test_instance_scope_preferences_path(self):
         """ instance scope preferences path """
 
@@ -182,8 +176,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('yellow', bgcolor_listener.old)
         self.assertEqual('red', bgcolor_listener.new)
 
-        return
-
     def test_default_values(self):
         """ default values """
 
@@ -214,8 +206,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(u'description', helper.description)
         self.assertEqual([1, 2, 3, 4], helper.offsets)
         self.assertEqual(['joe', 'fred', 'jane'], helper.names)
-
-        return
 
     def test_real_unicode_values(self):
         """ Test with real life unicode values """
@@ -264,8 +254,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(second_unicode_str, p.get('acme.ui.description'))
         self.assertEqual(u'True', p.get('acme.ui.visible'))
         self.assertTrue(helper.visible)
-        
-        return
 
     def test_no_preferences_path(self):
         """ no preferences path """
@@ -287,8 +275,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         # Cannot create a helper with a preferences path.
         self.assertRaises(SystemError, AcmeUIPreferencesHelper)
-
-        return
 
     def test_sync_trait(self):
         """ sync trait """
@@ -359,8 +345,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('yellow', bgcolor_listener.old)
         self.assertEqual('red', bgcolor_listener.new)
 
-        return
-
     def test_scoped_preferences(self):
         """ scoped preferences """
 
@@ -389,8 +373,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
         # And that the non-existent trait gets the default value.
         self.assertEqual('', helper.name)
 
-        return
-
     def test_preference_not_in_file(self):
         """ preference not in file """
 
@@ -414,8 +396,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
         # Make sure the trait is set!
         self.assertEqual('Acme Plus', helper.title)
         self.assertEqual('Acme Plus', self.preferences.get('acme.ui.title'))
-
-        return
 
     def test_preferences_node_changed(self):
         """ preferences node changed """
@@ -484,8 +464,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual('red', bgcolor_listener.old)
         self.assertEqual('black', bgcolor_listener.new)
 
-        return
-
     def test_nested_set_in_trait_change_handler(self):
         """ nested set in trait change handler """
 
@@ -533,8 +511,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(3.0, helper.ratio)
         self.assertEqual('3.0', p.get('acme.ui.ratio'))
 
-        return
-
     # fixme: No comments - nice work... I added the doc string and the 'return'
     # to be compatible with the rest of the module. Interns please note correct
     # procedure when modifying existing code. If in doubt, ask a developer.
@@ -550,5 +526,3 @@ class PreferencesHelperTestCase(unittest.TestCase):
         helper = AcmeUIPreferencesHelper(preferences_path='acme.ui')
 
         self.assertEqual('50', helper.width)
-
-        return

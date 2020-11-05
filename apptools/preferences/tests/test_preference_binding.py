@@ -45,12 +45,8 @@ class PreferenceBindingTestCase(unittest.TestCase):
         # The filename of the example preferences file.
         self.example = resource_filename(PKG, 'example.ini')
 
-        return
-
     def tearDown(self):
         """ Called immediately after each test method has been called. """
-
-        return
 
     ###########################################################################
     # Tests.
@@ -118,8 +114,6 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual('0.75', p.get('acme.ui.ratio'))
         self.assertEqual(0.75, acme_ui.ratio)
 
-        return
-
     def test_default_values(self):
         """ instance scope preferences path """
 
@@ -147,8 +141,6 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual(50, acme_ui.width)
         self.assertEqual(1.0, acme_ui.ratio)
         self.assertTrue(acme_ui.visible)
-
-        return
 
     def test_load_and_save(self):
         """ load and save """
@@ -213,8 +205,6 @@ class PreferenceBindingTestCase(unittest.TestCase):
         os.remove(tmp)
         os.rmdir(tmpdir)
 
-        return
-
     def test_explicit_preferences(self):
         """ explicit preferences """
 
@@ -248,8 +238,6 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual(50, acme_ui.width)
         self.assertEqual(0.0, acme_ui.ratio)
         self.assertTrue(acme_ui.visible)
-
-        return
 
     def test_nested_set_in_trait_change_handler(self):
         """ nested set in trait change handler """
@@ -298,8 +286,6 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual(3.0, acme_ui.ratio)
         self.assertEqual('3.0', p.get('acme.ui.ratio'))
 
-        return
-
     def test_trait_name_different_to_preference_name(self):
 
         p = self.preferences
@@ -326,5 +312,3 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual('color', listener.trait_name)
         self.assertEqual('blue', listener.old)
         self.assertEqual('red', listener.new)
-
-        return

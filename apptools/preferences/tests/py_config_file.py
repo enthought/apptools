@@ -45,8 +45,6 @@ class PyConfigFile(dict):
         if file_or_filename is not None:
             self.load(file_or_filename)
 
-        return
-
     ###########################################################################
     # 'PyConfigFile' interface.
     ###########################################################################
@@ -92,8 +90,6 @@ class PyConfigFile(dict):
 
         f.close()
 
-        return
-
     def save(self, file_or_filename):
         """ Save the configuration to a file.
 
@@ -110,8 +106,6 @@ class PyConfigFile(dict):
             self._write_section(f, section_name, section_data)
 
         f.close()
-
-        return
 
     ###########################################################################
     # Private interface.
@@ -182,8 +176,6 @@ class PyConfigFile(dict):
         namespace = self._get_namespace(section_name)
         namespace.__dict__.update(section)
 
-        return
-
     def _write_section(self, f, section_name, section_data):
         """ Write a section to a file. """
 
@@ -193,8 +185,6 @@ class PyConfigFile(dict):
             f.write('%s = %s\n' % (name, repr(value)))
 
         f.write('\n')
-
-        return
 
     ###########################################################################
     # Debugging interface.
@@ -206,8 +196,6 @@ class PyConfigFile(dict):
         for name, value in self._namespaces.items():
             print('Namespace:', name)
             value.pretty_print('  ')
-
-        return
 
 
 ###############################################################################
@@ -258,5 +246,3 @@ class _Namespace(object):
 
             else:
                 print(indent, name, ':', value)
-
-        return
