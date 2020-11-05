@@ -53,7 +53,7 @@ you can run tests in all supported runtimes::
 
     python etstool.py test_all
 
-Currently supported runtime values are ``2.7``, ``3.5``, ``3.6``.  Not all
+Currently supported runtime value is``3.6``.  Not all
 runtimes will work, but the tasks will fail with a clear error if that is the
 case.
 
@@ -72,6 +72,14 @@ Other changes to commands should be a straightforward change to the listed
 commands for each task. See the EDM documentation for more information about
 how to run commands within an EDM enviornment.
 
+Build changelog
+---------------
+
+To create a first-cut changelog from the news fragments, use this command::
+
+    python etstool.py changelog build
+
+This will update the changelog file. You should review and edit it.
 """
 
 import glob
@@ -87,8 +95,6 @@ import click
 DEFAULT_RUNTIME = "3.6"
 
 supported_runtimes = [
-    '2.7',
-    '3.5',
     '3.6',
 ]
 
@@ -114,6 +120,17 @@ source_dependencies = {
 
 
 github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
+
+
+# Location of documentation files
+HERE = os.path.dirname(__file__)
+DOCS_DIR = os.path.join(HERE, "docs")
+
+# Location of news fragment for creating changelog.
+NEWS_FRAGMENT_DIR = os.path.join(DOCS_DIR, "releases", "upcoming")
+
+# Location of the Changelog file.
+CHANGELOG_PATH = os.path.join(HERE, "CHANGES.txt")
 
 
 @click.group()
@@ -282,6 +299,98 @@ def test_all():
             failed_command = True
     if failed_command:
         sys.exit(1)
+
+
+@cli.group("changelog")
+@click.pass_context
+def changelog(ctx):
+    """ Group of commands related to creating changelog."""
+
+    ctx.obj = {
+        # Mapping from news fragment type to their description in
+        # the changelog.
+        "type_to_description": {
+            "feature": "Features",
+            "bugfix": "Fixes",
+            "deprecation": "Deprecations",
+            "removal": "Removals",
+            "doc": "Documentation changes",
+        }
+    }
+
+
+@changelog.command("create")
+@click.pass_context
+def create_news_fragment(ctx):
+    """ Create a news fragment for your PR."""
+
+    pr_number = click.prompt('Please enter the PR number', type=int)
+    type_ = click.prompt(
+        "Choose a fragment type:",
+        type=click.Choice(ctx.obj["type_to_description"])
+    )
+
+    filepath = os.path.join(
+        NEWS_FRAGMENT_DIR, f"{pr_number}.{type_}.rst"
+    )
+
+    if os.path.exists(filepath):
+        click.echo("FAILED: File {} already exists.".format(filepath))
+        ctx.exit(1)
+
+    content = click.prompt(
+        "Describe the changes to the END USERS.\n"
+        "Example: 'Remove subpackage xyz.'\n",
+        type=str,
+    )
+    if not os.path.exists(NEWS_FRAGMENT_DIR):
+        os.makedirs(NEWS_FRAGMENT_DIR)
+    with open(filepath, "w", encoding="utf-8") as fp:
+        fp.write(content + f" (#{pr_number})")
+
+    click.echo("Please commit the file created at: {}".format(filepath))
+
+
+@changelog.command("build")
+@click.pass_context
+def build_changelog(ctx):
+    """ Build Changelog created from all the news fragments."""
+    # This is a rather simple first-cut generation of the changelog.
+    # It removes the laborious concatenation, but the end results might
+    # still require some tweaking.
+    contents = []
+
+    for type_, description in ctx.obj["type_to_description"].items():
+        pattern = os.path.join(NEWS_FRAGMENT_DIR, f"*.{type_}.rst")
+        file_paths = sorted(glob.glob(pattern))
+
+        if file_paths:
+            contents.append("")
+            contents.append(description)
+            contents.append("-" * len(description))
+
+        for filename in file_paths:
+            with open(filename, "r", encoding="utf-8") as fp:
+                contents.append("* " + fp.read())
+
+    # Prepend content to the changelog file.
+
+    with open(CHANGELOG_PATH, "r", encoding="utf-8") as fp:
+        original_changelog = fp.read()
+
+    with open(CHANGELOG_PATH, "w", encoding="utf-8") as fp:
+        if contents:
+            print(*contents, sep="\n", file=fp)
+        fp.write(original_changelog)
+
+    click.echo("Changelog is updated.")
+    should_clean = click.confirm(
+        "Do you want to remove the news fragments?"
+    )
+    if should_clean:
+        rmtree(NEWS_FRAGMENT_DIR)
+        os.makedirs(NEWS_FRAGMENT_DIR)
+
 
 # ----------------------------------------------------------------------------
 # Utility routines
