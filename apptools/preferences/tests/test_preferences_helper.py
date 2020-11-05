@@ -3,6 +3,7 @@
 
 # Standard library imports.
 import os
+import shutil
 import tempfile
 import time
 import unittest
@@ -64,7 +65,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         """ Called immediately after each test method has been called. """
 
         # Remove the temporary directory.
-        os.rmdir(self.tmpdir)
+        shutil.rmtree(self.tmpdir)
 
         return
 
@@ -257,16 +258,12 @@ class PreferencesHelperTestCase(unittest.TestCase):
         tmp = os.path.join(self.tmpdir, 'tmp.ini')
         p.save(tmp)
 
-        try:
-            # Load it into a new node.
-            p = Preferences()
-            p.load(tmp)
-            self.assertEqual(second_unicode_str, p.get('acme.ui.description'))
-            self.assertEqual(u'True', p.get('acme.ui.visible'))
-            self.assertTrue(helper.visible)
-        finally:
-            # Clean up!
-            os.remove(tmp)
+        # Load it into a new node.
+        p = Preferences()
+        p.load(tmp)
+        self.assertEqual(second_unicode_str, p.get('acme.ui.description'))
+        self.assertEqual(u'True', p.get('acme.ui.visible'))
+        self.assertTrue(helper.visible)
         
         return
 
