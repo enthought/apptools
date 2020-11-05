@@ -53,7 +53,7 @@ you can run tests in all supported runtimes::
 
     python etstool.py test_all
 
-Currently supported runtime values are ``2.7``, ``3.5``, ``3.6``.  Not all
+Currently supported runtime value is``3.6``.  Not all
 runtimes will work, but the tasks will fail with a clear error if that is the
 case.
 
@@ -95,8 +95,6 @@ import click
 DEFAULT_RUNTIME = "3.6"
 
 supported_runtimes = [
-    '2.7',
-    '3.5',
     '3.6',
 ]
 
