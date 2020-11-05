@@ -14,7 +14,7 @@
 
 
 # Enthought library imports.
-from traits.api import Instance, Int, Unicode
+from traits.api import Instance, Int, Str
 from apptools.undo.api import AbstractCommand
 
 # Local imports.
@@ -33,7 +33,7 @@ class LabelIncrementSizeCommand(AbstractCommand):
     data = Instance(Label)
 
     # The name of the command.
-    name = Unicode("&Increment size")
+    name = Str("&Increment size")
 
     #### Private interface ####################################################
 
@@ -76,7 +76,7 @@ class LabelDecrementSizeCommand(AbstractCommand):
     data = Instance(Label)
 
     # The name of the command.
-    name = Unicode("&Decrement size")
+    name = Str("&Decrement size")
 
     #### Private interface ####################################################
 
@@ -118,7 +118,7 @@ class LabelNormalFontCommand(AbstractCommand):
     data = Instance(Label)
 
     # The name of the command.
-    name = Unicode("&Normal font")
+    name = Str("&Normal font")
 
     ###########################################################################
     # 'ICommand' interface.
@@ -150,7 +150,7 @@ class LabelBoldFontCommand(AbstractCommand):
     data = Instance(Label)
 
     # The name of the command.
-    name = Unicode("&Bold font")
+    name = Str("&Bold font")
 
     ###########################################################################
     # 'ICommand' interface.
@@ -182,7 +182,7 @@ class LabelItalicFontCommand(AbstractCommand):
     data = Instance(Label)
 
     # The name of the command.
-    name = Unicode("&Italic font")
+    name = Str("&Italic font")
 
     ###########################################################################
     # 'ICommand' interface.

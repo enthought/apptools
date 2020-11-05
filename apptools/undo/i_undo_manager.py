@@ -13,7 +13,7 @@
 #------------------------------------------------------------------------------
 
 # Enthought library imports.
-from traits.api import Bool, Event, Instance, Int, Interface, Unicode
+from traits.api import Bool, Event, Instance, Int, Interface, Str
 
 
 class IUndoManager(Interface):
@@ -36,7 +36,7 @@ class IUndoManager(Interface):
     # This is the name of the command that can be redone.  It will be empty if
     # there is no command that can be redone.  It is maintained by the undo
     # manager.
-    redo_name = Unicode
+    redo_name = Str
 
     # This is the sequence number of the next command to be performed.  It is
     # incremented immediately before a command is invoked (by its 'do()'
@@ -50,7 +50,7 @@ class IUndoManager(Interface):
     # This is the name of the command that can be undone.  It will be empty if
     # there is no command that can be undone.  It is maintained by the undo
     # manager.
-    undo_name = Unicode
+    undo_name = Str
 
     ###########################################################################
     # 'IUndoManager' interface.

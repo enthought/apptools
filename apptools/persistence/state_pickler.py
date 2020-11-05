@@ -215,7 +215,7 @@ class StatePickler:
     will return the dictionary that is pickled.
 
     The format of the state dict is quite strightfoward.  Basic types
-    (bool, int, long, float, complex, None, string and unicode) are
+    (bool, int, long, float, complex, None, string) are
     represented as they are.  Everything else is stored as a
     dictionary containing metadata information on the object's type
     etc. and also the actual object in the 'data' key.  For example::
@@ -268,9 +268,6 @@ class StatePickler:
                     NumpyArrayType: self._do_numeric,
                     State: self._do_state,
                     }
-        if PY_VER == 2:
-            type_map[long] = self._do_basic_type
-            type_map[unicode] = self._do_basic_type
         self.type_map = type_map
 
     def dump(self, value, file):

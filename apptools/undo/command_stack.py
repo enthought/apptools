@@ -14,7 +14,7 @@
 
 # Enthought library imports.
 from traits.api import Bool, HasTraits, Instance, Int, List, Property, \
-    Unicode, provides
+    Str, provides
 
 # Local imports.
 from .abstract_command import AbstractCommand
@@ -99,7 +99,7 @@ class CommandStack(HasTraits):
     # This is the name of the command that can be redone.  It will be empty if
     # there is no command that can be redone.  It is maintained by the undo
     # stack.
-    redo_name = Property(Unicode)
+    redo_name = Property(Str)
 
     # This is the undo manager that manages this stack.
     undo_manager = Instance(IUndoManager)
@@ -107,7 +107,7 @@ class CommandStack(HasTraits):
     # This is the name of the command that can be undone.  It will be empty if
     # there is no command that can be undone.  It is maintained by the undo
     # stack.
-    undo_name = Property(Unicode)
+    undo_name = Property(Str)
 
     #### Private interface ####################################################
 

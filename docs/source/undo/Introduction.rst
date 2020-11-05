@@ -103,12 +103,12 @@ interface.
     be the currently active stack.
 
 ``undo_name``
-    This Unicode trait is the name of the command that can be undone, and will
+    This Str trait is the name of the command that can be undone, and will
     be empty if there is no such command.  It is maintained by the undo
     manager.
 
 ``redo_name``
-    This Unicode trait is the name of the command that can be redone, and will
+    This Str trait is the name of the command that can be redone, and will
     be empty if there is no such command.  It is maintained by the undo
     manager.
 
@@ -143,12 +143,12 @@ The ``CommandStack`` class is the default implementation of the
     data is saved to disk for example).
 
 ``undo_name``
-    This Unicode trait is the name of the command that can be undone, and will
+    This Str trait is the name of the command that can be undone, and will
     be empty if there is no such command.  It is maintained by the command
     stack.
 
 ``redo_name``
-    This Unicode trait is the name of the command that can be redone, and will
+    This Str trait is the name of the command that can be redone, and will
     be empty if there is no such command.  It is maintained by the command
     stack.
 
@@ -199,7 +199,7 @@ any undoable/redoable command.
     operates on.  It is not used by the framework itself.
 
 ``name``
-    This Unicode trait is the name of the command as it will appear in any GUI
+    This Str trait is the name of the command as it will appear in any GUI
     element (e.g. in the text of an undo and redo menu entry).  It may include
     ``&`` to indicate a keyboard shortcut which will be automatically removed
     whenever it is inappropriate.

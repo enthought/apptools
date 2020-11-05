@@ -5,7 +5,7 @@
 import logging
 
 # Enthought library imports.
-from traits.api import HasTraits, Instance, Str, Unicode
+from traits.api import HasTraits, Instance, Str
 
 # Local imports.
 from .i_preferences import IPreferences
@@ -128,8 +128,8 @@ class PreferencesHelper(HasTraits):
         trait = self.trait(trait_name)
         handler = trait.handler
 
-        # If the trait type is 'Str' or Unicode then we just take the raw value.
-        if isinstance(handler, (Str, Unicode)) or trait.is_str:
+        # If the trait type is 'Str' then we just take the raw value.
+        if isinstance(handler, Str) or trait.is_str:
             pass
 
         # Otherwise, we eval it!

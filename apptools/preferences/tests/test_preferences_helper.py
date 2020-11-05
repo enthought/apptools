@@ -15,7 +15,7 @@ from pkg_resources import resource_filename
 from apptools.preferences.api import Preferences, PreferencesHelper
 from apptools.preferences.api import ScopedPreferences
 from apptools.preferences.api import set_default_preferences
-from traits.api import Any, Bool, HasTraits, Int, Float, List, Str, Unicode
+from traits.api import Any, Bool, HasTraits, Int, Float, List, Str
 
 
 def width_listener(obj, trait_name, old, new):
@@ -86,7 +86,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             width       = Int
             ratio       = Float
             visible     = Bool
-            description = Unicode
+            description = Str
             offsets     = List(Int)
             names       = List(Str)
 
@@ -138,7 +138,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             width       = Int
             ratio       = Float
             visible     = Bool
-            description = Unicode
+            description = Str
             offsets     = List(Int)
             names       = List(Str)
 
@@ -192,7 +192,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             width       = Int(50)
             ratio       = Float(1.0)
             visible     = Bool(True)
-            description = Unicode(u'description')
+            description = Str(u'description')
             offsets     = List(Int, [1, 2, 3, 4])
             names       = List(Str, ['joe', 'fred', 'jane'])
 
@@ -224,7 +224,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             width       = Int(50)
             ratio       = Float(1.0)
             visible     = Bool(True)
-            description = Unicode(u'')
+            description = Str(u'')
             offsets     = List(Int, [1, 2, 3, 4])
             names       = List(Str, ['joe', 'fred', 'jane'])
 
@@ -269,7 +269,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             width       = Int
             ratio       = Float
             visible     = Bool
-            description = Unicode
+            description = Str
             offsets     = List(Int)
             names       = List(Str)
 
@@ -301,7 +301,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             width       = Int
             ratio       = Float
             visible     = Bool
-            description = Unicode
+            description = Str
             offsets     = List(Int)
             names       = List(Str)
 
@@ -414,7 +414,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             width       = Int
             ratio       = Float
             visible     = Bool
-            description = Unicode
+            description = Str
             offsets     = List(Int)
             names       = List(Str)
 
@@ -478,7 +478,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             width       = Int
             ratio       = Float
             visible     = Bool
-            description = Unicode
+            description = Str
             offsets     = List(Int)
             names       = List(Str)
 
