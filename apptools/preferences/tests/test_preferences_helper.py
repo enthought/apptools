@@ -2,6 +2,9 @@
 
 
 # Standard library imports.
+import os
+import shutil
+import tempfile
 import time
 import unittest
 
@@ -53,10 +56,16 @@ class PreferencesHelperTestCase(unittest.TestCase):
         # The filename of the example preferences file.
         self.example = resource_filename(PKG, 'example.ini')
 
+        # A temporary directory that can safely be written to.
+        self.tmpdir = tempfile.mkdtemp()
+
         return
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
+
+        # Remove the temporary directory.
+        shutil.rmtree(self.tmpdir)
 
         return
 
@@ -245,16 +254,18 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(second_unicode_str, helper.description)
         self.assertEqual(second_unicode_str, p.get('acme.ui.description'))
 
-        p.save(self.example)
+        # Save it to another file.
+        tmp = os.path.join(self.tmpdir, 'tmp.ini')
+        p.save(tmp)
 
-        p.load(self.example)
+        # Load it into a new node.
+        p = Preferences()
+        p.load(tmp)
         self.assertEqual(second_unicode_str, p.get('acme.ui.description'))
         self.assertEqual(u'True', p.get('acme.ui.visible'))
         self.assertTrue(helper.visible)
-
-        # reset the original description and save the example file
-        helper.description = original_description
-        p.save(self.example)
+        
+        return
 
     def test_no_preferences_path(self):
         """ no preferences path """
