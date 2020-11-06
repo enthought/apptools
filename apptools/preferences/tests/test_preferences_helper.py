@@ -15,7 +15,10 @@ from pkg_resources import resource_filename
 from apptools.preferences.api import Preferences, PreferencesHelper
 from apptools.preferences.api import ScopedPreferences
 from apptools.preferences.api import set_default_preferences
-from traits.api import Any, Bool, HasTraits, Int, Float, List, Str
+from traits.api import (
+    Any, Bool, cached_property, Event, HasTraits, Int, Float, List, Str,
+    Property,
+)
 
 
 def width_listener(obj, trait_name, old, new):
@@ -58,6 +61,9 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         # A temporary directory that can safely be written to.
         self.tmpdir = tempfile.mkdtemp()
+
+        # Path to a temporary file
+        self.tmpfile = os.path.join(self.tmpdir, "tmp.ini")
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
@@ -245,15 +251,42 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(second_unicode_str, p.get('acme.ui.description'))
 
         # Save it to another file.
-        tmp = os.path.join(self.tmpdir, 'tmp.ini')
-        p.save(tmp)
+        p.save(self.tmpfile)
 
         # Load it into a new node.
         p = Preferences()
-        p.load(tmp)
+        p.load(self.tmpfile)
         self.assertEqual(second_unicode_str, p.get('acme.ui.description'))
         self.assertEqual(u'True', p.get('acme.ui.visible'))
         self.assertTrue(helper.visible)
+
+    def test_items_trait_not_saved(self):
+        """ Invisible and noneditable traits are not saved in preferences."""
+        # Regression test for enthought/apptools#129
+
+        class MyPreferencesHelper(PreferencesHelper):
+            preferences_path = Str('my_section')
+
+            list_of_str = List(Str)
+
+            an_event = Event()
+
+            a_property = Property()
+
+            @cached_property
+            def _get_a_property(self):
+                return 1
+
+        helper = MyPreferencesHelper(list_of_str=["1"])
+
+        # Now modify the list to fire _items event
+        helper.list_of_str.append("2")
+        self.preferences.save(self.tmpfile)
+
+        new_preferences = Preferences()
+        new_preferences.load(self.tmpfile)
+
+        self.assertEqual(new_preferences.keys("my_section"), ["list_of_str"])
 
     def test_no_preferences_path(self):
         """ no preferences path """
