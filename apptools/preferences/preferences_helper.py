@@ -17,7 +17,14 @@ logger = logging.getLogger(__name__)
 
 
 class PreferencesHelper(HasTraits):
-    """ An object that can be initialized from a preferences node. """
+    """ A base class for objects that can be initialized from a preferences
+    node.
+
+    Additional traits defined on subclasses will be listened to. Changes
+    are then synchronized with the preferences. Note that mutations on nested
+    containers e.g. List(List(Str)) cannot be synchronized and should be
+    avoided.
+    """
 
     #### 'PreferencesHelper' interface ########################################
 
