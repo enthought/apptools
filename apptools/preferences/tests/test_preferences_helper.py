@@ -299,6 +299,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
     def test_nested_container_mutation_not_supported(self):
         """ Known limitation: mutation on nested containers are not
         synchronized
+        See enthought/apptools#194
         """
 
         class MyPreferencesHelper(PreferencesHelper):
