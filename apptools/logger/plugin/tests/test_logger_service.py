@@ -1,12 +1,6 @@
 from email.mime.multipart import MIMEMultipart
 import unittest
-
-try:
-    # On Python 3, mock is part of the standard library,
-    from unittest import mock
-except ImportError:
-    # Whereas on Python 2 it is not.
-    import mock
+from unittest import mock
 
 from apptools.logger.plugin.logger_service import LoggerService
 
