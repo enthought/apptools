@@ -2,7 +2,7 @@
 
 import unittest
 
-from traits.api import Enum
+from traits.api import Enum, List, Str
 from traitsui.api import Group, Item, View
 
 from apptools.preferences.api import Preferences
@@ -56,3 +56,21 @@ class TestPreferencesPage(unittest.TestCase):
         self.assertIsNone(preferences.get("my_ref.pref.help_id"))
         self.assertIsNone(preferences.get("my_ref.pref.category"))
         self.assertIsNone(preferences.get("my_ref.pref.name"))
+
+    def test_preferences_page_apply_skip_items_traits(self):
+        """ Test _items traits from List mutation are skipped. """
+        # Regression test for enthought/apptools#129
+
+        class MyPreferencesPage(PreferencesPage):
+            preferences_path = "my_ref.pref"
+            names = List(Str())
+
+        preferences = Preferences()
+        pref_page = MyPreferencesPage(
+            preferences=preferences,
+            names=["1"],
+        )
+        pref_page.names.append("2")
+        pref_page.apply()
+
+        self.assertEqual(preferences.keys("my_ref.pref"), ["names"])
