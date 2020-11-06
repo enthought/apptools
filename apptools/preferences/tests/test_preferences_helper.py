@@ -260,8 +260,10 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(u'True', p.get('acme.ui.visible'))
         self.assertTrue(helper.visible)
 
-    def test_items_trait_not_saved(self):
-        """ Invisible and noneditable traits are not saved in preferences."""
+    def test_mutate_list_of_values(self):
+        """ Mutated list should be saved and _items events not to be
+        saved in the preferences.
+        """
         # Regression test for enthought/apptools#129
 
         class MyPreferencesHelper(PreferencesHelper):
@@ -286,6 +288,9 @@ class PreferencesHelperTestCase(unittest.TestCase):
         new_preferences = Preferences()
         new_preferences.load(self.tmpfile)
 
+        self.assertEqual(
+            new_preferences.get("my_section.list_of_str"), str(["1", "2"])
+        )
         self.assertEqual(new_preferences.keys("my_section"), ["list_of_str"])
 
     def test_no_preferences_path(self):

@@ -73,4 +73,5 @@ class TestPreferencesPage(unittest.TestCase):
         pref_page.names.append("2")
         pref_page.apply()
 
+        self.assertEqual(preferences.get("my_ref.pref.names"), str(["1", "2"]))
         self.assertEqual(preferences.keys("my_ref.pref"), ["names"])
