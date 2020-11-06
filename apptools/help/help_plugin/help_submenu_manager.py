@@ -110,7 +110,7 @@ class DocumentsMenuManager(HelpSubmenuManager):
 
     # The menu manager's name (if the manager is a sub-menu, this is what its
     # label will be).
-    name = u'&Documents'
+    name = '&Documents'
 
     #### 'DocMenuManager' interface ##########################################
 
@@ -151,7 +151,7 @@ class DemosMenuManager(HelpSubmenuManager):
 
     # The menu manager's name (if the manager is a sub-menu, this is what its
     # label will be).
-    name = u'D&emos'
+    name = 'D&emos'
 
     #### 'DemoMenuManager' interface ##########################################
 
@@ -191,7 +191,7 @@ class ExamplesMenuManager(HelpSubmenuManager):
 
     # The menu manager's name (if the manager is a sub-menu, this is what its
     # label will be).
-    name = u'&Examples'
+    name = '&Examples'
 
     #### 'ExampleMenuManager' interface ##########################################
 
@@ -236,7 +236,7 @@ class DownloadsMenuManager(HelpSubmenuManager):
 
     # The menu manager's name (if the manager is a sub-menu, this is what its
     # label will be).
-    name = u'&Downloads'
+    name = '&Downloads'
 
     #### 'DocMenuManager' interface ##########################################
 
