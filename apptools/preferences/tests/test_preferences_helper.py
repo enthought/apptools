@@ -296,6 +296,35 @@ class PreferencesHelperTestCase(unittest.TestCase):
         )
         self.assertEqual(new_preferences.keys("my_section"), ["list_of_str"])
 
+    def test_nested_container_mutation_not_supported(self):
+        """ Known limitation: mutation on nested containers are not
+        synchronized
+        """
+
+        class MyPreferencesHelper(PreferencesHelper):
+            preferences_path = Str('my_section')
+            list_of_list_of_str = List(List(Str))
+
+        helper = MyPreferencesHelper(list_of_list_of_str=[["1"]])
+        helper.list_of_list_of_str[0].append("9")
+
+        self.preferences.save(self.tmpfile)
+
+        new_preferences = Preferences()
+        new_preferences.load(self.tmpfile)
+
+        # The event trait is not saved.
+        self.assertEqual(
+            new_preferences.keys("my_section"), ["list_of_list_of_str"]
+        )
+
+        # The values are not synchronized
+        with self.assertRaises(AssertionError):
+            self.assertEqual(
+                new_preferences.get("my_section.list_of_list_of_str"),
+                str(helper.list_of_list_of_str)
+            )
+
     def test_no_preferences_path(self):
         """ no preferences path """
 
