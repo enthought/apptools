@@ -13,8 +13,8 @@
 # -----------------------------------------------------------------------------
 
 from contextlib import contextmanager
+import unittest
 
-from traits.testing.unittest_tools import unittest
 from apptools.undo.api import CommandStack, UndoManager
 from apptools.undo.tests.testing_commands import SimpleCommand, UnnamedCommand
 
