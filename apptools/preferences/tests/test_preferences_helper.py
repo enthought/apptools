@@ -16,8 +16,8 @@ from apptools.preferences.api import Preferences, PreferencesHelper
 from apptools.preferences.api import ScopedPreferences
 from apptools.preferences.api import set_default_preferences
 from traits.api import (
-    Any, Bool, cached_property, Event, HasTraits, Int, Float, List, Str,
-    Property, push_exception_handler, pop_exception_handler,
+    Any, Bool, HasTraits, Int, Float, List, Str,
+    push_exception_handler, pop_exception_handler,
 )
 
 
@@ -273,14 +273,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
             preferences_path = Str('my_section')
 
             list_of_str = List(Str)
-
-            an_event = Event()
-
-            a_property = Property()
-
-            @cached_property
-            def _get_a_property(self):
-                return 1
 
         helper = MyPreferencesHelper(list_of_str=["1"])
 
