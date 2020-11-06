@@ -17,7 +17,7 @@ from apptools.preferences.api import ScopedPreferences
 from apptools.preferences.api import set_default_preferences
 from traits.api import (
     Any, Bool, cached_property, Event, HasTraits, Int, Float, List, Str,
-    Property,
+    Property, push_exception_handler, pop_exception_handler,
 )
 
 
@@ -64,6 +64,9 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         # Path to a temporary file
         self.tmpfile = os.path.join(self.tmpdir, "tmp.ini")
+
+        push_exception_handler(reraise_exceptions=True)
+        self.addCleanup(pop_exception_handler)
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """

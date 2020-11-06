@@ -65,9 +65,23 @@ class PreferencesHelper(HasTraits):
     def _anytrait_changed(self, trait_name, old, new):
         """ Static trait change handler. """
 
+        if self.preferences is None:
+            return
+
+        # If the trait was a list or dict '_items' trait then just treat it as
+        # if the entire list or dict was changed.
+        if trait_name.endswith('_items'):
+            trait_name = trait_name[:-6]
+            if self._is_preference_trait(trait_name):
+                self.preferences.set(
+                    '%s.%s' % (self._get_path(), trait_name),
+                    getattr(self, trait_name)
+                )
+                return
+
         # If we were the one that set the trait (because the underlying
         # preferences node changed) then do nothing.
-        if self.preferences and self._is_preference_trait(trait_name):
+        if self._is_preference_trait(trait_name):
             self.preferences.set('%s.%s' % (self._get_path(), trait_name), new)
 
         return
