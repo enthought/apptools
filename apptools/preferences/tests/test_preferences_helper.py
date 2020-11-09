@@ -98,7 +98,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(50, helper.width)
         self.assertEqual(1.0, helper.ratio)
         self.assertTrue(helper.visible)
-        self.assertEqual(u'acme ui', helper.description)
+        self.assertEqual('acme ui', helper.description)
         self.assertEqual([1, 2, 3, 4], helper.offsets)
         self.assertEqual(['joe', 'fred', 'jane'], helper.names)
 
@@ -150,7 +150,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(50, helper.width)
         self.assertEqual(1.0, helper.ratio)
         self.assertTrue(helper.visible)
-        self.assertEqual(u'acme ui', helper.description)
+        self.assertEqual('acme ui', helper.description)
         self.assertEqual([1, 2, 3, 4], helper.offsets)
         self.assertEqual(['joe', 'fred', 'jane'], helper.names)
 
@@ -192,7 +192,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             width       = Int(50)
             ratio       = Float(1.0)
             visible     = Bool(True)
-            description = Str(u'description')
+            description = Str('description')
             offsets     = List(Int, [1, 2, 3, 4])
             names       = List(Str, ['joe', 'fred', 'jane'])
 
@@ -203,7 +203,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(50, helper.width)
         self.assertEqual(1.0, helper.ratio)
         self.assertTrue(helper.visible)
-        self.assertEqual(u'description', helper.description)
+        self.assertEqual('description', helper.description)
         self.assertEqual([1, 2, 3, 4], helper.offsets)
         self.assertEqual(['joe', 'fred', 'jane'], helper.names)
 
@@ -224,13 +224,13 @@ class PreferencesHelperTestCase(unittest.TestCase):
             width       = Int(50)
             ratio       = Float(1.0)
             visible     = Bool(True)
-            description = Str(u'')
+            description = Str('')
             offsets     = List(Int, [1, 2, 3, 4])
             names       = List(Str, ['joe', 'fred', 'jane'])
 
         helper = AcmeUIPreferencesHelper()
 
-        first_unicode_str = u'U\xdc\xf2ser'
+        first_unicode_str = 'U\xdc\xf2ser'
         first_utf8_str = 'U\xc3\x9c\xc3\xb2ser'
 
         original_description = helper.description
@@ -238,7 +238,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(first_unicode_str, helper.description)
 
 
-        second_unicode_str = u'caf\xe9'
+        second_unicode_str = 'caf\xe9'
         second_utf8_str = 'caf\xc3\xa9'
         helper.description = second_unicode_str
         self.assertEqual(second_unicode_str, helper.description)
@@ -252,7 +252,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         p = Preferences()
         p.load(tmp)
         self.assertEqual(second_unicode_str, p.get('acme.ui.description'))
-        self.assertEqual(u'True', p.get('acme.ui.visible'))
+        self.assertEqual('True', p.get('acme.ui.visible'))
         self.assertTrue(helper.visible)
 
     def test_no_preferences_path(self):
@@ -313,7 +313,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(50, helper.width)
         self.assertEqual(1.0, helper.ratio)
         self.assertTrue(helper.visible)
-        self.assertEqual(u'acme ui', helper.description)
+        self.assertEqual('acme ui', helper.description)
         self.assertEqual([1, 2, 3, 4], helper.offsets)
         self.assertEqual(['joe', 'fred', 'jane'], helper.names)
 
@@ -497,7 +497,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(50, helper.width)
         self.assertEqual(1.0, helper.ratio)
         self.assertTrue(helper.visible)
-        self.assertEqual(u'acme ui', helper.description)
+        self.assertEqual('acme ui', helper.description)
         self.assertEqual([1, 2, 3, 4], helper.offsets)
         self.assertEqual(['joe', 'fred', 'jane'], helper.names)
 

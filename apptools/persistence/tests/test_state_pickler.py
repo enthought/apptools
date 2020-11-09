@@ -48,7 +48,7 @@ class TestClassic:
         self.c = complex(1.01234, 2.3)
         self.n = None
         self.s = 'String'
-        self.u = u'Unicode'
+        self.u = 'Unicode'
         self.inst = A()
         self.tuple = (1, 2, 'a', A())
         self.list = [1, 1.1, 'a', 1j, self.inst]
@@ -69,7 +69,7 @@ class TestTraits(HasTraits):
     c = Complex(complex(1.01234, 2.3))
     n = Any
     s = Str('String')
-    u = Str(u'Unicode')
+    u = Str('Unicode')
     inst = Instance(A)
     tuple = Tuple
     list = List
@@ -95,7 +95,7 @@ class TestDictPickler(unittest.TestCase):
         obj.b = True
         obj.i = 8
         obj.s = 'string'
-        obj.u = u'unicode'
+        obj.u = 'unicode'
         obj.inst.a = 'b'
         obj.list[0] = 2
         obj.tuple[-1].a = 't'
@@ -334,7 +334,7 @@ class TestDictPickler(unittest.TestCase):
         # Rest are unchanged.
         self.assertEqual(t1.i, 7)
         self.assertEqual(t1.s, 'String')
-        self.assertEqual(t1.u, u'Unicode')
+        self.assertEqual(t1.u, 'Unicode')
         self.assertEqual(t1.inst.a, 'a')
         self.assertEqual(t1.list[0], 1)
         self.assertEqual(t1.tuple[-1].a, 'a')
