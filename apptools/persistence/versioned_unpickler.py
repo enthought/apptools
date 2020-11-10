@@ -137,9 +137,6 @@ class VersionedUnpickler(NewUnpickler):
             module, name = self.updater.get_latest(module, name)
 
             # load the class...
-            '''__import__(module)
-            mod = sys.modules[module]
-            klass = getattr(mod, name)'''
             klass = self.import_name(module, name)
 
             # add the updater....  TODO - why the old name?
@@ -201,7 +198,6 @@ class VersionedUnpickler(NewUnpickler):
                 # and run later when we have finished updating the class
                 name = '__setstate_original__'
 
-            #logger.debug('renaming __setstate__ to %s' % name)
             method = getattr(klass, '__setstate__')
             m = _unbound_method(method, klass)
             setattr(klass, name, m)
