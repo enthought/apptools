@@ -8,16 +8,16 @@ mechanism and each layer on top providing more convenient ways to get and set
 preference values.
 
 The Basic Preferences Mechanism
-===============================
+-------------------------------
 
 Lets start by taking a look at the lowest layer which consists of the
-IPreferences_ interface and its default implementation in the Preferences_
+|IPreferences| interface and its default implementation in the |Preferences|
 class. This layer implements the basic preferences system which is a
 hierarchical arrangement of preferences 'nodes' (where each node is simply an
-object that implements the IPreferences_ interface). Nodes in the hierarchy can
+object that implements the |IPreferences| interface). Nodes in the hierarchy can
 contain preference settings and/or child nodes. This layer also provides a
 default way to read and write preferences from the filesystem using the
-excellent ConfigObj_ package.
+excellent `ConfigObj`_ package.
 
 This all sounds a bit complicated but, believe me, it isn't! To prove it
 (hopefully) lets look at an example. Say I have the following preferences in
@@ -40,9 +40,9 @@ I can create a preferences hierarchy from this file by::
   >>> preferences.dump()
 
    Node() {}
-      Node(acme) {}
-        Node(ui) {'bgcolor': 'blue', 'ratio': '1.0', 'width': '50', 'visible': 'True'}
-          Node(splash_screen) {'image': 'splash', 'fgcolor': 'red'}
+     Node(acme) {}
+       Node(ui) {'bgcolor': 'blue', 'width': '50', 'ratio': '1.0', 'visible': 'True'}
+         Node(splash_screen) {'image': 'splash', 'fgcolor': 'red'}
 
 The 'dump' method (useful for debugging etc) simply 'pretty prints' a
 preferences hierarchy. The dictionary next to each node contains the node's
@@ -109,7 +109,7 @@ preferences::
   'bgcolor'
 
 Strings, Glorious Strings
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 At this point it is worth mentioning that preferences are *always* stored and
 returned as strings. This is because of the limitations of the traditional
@@ -136,10 +136,10 @@ discusses how we associate type information with our preferences to make
 getting and setting them more natural.
 
 Preferences and Types
-=====================
+---------------------
 
 As mentioned previously, we would like to be able to get and set non-string
-preferences in a more convenient way. This is where the PreferencesHelper_
+preferences in a more convenient way. This is where the |PreferencesHelper|
 class comes in.
 
 Let's take another look at 'example.ini'::
@@ -162,7 +162,7 @@ preferences helper as follows::
   class SplashScreenPreferences(PreferencesHelper):
       """ A preferences helper for the splash screen. """
 
-      PREFERENCES_PATH = 'acme.ui'
+      preferences_path = 'acme.ui'
 
       bgcolor = Str
       width   = Int
@@ -174,7 +174,7 @@ preferences helper as follows::
   >>> helper.bgcolor
   'blue'
   >>> helper.width
-  100
+  50
   >>> helper.ratio
   1.0
   >>> helper.visible
@@ -202,30 +202,14 @@ preferences node directly::
   >>> preferences.set('acme.ui.ratio', 0.33)
   ratio 0.75 0.33
 
-If you always use the same preference node as the root of your preferences you
-can also set the class attribute 'PreferencesHelper.preferences' to be that
-node and from then on in, you don't have to pass a preferences collection in
-each time you create a helper::
-
-  >>> PreferencesHelper.preferences = Preferences(filename='example.ini')
-  >>> helper = SplashScreenPreferences()
-  >>> helper.bgcolor
-  'blue'
-  >>> helper.width
-  100
-  >>> helper.ratio
-  1.0
-  >>> helper.visible
-  True
-
 Scoped Preferences
-==================
+------------------
 
 In many applications the idea of preferences scopes is useful. In a scoped
 system, an actual preference value can be stored in any scope and when a call
 is made to the 'get' method the scopes are searched in order of precedence.
 
-The default implementation (in the ScopedPreferences_ class) provides two
+The default implementation (in the |ScopedPreferences| class) provides two
 scopes by default:
 
 1) The application scope
@@ -245,14 +229,14 @@ preferences is just like using the plain old non-scoped version::
   >>> from apptools.preferences.api import ScopedPreferences
   >>> preferences = ScopedPreferences(filename='example.ini')
   >>> preferences.load('example.ini')
-  >>> p.dump()
+  >>> preferences.dump()
 
-    Node() {}
-      Node(application) {}
-        Node(acme) {}
-          Node(ui) {'bgcolor': 'blue', 'ratio': '1.0', 'width': '50', 'visible': 'True'}
-            Node(splash_screen) {'image': 'splash', 'fgcolor': 'red'}
-      Node(default) {}
+   Node() {}
+     Node(application) {}
+       Node(acme) {}
+         Node(ui) {'bgcolor': 'blue', 'width': '50', 'ratio': '1.0', 'visible': 'True'}
+           Node(splash_screen) {'image': 'splash', 'fgcolor': 'red'}
+     Node(default) {}
 
 Here you can see that the root node now has a child node representing each
 scope.
@@ -275,29 +259,28 @@ So usually, we just use the scoped preferences as before::
   >>> preferences.set('acme.ui.bgcolor', 'red')
   >>> preferences.dump()
 
-    Node() {}
-      Node(application) {}
-        Node(acme) {}
-          Node(ui) {'bgcolor': 'red', 'ratio': '1.0', 'width': '50', 'visible': 'True'}
-            Node(splash_screen) {'image': 'splash', 'fgcolor': 'red'}
-      Node(default) {}
+   Node() {}
+     Node(application) {}
+       Node(acme) {}
+         Node(ui) {'bgcolor': 'red', 'width': '50', 'ratio': '1.0', 'visible': 'True'}
+           Node(splash_screen) {'image': 'splash', 'fgcolor': 'red'}
+     Node(default) {}
 
 And, conveniently, preference helpers work just the same with scoped
 preferences too::
 
-  >>> PreferencesHelper.preferences = ScopedPreferences(filename='example.ini')
-  >>> helper = SplashScreenPreferences()
+  >>> helper = SplashScreenPreferences(preferences=preferences)
   >>> helper.bgcolor
-  'blue'
+  'red'
   >>> helper.width
-  100
+  50
   >>> helper.ratio
   1.0
   >>> helper.visible
   True
 
 Accessing a particular scope
-----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Should you care about getting or setting a preference in a particular scope
 then you use the following syntax::
@@ -307,14 +290,14 @@ then you use the following syntax::
   'red'
   >>> preferences.dump()
 
-    Node() {}
-      Node(application) {}
-        Node(acme) {}
-          Node(ui) {'bgcolor': 'red', 'ratio': '1.0', 'width': '50', 'visible': 'True'}
-            Node(splash_screen) {'image': 'splash', 'fgcolor': 'red'}
-      Node(default) {}
-        Node(acme) {}
-          Node(ui) {'bgcolor': 'red'}
+   Node() {}
+     Node(application) {}
+       Node(acme) {}
+         Node(ui) {'bgcolor': 'red', 'width': '50', 'ratio': '1.0', 'visible': 'True'}
+           Node(splash_screen) {'image': 'splash', 'fgcolor': 'red'}
+     Node(default) {}
+       Node(acme) {}
+         Node(ui) {'bgcolor': 'red'}
 
 You can also get hold of a scope via::
 
@@ -323,18 +306,25 @@ You can also get hold of a scope via::
 And then perform any of the usual operations on it.
 
 Further Reading
-===============
+---------------
 
 So that's a quick tour around the basic useage of the preferences API. For more
-imformation about what is provided take a look at the API_ documentation.
+information about what is provided take a look at the :ref:`api-documentation`.
 
 If you are using Envisage to build your applications then you might also be
-interested in the `Preferences in Envisage`_ section.
+interested in the |Preferences in Envisage| section.
 
-.. _API: api/index.html
-.. _ConfigObj: http://www.voidspace.org.uk/python/configobj.html
-.. _IPreferences: ../../enthought/preferences/i_preferences.py
-.. _Preferences: ../../enthought/preferences/preferences.py
-.. _PreferencesHelper: ../../enthought/preferences/preferences_helper.py
-.. _ScopedPreferences: ../../enthought/preferences/scoped_preferences.py
-.. _`Preferences in Envisage`: PreferencesInEnvisage.html
+..
+   external links
+
+.. _ConfigObj: https://configobj.readthedocs.io/en/latest
+
+..
+   # substitutions
+
+.. |ScopedPreferences| replace:: :class:`~apptools.preferences.scoped_preferences.ScopedPreferences`
+.. |IPreferences| replace:: :class:`~apptools.preferences.i_preferences.IPreferences`
+.. |Preferences| replace:: :class:`~apptools.preferences.preferences.Preferences`
+.. |PreferencesHelper| replace:: :class:`~apptools.preferences.preferences_helper.PreferencesHelper`
+.. |Preferences in Envisage| replace:: :ref:`preferences-in-envisage`
+.. |ConfigObj| replace:: :class:`~class:configobj.ConfigObj`
