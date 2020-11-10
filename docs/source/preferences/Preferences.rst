@@ -327,4 +327,3 @@ interested in the |Preferences in Envisage| section.
 .. |Preferences| replace:: :class:`~apptools.preferences.preferences.Preferences`
 .. |PreferencesHelper| replace:: :class:`~apptools.preferences.preferences_helper.PreferencesHelper`
 .. |Preferences in Envisage| replace:: :ref:`preferences-in-envisage`
-.. |ConfigObj| replace:: :class:`~class:configobj.ConfigObj`
