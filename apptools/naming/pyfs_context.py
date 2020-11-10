@@ -303,11 +303,6 @@ class PyFSContext(DirContext, Referenceable):
     def _rebind(self, name, obj):
         """ Rebinds a name to an object in this context. """
 
-        # We unbind first to make sure that the old file gets removed (this
-        # is handy if the object that we are rebinding has a different
-        # serializer than the current one).
-        #self._unbind(name)
-
         self._bind(name, obj)
 
         return

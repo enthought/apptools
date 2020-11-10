@@ -136,10 +136,6 @@ class StatePickler(Pickler):
                 raise PicklingError(
                     "args from reduce() should be a tuple")
 
-        # Assert that func is callable
-        #if not callable(func):
-        #    raise PicklingError("func from reduce should be callable")
-
         save = self.save
         write = self.write
 
