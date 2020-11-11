@@ -16,7 +16,7 @@ class DictContextAdapter(ContextAdapter):
     # fixme: We would like to specialize the 'adaptee' trait here, but if we
     # make it of type 'Dict' then, on assignment, traits will create a *copy*
     # of the actual dict which I think you'll agree is not very adapter-like!
-##     adaptee = Dict
+    ##     adaptee = Dict
 
     ###########################################################################
     # Protected 'Context' interface.
@@ -94,9 +94,7 @@ class DictContextAdapter(ContextAdapter):
 
         bindings = []
         for key in self.adaptee:
-            bindings.append(
-                Binding(name=str(key), obj=self._lookup(key), context=self)
-            )
+            bindings.append(Binding(name=str(key), obj=self._lookup(key), context=self))
 
         return bindings
 

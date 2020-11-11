@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ The address of a commuications endpoint. """
 
 
@@ -19,7 +19,7 @@ from traits.api import Any, HasTraits, Str
 
 
 class Address(HasTraits):
-    """ The address of a communications end-point.
+    """The address of a communications end-point.
 
     It contains a type that describes the communication mechanism, and the
     actual address content.

@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,41 +10,43 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ Naming exceptions. """
 
 
 class NamingError(Exception):
-    """ Base class for all naming exceptions.
+    """Base class for all naming exceptions."""
 
-    """
 
 class InvalidNameError(NamingError):
-    """ Invalid name.
+    """Invalid name.
 
     This exception is thrown when the name passed to a naming operation does
     not conform to the syntax of the naming system (or is empty etc).
 
     """
 
+
 class NameAlreadyBoundError(NamingError):
-    """ Name already bound.
+    """Name already bound.
 
     This exception is thrown when an attempt is made to bind a name that is
     already bound in the current context.
 
     """
 
+
 class NameNotFoundError(NamingError):
-    """ Name not found.
+    """Name not found.
 
     This exception is thrown when a component of a name cannot be resolved
     because it is not bound in the current context.
 
     """
 
+
 class NotContextError(NamingError):
-    """ Not a context.
+    """Not a context.
 
     This exception is thrown when a naming operation has reached a point where
     a context is required to continue the operation, but the resolved object
@@ -52,7 +54,6 @@ class NotContextError(NamingError):
 
     """
 
-class OperationNotSupportedError(NamingError):
-    """ The context does support the requested operation.
 
-    """
+class OperationNotSupportedError(NamingError):
+    """The context does support the requested operation."""

@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ The base class for all directory contexts. """
 
 
@@ -63,8 +63,7 @@ class DirContext(Context):
                     raise NameNotFoundError(components[0])
 
                 next_context = self._get_next_context(components[0])
-                attributes = next_context.get_attributes(
-                    '/'.join(components[1:]))
+                attributes = next_context.get_attributes("/".join(components[1:]))
 
         return attributes
 
@@ -96,15 +95,13 @@ class DirContext(Context):
                     raise NameNotFoundError(components[0])
 
                 next_context = self._get_next_context(components[0])
-                next_context.set_attributes(
-                    '/'.join(components[1:]), attributes
-                )
+                next_context.set_attributes("/".join(components[1:]), attributes)
 
         return
 
     # fixme: Non-JNDI
     def find_bindings(self, visitor):
-        """ Find bindings with attributes matching criteria in visitor.
+        """Find bindings with attributes matching criteria in visitor.
 
         Visitor is a function that is passed the bindings for each level of the
         heirarchy and the attribute dictionary for those bindings.  The visitor

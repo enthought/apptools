@@ -7,7 +7,7 @@ from traits.api import Any
 from traitsui.api import EditorFactory
 
 # fixme: We need to import the 'Editor' class from the appropriate toolkit.
-exec('from traitsui.%s.editor import Editor' % ETSConfig.toolkit)
+exec("from traitsui.%s.editor import Editor" % ETSConfig.toolkit)
 
 
 class _WidgetEditor(Editor):
@@ -34,7 +34,7 @@ class _WidgetEditor(Editor):
         self.control = page.create_control(parent)
 
         # Listen for the page being changed.
-        self.object.on_trait_change(self._on_page_changed, 'selected_page')
+        self.object.on_trait_change(self._on_page_changed, "selected_page")
 
         return
 
@@ -74,7 +74,7 @@ class WidgetEditor(EditorFactory):
     # 'object' interface.
     ###########################################################################
 
-    def __call__ (self, *args, **traits):
+    def __call__(self, *args, **traits):
         """ Call the object. """
 
         return self.trait_set(**traits)
@@ -88,15 +88,15 @@ class WidgetEditor(EditorFactory):
 
         editor = _WidgetEditor(
             parent,
-            factory     = self,
-            ui          = ui,
-            object      = object,
-            name        = name,
-            description = description
+            factory=self,
+            ui=ui,
+            object=object,
+            name=name,
+            description=description,
         )
 
         return editor
 
-    custom_editor   = simple_editor
-    text_editor     = simple_editor
+    custom_editor = simple_editor
+    text_editor = simple_editor
     readonly_editor = simple_editor

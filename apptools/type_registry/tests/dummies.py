@@ -36,7 +36,7 @@ class ConcreteSubclass(Concrete):
 
 
 for typ in (A, B, C, D, Mixed, Abstract, Concrete, ConcreteSubclass):
-    typ.__module__ = 'dummies'
+    typ.__module__ = "dummies"
 
 
 Abstract.register(Concrete)

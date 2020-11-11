@@ -24,7 +24,6 @@ logger = logging.getLogger(__name__)
 class Preferences(HasTraits):
     """ The default implementation of a node in a preferences hierarchy. """
 
-
     #### 'IPreferences' interface #############################################
 
     # The absolute path to this node from the root node (the empty string if
@@ -106,7 +105,7 @@ class Preferences(HasTraits):
 
         names.reverse()
 
-        return '.'.join(names)
+        return ".".join(names)
 
     #### Methods ##############################################################
 
@@ -116,9 +115,9 @@ class Preferences(HasTraits):
         """ Get the value of the preference at the specified path. """
 
         if len(path) == 0:
-            raise ValueError('empty path')
+            raise ValueError("empty path")
 
-        components = path.split('.')
+        components = path.split(".")
 
         # If there is only one component in the path then the operation takes
         # place in this node.
@@ -129,7 +128,7 @@ class Preferences(HasTraits):
         else:
             node = self._get_child(components[0])
             if node is not None:
-                value = node.get('.'.join(components[1:]), Undefined)
+                value = node.get(".".join(components[1:]), Undefined)
 
             else:
                 value = Undefined
@@ -147,7 +146,7 @@ class Preferences(HasTraits):
             del components[-2]
 
             # ... and try that.
-            value = self.get('.'.join(components), default=Undefined)
+            value = self.get(".".join(components), default=Undefined)
 
         if value is Undefined:
             value = default
@@ -158,9 +157,9 @@ class Preferences(HasTraits):
         """ Remove the preference at the specified path. """
 
         if len(path) == 0:
-            raise ValueError('empty path')
+            raise ValueError("empty path")
 
-        components = path.split('.')
+        components = path.split(".")
 
         # If there is only one component in the path then the operation takes
         # place in this node.
@@ -171,7 +170,7 @@ class Preferences(HasTraits):
         else:
             node = self._get_child(components[0])
             if node is not None:
-                node.remove('.'.join(components[1:]))
+                node.remove(".".join(components[1:]))
 
         return
 
@@ -179,9 +178,9 @@ class Preferences(HasTraits):
         """ Set the value of the preference at the specified path. """
 
         if len(path) == 0:
-            raise ValueError('empty path')
+            raise ValueError("empty path")
 
-        components = path.split('.')
+        components = path.split(".")
 
         # If there is only one component in the path then the operation takes
         # place in this node.
@@ -192,13 +191,13 @@ class Preferences(HasTraits):
         # and pass the rest of the path to that.
         else:
             node = self._node(components[0])
-            node.set('.'.join(components[1:]), value)
+            node.set(".".join(components[1:]), value)
 
         return
 
     #### Methods where 'path' refers to a node ####
 
-    def clear(self, path=''):
+    def clear(self, path=""):
         """ Remove all preferences from the node at the specified path. """
 
         # If the path is empty then the operation takes place in this node.
@@ -207,15 +206,15 @@ class Preferences(HasTraits):
 
         # Otherwise, find the next node and pass the rest of the path to that.
         else:
-            components = path.split('.')
+            components = path.split(".")
 
             node = self._get_child(components[0])
             if node is not None:
-                node.clear('.'.join(components[1:]))
+                node.clear(".".join(components[1:]))
 
         return
 
-    def keys(self, path=''):
+    def keys(self, path=""):
         """ Return the preference keys of the node at the specified path. """
 
         # If the path is empty then the operation takes place in this node.
@@ -224,18 +223,18 @@ class Preferences(HasTraits):
 
         # Otherwise, find the next node and pass the rest of the path to that.
         else:
-            components = path.split('.')
+            components = path.split(".")
 
             node = self._get_child(components[0])
             if node is not None:
-                keys = node.keys('.'.join(components[1:]))
+                keys = node.keys(".".join(components[1:]))
 
             else:
                 keys = []
 
         return keys
 
-    def node(self, path=''):
+    def node(self, path=""):
         """ Return the node at the specified path. """
 
         # If the path is empty then the operation takes place in this node.
@@ -244,14 +243,14 @@ class Preferences(HasTraits):
 
         # Otherwise, find the next node and pass the rest of the path to that.
         else:
-            components = path.split('.')
+            components = path.split(".")
 
             node = self._node(components[0])
-            node = node.node('.'.join(components[1:]))
+            node = node.node(".".join(components[1:]))
 
         return node
 
-    def node_exists(self, path=''):
+    def node_exists(self, path=""):
         """ Return True if the node at the specified path exists. """
 
         # If the path is empty then the operation takes place in this node.
@@ -260,21 +259,19 @@ class Preferences(HasTraits):
 
         # Otherwise, find the next node and pass the rest of the path to that.
         else:
-            components = path.split('.')
+            components = path.split(".")
 
             node = self._get_child(components[0])
             if node is not None:
-                exists = node.node_exists('.'.join(components[1:]))
+                exists = node.node_exists(".".join(components[1:]))
 
             else:
                 exists = False
 
         return exists
 
-    def node_names(self, path=''):
-        """ Return the names of the children of the node at the specified path.
-
-        """
+    def node_names(self, path=""):
+        """Return the names of the children of the node at the specified path."""
 
         # If the path is empty then the operation takes place in this node.
         if len(path) == 0:
@@ -282,11 +279,11 @@ class Preferences(HasTraits):
 
         # Otherwise, find the next node and pass the rest of the path to that.
         else:
-            components = path.split('.')
+            components = path.split(".")
 
             node = self._get_child(components[0])
             if node is not None:
-                names = node.node_names('.'.join(components[1:]))
+                names = node.node_names(".".join(components[1:]))
 
             else:
                 names = []
@@ -296,7 +293,7 @@ class Preferences(HasTraits):
     #### Persistence methods ####
 
     def flush(self):
-        """ Force any changes in the node to the backing store.
+        """Force any changes in the node to the backing store.
 
         This includes any changes to the node's descendants.
 
@@ -312,7 +309,7 @@ class Preferences(HasTraits):
 
     #### Listener methods ####
 
-    def add_preferences_listener(self, listener, path=''):
+    def add_preferences_listener(self, listener, path=""):
         """ Add a listener for changes to a node's preferences. """
 
         # If the path is empty then the operation takes place in this node.
@@ -321,14 +318,14 @@ class Preferences(HasTraits):
 
         # Otherwise, find the next node and pass the rest of the path to that.
         else:
-            components = path.split('.')
+            components = path.split(".")
 
             node = self._node(components[0])
-            node.add_preferences_listener(listener, '.'.join(components[1:]))
+            node.add_preferences_listener(listener, ".".join(components[1:]))
 
         return
 
-    def remove_preferences_listener(self, listener, path=''):
+    def remove_preferences_listener(self, listener, path=""):
         """ Remove a listener for changes to a node's preferences. """
 
         # If the path is empty then the operation takes place in this node.
@@ -337,17 +334,17 @@ class Preferences(HasTraits):
 
         # Otherwise, find the next node and pass the rest of the path to that.
         else:
-            components = path.split('.')
+            components = path.split(".")
 
             node = self._node(components[0])
-            node.remove_preferences_listener(listener,'.'.join(components[1:]))
+            node.remove_preferences_listener(listener, ".".join(components[1:]))
 
         return
 
     #### Persistence methods ####
 
     def load(self, file_or_filename=None):
-        """ Load preferences from a file.
+        """Load preferences from a file.
 
         This is a *merge* operation i.e. the contents of the file are added to
         the node.
@@ -359,20 +356,20 @@ class Preferences(HasTraits):
         if file_or_filename is None:
             file_or_filename = self.filename
 
-        logger.debug('loading preferences from <%s>', file_or_filename)
+        logger.debug("loading preferences from <%s>", file_or_filename)
 
         # Do the import here so that we don't make 'ConfigObj' a requirement
         # if preferences aren't ever persisted (or a derived class chooses to
         # use a different persistence mechanism).
         from configobj import ConfigObj
 
-        config_obj = ConfigObj(file_or_filename, encoding='utf-8')
+        config_obj = ConfigObj(file_or_filename, encoding="utf-8")
 
         # 'name' is the section name, 'value' is a dictionary containing the
         # name/value pairs in the section (the actual preferences ;^).
         for name, value in config_obj.items():
             # Create/get the node from the section name.
-            components = name.split('.')
+            components = name.split(".")
 
             node = self
             for component in components:
@@ -384,7 +381,7 @@ class Preferences(HasTraits):
         return
 
     def save(self, file_or_filename=None):
-        """ Save the node's preferences to a file.
+        """Save the node's preferences to a file.
 
         This implementation uses 'ConfigObj' files.
 
@@ -400,9 +397,9 @@ class Preferences(HasTraits):
             # class chooses to use a different persistence mechanism).
             from configobj import ConfigObj
 
-            logger.debug('saving preferences to <%s>', file_or_filename)
+            logger.debug("saving preferences to <%s>", file_or_filename)
 
-            config_obj = ConfigObj(file_or_filename, encoding='utf-8')
+            config_obj = ConfigObj(file_or_filename, encoding="utf-8")
             self._add_node_to_dictionary(self, config_obj)
             config_obj.write()
 
@@ -480,7 +477,7 @@ class Preferences(HasTraits):
         return value
 
     def _get_child(self, name):
-        """ Return the child of this node with the specified name.
+        """Return the child of this node with the specified name.
 
         Return None if no such child exists.
 
@@ -502,7 +499,7 @@ class Preferences(HasTraits):
         return keys
 
     def _node(self, name):
-        """ Return the child of this node with the specified name.
+        """Return the child of this node with the specified name.
 
         Create the child node if it does not exist.
 
@@ -545,7 +542,7 @@ class Preferences(HasTraits):
 
     def _set(self, key, value):
         """ Set the value of a preference in this node. """
-        
+
         # everything must be unicode encoded so that ConfigObj configuration
         # can properly serialize the data. Python str are supposed to be ASCII
         # encoded.
@@ -572,14 +569,14 @@ class Preferences(HasTraits):
     # Debugging interface.
     ###########################################################################
 
-    def dump(self, indent=''):
+    def dump(self, indent=""):
         """ Dump the preferences hierarchy to stdout. """
 
-        if indent == '':
+        if indent == "":
             print()
 
-        print(indent, 'Node(%s)' % self.name, self._preferences)
-        indent += '  '
+        print(indent, "Node(%s)" % self.name, self._preferences)
+        indent += "  "
 
         for child in self._children.values():
             child.dump(indent)

@@ -9,7 +9,7 @@ from .abstract_factory import AbstractFactory
 
 
 class Factory(AbstractFactory):
-    """ A generic object factory.
+    """A generic object factory.
 
     This implementation of the abstract factory interface provides for the
     common scenario where the factory produces objects of exactly one type.

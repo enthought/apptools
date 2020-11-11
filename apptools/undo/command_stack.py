@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
@@ -10,11 +10,10 @@
 #
 # Author: Riverbank Computing Limited
 # Description: <Enthought undo package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Enthought library imports.
-from traits.api import Bool, HasTraits, Instance, Int, List, Property, \
-    Str, provides
+from traits.api import Bool, HasTraits, Instance, Int, List, Property, Str, provides
 
 # Local imports.
 from .abstract_command import AbstractCommand
@@ -84,7 +83,7 @@ class _MacroCommand(AbstractCommand):
 
 @provides(ICommandStack)
 class CommandStack(HasTraits):
-    """ The CommandStack class is the default implementation of the
+    """The CommandStack class is the default implementation of the
     ICommandStack interface.
     """
 
@@ -125,7 +124,7 @@ class CommandStack(HasTraits):
     ###########################################################################
 
     def begin_macro(self, name):
-        """ This begins a macro by creating an empty command with the given
+        """This begins a macro by creating an empty command with the given
         'name'.  All subsequent calls to 'push()' create commands that will be
         children of the empty command until the next call to 'end_macro()'.
         Macros may be nested.  The stack is disabled (ie. nothing can be undone
@@ -138,7 +137,7 @@ class CommandStack(HasTraits):
         self._macro_stack.append(command)
 
     def clear(self):
-        """ This clears the stack, without undoing or redoing any commands, and
+        """This clears the stack, without undoing or redoing any commands, and
         leaves the stack in a clean state.  It is typically used when all
         changes to the data have been abandoned.
         """
@@ -158,7 +157,7 @@ class CommandStack(HasTraits):
             pass
 
     def push(self, command):
-        """ This executes a command and saves it on the command stack so that
+        """This executes a command and saves it on the command stack so that
         it can be subsequently undone and redone.  'command' is an instance
         that implements the ICommand interface.  Its 'do()' method is called
         to execute the command.  If any value is returned by 'do()' then it is
@@ -190,11 +189,12 @@ class CommandStack(HasTraits):
             # Remove everything on the stack after the last command that was
             # done.
             self._index += 1
-            del self._stack[self._index:]
+            del self._stack[self._index :]
 
             # Create a new stack entry and add it to the stack.
-            entry = _StackEntry(command=command,
-                    sequence_nr=self.undo_manager.sequence_nr)
+            entry = _StackEntry(
+                command=command, sequence_nr=self.undo_manager.sequence_nr
+            )
 
             self._stack.append(entry)
             self.undo_manager.stack_updated = self
@@ -205,7 +205,7 @@ class CommandStack(HasTraits):
         return result
 
     def redo(self, sequence_nr=0):
-        """ If 'sequence_nr' is 0 then the last command that was undone is
+        """If 'sequence_nr' is 0 then the last command that was undone is
         redone and any result returned.  Otherwise commands are redone up to
         and including the given 'sequence_nr' and any result of the last of
         these is returned.
@@ -231,7 +231,7 @@ class CommandStack(HasTraits):
         return result
 
     def undo(self, sequence_nr=0):
-        """ If 'sequence_nr' is 0 then the last command is undone.  Otherwise
+        """If 'sequence_nr' is 0 then the last command is undone.  Otherwise
         commands are undone up to and including the given 'sequence_nr'.
         """
 
@@ -292,7 +292,7 @@ class CommandStack(HasTraits):
         redo_name = ""
 
         if len(self._macro_stack) == 0 and self._index + 1 < len(self._stack):
-            redo_name = self._stack[self._index + 1].command.name.replace('&', '')
+            redo_name = self._stack[self._index + 1].command.name.replace("&", "")
 
         return redo_name
 
@@ -303,6 +303,6 @@ class CommandStack(HasTraits):
 
         if len(self._macro_stack) == 0 and self._index >= 0:
             command = self._stack[self._index].command
-            undo_name = command.name.replace('&', '')
+            undo_name = command.name.replace("&", "")
 
         return undo_name

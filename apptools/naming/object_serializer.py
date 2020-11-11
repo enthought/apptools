@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ The base class for all object serializers. """
 
 
@@ -18,8 +18,9 @@
 import logging
 from traceback import print_exc
 from os.path import splitext
-#import cPickle
-#import pickle
+
+# import cPickle
+# import pickle
 
 # Enthought library imports.
 import apptools.sweet_pickle as sweet_pickle
@@ -36,7 +37,7 @@ class ObjectSerializer(HasTraits):
     #### 'ObjectSerializer' interface #########################################
 
     # The file extension recognized by this serializer.
-    ext = Str('.pickle')
+    ext = Str(".pickle")
 
     ###########################################################################
     # 'ObjectSerializer' interface.
@@ -53,15 +54,15 @@ class ObjectSerializer(HasTraits):
         """ Loads an object from a file. """
 
         # Unpickle the object.
-        f = open(path, 'rb')
+        f = open(path, "rb")
         try:
             try:
-                 obj = sweet_pickle.load(f)
-#                obj = cPickle.load(f)
-#                obj = pickle.load(f)
+                obj = sweet_pickle.load(f)
+            #                obj = cPickle.load(f)
+            #                obj = pickle.load(f)
             except Exception as ex:
                 print_exc()
-                logger.exception( "Failed to load pickle file: %s, %s" % (path, ex))
+                logger.exception("Failed to load pickle file: %s, %s" % (path, ex))
 
                 raise
         finally:
@@ -84,14 +85,15 @@ class ObjectSerializer(HasTraits):
             actual_path = path
 
         # Pickle the object.
-        f = open(actual_path, 'wb')
+        f = open(actual_path, "wb")
         try:
             sweet_pickle.dump(obj, f, 1)
-#            cPickle.dump(obj, f, 1)
-#            pickle.dump(obj, f, 1)
+        #            cPickle.dump(obj, f, 1)
+        #            pickle.dump(obj, f, 1)
         except Exception as ex:
-            logger.exception( "Failed to pickle into file: %s, %s, object:%s"
-                % (path, ex, obj))
+            logger.exception(
+                "Failed to pickle into file: %s, %s, object:%s" % (path, ex, obj)
+            )
             print_exc()
         f.close()
 

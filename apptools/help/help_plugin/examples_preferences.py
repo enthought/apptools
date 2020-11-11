@@ -15,19 +15,18 @@ from apptools.preferences.api import PreferencesHelper
 from traits.api import Either, Enum, File, Str, provides
 
 # This module's package.
-PKG = '.'.join(__name__.split('.')[:-1])
+PKG = ".".join(__name__.split(".")[:-1])
+
 
 class ExamplesPreferences(PreferencesHelper):
-    """ Preferences for all help examples.
-    """
+    """Preferences for all help examples."""
 
     #### Preferences ######################################
 
     # The path to the preferences
-    preferences_path = PKG + '.Examples'
+    preferences_path = PKG + ".Examples"
 
     # The external program to use to view the document, if editor_choice is
     # 'external'. It is a command to run, which may be in the program search
     # path of the current environment, or an absolute path to a program.
     editor = Str
-

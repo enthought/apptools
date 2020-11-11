@@ -18,11 +18,10 @@ from .i_help_doc import IHelpDoc
 
 @provides(IHelpDoc)
 class HelpDoc(PreferencesHelper):
-    """ The implementation for help docs.
+    """The implementation for help docs.
 
     A help doc is defined by a UI label, a filename, and a viewer program.
     """
-
 
     #### IHelpDoc interface / Preferences ######################################
 
@@ -42,5 +41,4 @@ class HelpDoc(PreferencesHelper):
     # default web browser. Otherwise, it is a command to run, which may be
     # in the program search path of the current environment, or an absolute
     # path to a program.
-    viewer = Either('browser', Str)
-
+    viewer = Either("browser", Str)

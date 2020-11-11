@@ -8,12 +8,12 @@ from tables.nodes import filenode
 
 
 #: The key name which identifies array objects in the JSON dict.
-ARRAY_PROXY_KEY = '__array__'
-NODE_KEY = 'node_name'
+ARRAY_PROXY_KEY = "__array__"
+NODE_KEY = "node_name"
 
 
 class H5DictNode(object):
-    """ Dictionary-like node interface.
+    """Dictionary-like node interface.
 
     Data for the dict is stored as a JSON file in a PyTables FileNode. This
     allows easy storage of Python objects, such as dictionaries and lists of
@@ -32,7 +32,7 @@ class H5DictNode(object):
     """
 
     #: Name of filenode where dict data is stored.
-    _pyobject_data_node = '_pyobject_data'
+    _pyobject_data_node = "_pyobject_data"
 
     def __init__(self, h5_group, auto_flush=True):
         assert self.is_dict_node(h5_group)
@@ -45,12 +45,12 @@ class H5DictNode(object):
         dict_node = getattr(h5_group, self._pyobject_data_node)
         with closing(filenode.open_node(dict_node)) as f:
             self._pyobject_data = json.loads(
-                f.read().decode('ascii'), object_hook=self._object_hook
+                f.read().decode("ascii"), object_hook=self._object_hook
             )
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     #  Dictionary interface
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def __getitem__(self, key):
         return self.data[key]
@@ -71,9 +71,9 @@ class H5DictNode(object):
     def keys(self):
         return self.data.keys()
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     #  Public interface
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     @property
     def data(self):
@@ -92,7 +92,7 @@ class H5DictNode(object):
 
     @classmethod
     def add_to_h5file(cls, h5, node_path, data=None, **kwargs):
-        """ Add dict node to an H5 file at the specified path.
+        """Add dict node to an H5 file at the specified path.
 
         Parameters
         ----------
@@ -111,7 +111,7 @@ class H5DictNode(object):
 
     @classmethod
     def is_dict_node(cls, pytables_node):
-        """ Return True if PyTables node looks like an H5DictNode.
+        """Return True if PyTables node looks like an H5DictNode.
 
         NOTE: That this returns False if the node is an `H5DictNode` instance,
         since the input node should be a normal PyTables Group node.
@@ -127,12 +127,12 @@ class H5DictNode(object):
 
         return cls._pyobject_data_node in pytables_node._v_children
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     #  Private interface
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def _f_remove(self):
-        """ This is called by H5File whenever a node is removed.
+        """This is called by H5File whenever a node is removed.
 
         All nodes in `_h5_group` will be removed.
         """
@@ -145,7 +145,7 @@ class H5DictNode(object):
         self._h5_group._f_remove()
 
     def _object_hook(self, dct):
-        """ This gets passed object dictionaries by `json.load(s)` and if it
+        """This gets passed object dictionaries by `json.load(s)` and if it
         finds `ARRAY_PROXY_KEY` in the object description it returns the
         proxied array object.
         """
@@ -174,17 +174,17 @@ class H5DictNode(object):
 
         kwargs = dict(where=node_path, name=cls._pyobject_data_node)
         with closing(filenode.new_node(pyt_file, **kwargs)) as f:
-            f.write(json.dumps(out_data).encode('ascii'))
+            f.write(json.dumps(out_data).encode("ascii"))
 
     @classmethod
     def _get_pyt_group(self, group):
-        if hasattr(group, '_h5_group'):
+        if hasattr(group, "_h5_group"):
             group = group._h5_group
         return group
 
     @classmethod
     def _array_proxy(cls, pyt_file, group, key, array):
-        """ Stores an array as a normal H5 node and returns the proxy object
+        """Stores an array as a normal H5 node and returns the proxy object
         which will be serialized to JSON.
 
         `ARRAY_PROXY_KEY` marks the object dictionary as an array proxy so that

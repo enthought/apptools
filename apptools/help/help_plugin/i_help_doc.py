@@ -12,8 +12,9 @@
 
 from traits.api import Interface, Either, File, Str, Bool
 
+
 class IHelpDoc(Interface):
-    """ The interface for help docs.
+    """The interface for help docs.
 
     A help doc is defined by a UI label, a filename, and a viewer program.
     """
@@ -32,7 +33,7 @@ class IHelpDoc(Interface):
     # default web browser. Otherwise, it is a command to run, which may be
     # in the program search path of the current environment, or an absolute
     # path to a program.
-    viewer = Either('browser', Str)
+    viewer = Either("browser", Str)
 
     # The unique ID of the preferences node that contains the other values for
     # this object

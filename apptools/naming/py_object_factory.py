@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ Object factory for Python namespace contexts. """
 
 
@@ -33,12 +33,13 @@ class PyObjectFactory(ObjectFactory):
 
         if isinstance(state, Reference):
             if len(state.addresses) > 0:
-                if state.addresses[0].type == 'py_context':
+                if state.addresses[0].type == "py_context":
                     namespace = state.addresses[0].content
                     obj = context._context_factory(name, namespace)
 
-        elif hasattr(state, '__dict__'):
+        elif hasattr(state, "__dict__"):
             from apptools.naming.py_context import PyContext
+
             if not isinstance(state, PyContext):
                 obj = context._context_factory(name, state)
 

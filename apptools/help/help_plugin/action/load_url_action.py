@@ -14,16 +14,14 @@
 from .doc_action import DocAction
 
 # This module's parent package.
-PARENT = '.'.join(__name__.split('.')[:-2])
+PARENT = ".".join(__name__.split(".")[:-2])
 
 
 class LoadURLAction(DocAction):
-    """ Workbench Action for displaying a url in a web browser.
-    """
+    """Workbench Action for displaying a url in a web browser."""
 
     def _my_help_doc_default(self):
-        exns = self.extension_registry.get_extensions(PARENT +
-                                                      '.help_downloads')
+        exns = self.extension_registry.get_extensions(PARENT + ".help_downloads")
         for hc in exns:
             if hc.label == self.name:
                 return hc

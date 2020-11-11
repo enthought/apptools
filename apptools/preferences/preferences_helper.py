@@ -68,7 +68,7 @@ class PreferencesHelper(HasTraits):
         # If we were the one that set the trait (because the underlying
         # preferences node changed) then do nothing.
         if self.preferences and self._is_preference_trait(trait_name):
-            self.preferences.set('%s.%s' % (self._get_path(), trait_name), new)
+            self.preferences.set("%s.%s" % (self._get_path(), trait_name), new)
 
         return
 
@@ -107,9 +107,9 @@ class PreferencesHelper(HasTraits):
             path = self.preferences_path
 
         else:
-            path = getattr(self, 'PREFERENCES_PATH', None)
+            path = getattr(self, "PREFERENCES_PATH", None)
             if path is None:
-                raise SystemError('no preferences path, %s' % self)
+                raise SystemError("no preferences path, %s" % self)
 
             else:
                 logger.warn('DEPRECATED: use "preferences_path" %s' % self)
@@ -117,7 +117,7 @@ class PreferencesHelper(HasTraits):
         return path
 
     def _get_value(self, trait_name, value):
-        """ Get the actual value to set.
+        """Get the actual value to set.
 
         This method makes sure that any required work is done to convert the
         preference value from a string. Str traits or those with the metadata
@@ -159,16 +159,14 @@ class PreferencesHelper(HasTraits):
         traits_to_set = {}
         for trait_name in self.trait_names():
             if trait_name in keys:
-                key = '%s.%s' % (path, trait_name)
+                key = "%s.%s" % (path, trait_name)
                 value = self._get_value(trait_name, preferences.get(key))
                 traits_to_set[trait_name] = value
 
         self.trait_set(trait_change_notify=notify, **traits_to_set)
 
         # Listen for changes to the node's preferences.
-        preferences.add_preferences_listener(
-            self._preferences_changed_listener, path
-        )
+        preferences.add_preferences_listener(self._preferences_changed_listener, path)
 
         return
 
@@ -177,8 +175,11 @@ class PreferencesHelper(HasTraits):
     def _is_preference_trait(self, trait_name):
         """ Return True if a trait represents a preference value. """
 
-        if trait_name.startswith('_') or trait_name.endswith('_') \
-           or trait_name in PreferencesHelper.class_traits():
+        if (
+            trait_name.startswith("_")
+            or trait_name.endswith("_")
+            or trait_name in PreferencesHelper.class_traits()
+        ):
             return False
 
         return True

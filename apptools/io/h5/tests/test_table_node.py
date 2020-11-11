@@ -14,43 +14,41 @@ if np is not None and tables is not None:
     from .utils import temp_h5_file
 
 
-NODE = '/table_node'
+NODE = "/table_node"
 
 
 @requires_numpy
 @requires_tables
 class TableNodeTestCase(unittest.TestCase):
-
     def test_basics(self):
-        description = [('a', np.float64), ('b', np.float64)]
+        description = [("a", np.float64), ("b", np.float64)]
         with temp_h5_file() as h5:
             h5table = H5TableNode.add_to_h5file(h5, NODE, description)
-            h5table.append({'a': [1, 2], 'b': [3, 4]})
+            h5table.append({"a": [1, 2], "b": [3, 4]})
 
-            np.testing.assert_allclose(h5table['a'], [1, 2])
-            np.testing.assert_allclose(h5table['b'], [3, 4])
+            np.testing.assert_allclose(h5table["a"], [1, 2])
+            np.testing.assert_allclose(h5table["b"], [3, 4])
 
-        dtype_description = np.dtype([('c', 'f4'), ('d', 'f4')])
+        dtype_description = np.dtype([("c", "f4"), ("d", "f4")])
         with temp_h5_file() as h5:
             h5table = H5TableNode.add_to_h5file(h5, NODE, dtype_description)
-            h5table.append({'c': [1.2, 3.4], 'd': [5.6, 7.8]})
+            h5table.append({"c": [1.2, 3.4], "d": [5.6, 7.8]})
 
-            np.testing.assert_allclose(h5table['c'], [1.2, 3.4])
-            np.testing.assert_allclose(h5table['d'], [5.6, 7.8])
+            np.testing.assert_allclose(h5table["c"], [1.2, 3.4])
+            np.testing.assert_allclose(h5table["d"], [5.6, 7.8])
 
             assert len(repr(h5table)) > 0
 
     def test_getitem(self):
-        description = [('a', np.float64), ('b', np.float64)]
+        description = [("a", np.float64), ("b", np.float64)]
         with temp_h5_file() as h5:
             h5table = H5TableNode.add_to_h5file(h5, NODE, description)
-            h5table.append({'a': [1, 2], 'b': [3, 4]})
-            np.testing.assert_allclose(h5table['a'], (1, 2))
-            np.testing.assert_allclose(
-                h5table[['b', 'a']], [(3, 1), (4, 2)])
+            h5table.append({"a": [1, 2], "b": [3, 4]})
+            np.testing.assert_allclose(h5table["a"], (1, 2))
+            np.testing.assert_allclose(h5table[["b", "a"]], [(3, 1), (4, 2)])
 
     def test_keys(self):
-        description = [('hello', 'int'), ('world', 'int'), ('Qux1', 'bool')]
+        description = [("hello", "int"), ("world", "int"), ("Qux1", "bool")]
         with temp_h5_file() as h5:
             keys = set(list(zip(*description))[0])
             h5table = H5TableNode.add_to_h5file(h5, NODE, description)
@@ -58,15 +56,16 @@ class TableNodeTestCase(unittest.TestCase):
 
     @requires_pandas
     def test_to_dataframe(self):
-        description = [('a', np.float64)]
+        description = [("a", np.float64)]
         with temp_h5_file() as h5:
             h5table = H5TableNode.add_to_h5file(h5, NODE, description)
-            h5table.append({'a': [1, 2, 3]})
+            h5table.append({"a": [1, 2, 3]})
             df = h5table.to_dataframe()
             assert isinstance(df, pandas.DataFrame)
-            np.testing.assert_allclose(df['a'], h5table['a'])
+            np.testing.assert_allclose(df["a"], h5table["a"])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from numpy import testing
+
     testing.run_module_suite()

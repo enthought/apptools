@@ -1,11 +1,11 @@
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #
 #  Copyright (c) 2006 by Enthought, Inc.
 #  All rights reserved.
 #
 #  Author: Dave Peterson <dpeterson@enthought.com>
 #
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 """ Tests the class mapping functionality of the enthought.pickle
     framework.
@@ -32,9 +32,10 @@ from apptools.sweet_pickle.tests.class_mapping_classes import Foo, Bar, Baz
 # class 'ClassMappingTestCase'
 ##############################################################################
 
+
 class ClassMappingTestCase(unittest.TestCase):
-    """ Tests the class mapping functionality of the apptools.sweet_pickle
-        framework.
+    """Tests the class mapping functionality of the apptools.sweet_pickle
+    framework.
     """
 
     ##########################################################################
@@ -44,17 +45,16 @@ class ClassMappingTestCase(unittest.TestCase):
     ### public interface #####################################################
 
     def setUp(self):
-        """ Creates the test fixture.
+        """Creates the test fixture.
 
-            Overridden here to ensure each test starts with an empty global
-            registry.
+        Overridden here to ensure each test starts with an empty global
+        registry.
         """
         # Clear the global registry
         _clear_global_registry()
 
         # Cache a reference to the new global registry
         self.registry = sweet_pickle.get_global_registry()
-
 
     ##########################################################################
     # 'ClassMappingTestCase' interface
@@ -63,8 +63,8 @@ class ClassMappingTestCase(unittest.TestCase):
     ### public interface #####################################################
 
     def test_infinite_loop_detection(self):
-        """ Validates that the class mapping framework detects infinite
-            loops of class mappings.
+        """Validates that the class mapping framework detects infinite
+        loops of class mappings.
         """
         # Add mappings to the registry
         self.registry.add_mapping_to_class(Foo.__module__, Foo.__name__, Bar)
@@ -75,10 +75,10 @@ class ClassMappingTestCase(unittest.TestCase):
         # instance anywhere within the circular definition.
         def fn(o):
             sweet_pickle.loads(sweet_pickle.dumps(o))
+
         self.assertRaises(sweet_pickle.UnpicklingError, fn, Foo())
         self.assertRaises(sweet_pickle.UnpicklingError, fn, Bar())
         self.assertRaises(sweet_pickle.UnpicklingError, fn, Baz())
-
 
     def test_unpickled_class_mapping(self):
 

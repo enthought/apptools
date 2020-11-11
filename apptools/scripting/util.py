@@ -27,7 +27,7 @@ def start_recording(object, ui=True, **kw):
     """
     if ui:
         r = RecorderWithUI(root=object)
-        r.edit_traits(kind='live')
+        r.edit_traits(kind="live")
     else:
         r = Recorder()
     # Set the global recorder.
@@ -35,6 +35,7 @@ def start_recording(object, ui=True, **kw):
     r.recording = True
     r.register(object, **kw)
     return r
+
 
 def stop_recording(object, save=True):
     """Stop recording the object.  If `save` is `True`, this will pop up

@@ -32,22 +32,21 @@ from .util import get_sys_prefix_relative_filename
 logger = logging.getLogger(__name__)
 
 # This module's parent package.
-PARENT = '.'.join(__name__.split('.')[:-2])
+PARENT = ".".join(__name__.split(".")[:-2])
 
 # Implementation of the ImageResource class to be used for the DocAction class.
 @provides(IExtensionPointUser)
 class DocImageResource(ImageResource):
-    """ Implementation of the ImageResource class to be used for the DocAction
+    """Implementation of the ImageResource class to be used for the DocAction
     class.
     Overrides the '_image_not_found' trait in the base ImageResource class.
     """
 
-    _image_not_found = ImageResource('document')
+    _image_not_found = ImageResource("document")
+
 
 class DocAction(WorkbenchAction):
-    """ (Pyface) Action for displaying a help doc.
-    """
-
+    """(Pyface) Action for displaying a help doc."""
 
     ### Action interface ##############################################
 
@@ -62,8 +61,7 @@ class DocAction(WorkbenchAction):
         return self.window.application.extension_registry
 
     def _get_image(self):
-        """ Returns the image to be used for this DocAction instance.
-        """
+        """Returns the image to be used for this DocAction instance."""
         # The current implementation searches for an image file matching
         # 'name' in all of the image paths. If such a file is not to be found,
         # the '_image_not_found' file for the DocImageResourceClass is used.
@@ -75,7 +73,7 @@ class DocAction(WorkbenchAction):
     my_help_doc = Instance(HelpDoc)
 
     def _my_help_doc_default(self):
-        exns = self.extension_registry.get_extensions(PARENT + '.help_docs')
+        exns = self.extension_registry.get_extensions(PARENT + ".help_docs")
         for hd in exns:
             if hd.label == self.name:
                 return hd
@@ -91,24 +89,30 @@ class DocAction(WorkbenchAction):
         return filename
 
     def perform(self, event):
-        """ Perform the action by displaying the document.
-        """
+        """Perform the action by displaying the document."""
 
         filename = self._get_filename(self.my_help_doc)
         if filename is not None:
-            if self.my_help_doc.url or self.my_help_doc.viewer == 'browser':
+            if self.my_help_doc.url or self.my_help_doc.viewer == "browser":
                 import webbrowser
+
                 try:
                     webbrowser.open(filename)
                 except (OSError, webbrowser.Error) as msg:
-                    logger.error('Could not open page in browser for '+ \
-                        'Document "%s":\n\n' % self.my_help_doc.label + \
-                        str(msg) + '\n\nTry changing Dcoument Preferences.')
+                    logger.error(
+                        "Could not open page in browser for "
+                        + 'Document "%s":\n\n' % self.my_help_doc.label
+                        + str(msg)
+                        + "\n\nTry changing Dcoument Preferences."
+                    )
             elif self.my_help_doc.viewer is not None:
                 # Run the viewer, passing it the filename
                 try:
                     Popen([self.my_help_doc.viewer, filename])
                 except OSError as msg:
-                    logger.error('Could not execute program for Document' + \
-                        ' "%s":\n\n ' % self.my_help_doc.label + str(msg) + \
-                        '\n\nTry changing Document Preferences.')
+                    logger.error(
+                        "Could not execute program for Document"
+                        + ' "%s":\n\n ' % self.my_help_doc.label
+                        + str(msg)
+                        + "\n\nTry changing Document Preferences."
+                    )

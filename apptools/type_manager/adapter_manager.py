@@ -70,7 +70,7 @@ class AdapterManager(HasTraits):
     #### Methods ##############################################################
 
     def adapt(self, adaptee, target_class, *args, **kw):
-        """ Returns an adapter that adapts an object to the target class.
+        """Returns an adapter that adapts an object to the target class.
 
         'adaptee' is the object that we want to adapt.
         'target_class' is the class that the adaptee should be adapted to.
@@ -104,7 +104,7 @@ class AdapterManager(HasTraits):
         return adapter
 
     def register_instance_adapters(self, factory, obj):
-        """ Registers an instance-scope adapter factory.
+        """Registers an instance-scope adapter factory.
 
         A factory can be in exactly one manager (as it uses the manager's type
         system).
@@ -120,7 +120,7 @@ class AdapterManager(HasTraits):
         return
 
     def unregister_instance_adapters(self, factory, obj):
-        """ Unregisters an instance scope adapter factory.
+        """Unregisters an instance scope adapter factory.
 
         A factory can be in exactly one manager (as it uses the manager's type
         system).
@@ -137,7 +137,7 @@ class AdapterManager(HasTraits):
         return
 
     def register_type_adapters(self, factory, adaptee_class):
-        """ Registers a type-scope adapter factory.
+        """Registers a type-scope adapter factory.
 
         'adaptee_class' can be either a class object or the name of a class.
 
@@ -175,7 +175,7 @@ class AdapterManager(HasTraits):
     #### DEPRECATED ###########################################################
 
     def register_adapters(self, factory, adaptee_class):
-        """ Registers an adapter factory.
+        """Registers an adapter factory.
 
         'adaptee_class' can be either a class object or the name of a class.
 
@@ -184,10 +184,7 @@ class AdapterManager(HasTraits):
 
         """
 
-        warnings.warn(
-            'Use "register_type_adapters" instead.',
-            DeprecationWarning
-        )
+        warnings.warn('Use "register_type_adapters" instead.', DeprecationWarning)
 
         self.register_type_adapters(factory, adaptee_class)
 
@@ -196,10 +193,7 @@ class AdapterManager(HasTraits):
     def unregister_adapters(self, factory):
         """ Unregisters an adapter factory. """
 
-        warnings.warn(
-            'use "unregister_type_adapters" instead.',
-            DeprecationWarning
-        )
+        warnings.warn('use "unregister_type_adapters" instead.', DeprecationWarning)
 
         self.unregister_type_adapters(factory)
 
@@ -210,7 +204,7 @@ class AdapterManager(HasTraits):
     ###########################################################################
 
     def _adapt_instance(self, adaptee, target_class, *args, **kw):
-        """ Returns an adapter that adaptes an object to the target class.
+        """Returns an adapter that adaptes an object to the target class.
 
         Returns None if no such adapter exists.
 
@@ -227,7 +221,7 @@ class AdapterManager(HasTraits):
         return adapter
 
     def _adapt_type(self, adaptee, adaptee_class, target_class, *args, **kw):
-        """ Returns an adapter that adapts an object to the target class.
+        """Returns an adapter that adapts an object to the target class.
 
         Returns None if no such adapter exists.
 

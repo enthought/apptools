@@ -14,20 +14,23 @@ class Foo(HasTraits):
     name = Str
 
     def foogle(self):
-        return 'Foo.foogle.%s' % self.name
+        return "Foo.foogle.%s" % self.name
 
 
 class SubOfFoo(Foo):
     def foogle(self):
-        return 'Sub.foogle.%s' % self.name
+        return "Sub.foogle.%s" % self.name
+
 
 class EmptySubOfFoo(Foo):
     pass
 
+
 class Bar(HasTraits):
     name = Str
+
     def blargle(self):
-        return 'Bar.blargle.%s' % self.name
+        return "Bar.blargle.%s" % self.name
 
 
 # Test adapters and factories.
@@ -36,6 +39,7 @@ class FooToBarAdapter(HasTraits):
 
     def blargle(self):
         return self.adaptee.foogle()
+
 
 class FooToBarAdapterFactory(AdapterFactory):
 
@@ -57,6 +61,7 @@ class SubOfFooToBarAdapter(HasTraits):
 
     def blargle(self):
         return self.adaptee.foogle()
+
 
 class SubOfFooToBarAdapterFactory(AdapterFactory):
     #### 'AdapterFactory' interface ###########################################
@@ -122,7 +127,7 @@ class TypeManagerTestCase(unittest.TestCase):
         """ no adapter available """
 
         # Create a Foo.
-        foo = Foo(name='fred')
+        foo = Foo(name="fred")
 
         # Try to adapt it to a bar.
         bar = self.type_manager.object_as(foo, Bar)
@@ -136,24 +141,20 @@ class TypeManagerTestCase(unittest.TestCase):
         """ instance adapter """
 
         # Create a Foo.
-        foo = Foo(name='fred')
+        foo = Foo(name="fred")
 
         # Register an adapter Foo->Bar on the INSTANCE (this one should take
         # precedence).
-        self.type_manager.register_instance_adapters(
-            FooToBarAdapterFactory(), foo
-        )
+        self.type_manager.register_instance_adapters(FooToBarAdapterFactory(), foo)
 
         # Register an adapter Foo->Bar on the TYPE (this will fail if it gets
         # picked up since it won't actually adapt 'Foo' objects!).
-        self.type_manager.register_instance_adapters(
-            SubOfFooToBarAdapterFactory(), Foo
-        )
+        self.type_manager.register_instance_adapters(SubOfFooToBarAdapterFactory(), Foo)
 
         # Adapt it to a Bar.
         bar = self.type_manager.object_as(foo, Bar)
         self.assertIsNotNone(bar)
-        self.assertEqual(bar.blargle(), 'Foo.foogle.fred')
+        self.assertEqual(bar.blargle(), "Foo.foogle.fred")
 
         return
 
@@ -161,7 +162,7 @@ class TypeManagerTestCase(unittest.TestCase):
         """ unregister instance adapter """
 
         # Create a Foo.
-        foo = Foo(name='fred')
+        foo = Foo(name="fred")
 
         # The factory.
         factory = FooToBarAdapterFactory()
@@ -173,7 +174,7 @@ class TypeManagerTestCase(unittest.TestCase):
         # Adapt it to a Bar.
         bar = self.type_manager.object_as(foo, Bar)
         self.assertIsNotNone(bar)
-        self.assertEqual(bar.blargle(), 'Foo.foogle.fred')
+        self.assertEqual(bar.blargle(), "Foo.foogle.fred")
 
         # Remove the adapter.
         self.type_manager.unregister_instance_adapters(factory, foo)
@@ -195,12 +196,12 @@ class TypeManagerTestCase(unittest.TestCase):
         self.type_manager.register_type_adapters(FooToBarAdapterFactory(), Foo)
 
         # Create a Foo.
-        foo = Foo(name='fred')
+        foo = Foo(name="fred")
 
         # Adapt it to a Bar.
         bar = self.type_manager.object_as(foo, Bar)
         self.assertIsNotNone(bar)
-        self.assertEqual(bar.blargle(), 'Foo.foogle.fred')
+        self.assertEqual(bar.blargle(), "Foo.foogle.fred")
 
         return
 
@@ -211,12 +212,12 @@ class TypeManagerTestCase(unittest.TestCase):
         self.type_manager.register_type_adapters(FooToBarAdapterFactory(), Foo)
 
         # Create an instance of a class derived from Foo.
-        sub = SubOfFoo(name='fred')
+        sub = SubOfFoo(name="fred")
 
         # Adapt it to a Bar.
         bar = self.type_manager.object_as(sub, Bar)
         self.assertIsNotNone(bar)
-        self.assertEqual(bar.blargle(), 'Sub.foogle.fred')
+        self.assertEqual(bar.blargle(), "Sub.foogle.fred")
 
         return
 
@@ -224,12 +225,10 @@ class TypeManagerTestCase(unittest.TestCase):
         """ ignore an adapter on an object's actual class. """
 
         # Register an adapter SubOfFoo->Bar on the Foo class.
-        self.type_manager.register_type_adapters(
-            SubOfFooToBarAdapterFactory(), Foo
-        )
+        self.type_manager.register_type_adapters(SubOfFooToBarAdapterFactory(), Foo)
 
         # Create a Foo.
-        foo = Foo(name='fred')
+        foo = Foo(name="fred")
 
         # Adapt it to a Bar.
         bar = self.type_manager.object_as(foo, Bar)
@@ -243,12 +242,10 @@ class TypeManagerTestCase(unittest.TestCase):
         """ ignore an adapter registered on a derived class. """
 
         # Register an adapter Foo->Bar on the SubOfFoo class.
-        self.type_manager.register_type_adapters(
-            FooToBarAdapterFactory(), SubOfFoo
-        )
+        self.type_manager.register_type_adapters(FooToBarAdapterFactory(), SubOfFoo)
 
         # Create a Foo.
-        foo = Foo(name='fred')
+        foo = Foo(name="fred")
 
         # Adapt it to a Bar.
         bar = self.type_manager.object_as(foo, Bar)
@@ -267,12 +264,12 @@ class TypeManagerTestCase(unittest.TestCase):
         self.type_manager.register_type_adapters(factory, Foo)
 
         # Create a Foo.
-        foo = Foo(name='fred')
+        foo = Foo(name="fred")
 
         # Adapt it to a Bar.
         bar = self.type_manager.object_as(foo, Bar)
         self.assertIsNotNone(bar)
-        self.assertEqual(bar.blargle(), 'Foo.foogle.fred')
+        self.assertEqual(bar.blargle(), "Foo.foogle.fred")
 
         # Unregister the adapter.
         self.type_manager.unregister_type_adapters(factory)
@@ -292,9 +289,9 @@ class TypeManagerTestCase(unittest.TestCase):
         factory = BarFactory()
 
         # Try to create a Bar using the factory.
-        bar = self.type_manager.object_as(factory, Bar, name='joe')
+        bar = self.type_manager.object_as(factory, Bar, name="joe")
         self.assertIsNotNone(bar)
-        self.assertEqual(bar.blargle(), 'Bar.blargle.joe')
+        self.assertEqual(bar.blargle(), "Bar.blargle.joe")
 
         return
 
@@ -302,14 +299,15 @@ class TypeManagerTestCase(unittest.TestCase):
         """ pre hook """
 
         l = []
+
         def hook(*args, **kw):
-            l.append('Hello')
+            l.append("Hello")
 
         # Create a Foo.
-        foo = Foo(name='fred')
+        foo = Foo(name="fred")
 
         # Hook a method.
-        self.type_manager.add_pre(Foo, 'foogle', hook)
+        self.type_manager.add_pre(Foo, "foogle", hook)
 
         # Call the method that we have hooked.
         foo.foogle()
@@ -318,7 +316,7 @@ class TypeManagerTestCase(unittest.TestCase):
         self.assertEqual(len(l), 1)
 
         # Remove the hook.
-        self.type_manager.remove_pre(Foo, 'foogle', hook)
+        self.type_manager.remove_pre(Foo, "foogle", hook)
 
         # Call the method that we have hooked.
         foo.foogle()
@@ -332,25 +330,25 @@ class TypeManagerTestCase(unittest.TestCase):
         """ post hook """
 
         def hook(result, *args, **kw):
-            return 'Hello'
+            return "Hello"
 
         # Create a Foo.
-        foo = Foo(name='fred')
+        foo = Foo(name="fred")
 
         # Hook a method.
-        self.type_manager.add_post(Foo, 'foogle', hook)
+        self.type_manager.add_post(Foo, "foogle", hook)
 
         # Call the method that we have hooked.
-        self.assertEqual(foo.foogle(), 'Hello')
+        self.assertEqual(foo.foogle(), "Hello")
 
         # Remove the hook.
-        self.type_manager.remove_post(Foo, 'foogle', hook)
+        self.type_manager.remove_post(Foo, "foogle", hook)
 
         # Call the method that we have hooked.
         foo.foogle()
 
         # Make sure that the hook was NOT called.
-        self.assertEqual(foo.foogle(), 'Foo.foogle.fred')
+        self.assertEqual(foo.foogle(), "Foo.foogle.fred")
 
         return
 
@@ -358,22 +356,23 @@ class TypeManagerTestCase(unittest.TestCase):
         """ test pre hook on an inherited method """
 
         l = []
+
         def hook(*args, **kw):
-            l.append('Hello')
+            l.append("Hello")
 
         # Create an instance of a subclass of Foo that does NOT override
         # 'foogle'.
-        esof = EmptySubOfFoo(name='fred')
+        esof = EmptySubOfFoo(name="fred")
 
         # Prove that it does not override 'foogle'!
-        method = EmptySubOfFoo.__dict__.get('foogle')
+        method = EmptySubOfFoo.__dict__.get("foogle")
         self.assertIsNone(method)
 
         # Hook a method.
-        self.type_manager.add_pre(EmptySubOfFoo, 'foogle', hook)
+        self.type_manager.add_pre(EmptySubOfFoo, "foogle", hook)
 
         # Make sure that the method was added to the class dictionary.
-        method = EmptySubOfFoo.__dict__.get('foogle')
+        method = EmptySubOfFoo.__dict__.get("foogle")
         self.assertIsNotNone(method)
 
         # Call the method that we have hooked.
@@ -383,7 +382,7 @@ class TypeManagerTestCase(unittest.TestCase):
         self.assertEqual(len(l), 1)
 
         # Remove the hook.
-        self.type_manager.remove_pre(EmptySubOfFoo, 'foogle', hook)
+        self.type_manager.remove_pre(EmptySubOfFoo, "foogle", hook)
 
         # Call the method that we have hooked.
         esof.foogle()
@@ -393,7 +392,7 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # Make sure that we didn't put the original method back onto
         # 'EmptySubOfFoo'(since it didn't override it in the first place).
-        method = EmptySubOfFoo.__dict__.get('foogle')
+        method = EmptySubOfFoo.__dict__.get("foogle")
         self.assertIsNone(method)
 
         return
@@ -409,11 +408,11 @@ class TypeManagerTestCase(unittest.TestCase):
         type_manager = TypeManager(parent=self.type_manager)
 
         # Create a Foo.
-        foo = Foo(name='fred')
+        foo = Foo(name="fred")
 
         # Adapt it to a Bar.
         bar = type_manager.object_as(foo, Bar)
         self.assertIsNotNone(bar)
-        self.assertEqual(bar.blargle(), 'Foo.foogle.fred')
+        self.assertEqual(bar.blargle(), "Foo.foogle.fred")
 
         return

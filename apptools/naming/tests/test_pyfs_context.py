@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ Tests naming operations on PyFS contexts. """
 
 
@@ -33,19 +33,21 @@ class PyFSContextTestCase(unittest.TestCase):
         """ Prepares the test fixture before each test method is called. """
 
         try:
-            if os.path.exists('data'): shutil.rmtree('data')
-            if os.path.exists('other'): shutil.rmtree('other')
+            if os.path.exists("data"):
+                shutil.rmtree("data")
+            if os.path.exists("other"):
+                shutil.rmtree("other")
 
         except:
             pass
 
-        os.mkdir('data')
-        os.mkdir('other')
+        os.mkdir("data")
+        os.mkdir("other")
 
-        self.context = PyFSContext(path='data')
-        self.context.create_subcontext('sub')
-        self.context.bind('x', 123)
-        self.context.bind('y', 321)
+        self.context = PyFSContext(path="data")
+        self.context.create_subcontext("sub")
+        self.context.bind("x", 123)
+        self.context.bind("y", 321)
 
         return
 
@@ -54,8 +56,8 @@ class PyFSContextTestCase(unittest.TestCase):
 
         self.context = None
 
-        shutil.rmtree('data')
-        shutil.rmtree('other')
+        shutil.rmtree("data")
+        shutil.rmtree("other")
 
         return
 
@@ -66,16 +68,16 @@ class PyFSContextTestCase(unittest.TestCase):
     def test_initialization(self):
         """ initialization of an existing context """
 
-        context = PyFSContext(path='data')
-        self.assertEqual(len(context.list_bindings('')), 3)
+        context = PyFSContext(path="data")
+        self.assertEqual(len(context.list_bindings("")), 3)
 
         return
 
     def test_initialization_with_empty_environment(self):
         """ initialization with empty environmentt """
 
-        context = PyFSContext(path='other', environment={})
-        self.assertEqual(len(context.list_names('')), 0)
+        context = PyFSContext(path="other", environment={})
+        self.assertEqual(len(context.list_names("")), 0)
 
         return
 
@@ -84,39 +86,39 @@ class PyFSContextTestCase(unittest.TestCase):
 
         # Convenience.
         context = self.context
-        sub = self.context.lookup('sub')
+        sub = self.context.lookup("sub")
 
         # Make sure that the sub-context is empty.
-        self.assertEqual(len(sub.list_bindings('')), 0)
+        self.assertEqual(len(sub.list_bindings("")), 0)
 
         # Empty name.
-        self.assertRaises(InvalidNameError, context.bind, '', 1)
+        self.assertRaises(InvalidNameError, context.bind, "", 1)
 
         # Bind a local file object.
-        f = File(os.path.join(sub.path, 'foo.py'))
-        #f.create_file('print("foo!")\n')
+        f = File(os.path.join(sub.path, "foo.py"))
+        # f.create_file('print("foo!")\n')
 
-        context.bind('sub/foo.py', f)
-        self.assertEqual(len(sub.list_bindings('')), 1)
+        context.bind("sub/foo.py", f)
+        self.assertEqual(len(sub.list_bindings("")), 1)
 
         # Bind a reference to a non-local file.
-        f = File('/tmp')
-        context.bind('sub/tmp', f)
-        self.assertEqual(len(sub.list_bindings('')), 2)
-        self.assertEqual(context.lookup('sub/tmp').path, f.path)
+        f = File("/tmp")
+        context.bind("sub/tmp", f)
+        self.assertEqual(len(sub.list_bindings("")), 2)
+        self.assertEqual(context.lookup("sub/tmp").path, f.path)
 
         # Bind a reference to a non-local context.
-        f = PyFSContext(path='other')
-        context.bind('sub/other', f)
-        self.assertEqual(len(sub.list_bindings('')), 3)
-        self.assertIn(f.path, context.lookup('sub/other').path)
+        f = PyFSContext(path="other")
+        context.bind("sub/other", f)
+        self.assertEqual(len(sub.list_bindings("")), 3)
+        self.assertIn(f.path, context.lookup("sub/other").path)
 
         # Bind a Python object.
-        context.bind('sub/a', 1)
-        self.assertEqual(len(sub.list_bindings('')), 4)
+        context.bind("sub/a", 1)
+        self.assertEqual(len(sub.list_bindings("")), 4)
 
         # Try to bind it again.
-        self.assertRaises(NameAlreadyBoundError, context.bind, 'sub/a', 1)
+        self.assertRaises(NameAlreadyBoundError, context.bind, "sub/a", 1)
 
         return
 
@@ -125,21 +127,21 @@ class PyFSContextTestCase(unittest.TestCase):
 
         # Convenience.
         context = self.context
-        sub = self.context.lookup('sub')
+        sub = self.context.lookup("sub")
 
         # Make sure that the sub-context is empty.
-        self.assertEqual(len(sub.list_bindings('')), 0)
+        self.assertEqual(len(sub.list_bindings("")), 0)
 
         # Empty name.
-        self.assertRaises(InvalidNameError, context.rebind, '', 1)
+        self.assertRaises(InvalidNameError, context.rebind, "", 1)
 
         # Bind a name.
-        context.bind('sub/a', 1)
-        self.assertEqual(len(sub.list_bindings('')), 1)
+        context.bind("sub/a", 1)
+        self.assertEqual(len(sub.list_bindings("")), 1)
 
         # Rebind it.
-        context.rebind('sub/a', 1)
-        self.assertEqual(len(sub.list_bindings('')), 1)
+        context.rebind("sub/a", 1)
+        self.assertEqual(len(sub.list_bindings("")), 1)
 
         return
 
@@ -148,24 +150,24 @@ class PyFSContextTestCase(unittest.TestCase):
 
         # Convenience.
         context = self.context
-        sub = self.context.lookup('sub')
+        sub = self.context.lookup("sub")
 
         # Make sure that the sub-context is empty.
-        self.assertEqual(len(sub.list_bindings('')), 0)
+        self.assertEqual(len(sub.list_bindings("")), 0)
 
         # Empty name.
-        self.assertRaises(InvalidNameError, context.unbind, '')
+        self.assertRaises(InvalidNameError, context.unbind, "")
 
         # Bind a name.
-        context.bind('sub/a', 1)
-        self.assertEqual(len(sub.list_bindings('')), 1)
+        context.bind("sub/a", 1)
+        self.assertEqual(len(sub.list_bindings("")), 1)
 
         # Unbind it.
-        context.unbind('sub/a')
-        self.assertEqual(len(sub.list_bindings('')), 0)
+        context.unbind("sub/a")
+        self.assertEqual(len(sub.list_bindings("")), 0)
 
         # Try to unbind a non-existent name.
-        self.assertRaises(NameNotFoundError, context.unbind, 'sub/b')
+        self.assertRaises(NameNotFoundError, context.unbind, "sub/b")
 
         return
 
@@ -174,61 +176,61 @@ class PyFSContextTestCase(unittest.TestCase):
 
         # Convenience.
         context = self.context
-        sub = self.context.lookup('sub')
+        sub = self.context.lookup("sub")
 
         # Make sure that the sub-context is empty.
-        self.assertEqual(len(sub.list_bindings('')), 0)
+        self.assertEqual(len(sub.list_bindings("")), 0)
 
         # Empty name.
-        self.assertRaises(InvalidNameError, context.rename, '', 'x')
-        self.assertRaises(InvalidNameError, context.rename, 'x', '')
+        self.assertRaises(InvalidNameError, context.rename, "", "x")
+        self.assertRaises(InvalidNameError, context.rename, "x", "")
 
         # Bind a name.
-        context.bind('sub/a', 1)
-        self.assertEqual(len(sub.list_bindings('')), 1)
+        context.bind("sub/a", 1)
+        self.assertEqual(len(sub.list_bindings("")), 1)
 
         # Rename it.
-        context.rename('sub/a', 'sub/b')
-        self.assertEqual(len(sub.list_bindings('')), 1)
+        context.rename("sub/a", "sub/b")
+        self.assertEqual(len(sub.list_bindings("")), 1)
 
         # Lookup using the new name.
-        self.assertEqual(context.lookup('sub/b'), 1)
+        self.assertEqual(context.lookup("sub/b"), 1)
 
         # Lookup using the old name.
-        self.assertRaises(NameNotFoundError, context.lookup, 'sub/a')
+        self.assertRaises(NameNotFoundError, context.lookup, "sub/a")
 
     def test_lookup(self):
         """ pyfs context lookup """
 
         # Convenience.
         context = self.context
-        sub = self.context.lookup('sub')
+        sub = self.context.lookup("sub")
 
         # Make sure that the sub-context is empty.
-        self.assertEqual(len(sub.list_bindings('')), 0)
+        self.assertEqual(len(sub.list_bindings("")), 0)
 
         # Bind a file object.
-        f = File(os.path.join(sub.path, 'foo.py'))
-        #f.create_file('print("foo!")\n')
+        f = File(os.path.join(sub.path, "foo.py"))
+        # f.create_file('print("foo!")\n')
 
-        context.bind('sub/foo.py', f)
-        self.assertEqual(len(sub.list_bindings('')), 1)
+        context.bind("sub/foo.py", f)
+        self.assertEqual(len(sub.list_bindings("")), 1)
 
         # Look it up.
-        self.assertEqual(context.lookup('sub/foo.py').path, f.path)
+        self.assertEqual(context.lookup("sub/foo.py").path, f.path)
 
         # Bind a Python object.
-        context.bind('sub/a', 1)
-        self.assertEqual(len(sub.list_bindings('')), 2)
+        context.bind("sub/a", 1)
+        self.assertEqual(len(sub.list_bindings("")), 2)
 
         # Look it up.
-        self.assertEqual(context.lookup('sub/a'), 1)
+        self.assertEqual(context.lookup("sub/a"), 1)
 
         # Looking up the Empty name returns the context itself.
-        self.assertEqual(context.lookup(''), context)
+        self.assertEqual(context.lookup(""), context)
 
         # Non-existent name.
-        self.assertRaises(NameNotFoundError, context.lookup, 'sub/b')
+        self.assertRaises(NameNotFoundError, context.lookup, "sub/b")
 
         return
 
@@ -237,23 +239,21 @@ class PyFSContextTestCase(unittest.TestCase):
 
         # Convenience.
         context = self.context
-        sub = self.context.lookup('sub')
+        sub = self.context.lookup("sub")
 
         # Make sure that the sub-context is empty.
-        self.assertEqual(len(sub.list_bindings('')), 0)
+        self.assertEqual(len(sub.list_bindings("")), 0)
 
         # Empty name.
-        self.assertRaises(InvalidNameError, context.create_subcontext, '')
+        self.assertRaises(InvalidNameError, context.create_subcontext, "")
 
         # Create a sub-context.
-        a = context.create_subcontext('sub/a')
-        self.assertEqual(len(sub.list_bindings('')), 1)
-        self.assertTrue(os.path.isdir(os.path.join(sub.path, 'a')))
+        a = context.create_subcontext("sub/a")
+        self.assertEqual(len(sub.list_bindings("")), 1)
+        self.assertTrue(os.path.isdir(os.path.join(sub.path, "a")))
 
         # Try to bind it again.
-        self.assertRaises(
-            NameAlreadyBoundError, context.create_subcontext, 'sub/a'
-        )
+        self.assertRaises(NameAlreadyBoundError, context.create_subcontext, "sub/a")
 
         return
 
@@ -262,38 +262,34 @@ class PyFSContextTestCase(unittest.TestCase):
 
         # Convenience.
         context = self.context
-        sub = self.context.lookup('sub')
+        sub = self.context.lookup("sub")
 
         # Make sure that the sub-context is empty.
-        self.assertEqual(len(sub.list_bindings('')), 0)
+        self.assertEqual(len(sub.list_bindings("")), 0)
 
         # Empty name.
-        self.assertRaises(InvalidNameError, context.destroy_subcontext, '')
+        self.assertRaises(InvalidNameError, context.destroy_subcontext, "")
 
         # Create a sub-context.
-        a = context.create_subcontext('sub/a')
-        self.assertEqual(len(sub.list_bindings('')), 1)
+        a = context.create_subcontext("sub/a")
+        self.assertEqual(len(sub.list_bindings("")), 1)
 
         # Destroy it.
-        context.destroy_subcontext('sub/a')
-        self.assertEqual(len(sub.list_bindings('')), 0)
-        self.assertTrue(not os.path.isdir(os.path.join(sub.path, 'a')))
+        context.destroy_subcontext("sub/a")
+        self.assertEqual(len(sub.list_bindings("")), 0)
+        self.assertTrue(not os.path.isdir(os.path.join(sub.path, "a")))
 
         # Bind a name.
-        context.bind('sub/a', 1)
-        self.assertEqual(len(sub.list_bindings('')), 1)
+        context.bind("sub/a", 1)
+        self.assertEqual(len(sub.list_bindings("")), 1)
 
         # Try to destroy it.
-        self.assertRaises(
-            NotContextError, context.destroy_subcontext, 'sub/a'
-        )
+        self.assertRaises(NotContextError, context.destroy_subcontext, "sub/a")
 
         return
 
         # Try to destroy a non-existent name.
-        self.assertRaises(
-            NameNotFoundError, context.destroy_subcontext, 'sub/b'
-        )
+        self.assertRaises(NameNotFoundError, context.destroy_subcontext, "sub/b")
 
         return
 
@@ -302,30 +298,30 @@ class PyFSContextTestCase(unittest.TestCase):
 
         # Convenience.
         context = self.context
-        sub = self.context.lookup('sub')
+        sub = self.context.lookup("sub")
         self.assertIsInstance(sub, DirContext)
 
         #### Generic name resolution tests ####
 
         # Non-existent name.
-        self.assertRaises(NameNotFoundError, context.get_attributes, 'xx')
+        self.assertRaises(NameNotFoundError, context.get_attributes, "xx")
 
         # Attempt to resolve via a non-existent context.
-        self.assertRaises(NameNotFoundError, context.get_attributes,'xx/a')
+        self.assertRaises(NameNotFoundError, context.get_attributes, "xx/a")
 
         # Attempt to resolve via an existing name that is not a context.
-        context.bind('sub/a', 1)
-        self.assertEqual(len(sub.list_bindings('')), 1)
-        self.assertRaises(NotContextError,context.get_attributes,'sub/a/x')
+        context.bind("sub/a", 1)
+        self.assertEqual(len(sub.list_bindings("")), 1)
+        self.assertRaises(NotContextError, context.get_attributes, "sub/a/x")
 
         #### Operation specific tests ####
 
         # Attributes of the root context.
-        attributes = context.get_attributes('')
+        attributes = context.get_attributes("")
         self.assertEqual(len(attributes), 0)
 
         # Attributes of a sub-context.
-        attributes = context.get_attributes('sub')
+        attributes = context.get_attributes("sub")
         self.assertEqual(len(attributes), 0)
 
         return
@@ -333,53 +329,47 @@ class PyFSContextTestCase(unittest.TestCase):
     def test_set_get_attributes(self):
         """ get and set attributes """
 
-        defaults = {'colour' : 'blue'}
+        defaults = {"colour": "blue"}
 
         # Convenience.
         context = self.context
-        sub = self.context.lookup('sub')
+        sub = self.context.lookup("sub")
         self.assertIsInstance(sub, DirContext)
 
         #### Generic name resolution tests ####
 
         # Non-existent name.
-        self.assertRaises(
-            NameNotFoundError, context.set_attributes, 'xx', defaults
-        )
+        self.assertRaises(NameNotFoundError, context.set_attributes, "xx", defaults)
 
         # Attempt to resolve via a non-existent context.
-        self.assertRaises(
-            NameNotFoundError, context.set_attributes, 'xx/a', defaults
-        )
+        self.assertRaises(NameNotFoundError, context.set_attributes, "xx/a", defaults)
 
         # Attempt to resolve via an existing name that is not a context.
-        context.bind('sub/a', 1)
-        self.assertEqual(len(sub.list_bindings('')), 1)
-        self.assertRaises(
-            NotContextError, context.set_attributes, 'sub/a/xx', defaults
-        )
+        context.bind("sub/a", 1)
+        self.assertEqual(len(sub.list_bindings("")), 1)
+        self.assertRaises(NotContextError, context.set_attributes, "sub/a/xx", defaults)
 
         #### Operation specific tests ####
 
         # Attributes of the root context.
-        attributes = self.context.get_attributes('')
+        attributes = self.context.get_attributes("")
         self.assertEqual(len(attributes), 0)
 
         # Set the attributes.
-        context.set_attributes('', defaults)
-        attributes = context.get_attributes('')
+        context.set_attributes("", defaults)
+        attributes = context.get_attributes("")
         self.assertEqual(len(attributes), 1)
-        self.assertEqual(attributes['colour'], 'blue')
+        self.assertEqual(attributes["colour"], "blue")
 
         # Attributes of a sub-context.
-        attributes = context.get_attributes('sub')
+        attributes = context.get_attributes("sub")
         self.assertEqual(len(attributes), 0)
 
         # Set the attributes.
-        context.set_attributes('sub', defaults)
-        attributes = context.get_attributes('sub')
+        context.set_attributes("sub", defaults)
+        attributes = context.get_attributes("sub")
         self.assertEqual(len(attributes), 1)
-        self.assertEqual(attributes['colour'], 'blue')
+        self.assertEqual(attributes["colour"], "blue")
 
         return
 
@@ -388,10 +378,10 @@ class PyFSContextTestCase(unittest.TestCase):
 
         # Convenience.
         context = self.context
-        sub = self.context.lookup('sub')
+        sub = self.context.lookup("sub")
         self.assertIsInstance(sub, DirContext)
 
-        self.assertEqual(context.namespace_name, 'data')
-        self.assertEqual(sub.namespace_name, 'data/sub')
+        self.assertEqual(context.namespace_name, "data")
+        self.assertEqual(sub.namespace_name, "data/sub")
 
         return

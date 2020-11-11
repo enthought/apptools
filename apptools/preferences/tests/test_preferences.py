@@ -14,7 +14,7 @@ from traits.api import HasTraits, Int, Str
 
 
 # This module's package.
-PKG = 'apptools.preferences.tests'
+PKG = "apptools.preferences.tests"
 
 
 class PreferencesTestCase(unittest.TestCase):
@@ -30,11 +30,10 @@ class PreferencesTestCase(unittest.TestCase):
         self.preferences = Preferences()
 
         # The filename of the example preferences file.
-        self.example = resource_filename(PKG, 'example.ini')
+        self.example = resource_filename(PKG, "example.ini")
 
         # A temporary directory that can safely be written to.
         self.tmpdir = tempfile.mkdtemp()
-
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
@@ -61,8 +60,8 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # Set a string preference.
-        p.set('acme.ui.bgcolor', 'blue')
-        self.assertEqual('blue', p.get('acme.ui.bgcolor'))
+        p.set("acme.ui.bgcolor", "blue")
+        self.assertEqual("blue", p.get("acme.ui.bgcolor"))
 
     def test_get_and_set_int(self):
         """ get and set int """
@@ -71,8 +70,8 @@ class PreferencesTestCase(unittest.TestCase):
 
         # Note that we can pass an actual 'int' to 'set', but the preference
         # manager *always* returns preference values as strings.
-        p.set('acme.ui.width', 50)
-        self.assertEqual('50', p.get('acme.ui.width'))
+        p.set("acme.ui.width", 50)
+        self.assertEqual("50", p.get("acme.ui.width"))
 
     def test_get_and_set_float(self):
         """ get and set float """
@@ -81,8 +80,8 @@ class PreferencesTestCase(unittest.TestCase):
 
         # Note that we can pass an actual 'flaot' to 'set', but the preference
         # manager *always* returns preference values as strings.
-        p.set('acme.ui.ratio', 1.0)
-        self.assertEqual('1.0', p.get('acme.ui.ratio'))
+        p.set("acme.ui.ratio", 1.0)
+        self.assertEqual("1.0", p.get("acme.ui.ratio"))
 
     def test_get_and_set_bool(self):
         """ get and set bool """
@@ -91,8 +90,8 @@ class PreferencesTestCase(unittest.TestCase):
 
         # Note that we can pass an actual 'bool' to 'set', but the preference
         # manager *always* returns preference values as strings.
-        p.set('acme.ui.visible', True)
-        self.assertEqual('True', p.get('acme.ui.visible'))
+        p.set("acme.ui.visible", True)
+        self.assertEqual("True", p.get("acme.ui.visible"))
 
     def test_get_and_set_list_of_str(self):
         """ get and set list of str """
@@ -101,8 +100,8 @@ class PreferencesTestCase(unittest.TestCase):
 
         # Note that we can pass an actual 'int' to 'set', but the preference
         # manager *always* returns preference values as strings.
-        p.set('acme.ui.names', ['fred', 'wilma', 'barney'])
-        self.assertEqual("['fred', 'wilma', 'barney']", p.get('acme.ui.names'))
+        p.set("acme.ui.names", ["fred", "wilma", "barney"])
+        self.assertEqual("['fred', 'wilma', 'barney']", p.get("acme.ui.names"))
 
     def test_get_and_set_list_of_int(self):
         """ get and set list of int """
@@ -111,17 +110,17 @@ class PreferencesTestCase(unittest.TestCase):
 
         # Note that we can pass an actual 'int' to 'set', but the preference
         # manager *always* returns preference values as strings.
-        p.set('acme.ui.offsets', [1, 2, 3])
-        self.assertEqual('[1, 2, 3]', p.get('acme.ui.offsets'))
+        p.set("acme.ui.offsets", [1, 2, 3])
+        self.assertEqual("[1, 2, 3]", p.get("acme.ui.offsets"))
 
     def test_empty_path(self):
         """ empty path """
 
         p = self.preferences
 
-        self.assertRaises(ValueError, p.get, '')
-        self.assertRaises(ValueError, p.remove, '')
-        self.assertRaises(ValueError, p.set, '', 'a value')
+        self.assertRaises(ValueError, p.get, "")
+        self.assertRaises(ValueError, p.remove, "")
+        self.assertRaises(ValueError, p.set, "", "a value")
 
     def test_default_values(self):
         """ default values """
@@ -129,14 +128,14 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # Try non-existent names to get the default-default!
-        self.assertIsNone(p.get('bogus'))
-        self.assertIsNone(p.get('acme.bogus'))
-        self.assertIsNone(p.get('acme.ui.bogus'))
+        self.assertIsNone(p.get("bogus"))
+        self.assertIsNone(p.get("acme.bogus"))
+        self.assertIsNone(p.get("acme.ui.bogus"))
 
         # Try non-existent names to get the specified default.
-        self.assertEqual('a value', p.get('bogus', 'a value'))
-        self.assertEqual('a value', p.get('acme.bogus', 'a value'))
-        self.assertEqual('a value', p.get('acme.ui.bogus', 'a value'))
+        self.assertEqual("a value", p.get("bogus", "a value"))
+        self.assertEqual("a value", p.get("acme.bogus", "a value"))
+        self.assertEqual("a value", p.get("acme.ui.bogus", "a value"))
 
     def test_keys(self):
         """ keys """
@@ -147,36 +146,36 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual([], list(p.keys()))
 
         # Set some preferences in the node.
-        p.set('a', '1')
-        p.set('b', '2')
-        p.set('c', '3')
+        p.set("a", "1")
+        p.set("b", "2")
+        p.set("c", "3")
 
         keys = sorted(p.keys())
 
-        self.assertEqual(['a', 'b', 'c'], keys)
+        self.assertEqual(["a", "b", "c"], keys)
 
         # Set some preferences in a child node.
-        p.set('acme.a', '1')
-        p.set('acme.b', '2')
-        p.set('acme.c', '3')
+        p.set("acme.a", "1")
+        p.set("acme.b", "2")
+        p.set("acme.c", "3")
 
-        keys = sorted(p.keys('acme'))
+        keys = sorted(p.keys("acme"))
 
-        self.assertEqual(['a', 'b', 'c'], keys)
+        self.assertEqual(["a", "b", "c"], keys)
 
         # And, just to be sure, in a child of the child node ;^)
-        p.set('acme.ui.a', '1')
-        p.set('acme.ui.b', '2')
-        p.set('acme.ui.c', '3')
+        p.set("acme.ui.a", "1")
+        p.set("acme.ui.b", "2")
+        p.set("acme.ui.c", "3")
 
-        keys = sorted(p.keys('acme.ui'))
+        keys = sorted(p.keys("acme.ui"))
 
-        self.assertEqual(['a', 'b', 'c'], keys)
+        self.assertEqual(["a", "b", "c"], keys)
 
         # Test keys of a non-existent node.
-        self.assertEqual([], p.keys('bogus'))
-        self.assertEqual([], p.keys('bogus.blargle'))
-        self.assertEqual([], p.keys('bogus.blargle.foogle'))
+        self.assertEqual([], p.keys("bogus"))
+        self.assertEqual([], p.keys("bogus.blargle"))
+        self.assertEqual([], p.keys("bogus.blargle.foogle"))
 
     def test_node(self):
         """ node """
@@ -187,28 +186,28 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual(p, p.node())
 
         # Try a simple path.
-        node = p.node('acme')
+        node = p.node("acme")
         self.assertIsNotNone(node)
-        self.assertEqual('acme', node.name)
-        self.assertEqual('acme', node.path)
+        self.assertEqual("acme", node.name)
+        self.assertEqual("acme", node.path)
         self.assertEqual(p, node.parent)
 
         # Make sure we get the same node each time we ask for it!
-        self.assertEqual(node, p.node('acme'))
+        self.assertEqual(node, p.node("acme"))
 
         # Try a nested path.
-        node = p.node('acme.ui')
+        node = p.node("acme.ui")
         self.assertIsNotNone(node)
-        self.assertEqual('ui', node.name)
-        self.assertEqual('acme.ui', node.path)
-        self.assertEqual(p.node('acme'), node.parent)
+        self.assertEqual("ui", node.name)
+        self.assertEqual("acme.ui", node.path)
+        self.assertEqual(p.node("acme"), node.parent)
 
         # And just to be sure, a really nested path.
-        node = p.node('acme.ui.splash_screen')
+        node = p.node("acme.ui.splash_screen")
         self.assertIsNotNone(node)
-        self.assertEqual('splash_screen', node.name)
-        self.assertEqual('acme.ui.splash_screen', node.path)
-        self.assertEqual(p.node('acme.ui'), node.parent)
+        self.assertEqual("splash_screen", node.name)
+        self.assertEqual("acme.ui.splash_screen", node.path)
+        self.assertEqual(p.node("acme.ui"), node.parent)
 
     def test_node_exists(self):
         """ node exists """
@@ -216,10 +215,10 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         self.assertTrue(p.node_exists())
-        self.assertFalse(p.node_exists('acme'))
+        self.assertFalse(p.node_exists("acme"))
 
-        p.node('acme')
-        self.assertTrue(p.node_exists('acme'))
+        p.node("acme")
+        self.assertTrue(p.node_exists("acme"))
 
     def test_node_names(self):
         """ node names """
@@ -230,36 +229,36 @@ class PreferencesTestCase(unittest.TestCase):
         self.assertEqual([], p.node_names())
 
         # Add some nodes.
-        p.node('a')
-        p.node('b')
-        p.node('c')
+        p.node("a")
+        p.node("b")
+        p.node("c")
 
         names = sorted(p.node_names())
 
-        self.assertEqual(['a', 'b', 'c'], names)
+        self.assertEqual(["a", "b", "c"], names)
 
         # Creatd some nodes in a child node.
-        p.node('acme.a')
-        p.node('acme.b')
-        p.node('acme.c')
+        p.node("acme.a")
+        p.node("acme.b")
+        p.node("acme.c")
 
-        names = sorted(p.node_names('acme'))
+        names = sorted(p.node_names("acme"))
 
-        self.assertEqual(['a', 'b', 'c'], names)
+        self.assertEqual(["a", "b", "c"], names)
 
         # And, just to be sure, in a child of the child node ;^)
-        p.node('acme.ui.a')
-        p.node('acme.ui.b')
-        p.node('acme.ui.c')
+        p.node("acme.ui.a")
+        p.node("acme.ui.b")
+        p.node("acme.ui.c")
 
-        names = sorted(p.node_names('acme.ui'))
+        names = sorted(p.node_names("acme.ui"))
 
-        self.assertEqual(['a', 'b', 'c'], names)
+        self.assertEqual(["a", "b", "c"], names)
 
         # Test keys of a non-existent node.
-        self.assertEqual([], p.node_names('bogus'))
-        self.assertEqual([], p.node_names('bogus.blargle'))
-        self.assertEqual([], p.node_names('bogus.blargle.foogle'))
+        self.assertEqual([], p.node_names("bogus"))
+        self.assertEqual([], p.node_names("bogus.blargle"))
+        self.assertEqual([], p.node_names("bogus.blargle.foogle"))
 
     def test_clear(self):
         """ clear """
@@ -267,16 +266,16 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # Set some values.
-        p.set('acme.ui.bgcolor', 'blue')
-        self.assertEqual('blue', p.get('acme.ui.bgcolor'))
-        p.set('acme.ui.width', 100)
-        self.assertEqual('100', p.get('acme.ui.width'))
+        p.set("acme.ui.bgcolor", "blue")
+        self.assertEqual("blue", p.get("acme.ui.bgcolor"))
+        p.set("acme.ui.width", 100)
+        self.assertEqual("100", p.get("acme.ui.width"))
 
         # Clear all preferences from the node.
-        p.clear('acme.ui')
-        self.assertIsNone(p.get('acme.ui.bgcolor'))
-        self.assertIsNone(p.get('acme.ui.width'))
-        self.assertEqual(0, len(p.keys('acme.ui')))
+        p.clear("acme.ui")
+        self.assertIsNone(p.get("acme.ui.bgcolor"))
+        self.assertIsNone(p.get("acme.ui.width"))
+        self.assertEqual(0, len(p.keys("acme.ui")))
 
     def test_remove(self):
         """ remove """
@@ -284,16 +283,16 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # Set a value.
-        p.set('acme.ui.bgcolor', 'blue')
-        self.assertEqual('blue', p.get('acme.ui.bgcolor'))
+        p.set("acme.ui.bgcolor", "blue")
+        self.assertEqual("blue", p.get("acme.ui.bgcolor"))
 
         # Remove it.
-        p.remove('acme.ui.bgcolor')
-        self.assertIsNone(p.get('acme.ui.bgcolor'))
+        p.remove("acme.ui.bgcolor")
+        self.assertIsNone(p.get("acme.ui.bgcolor"))
 
         # Make sure we can't remove nodes!
-        p.remove('acme.ui')
-        self.assertTrue(p.node_exists('acme.ui'))
+        p.remove("acme.ui")
+        self.assertTrue(p.node_exists("acme.ui"))
 
     def test_flush(self):
         """ flush """
@@ -301,7 +300,7 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # A temporary .ini file for this test.
-        tmp = join(self.tmpdir, 'tmp.ini')
+        tmp = join(self.tmpdir, "tmp.ini")
 
         # This could be set in the constructor of course, its just here we
         # want to use the instance declared in 'setUp'.
@@ -319,15 +318,15 @@ class PreferencesTestCase(unittest.TestCase):
             p.load(tmp)
 
             # Make sure it was all loaded!
-            self.assertEqual('blue', p.get('acme.ui.bgcolor'))
-            self.assertEqual('50', p.get('acme.ui.width'))
-            self.assertEqual('1.0', p.get('acme.ui.ratio'))
-            self.assertEqual('True', p.get('acme.ui.visible'))
-            self.assertEqual('acme ui', p.get('acme.ui.description'))
-            self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
-            self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
-            self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
-            self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
+            self.assertEqual("blue", p.get("acme.ui.bgcolor"))
+            self.assertEqual("50", p.get("acme.ui.width"))
+            self.assertEqual("1.0", p.get("acme.ui.ratio"))
+            self.assertEqual("True", p.get("acme.ui.visible"))
+            self.assertEqual("acme ui", p.get("acme.ui.description"))
+            self.assertEqual("[1, 2, 3, 4]", p.get("acme.ui.offsets"))
+            self.assertEqual("['joe', 'fred', 'jane']", p.get("acme.ui.names"))
+            self.assertEqual("splash", p.get("acme.ui.splash_screen.image"))
+            self.assertEqual("red", p.get("acme.ui.splash_screen.fgcolor"))
 
         finally:
             # Clean up!
@@ -342,15 +341,15 @@ class PreferencesTestCase(unittest.TestCase):
         p.load(self.example)
 
         # Make sure it was all loaded!
-        self.assertEqual('blue', p.get('acme.ui.bgcolor'))
-        self.assertEqual('50', p.get('acme.ui.width'))
-        self.assertEqual('1.0', p.get('acme.ui.ratio'))
-        self.assertEqual('True', p.get('acme.ui.visible'))
-        self.assertEqual('acme ui', p.get('acme.ui.description'))
-        self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
-        self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
-        self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
-        self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
+        self.assertEqual("blue", p.get("acme.ui.bgcolor"))
+        self.assertEqual("50", p.get("acme.ui.width"))
+        self.assertEqual("1.0", p.get("acme.ui.ratio"))
+        self.assertEqual("True", p.get("acme.ui.visible"))
+        self.assertEqual("acme ui", p.get("acme.ui.description"))
+        self.assertEqual("[1, 2, 3, 4]", p.get("acme.ui.offsets"))
+        self.assertEqual("['joe', 'fred', 'jane']", p.get("acme.ui.names"))
+        self.assertEqual("splash", p.get("acme.ui.splash_screen.image"))
+        self.assertEqual("red", p.get("acme.ui.splash_screen.fgcolor"))
 
     def test_load_with_filename_trait_set(self):
         """ load with filename trait set """
@@ -362,15 +361,15 @@ class PreferencesTestCase(unittest.TestCase):
         p.load()
 
         # Make sure it was all loaded!
-        self.assertEqual('blue', p.get('acme.ui.bgcolor'))
-        self.assertEqual('50', p.get('acme.ui.width'))
-        self.assertEqual('1.0', p.get('acme.ui.ratio'))
-        self.assertEqual('True', p.get('acme.ui.visible'))
-        self.assertEqual('acme ui', p.get('acme.ui.description'))
-        self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
-        self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
-        self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
-        self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
+        self.assertEqual("blue", p.get("acme.ui.bgcolor"))
+        self.assertEqual("50", p.get("acme.ui.width"))
+        self.assertEqual("1.0", p.get("acme.ui.ratio"))
+        self.assertEqual("True", p.get("acme.ui.visible"))
+        self.assertEqual("acme ui", p.get("acme.ui.description"))
+        self.assertEqual("[1, 2, 3, 4]", p.get("acme.ui.offsets"))
+        self.assertEqual("['joe', 'fred', 'jane']", p.get("acme.ui.names"))
+        self.assertEqual("splash", p.get("acme.ui.splash_screen.image"))
+        self.assertEqual("red", p.get("acme.ui.splash_screen.fgcolor"))
 
         p = self.preferences
 
@@ -378,15 +377,15 @@ class PreferencesTestCase(unittest.TestCase):
         p.load(self.example)
 
         # Make sure it was all loaded!
-        self.assertEqual('blue', p.get('acme.ui.bgcolor'))
-        self.assertEqual('50', p.get('acme.ui.width'))
-        self.assertEqual('1.0', p.get('acme.ui.ratio'))
-        self.assertEqual('True', p.get('acme.ui.visible'))
-        self.assertEqual('acme ui', p.get('acme.ui.description'))
-        self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
-        self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
-        self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
-        self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
+        self.assertEqual("blue", p.get("acme.ui.bgcolor"))
+        self.assertEqual("50", p.get("acme.ui.width"))
+        self.assertEqual("1.0", p.get("acme.ui.ratio"))
+        self.assertEqual("True", p.get("acme.ui.visible"))
+        self.assertEqual("acme ui", p.get("acme.ui.description"))
+        self.assertEqual("[1, 2, 3, 4]", p.get("acme.ui.offsets"))
+        self.assertEqual("['joe', 'fred', 'jane']", p.get("acme.ui.names"))
+        self.assertEqual("splash", p.get("acme.ui.splash_screen.image"))
+        self.assertEqual("red", p.get("acme.ui.splash_screen.fgcolor"))
 
     def test_save(self):
         """ save """
@@ -397,21 +396,21 @@ class PreferencesTestCase(unittest.TestCase):
         p.load(self.example)
 
         # Make sure it was all loaded!
-        self.assertEqual('blue', p.get('acme.ui.bgcolor'))
-        self.assertEqual('50', p.get('acme.ui.width'))
-        self.assertEqual('1.0', p.get('acme.ui.ratio'))
-        self.assertEqual('True', p.get('acme.ui.visible'))
-        self.assertEqual('acme ui', p.get('acme.ui.description'))
-        self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
-        self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
-        self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
-        self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
+        self.assertEqual("blue", p.get("acme.ui.bgcolor"))
+        self.assertEqual("50", p.get("acme.ui.width"))
+        self.assertEqual("1.0", p.get("acme.ui.ratio"))
+        self.assertEqual("True", p.get("acme.ui.visible"))
+        self.assertEqual("acme ui", p.get("acme.ui.description"))
+        self.assertEqual("[1, 2, 3, 4]", p.get("acme.ui.offsets"))
+        self.assertEqual("['joe', 'fred', 'jane']", p.get("acme.ui.names"))
+        self.assertEqual("splash", p.get("acme.ui.splash_screen.image"))
+        self.assertEqual("red", p.get("acme.ui.splash_screen.fgcolor"))
 
         # Make a change.
-        p.set('acme.ui.bgcolor', 'yellow')
+        p.set("acme.ui.bgcolor", "yellow")
 
         # Save it to another file.
-        tmp = join(self.tmpdir, 'tmp.ini')
+        tmp = join(self.tmpdir, "tmp.ini")
         p.save(tmp)
 
         try:
@@ -420,15 +419,15 @@ class PreferencesTestCase(unittest.TestCase):
             p.load(tmp)
 
             # Make sure it was all loaded!
-            self.assertEqual('yellow', p.get('acme.ui.bgcolor'))
-            self.assertEqual('50', p.get('acme.ui.width'))
-            self.assertEqual('1.0', p.get('acme.ui.ratio'))
-            self.assertEqual('True', p.get('acme.ui.visible'))
-            self.assertEqual('acme ui', p.get('acme.ui.description'))
-            self.assertEqual('[1, 2, 3, 4]', p.get('acme.ui.offsets'))
-            self.assertEqual("['joe', 'fred', 'jane']", p.get('acme.ui.names'))
-            self.assertEqual('splash', p.get('acme.ui.splash_screen.image'))
-            self.assertEqual('red', p.get('acme.ui.splash_screen.fgcolor'))
+            self.assertEqual("yellow", p.get("acme.ui.bgcolor"))
+            self.assertEqual("50", p.get("acme.ui.width"))
+            self.assertEqual("1.0", p.get("acme.ui.ratio"))
+            self.assertEqual("True", p.get("acme.ui.visible"))
+            self.assertEqual("acme ui", p.get("acme.ui.description"))
+            self.assertEqual("[1, 2, 3, 4]", p.get("acme.ui.offsets"))
+            self.assertEqual("['joe', 'fred', 'jane']", p.get("acme.ui.names"))
+            self.assertEqual("splash", p.get("acme.ui.splash_screen.image"))
+            self.assertEqual("red", p.get("acme.ui.splash_screen.fgcolor"))
 
         finally:
             # Clean up!
@@ -452,23 +451,23 @@ class PreferencesTestCase(unittest.TestCase):
         p = self.preferences
 
         # Set a string preference.
-        p.set('bgcolor', 'red')
-        p.set('acme.bgcolor', 'green')
-        p.set('acme.ui.bgcolor', 'blue')
+        p.set("bgcolor", "red")
+        p.set("acme.bgcolor", "green")
+        p.set("acme.ui.bgcolor", "blue")
 
-        self.assertEqual('blue', p.get('acme.ui.bgcolor', inherit=True))
+        self.assertEqual("blue", p.get("acme.ui.bgcolor", inherit=True))
 
         # Now remove the 'lowest' layer.
-        p.remove('acme.ui.bgcolor')
-        self.assertEqual('green', p.get('acme.ui.bgcolor', inherit=True))
+        p.remove("acme.ui.bgcolor")
+        self.assertEqual("green", p.get("acme.ui.bgcolor", inherit=True))
 
         # And the next one.
-        p.remove('acme.bgcolor')
-        self.assertEqual('red', p.get('acme.ui.bgcolor', inherit=True))
+        p.remove("acme.bgcolor")
+        self.assertEqual("red", p.get("acme.ui.bgcolor", inherit=True))
 
         # And the last one.
-        p.remove('bgcolor')
-        self.assertEqual(None, p.get('acme.ui.bgcolor', inherit=True))
+        p.remove("bgcolor")
+        self.assertEqual(None, p.get("acme.ui.bgcolor", inherit=True))
 
     def test_add_listener(self):
         """ add listener """
@@ -479,27 +478,27 @@ class PreferencesTestCase(unittest.TestCase):
             """ Listener for changes to a preferences node. """
 
             listener.node = node
-            listener.key  = key
-            listener.old  = old
-            listener.new  = new
+            listener.key = key
+            listener.old = old
+            listener.new = new
 
         # Add a listener.
-        p.add_preferences_listener(listener, 'acme.ui')
+        p.add_preferences_listener(listener, "acme.ui")
 
         # Set a value and make sure the listener was called.
-        p.set('acme.ui.bgcolor', 'blue')
-        self.assertEqual(p.node('acme.ui'), listener.node)
-        self.assertEqual('bgcolor', listener.key)
+        p.set("acme.ui.bgcolor", "blue")
+        self.assertEqual(p.node("acme.ui"), listener.node)
+        self.assertEqual("bgcolor", listener.key)
         self.assertIsNone(listener.old)
-        self.assertEqual('blue', listener.new)
+        self.assertEqual("blue", listener.new)
 
         # Set it to another value to make sure we get the 'old' value
         # correctly.
-        p.set('acme.ui.bgcolor', 'red')
-        self.assertEqual(p.node('acme.ui'), listener.node)
-        self.assertEqual('bgcolor', listener.key)
-        self.assertEqual('blue', listener.old)
-        self.assertEqual('red', listener.new)
+        p.set("acme.ui.bgcolor", "red")
+        self.assertEqual(p.node("acme.ui"), listener.node)
+        self.assertEqual("bgcolor", listener.key)
+        self.assertEqual("blue", listener.old)
+        self.assertEqual("red", listener.new)
 
     def test_remove_listener(self):
         """ remove listener """
@@ -510,27 +509,27 @@ class PreferencesTestCase(unittest.TestCase):
             """ Listener for changes to a preferences node. """
 
             listener.node = node
-            listener.key  = key
-            listener.old  = old
-            listener.new  = new
+            listener.key = key
+            listener.old = old
+            listener.new = new
 
         # Add a listener.
-        p.add_preferences_listener(listener, 'acme.ui')
+        p.add_preferences_listener(listener, "acme.ui")
 
         # Set a value and make sure the listener was called.
-        p.set('acme.ui.bgcolor', 'blue')
-        self.assertEqual(p.node('acme.ui'), listener.node)
-        self.assertEqual('bgcolor', listener.key)
+        p.set("acme.ui.bgcolor", "blue")
+        self.assertEqual(p.node("acme.ui"), listener.node)
+        self.assertEqual("bgcolor", listener.key)
         self.assertIsNone(listener.old)
-        self.assertEqual('blue', listener.new)
+        self.assertEqual("blue", listener.new)
 
         # Remove the listener.
-        p.remove_preferences_listener(listener, 'acme.ui')
+        p.remove_preferences_listener(listener, "acme.ui")
 
         # Set a value and make sure the listener was *not* called.
         listener.node = None
 
-        p.set('acme.ui.bgcolor', 'blue')
+        p.set("acme.ui.bgcolor", "blue")
         self.assertIsNone(listener.node)
 
     def test_set_with_same_value(self):
@@ -542,23 +541,23 @@ class PreferencesTestCase(unittest.TestCase):
             """ Listener for changes to a preferences node. """
 
             listener.node = node
-            listener.key  = key
-            listener.old  = old
-            listener.new  = new
+            listener.key = key
+            listener.old = old
+            listener.new = new
 
         # Add a listener.
-        p.add_preferences_listener(listener, 'acme.ui')
+        p.add_preferences_listener(listener, "acme.ui")
 
         # Set a value and make sure the listener was called.
-        p.set('acme.ui.bgcolor', 'blue')
-        self.assertEqual(p.node('acme.ui'), listener.node)
-        self.assertEqual('bgcolor', listener.key)
+        p.set("acme.ui.bgcolor", "blue")
+        self.assertEqual(p.node("acme.ui"), listener.node)
+        self.assertEqual("bgcolor", listener.key)
         self.assertIsNone(listener.old)
-        self.assertEqual('blue', listener.new)
+        self.assertEqual("blue", listener.new)
 
         # Clear out the listener.
         listener.node = None
 
         # Set the same value and make sure the listener *doesn't* get called.
-        p.set('acme.ui.bgcolor', 'blue')
+        p.set("acme.ui.bgcolor", "blue")
         self.assertIsNone(listener.node)

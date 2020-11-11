@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought pyface package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ A log handler that allows filtering of messages by origin. """
 
 
@@ -26,7 +26,7 @@ from .util import get_module_name
 
 
 class FilteringHandler(logging.Handler):
-    """ A log handler that allows filtering of messages by origin.
+    """A log handler that allows filtering of messages by origin.
 
     Example
     -------
@@ -173,7 +173,7 @@ class FilteringHandler(logging.Handler):
         return exclude
 
     def _is_child_of(self, x, y):
-        """ Is 'y' a child symbol of 'x'?
+        """Is 'y' a child symbol of 'x'?
 
         e.g.
 
@@ -182,10 +182,10 @@ class FilteringHandler(logging.Handler):
         """
 
         if y.startswith(x):
-            x_atoms = x.split('.')
-            y_atoms = y.split('.')
+            x_atoms = x.split(".")
+            y_atoms = y.split(".")
 
-            is_child_of = y_atoms[:len(x_atoms)] == x_atoms
+            is_child_of = y_atoms[: len(x_atoms)] == x_atoms
 
         else:
             is_child_of = False

@@ -9,7 +9,7 @@ from .abstract_adapter_factory import AbstractAdapterFactory
 
 
 class AdapterFactory(AbstractAdapterFactory):
-    """ An adapter factory.
+    """An adapter factory.
 
     This implementation provides the common case where the factory adapts
     exactly one type of object to exactly one target type using exactly one
@@ -42,13 +42,14 @@ class AdapterFactory(AbstractAdapterFactory):
     def _can_adapt(self, adaptee, target_class, *args, **kw):
         """ Returns True if the factory can produce an appropriate adapter. """
 
-        can_adapt = target_class is self.target_class \
-                    and self.type_system.is_a(adaptee, self.adaptee_class)
+        can_adapt = target_class is self.target_class and self.type_system.is_a(
+            adaptee, self.adaptee_class
+        )
 
         return can_adapt
 
     def _adapt(self, adaptee, target_class, *args, **kw):
-        """ Returns an adapter that adapts an object to the target class.
+        """Returns an adapter that adapts an object to the target class.
 
         This requires the adapter class to have an 'adaptee' trait. The default
         'Adapter' class provides exactly that.

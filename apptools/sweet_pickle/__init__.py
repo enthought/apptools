@@ -1,11 +1,11 @@
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #
 #  Copyright (c) 2006 by Enthought, Inc.
 #  All rights reserved.
 #
 #  Author: Dave Peterson <dpeterson@enthought.com>
 #
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 """ A pickle framework that supports unpickling of refactored versions of
     old classes. Part of the AppTools project of the Enthought Tool Suite.
@@ -112,12 +112,15 @@ from .versioned_unpickler import VersionedUnpickler as Unpickler
 def load(file, max_pass=-1):
     return Unpickler(file).load(max_pass)
 
+
 # Use our custom unpickler to load from strings
 def loads(str, max_pass=-1):
     from io import BytesIO
+
     file = BytesIO(str)
 
     return Unpickler(file).load(max_pass)
+
 
 # We don't customize the Python pickler, though we do use the cPickle module
 # for improved performance.
@@ -128,12 +131,16 @@ from six.moves.cPickle import Pickler
 def dump(obj, file, protocol=2):
     _flush_traits(obj)
     from six.moves.cPickle import dump as d
+
     return d(obj, file, protocol)
+
 
 def dumps(obj, protocol=2):
     _flush_traits(obj)
     from six.moves.cPickle import dumps as ds
+
     return ds(obj, protocol)
+
 
 # We don't customize exceptions so just map to the Python pickle package
 from pickle import PickleError, PicklingError, UnpicklingError
@@ -158,10 +165,11 @@ from .updater import Updater
 # pickle.
 ##############################################################################
 
+
 def _flush_traits(obj):
-    if hasattr(obj, 'trait_names'):
+    if hasattr(obj, "trait_names"):
         for name, value in obj.traits().items():
-            if value.type == 'trait':
+            if value.type == "trait":
                 try:
                     getattr(obj, name)
                 except AttributeError:

@@ -6,7 +6,7 @@ from traits.api import HasTraits
 
 
 class AbstractTypeSystem(HasTraits):
-    """ The abstract base class for type systems.
+    """The abstract base class for type systems.
 
     A type system is responsible for:-
 

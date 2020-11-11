@@ -27,25 +27,24 @@ from apptools.help.help_plugin.api import HelpCode
 logger = logging.getLogger(__name__)
 
 # This module's parent package.
-PARENT = '.'.join(__name__.split('.')[:-2])
+PARENT = ".".join(__name__.split(".")[:-2])
 
 from .util import get_sys_prefix_relative_filename
 
 # Implementation of the ImageResource class to be used for the DocAction class.
 @provides(IExtensionPointUser)
 class DemoImageResource(ImageResource):
-    """ Implementation of the ImageResource class to be used for the DemoAction
+    """Implementation of the ImageResource class to be used for the DemoAction
     class.
     Overrides the '_image_not_found' trait in the base ImageResource class.
     """
 
     # Image to display when the specified image file cannot be located.
-    _image_not_found = ImageResource('python_run')
+    _image_not_found = ImageResource("python_run")
+
 
 class DemoAction(WorkbenchAction):
-    """
-    """
-
+    """"""
 
     ### Action interface ##############################################
 
@@ -59,8 +58,7 @@ class DemoAction(WorkbenchAction):
         return self.window.application.extension_registry
 
     def _get_image(self):
-        """ Returns the image to be used for this DemoAction instance.
-        """
+        """Returns the image to be used for this DemoAction instance."""
         # The current implementation searches for an image file matching
         # 'name' in all of the image paths. If such a file is not to be found,
         # the '_image_not_found' file for the DemoImageResourceClass is used.
@@ -72,15 +70,14 @@ class DemoAction(WorkbenchAction):
     my_help_code = Instance(HelpCode)
 
     def _my_help_code_default(self):
-        exns = self.extension_registry.get_extensions(PARENT + '.help_demos')
+        exns = self.extension_registry.get_extensions(PARENT + ".help_demos")
         for hc in exns:
             if hc.label == self.name:
                 return hc
         return None
 
     def perform(self, event):
-        """ Perform the action by running the demo.
-        """
+        """Perform the action by running the demo."""
         if self.my_help_code is not None:
             if self.my_help_code.filename:
                 filename = get_sys_prefix_relative_filename(self.my_help_code.filename)
@@ -89,9 +86,11 @@ class DemoAction(WorkbenchAction):
                         Popen([sys.executable, filename])
                     except OSError as err:
                         logger.error(
-                                'Could not execute Python file for Demo "%s".\n\n' \
-                                 % self.my_help_code.label + str(err) + \
-                                 '\n\nTry changing Demo Preferences.' )
+                            'Could not execute Python file for Demo "%s".\n\n'
+                            % self.my_help_code.label
+                            + str(err)
+                            + "\n\nTry changing Demo Preferences."
+                        )
             elif self.my_help_code.code:
                 exec("%s" % self.my_help_code.code)
         return
