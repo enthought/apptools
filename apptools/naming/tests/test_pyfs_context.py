@@ -253,7 +253,9 @@ class PyFSContextTestCase(unittest.TestCase):
         self.assertTrue(os.path.isdir(os.path.join(sub.path, "a")))
 
         # Try to bind it again.
-        self.assertRaises(NameAlreadyBoundError, context.create_subcontext, "sub/a")
+        self.assertRaises(
+            NameAlreadyBoundError, context.create_subcontext, "sub/a"
+        )
 
         return
 
@@ -289,7 +291,9 @@ class PyFSContextTestCase(unittest.TestCase):
         return
 
         # Try to destroy a non-existent name.
-        self.assertRaises(NameNotFoundError, context.destroy_subcontext, "sub/b")
+        self.assertRaises(
+            NameNotFoundError, context.destroy_subcontext, "sub/b"
+        )
 
         return
 
@@ -339,15 +343,21 @@ class PyFSContextTestCase(unittest.TestCase):
         #### Generic name resolution tests ####
 
         # Non-existent name.
-        self.assertRaises(NameNotFoundError, context.set_attributes, "xx", defaults)
+        self.assertRaises(
+            NameNotFoundError, context.set_attributes, "xx", defaults
+        )
 
         # Attempt to resolve via a non-existent context.
-        self.assertRaises(NameNotFoundError, context.set_attributes, "xx/a", defaults)
+        self.assertRaises(
+            NameNotFoundError, context.set_attributes, "xx/a", defaults
+        )
 
         # Attempt to resolve via an existing name that is not a context.
         context.bind("sub/a", 1)
         self.assertEqual(len(sub.list_bindings("")), 1)
-        self.assertRaises(NotContextError, context.set_attributes, "sub/a/xx", defaults)
+        self.assertRaises(
+            NotContextError, context.set_attributes, "sub/a/xx", defaults
+        )
 
         #### Operation specific tests ####
 

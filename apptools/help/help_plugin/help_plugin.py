@@ -225,14 +225,17 @@ class HelpPlugin(Plugin):
         ns = {
             "id": "apptools.help.help_plugin.help_action_set",
             "name": "Help Plugin ActionSet",
-            "groups": [Group(id=DOCS_GROUP, before="AboutGroup", path=HELP_MENU)],
+            "groups": [
+                Group(id=DOCS_GROUP, before="AboutGroup", path=HELP_MENU)
+            ],
         }
 
         for (menu_name, items) in extension_point_mapping.items():
             if len(items) > 0:
                 menu = Menu(
                     name=menu_name,
-                    class_name=PKG + ".help_submenu_manager:%sMenuManager" % menu_name,
+                    class_name=PKG
+                    + ".help_submenu_manager:%sMenuManager" % menu_name,
                 )
                 if menu_name in self.menus:
                     menu.path = "MenuBar"

@@ -338,14 +338,18 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(sub.list_bindings("")), 1)
 
         # Try to bind it again.
-        self.assertRaises(NameAlreadyBoundError, context.create_subcontext, "sub/a")
+        self.assertRaises(
+            NameAlreadyBoundError, context.create_subcontext, "sub/a"
+        )
 
         # Bind a name.
         context.bind("sub/b", 1)
         self.assertEqual(len(sub.list_bindings("")), 2)
 
         # Attempt to resolve via an existing name that is not a context.
-        self.assertRaises(NotContextError, context.create_subcontext, "sub/b/xx")
+        self.assertRaises(
+            NotContextError, context.create_subcontext, "sub/b/xx"
+        )
         self.assertEqual(len(sub.list_bindings("")), 2)
 
         return
@@ -364,7 +368,9 @@ class ContextTestCase(unittest.TestCase):
         self.assertRaises(InvalidNameError, context.destroy_subcontext, "")
 
         # Attempt to resolve via a non-existent context.
-        self.assertRaises(NameNotFoundError, context.destroy_subcontext, "xx/a")
+        self.assertRaises(
+            NameNotFoundError, context.destroy_subcontext, "xx/a"
+        )
         self.assertEqual(len(sub.list_bindings("")), 0)
 
         # Create a sub-context.
@@ -383,10 +389,14 @@ class ContextTestCase(unittest.TestCase):
         self.assertRaises(NotContextError, context.destroy_subcontext, "sub/a")
 
         # Try to destroy a non-existent name.
-        self.assertRaises(NameNotFoundError, context.destroy_subcontext, "sub/b")
+        self.assertRaises(
+            NameNotFoundError, context.destroy_subcontext, "sub/b"
+        )
 
         # Attempt to resolve via an existing name that is not a context.
-        self.assertRaises(NotContextError, context.destroy_subcontext, "sub/a/xx")
+        self.assertRaises(
+            NotContextError, context.destroy_subcontext, "sub/a/xx"
+        )
         self.assertEqual(len(sub.list_bindings("")), 1)
 
         return
@@ -458,7 +468,9 @@ class ContextTestCase(unittest.TestCase):
         )
 
         state_factory = StateFactory()
-        self.assertRaises(NotImplementedError, state_factory.get_state_to_bind, 0, 0, 0)
+        self.assertRaises(
+            NotImplementedError, state_factory.get_state_to_bind, 0, 0, 0
+        )
 
         return
 

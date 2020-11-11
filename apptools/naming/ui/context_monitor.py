@@ -43,13 +43,21 @@ class ContextMonitor(NodeMonitor):
 
         context = self.node.obj
 
-        context.on_trait_change(self._on_object_added, "object_added", remove=True)
+        context.on_trait_change(
+            self._on_object_added, "object_added", remove=True
+        )
 
-        context.on_trait_change(self._on_object_changed, "object_changed", remove=True)
+        context.on_trait_change(
+            self._on_object_changed, "object_changed", remove=True
+        )
 
-        context.on_trait_change(self._on_object_removed, "object_removed", remove=True)
+        context.on_trait_change(
+            self._on_object_removed, "object_removed", remove=True
+        )
 
-        context.on_trait_change(self._on_object_renamed, "object_renamed", remove=True)
+        context.on_trait_change(
+            self._on_object_renamed, "object_renamed", remove=True
+        )
 
         context.on_trait_change(
             self._on_context_changed, "context_changed", remove=True

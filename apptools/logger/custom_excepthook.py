@@ -33,7 +33,9 @@ def custom_excepthook(type, value, traceback):
     msg = "".join(list)
 
     # Try to find the module that the exception actually came from.
-    name = getattr(traceback.tb_frame, "f_globals", {}).get("__name__", __name__)
+    name = getattr(traceback.tb_frame, "f_globals", {}).get(
+        "__name__", __name__
+    )
     logger = logging.getLogger(name)
     logger.error(msg)
 

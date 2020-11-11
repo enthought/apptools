@@ -115,7 +115,9 @@ class StatePickler(Pickler):
         else:
             for arg in args:
                 save(arg)
-            write(INST + cls_md.get("module") + "\n" + cls_md.get("name") + "\n")
+            write(
+                INST + cls_md.get("module") + "\n" + cls_md.get("name") + "\n"
+            )
 
         self.memoize(obj)
 
@@ -149,7 +151,8 @@ class StatePickler(Pickler):
                 # A hack for Jim Fulton's ExtensionClass, now deprecated.
                 # See load_reduce()
                 warnings.warn(
-                    "__basicnew__ special case is deprecated", DeprecationWarning
+                    "__basicnew__ special case is deprecated",
+                    DeprecationWarning,
                 )
             else:
                 raise PicklingError("args from reduce() should be a tuple")
@@ -162,9 +165,13 @@ class StatePickler(Pickler):
             # FIXME: this is unlikely to work.
             cls = args[0]
             if not hasattr(cls, "__new__"):
-                raise PicklingError("args[0] from __newobj__ args has no __new__")
+                raise PicklingError(
+                    "args[0] from __newobj__ args has no __new__"
+                )
             if obj is not None and cls is not obj.__class__:
-                raise PicklingError("args[0] from __newobj__ args has the wrong class")
+                raise PicklingError(
+                    "args[0] from __newobj__ args has the wrong class"
+                )
             args = args[1:]
             save(cls)
             save(args)

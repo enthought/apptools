@@ -623,7 +623,9 @@ class StateUnpickler:
 
     def _do_instance(self, value, path):
         self._instances.append(path)
-        initargs = self._do(value["initargs"], path + '.__metadata__["initargs"]')
+        initargs = self._do(
+            value["initargs"], path + '.__metadata__["initargs"]'
+        )
         # Handle FilePaths.
         self._handle_file_path(value)
 
@@ -736,8 +738,12 @@ class StateSetter:
           order), after all other attributes are set.
 
         """
-        if (not isinstance(state, State)) and state.__metadata__["type"] != "instance":
-            raise StateSetterError("Can only set the attributes of an instance.")
+        if (not isinstance(state, State)) and state.__metadata__[
+            "type"
+        ] != "instance":
+            raise StateSetterError(
+                "Can only set the attributes of an instance."
+            )
 
         # Upgrade the state to the latest using the registry.
         self._update_and_check_state(obj, state)
@@ -903,7 +909,9 @@ class StateSetter:
                 else:
                     self._do_object(obj[i], state[i])
         else:
-            raise StateSetterError("Cannot set state of list of incorrect size.")
+            raise StateSetterError(
+                "Cannot set state of list of incorrect size."
+            )
 
     def _do_dict(self, obj, state):
         for key, value in state.items():
@@ -999,7 +1007,9 @@ def update_state(state):
 
 def create_instance(state):
     """Create an instance from the state if possible."""
-    if (not isinstance(state, State)) and ("class_name" not in state.__metadata__):
+    if (not isinstance(state, State)) and (
+        "class_name" not in state.__metadata__
+    ):
         raise StateSetterError("No class information in state")
     metadata = state.__metadata__
     class_name = metadata.get("class_name")

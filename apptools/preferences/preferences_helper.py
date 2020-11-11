@@ -166,7 +166,9 @@ class PreferencesHelper(HasTraits):
         self.trait_set(trait_change_notify=notify, **traits_to_set)
 
         # Listen for changes to the node's preferences.
-        preferences.add_preferences_listener(self._preferences_changed_listener, path)
+        preferences.add_preferences_listener(
+            self._preferences_changed_listener, path
+        )
 
         return
 

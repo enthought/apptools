@@ -337,7 +337,9 @@ class Preferences(HasTraits):
             components = path.split(".")
 
             node = self._node(components[0])
-            node.remove_preferences_listener(listener, ".".join(components[1:]))
+            node.remove_preferences_listener(
+                listener, ".".join(components[1:])
+            )
 
         return
 

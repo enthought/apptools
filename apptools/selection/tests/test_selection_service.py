@@ -36,7 +36,9 @@ class BogusSelectionProvider(HasTraits):
     selection = Event
 
     def get_selection(self):
-        return BogusSelection(provider_id=self.provider_id, content="get_selection")
+        return BogusSelection(
+            provider_id=self.provider_id, content="get_selection"
+        )
 
     def set_selection(self, items, ignore_missing=False):
         pass
@@ -44,7 +46,9 @@ class BogusSelectionProvider(HasTraits):
     #### 'BogusSelectionProvider' protocol ####################################
 
     def trigger_selection(self, content):
-        self.selection = BogusSelection(provider_id=self.provider_id, content=content)
+        self.selection = BogusSelection(
+            provider_id=self.provider_id, content=content
+        )
 
 
 class BogusListener(HasTraits):
@@ -65,7 +69,9 @@ class SimpleListProvider(HasTraits):
 
     def get_selection(self):
         selection = ListSelection.from_available_items(
-            provider_id=self.provider_id, selected=self._selected, all_items=self.items
+            provider_id=self.provider_id,
+            selected=self._selected,
+            all_items=self.items,
         )
         return selection
 
@@ -136,7 +142,9 @@ class TestSelectionService(unittest.TestCase):
         service.add_selection_provider(provider)
 
         listener = BogusListener()
-        service.connect_selection_listener(provider_id, listener.on_selection_changed)
+        service.connect_selection_listener(
+            provider_id, listener.on_selection_changed
+        )
 
         content = [1, 2, 3]
         provider.trigger_selection(content)
@@ -152,7 +160,9 @@ class TestSelectionService(unittest.TestCase):
 
         # Connect listener before provider is registered.
         listener = BogusListener()
-        service.connect_selection_listener(provider_id, listener.on_selection_changed)
+        service.connect_selection_listener(
+            provider_id, listener.on_selection_changed
+        )
 
         # When the provider is first added, the listener should receive the
         # initial selection (as returned by provider.get_selection)
@@ -189,7 +199,9 @@ class TestSelectionService(unittest.TestCase):
         service.add_selection_provider(provider)
 
         listener = BogusListener()
-        service.connect_selection_listener(provider_id, listener.on_selection_changed)
+        service.connect_selection_listener(
+            provider_id, listener.on_selection_changed
+        )
         service.disconnect_selection_listener(
             provider_id, listener.on_selection_changed
         )
@@ -207,7 +219,9 @@ class TestSelectionService(unittest.TestCase):
         # First case: there are listeners to a provider, but not the one we
         # pass to the disconnect method
         listener_1 = BogusListener()
-        service.connect_selection_listener(provider_id, listener_1.on_selection_changed)
+        service.connect_selection_listener(
+            provider_id, listener_1.on_selection_changed
+        )
 
         listener_2 = BogusListener()
         with self.assertRaises(ListenerNotConnectedError):
@@ -267,4 +281,6 @@ class TestSelectionService(unittest.TestCase):
 
         new_selection = [0, 11, 1]
         with self.assertRaises(ValueError):
-            service.set_selection(provider_id, new_selection, ignore_missing=False)
+            service.set_selection(
+                provider_id, new_selection, ignore_missing=False
+            )

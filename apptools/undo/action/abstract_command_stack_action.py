@@ -39,7 +39,9 @@ class AbstractCommandStackAction(Action):
 
         super(AbstractCommandStackAction, self).__init__(**traits)
 
-        self.undo_manager.on_trait_event(self._on_stack_updated, "stack_updated")
+        self.undo_manager.on_trait_event(
+            self._on_stack_updated, "stack_updated"
+        )
 
         # Update the action to initialise it.
         self._update_action()

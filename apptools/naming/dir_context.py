@@ -63,7 +63,9 @@ class DirContext(Context):
                     raise NameNotFoundError(components[0])
 
                 next_context = self._get_next_context(components[0])
-                attributes = next_context.get_attributes("/".join(components[1:]))
+                attributes = next_context.get_attributes(
+                    "/".join(components[1:])
+                )
 
         return attributes
 
@@ -95,7 +97,9 @@ class DirContext(Context):
                     raise NameNotFoundError(components[0])
 
                 next_context = self._get_next_context(components[0])
-                next_context.set_attributes("/".join(components[1:]), attributes)
+                next_context.set_attributes(
+                    "/".join(components[1:]), attributes
+                )
 
         return
 

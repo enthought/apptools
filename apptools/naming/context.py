@@ -509,7 +509,9 @@ class Context(HasTraits):
 
         """
 
-        return make_unique_name(prefix, existing=self.list_names(""), format="%s (%d)")
+        return make_unique_name(
+            prefix, existing=self.list_names(""), format="%s (%d)"
+        )
 
     def list_names(self, name=""):
         """ Lists the names bound in a context. """
@@ -685,7 +687,9 @@ class Context(HasTraits):
 
         bindings = []
         for name in self._list_names():
-            bindings.append(Binding(name=name, obj=self._lookup(name), context=self))
+            bindings.append(
+                Binding(name=name, obj=self._lookup(name), context=self)
+            )
 
         return bindings
 
@@ -733,7 +737,10 @@ class Context(HasTraits):
                 names.append("/".join(path))
                 path.pop()
 
-            if isinstance(binding.obj, Context) and not binding.obj in searched:
+            if (
+                isinstance(binding.obj, Context)
+                and not binding.obj in searched
+            ):
                 path.append(binding.name)
                 searched[binding.obj] = True
                 binding.obj._search(obj, names, path, searched)

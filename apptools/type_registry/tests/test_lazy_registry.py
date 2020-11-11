@@ -46,5 +46,6 @@ class TestLazyRegistry(unittest.TestCase):
             self.registry.lookup_by_type(Concrete), "Imported foo:Abstract"
         )
         self.assertEqual(
-            self.registry.lookup_by_type(ConcreteSubclass), "Imported foo:Abstract"
+            self.registry.lookup_by_type(ConcreteSubclass),
+            "Imported foo:Abstract",
         )

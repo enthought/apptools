@@ -20,7 +20,9 @@ class Updater:
             name = self.strip(name)
             # returns the new module and name if it exists otherwise defaults
             # to using the original module and name
-            module, name = self.refactorings.get((module, name), (module, name))
+            module, name = self.refactorings.get(
+                (module, name), (module, name)
+            )
 
         return module, name
 

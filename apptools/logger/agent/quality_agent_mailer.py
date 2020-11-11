@@ -82,7 +82,9 @@ def create_email_message(
             msg = MIMEBase(maintype, subtype)
 
             msg = MIMEText("".join(entries))
-            msg.add_header("Content-Disposition", "attachment", filename="logfile.txt")
+            msg.add_header(
+                "Content-Disposition", "attachment", filename="logfile.txt"
+            )
             message.attach(msg)
         except:
             logger.exception("Failed to include log file with message")
@@ -110,6 +112,8 @@ def create_email_message(
             message.attach(msg)
 
         except:
-            logger.exception("Failed to include environment variables with message")
+            logger.exception(
+                "Failed to include environment variables with message"
+            )
 
     return message

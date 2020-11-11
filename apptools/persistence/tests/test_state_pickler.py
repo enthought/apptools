@@ -158,7 +158,9 @@ class TestDictPickler(unittest.TestCase):
 
         num_attr = "numeric" if data["numeric"]["type"] == "numeric" else "ref"
         decodestring = getattr(base64, "decodebytes", base64.decodestring)
-        junk = state_pickler.gunzip_string(decodestring(data[num_attr]["data"]))
+        junk = state_pickler.gunzip_string(
+            decodestring(data[num_attr]["data"])
+        )
         num = pickle.loads(junk)
         self.assertEqual(numpy.alltrue(numpy.ravel(num == obj.numeric)), 1)
 
@@ -170,7 +172,9 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(data["ref"]["id"], data["numeric"]["id"])
 
     def verify_unpickled(self, obj, state):
-        self.assertEqual(state.__metadata__["class_name"], obj.__class__.__name__)
+        self.assertEqual(
+            state.__metadata__["class_name"], obj.__class__.__name__
+        )
         self.assertEqual(state.b, obj.b)
         self.assertEqual(state.i, obj.i)
         self.assertEqual(state.l, obj.l)
@@ -239,7 +243,9 @@ class TestDictPickler(unittest.TestCase):
         if TVTK_AVAILABLE:
             self.assertEqual(state1._tvtk, state._tvtk)
 
-        state1.tuple[-1].__metadata__["id"] = state.tuple[-1].__metadata__["id"]
+        state1.tuple[-1].__metadata__["id"] = state.tuple[-1].__metadata__[
+            "id"
+        ]
         self.assertEqual(state.inst.__metadata__, state1.inst.__metadata__)
 
         self.assertEqual(state.tuple, state1.tuple)

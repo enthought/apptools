@@ -226,7 +226,9 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
             from .global_registry import get_global_registry
 
             self.updater = get_global_registry()
-        logger.debug("VersionedUnpickler [%s] using Updater [%s]", self, self.updater)
+        logger.debug(
+            "VersionedUnpickler [%s] using Updater [%s]", self, self.updater
+        )
 
         # Update the BUILD instruction to use an overridden load_build method
         # NOTE: this is being disabled since, on some platforms, the object
@@ -270,7 +272,9 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
         # mapped to according to our updater.  The target class is the one
         # at the end of any chain of mappings.
         original_module, original_name = module, name
-        if self.updater is not None and self.updater.has_class_mapping(module, name):
+        if self.updater is not None and self.updater.has_class_mapping(
+            module, name
+        ):
             module, name = self._get_target_class(module, name)
             if module != original_module or name != original_name:
                 logger.debug(
@@ -288,7 +292,8 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
             from apptools.sweet_pickle import UnpicklingError
 
             logger.debug(
-                "Traceback when finding class [%s.%s]:" % (module, name), exc_info=True
+                "Traceback when finding class [%s.%s]:" % (module, name),
+                exc_info=True,
             )
             raise UnpicklingError(
                 "Unable to load class [%s.%s]. "
@@ -344,7 +349,9 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
             # Iterate through all version updates for the current class.
             key = self.updater.get_version_attribute(module, name)
             while (module, name, next_version) in self.updater.state_functions:
-                functions = self.updater.state_functions[(module, name, next_version)]
+                functions = self.updater.state_functions[
+                    (module, name, next_version)
+                ]
                 for f in functions:
                     logger.debug(
                         "Modifying state from [%s.%s (v.%s)] to "
@@ -372,7 +379,8 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
                 original_module, original_name = module, name
                 module, name = self.updater.class_map[(module, name)]
                 logger.debug(
-                    "Modifying state from [%s.%s (v.%s)] to " + "[%s.%s (v.%s)]",
+                    "Modifying state from [%s.%s (v.%s)] to "
+                    + "[%s.%s (v.%s)]",
                     original_module,
                     original_name,
                     version,
@@ -471,7 +479,13 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
                 raise UnpicklingError(
                     "Detected infinite loop in class "
                     + "mapping from [%s.%s] to [%s.%s] within Updater [%s]"
-                    % (original_module, original_name, module, name, self.updater)
+                    % (
+                        original_module,
+                        original_name,
+                        module,
+                        name,
+                        self.updater,
+                    )
                 )
             visited.append((module, name))
 
@@ -481,7 +495,9 @@ class VersionedUnpickler(NewUnpickler, HasTraits):
             try:
                 super(VersionedUnpickler, self).find_class(module, name)
             except:
-                logger.exception("_get_target_class can't find: %s" % (module, name))
+                logger.exception(
+                    "_get_target_class can't find: %s" % (module, name)
+                )
                 pass
 
         return module, name

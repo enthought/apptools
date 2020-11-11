@@ -128,7 +128,9 @@ class PreferenceBinding(HasTraits):
         components = self.preference_path.split(".")
         node = ".".join(components[:-1])
 
-        self.preferences.add_preferences_listener(self._preferences_listener, node)
+        self.preferences.add_preferences_listener(
+            self._preferences_listener, node
+        )
 
         return
 
@@ -161,7 +163,11 @@ def bind_preference(obj, trait_name, preference_path, preferences=None):
     # then it is too late as the binding initialization is done in the
     # constructor (we could of course split that out, which may be the 'right'
     # way to do it ;^).
-    traits = {"obj": obj, "trait_name": trait_name, "preference_path": preference_path}
+    traits = {
+        "obj": obj,
+        "trait_name": trait_name,
+        "preference_path": preference_path,
+    }
 
     if preferences is not None:
         traits["preferences"] = preferences

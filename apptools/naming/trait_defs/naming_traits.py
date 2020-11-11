@@ -36,7 +36,9 @@ def NamingInstance(klass=None, value="", allow_none=False, **metadata):
     metadata.setdefault("copy", "deep")
     return Trait(
         value,
-        NamingTraitHandler(klass, or_none=allow_none, module=get_module_name()),
+        NamingTraitHandler(
+            klass, or_none=allow_none, module=get_module_name()
+        ),
         **metadata
     )
 
@@ -59,7 +61,9 @@ class NamingTraitHandler(TraitHandler):
         self.or_none = or_none != False
         self.module = module
         self.aClass = aClass
-        if (aClass is not None) and (not isinstance(aClass, (six.string_types, type))):
+        if (aClass is not None) and (
+            not isinstance(aClass, (six.string_types, type))
+        ):
             self.aClass = aClass.__class__
 
     def validate(self, object, name, value):
@@ -106,7 +110,9 @@ class NamingTraitHandler(TraitHandler):
         if self.editor is None:
             from traitsui.api import DropEditor
 
-            self.editor = DropEditor(klass=self.aClass, binding=True, readonly=False)
+            self.editor = DropEditor(
+                klass=self.aClass, binding=True, readonly=False
+            )
         return self.editor
 
     def post_setattr(self, object, name, value):

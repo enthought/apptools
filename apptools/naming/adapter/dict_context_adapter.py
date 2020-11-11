@@ -94,7 +94,9 @@ class DictContextAdapter(ContextAdapter):
 
         bindings = []
         for key in self.adaptee:
-            bindings.append(Binding(name=str(key), obj=self._lookup(key), context=self))
+            bindings.append(
+                Binding(name=str(key), obj=self._lookup(key), context=self)
+            )
 
         return bindings
 

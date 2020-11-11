@@ -38,7 +38,9 @@ class LogFileHandler(RotatingFileHandler):
     def __init__(
         self, path, maxBytes=1000000, backupCount=3, level=None, formatter=None
     ):
-        RotatingFileHandler.__init__(self, path, maxBytes=maxBytes, backupCount=3)
+        RotatingFileHandler.__init__(
+            self, path, maxBytes=maxBytes, backupCount=3
+        )
 
         if level is None:
             level = LEVEL
@@ -67,7 +69,9 @@ def create_log_file_handler(
     if formatter is None:
         formatter = FORMATTER
 
-    handler = RotatingFileHandler(path, maxBytes=maxBytes, backupCount=backupCount)
+    handler = RotatingFileHandler(
+        path, maxBytes=maxBytes, backupCount=backupCount
+    )
 
     handler.setFormatter(formatter)
     handler.setLevel(level)

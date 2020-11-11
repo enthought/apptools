@@ -359,7 +359,8 @@ class ScopedPreferences(Preferences):
 
         scopes = [
             Preferences(
-                name="application", filename=self.application_preferences_filename
+                name="application",
+                filename=self.application_preferences_filename,
             ),
             Preferences(name="default"),
         ]

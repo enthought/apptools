@@ -178,7 +178,9 @@ class PyContext(Context, Referenceable):
 
         bindings = []
         for name, value in self.namespace.items():
-            bindings.append(Binding(name=name, obj=self._lookup(name), context=self))
+            bindings.append(
+                Binding(name=name, obj=self._lookup(name), context=self)
+            )
         return bindings
 
     def _list_names(self):

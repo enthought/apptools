@@ -169,6 +169,8 @@ class DynamicContext(Context):
         traits.sort()
 
         # Convert these trait definitions into a list of name and object tuples.
-        result = [(t.context_name, getattr(self, n), t) for order, n, t in traits]
+        result = [
+            (t.context_name, getattr(self, n), t) for order, n, t in traits
+        ]
 
         return result

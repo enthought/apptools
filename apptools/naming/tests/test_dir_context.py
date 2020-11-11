@@ -83,15 +83,21 @@ class DirContextTestCase(ContextTestCase):
         #### Generic name resolution tests ####
 
         # Non-existent name.
-        self.assertRaises(NameNotFoundError, context.set_attributes, "x", defaults)
+        self.assertRaises(
+            NameNotFoundError, context.set_attributes, "x", defaults
+        )
 
         # Attempt to resolve via a non-existent context.
-        self.assertRaises(NameNotFoundError, context.set_attributes, "x/a", defaults)
+        self.assertRaises(
+            NameNotFoundError, context.set_attributes, "x/a", defaults
+        )
 
         # Attempt to resolve via an existing name that is not a context.
         context.bind("sub/a", 1)
         self.assertEqual(len(sub.list_bindings("")), 1)
-        self.assertRaises(NotContextError, context.set_attributes, "sub/a/xx", defaults)
+        self.assertRaises(
+            NotContextError, context.set_attributes, "sub/a/xx", defaults
+        )
 
         #### Operation specific tests ####
 

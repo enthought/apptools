@@ -77,18 +77,26 @@ class Updater(HasPrivateTraits):
 
     ### public interface #####################################################
 
-    def add_mapping(self, source_module, source_name, target_module, target_name):
+    def add_mapping(
+        self, source_module, source_name, target_module, target_name
+    ):
         """Adds a mapping from the class with the source name in the source
         module to the class with the target name in the target module.
         """
-        self.class_map[(source_module, source_name)] = (target_module, target_name)
+        self.class_map[(source_module, source_name)] = (
+            target_module,
+            target_name,
+        )
 
     def add_mapping_to_class(self, source_module, source_name, target_class):
         """Convenience method to add a mapping, from the class with the
         source name in the source module to the target class.
         """
         self.add_mapping(
-            source_module, source_name, target_class.__module__, target_class.__name__
+            source_module,
+            source_name,
+            target_class.__module__,
+            target_class.__name__,
         )
 
     def add_mappings(self, source_module, target_module, class_names):
@@ -133,7 +141,9 @@ class Updater(HasPrivateTraits):
         """Covenience method to add the specified attribute name as the
         version attribute for the specified class.
         """
-        self.declare_version_attribute(klass.__module__, klass.__name__, attribute_name)
+        self.declare_version_attribute(
+            klass.__module__, klass.__name__, attribute_name
+        )
 
     def get_version_attribute(self, module, name):
         """Returns the name of the version attribute for the class of the
@@ -168,7 +178,9 @@ class Updater(HasPrivateTraits):
         for key, value in updater.state_functions.items():
             if isinstance(value, list) and len(value) > 0:
                 funcs = self.state_functions.setdefault(key, [])
-                funcs = funcs[:]  # Copy necessary because traits only recognizes
+                funcs = funcs[
+                    :
+                ]  # Copy necessary because traits only recognizes
                 # funcs changes by funcs instance - not its
                 # contents.
                 funcs.extend(value)
@@ -178,15 +190,21 @@ class Updater(HasPrivateTraits):
 
     def _class_map_changed(self, old, new):
         logger.debug(
-            "Detected class_map change from [%s] to [%s] in [%s]", old, new, self
+            "Detected class_map change from [%s] to [%s] in [%s]",
+            old,
+            new,
+            self,
         )
 
     def _class_map_items_changed(self, event):
         for o in event.removed:
-            logger.debug("Detected [%s] removed from class_map in [%s]", o, self)
+            logger.debug(
+                "Detected [%s] removed from class_map in [%s]", o, self
+            )
         for k, v in event.changed.items():
             logger.debug(
-                "Detected [%s] changed from [%s] to [%s] in " + "class_map in [%s]",
+                "Detected [%s] changed from [%s] to [%s] in "
+                + "class_map in [%s]",
                 k,
                 v,
                 self.class_map[k],
@@ -194,7 +212,8 @@ class Updater(HasPrivateTraits):
             )
         for k, v in event.added.items():
             logger.debug(
-                "Detected mapping from [%s] to [%s] added to " + "class_map in [%s]",
+                "Detected mapping from [%s] to [%s] added to "
+                + "class_map in [%s]",
                 k,
                 v,
                 self,
@@ -223,7 +242,9 @@ class Updater(HasPrivateTraits):
         # have state functions for.  If the reference count reaches zero,
         # remove the record completely.
         for k, v in event.removed.items():
-            logger.debug("Detected [%s] removed from state_functions in [%s]", k, self)
+            logger.debug(
+                "Detected [%s] removed from state_functions in [%s]", k, self
+            )
 
             # Determine the new reference count of state functions for the
             # class who the removed item was for.
@@ -298,7 +319,8 @@ class Updater(HasPrivateTraits):
 
     def _version_attribute_map_changed(self, old, new):
         logger.debug(
-            "Detected version_attribute_map change from [%s] " + "to [%s] in [%s]",
+            "Detected version_attribute_map change from [%s] "
+            + "to [%s] in [%s]",
             old,
             new,
             self,
@@ -307,13 +329,20 @@ class Updater(HasPrivateTraits):
     def _version_attribute_map_items_changed(self, event):
         for o in event.removed:
             logger.debug(
-                "Detected [%s] removed from version_attribute_map " + "in [%s]", o, self
+                "Detected [%s] removed from version_attribute_map "
+                + "in [%s]",
+                o,
+                self,
             )
         for o in event.changed:
             logger.debug(
-                "Detected [%s] changed in version_attribute_map " + "in [%s]", o, self
+                "Detected [%s] changed in version_attribute_map " + "in [%s]",
+                o,
+                self,
             )
         for o in event.added:
             logger.debug(
-                "Detected [%s] added to version_attribute_map in " + "[%s]", o, self
+                "Detected [%s] added to version_attribute_map in " + "[%s]",
+                o,
+                self,
             )

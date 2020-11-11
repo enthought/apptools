@@ -102,8 +102,12 @@ class TestRecorder(unittest.TestCase):
 
         t = XMLUnstructuredGridWriter()
         tape = self.tape
-        self.assertEqual(tape._get_unique_name(t), "xml_unstructured_grid_writer")
-        self.assertEqual(tape._get_unique_name(t), "xml_unstructured_grid_writer1")
+        self.assertEqual(
+            tape._get_unique_name(t), "xml_unstructured_grid_writer"
+        )
+        self.assertEqual(
+            tape._get_unique_name(t), "xml_unstructured_grid_writer1"
+        )
         t = Toy()
         self.assertEqual(tape._get_unique_name(t), "toy")
         t = (1, 2)
@@ -146,9 +150,13 @@ class TestRecorder(unittest.TestCase):
         c.age = 10.5
         self.assertEqual(tape.lines[-1], "child.age = 10.5")
         c.property.representation = "w"
-        self.assertEqual(tape.lines[-1], "child.property.representation = 'wireframe'")
+        self.assertEqual(
+            tape.lines[-1], "child.property.representation = 'wireframe'"
+        )
         c.property.color = (1, 0, 0)
-        self.assertEqual(tape.lines[-1], "child.property.color = (1.0, 0.0, 0.0)")
+        self.assertEqual(
+            tape.lines[-1], "child.property.color = (1.0, 0.0, 0.0)"
+        )
         toy.color = "red"
         self.assertEqual(tape.lines[-1], "child.toy.color = 'red'")
         toy.type = "teddy"
@@ -241,9 +249,13 @@ class TestRecorder(unittest.TestCase):
         tape.recording = True
 
         child.friends = ["Krishna", "Ajay", "Ali"]
-        self.assertEqual(tape.lines[-1], "child.friends = ['Krishna', 'Ajay', 'Ali']")
+        self.assertEqual(
+            tape.lines[-1], "child.friends = ['Krishna', 'Ajay', 'Ali']"
+        )
         child.friends[1:] = ["Sam", "Frodo"]
-        self.assertEqual(tape.lines[-1], "child.friends[1:3] = ['Sam', 'Frodo']")
+        self.assertEqual(
+            tape.lines[-1], "child.friends[1:3] = ['Sam', 'Frodo']"
+        )
         child.friends[1] = "Hari"
         self.assertEqual(tape.lines[-1], "child.friends[1:2] = ['Hari']")
 

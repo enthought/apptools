@@ -167,7 +167,9 @@ class DictNodeTestCase(unittest.TestCase):
         with temp_h5_file() as h5:
             data = dict(a=[1, 1.0, "abc"])
             h5dict = H5DictNode.add_to_h5file(h5, NODE, data)
-            for value, dtype in zip(h5dict["a"], (int, float, six.string_types)):
+            for value, dtype in zip(
+                h5dict["a"], (int, float, six.string_types)
+            ):
                 assert isinstance(value, dtype)
 
     def test_dict(self):

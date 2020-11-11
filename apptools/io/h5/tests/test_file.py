@@ -98,7 +98,9 @@ class FileTestCase(unittest.TestCase):
 
     def test_create_plain_array_with_H5Group(self):
         with open_h5file(H5_TEST_FILE, mode="w") as h5:
-            h5array = h5.root.create_array("/array", np.arange(3), chunked=False)
+            h5array = h5.root.create_array(
+                "/array", np.arange(3), chunked=False
+            )
             assert isinstance(h5array, tables.Array)
             assert not isinstance(h5array, tables.CArray)
 
@@ -214,7 +216,9 @@ class FileTestCase(unittest.TestCase):
         with open_h5file(H5_TEST_FILE, mode="w") as h5:
             h5.create_table("/table", old_description)
             # New table with the same node name should delete old table
-            h5.root.create_table("/table", new_description, delete_existing=True)
+            h5.root.create_table(
+                "/table", new_description, delete_existing=True
+            )
             tab = h5["/table"]
             tab.append({"Pop": (1,), "Toot": (np.pi,)})
             assert tab.ix[0][0] == np.pi
@@ -394,7 +398,9 @@ class FileTestCase(unittest.TestCase):
             h5.create_array("/group1/array", np.arange(3))
             h5.create_array("/group1/subgroup/deep_array", np.arange(3))
             group = h5["/group1"]
-            assert set(n.name for n in group.iter_groups()) == set(["subgroup"])
+            assert set(n.name for n in group.iter_groups()) == set(
+                ["subgroup"]
+            )
 
     def test_mapping_interface_for_file(self):
         with open_h5file(H5_TEST_FILE, mode="w", auto_groups=True) as h5:

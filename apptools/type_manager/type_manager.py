@@ -79,7 +79,9 @@ class TypeManager(HasTraits):
 
         # Otherwise, see if the object can be adapted to the target class.
         else:
-            result = self._adapter_manager.adapt(obj, target_class, *args, **kw)
+            result = self._adapter_manager.adapt(
+                obj, target_class, *args, **kw
+            )
 
         # If this type manager couldn't do the job, then give its parent a go!
         if result is None and self.parent is not None:
@@ -209,8 +211,8 @@ class TypeManager(HasTraits):
     def _is_factory_for(self, obj, target_class, *args, **kw):
         """ Returns True iff the object is a factory for the target class. """
 
-        is_factory_for = self.type_system.is_a(obj, Factory) and obj.can_create(
-            target_class, *args, **kw
-        )
+        is_factory_for = self.type_system.is_a(
+            obj, Factory
+        ) and obj.can_create(target_class, *args, **kw)
 
         return is_factory_for

@@ -244,7 +244,8 @@ class UpdaterTestCase(unittest.TestCase):
         )
         counts = {("foo", "Foo"): 3}
         self._validate_state_function_contents(
-            [(("foo", "Foo", 1), [fn1, fn2]), (("foo", "Foo", 2), [fn2])], counts
+            [(("foo", "Foo", 1), [fn1, fn2]), (("foo", "Foo", 2), [fn2])],
+            counts,
         )
 
     def test_registry_starts_empty(self):
@@ -305,7 +306,9 @@ class UpdaterTestCase(unittest.TestCase):
         self.assertEqual(
             classes_key, list(self.registry._state_function_classes.keys())[0]
         )
-        self.assertEqual(len(value), self.registry._state_function_classes[classes_key])
+        self.assertEqual(
+            len(value), self.registry._state_function_classes[classes_key]
+        )
 
     def _validate_state_function_contents(self, items, counts):
         """Validates that the registry's state functions contains the
@@ -334,4 +337,6 @@ class UpdaterTestCase(unittest.TestCase):
 
             classes_key = (key[0], key[1])
             count = counts[classes_key]
-            self.assertEqual(count, self.registry._state_function_classes[classes_key])
+            self.assertEqual(
+                count, self.registry._state_function_classes[classes_key]
+            )

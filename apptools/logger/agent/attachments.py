@@ -73,7 +73,9 @@ class Attachments(HasTraits):
         msg.set_payload(file_object.getvalue())
 
         encoders.encode_base64(msg)  # Encode the payload using Base64
-        msg.add_header("Content-Disposition", "attachment", filename="project.zip")
+        msg.add_header(
+            "Content-Disposition", "attachment", filename="project.zip"
+        )
 
         self.message.attach(msg)
 
@@ -92,5 +94,7 @@ def _append_to_zip_archive(zip, dir, relpath):
         else:
             if filename != ".svn":  # skip svn files if any
                 subdir = os.path.join(dir, filename)
-                _append_to_zip_archive(zip, subdir, os.path.join(relpath, filename))
+                _append_to_zip_archive(
+                    zip, subdir, os.path.join(relpath, filename)
+                )
     return

@@ -118,7 +118,9 @@ class StringFinder(object):
     def find(self):
         pattern = self.pattern
         string = self.source.data
-        self.data = [(x.start(), x.end()) for x in re.finditer(pattern, string)]
+        self.data = [
+            (x.start(), x.end()) for x in re.finditer(pattern, string)
+        ]
 
 
 class XMLFileReader(object):

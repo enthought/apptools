@@ -13,7 +13,16 @@
 # ------------------------------------------------------------------------------
 
 # Enthought library imports.
-from traits.api import Bool, Event, HasTraits, Instance, Int, Property, Str, provides
+from traits.api import (
+    Bool,
+    Event,
+    HasTraits,
+    Instance,
+    Int,
+    Property,
+    Str,
+    provides,
+)
 
 # Local imports.
 from .i_undo_manager import IUndoManager

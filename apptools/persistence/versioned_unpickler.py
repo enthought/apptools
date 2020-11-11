@@ -138,7 +138,9 @@ class VersionedUnpickler(NewUnpickler):
                 klass = Unpickler.find_class(self, module, name)
             except:
                 logger.error("Looking for [%s] [%s]" % (module, name))
-                logger.exception("Problem using default unpickle functionality")
+                logger.exception(
+                    "Problem using default unpickle functionality"
+                )
 
             # restore the original __setstate__ if necessary
             fn = getattr(klass, "__setstate_original__", False)

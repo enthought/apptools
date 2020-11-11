@@ -71,14 +71,18 @@ class QualityAgentView(Dialog):
 
         # Add the stack trace view ...
         error_panel = self._create_error_panel(panel)
-        sizer.Add(error_panel, 1, wx.ALL | wx.EXPAND | wx.CLIP_CHILDREN, border=5)
+        sizer.Add(
+            error_panel, 1, wx.ALL | wx.EXPAND | wx.CLIP_CHILDREN, border=5
+        )
 
         # Update the layout:
         sizer.Fit(panel)
 
         # Add the error report view ...
         report_panel = self._create_report_panel(panel)
-        sizer.Add(report_panel, 2, wx.ALL | wx.EXPAND | wx.CLIP_CHILDREN, border=5)
+        sizer.Add(
+            report_panel, 2, wx.ALL | wx.EXPAND | wx.CLIP_CHILDREN, border=5
+        )
 
         # Update the layout:
         sizer.Fit(panel)
@@ -128,9 +132,16 @@ class QualityAgentView(Dialog):
 
         # Print the stack trace
         label2 = wx.StaticText(
-            parent, -1, "The following information will be included in the report:"
+            parent,
+            -1,
+            "The following information will be included in the report:",
         )
-        sizer.Add(label2, 0, wx.LEFT | wx.TOP | wx.BOTTOM | wx.CLIP_CHILDREN, border=5)
+        sizer.Add(
+            label2,
+            0,
+            wx.LEFT | wx.TOP | wx.BOTTOM | wx.CLIP_CHILDREN,
+            border=5,
+        )
 
         details = wx.TextCtrl(
             parent,
@@ -166,7 +177,9 @@ class QualityAgentView(Dialog):
 
         # Extra comments from the user:
         label3 = wx.StaticText(parent, -1, "Additional Comments:")
-        sizer.Add(label3, 0, wx.LEFT | wx.TOP | wx.BOTTOM | wx.CLIP_CHILDREN, 5)
+        sizer.Add(
+            label3, 0, wx.LEFT | wx.TOP | wx.BOTTOM | wx.CLIP_CHILDREN, 5
+        )
 
         comments_field = wx.TextCtrl(
             parent,
@@ -198,33 +211,45 @@ class QualityAgentView(Dialog):
         sizer.Add(title_label, 0, wx.ALL | wx.ALIGN_RIGHT)
         title_field = wx.TextCtrl(parent, -1, self.subject, wx.Point(-1, -1))
         sizer.Add(
-            title_field, 1, wx.EXPAND | wx.ALL | wx.ALIGN_RIGHT | wx.CLIP_CHILDREN
+            title_field,
+            1,
+            wx.EXPAND | wx.ALL | wx.ALIGN_RIGHT | wx.CLIP_CHILDREN,
         )
         wx.EVT_TEXT(parent, title_field.GetId(), self._on_subject)
 
         to_label = wx.StaticText(parent, -1, "To:")
         sizer.Add(to_label, 0, wx.ALL | wx.ALIGN_RIGHT)
         to_field = wx.TextCtrl(parent, -1, self.to_address)
-        sizer.Add(to_field, 1, wx.EXPAND | wx.ALL | wx.ALIGN_RIGHT | wx.CLIP_CHILDREN)
+        sizer.Add(
+            to_field, 1, wx.EXPAND | wx.ALL | wx.ALIGN_RIGHT | wx.CLIP_CHILDREN
+        )
         wx.EVT_TEXT(parent, to_field.GetId(), self._on_to)
 
         cc_label = wx.StaticText(parent, -1, "Cc:")
         sizer.Add(cc_label, 0, wx.ALL | wx.ALIGN_RIGHT)
         cc_field = wx.TextCtrl(parent, -1, "")
-        sizer.Add(cc_field, 1, wx.EXPAND | wx.ALL | wx.ALIGN_RIGHT | wx.CLIP_CHILDREN)
+        sizer.Add(
+            cc_field, 1, wx.EXPAND | wx.ALL | wx.ALIGN_RIGHT | wx.CLIP_CHILDREN
+        )
         wx.EVT_TEXT(parent, cc_field.GetId(), self._on_cc)
 
         from_label = wx.StaticText(parent, -1, "From:")
         sizer.Add(from_label, 0, wx.ALL | wx.ALIGN_RIGHT)
         from_field = wx.TextCtrl(parent, -1, self.from_address)
-        sizer.Add(from_field, 1, wx.EXPAND | wx.ALL | wx.ALIGN_RIGHT | wx.CLIP_CHILDREN)
+        sizer.Add(
+            from_field,
+            1,
+            wx.EXPAND | wx.ALL | wx.ALIGN_RIGHT | wx.CLIP_CHILDREN,
+        )
         wx.EVT_TEXT(parent, from_field.GetId(), self._on_from)
 
         smtp_label = wx.StaticText(parent, -1, "SMTP Server:")
         sizer.Add(smtp_label, 0, wx.ALL | wx.ALIGN_RIGHT)
         smtp_server_field = wx.TextCtrl(parent, -1, self.smtp_server)
         sizer.Add(
-            smtp_server_field, 1, wx.EXPAND | wx.ALL | wx.ALIGN_RIGHT | wx.CLIP_CHILDREN
+            smtp_server_field,
+            1,
+            wx.EXPAND | wx.ALL | wx.ALIGN_RIGHT | wx.CLIP_CHILDREN,
         )
         wx.EVT_TEXT(parent, smtp_server_field.GetId(), self._on_smtp_server)
 

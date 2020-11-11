@@ -83,7 +83,9 @@ class LoggerPlugin(Plugin):
     def start(self):
         """Starts the plugin."""
         preferences = LoggerPreferences()
-        service = LoggerService(application=self.application, preferences=preferences)
+        service = LoggerService(
+            application=self.application, preferences=preferences
+        )
         formatter = logging.Formatter("%(levelname)s|%(asctime)s|%(message)s")
         handler = LogQueueHandler()
         handler.setLevel(preferences.level_)

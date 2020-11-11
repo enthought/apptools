@@ -184,7 +184,9 @@ class AdapterManager(HasTraits):
 
         """
 
-        warnings.warn('Use "register_type_adapters" instead.', DeprecationWarning)
+        warnings.warn(
+            'Use "register_type_adapters" instead.', DeprecationWarning
+        )
 
         self.register_type_adapters(factory, adaptee_class)
 
@@ -193,7 +195,9 @@ class AdapterManager(HasTraits):
     def unregister_adapters(self, factory):
         """ Unregisters an adapter factory. """
 
-        warnings.warn('use "unregister_type_adapters" instead.', DeprecationWarning)
+        warnings.warn(
+            'use "unregister_type_adapters" instead.', DeprecationWarning
+        )
 
         self.unregister_type_adapters(factory)
 

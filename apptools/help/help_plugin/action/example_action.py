@@ -52,7 +52,9 @@ class ExampleAction(WorkbenchAction):
     preferences = Instance(ExamplesPreferences)
 
     def _my_help_code_default(self):
-        exns = self.extension_registry.get_extensions(PARENT + ".help_examples")
+        exns = self.extension_registry.get_extensions(
+            PARENT + ".help_examples"
+        )
         for he in exns:
             if he.label == self.name:
                 return he
@@ -61,7 +63,9 @@ class ExampleAction(WorkbenchAction):
     def perform(self, event):
         """Perform the action by displaying the document."""
         if self.my_help_code is not None:
-            filename = get_sys_prefix_relative_filename(self.my_help_code.filename)
+            filename = get_sys_prefix_relative_filename(
+                self.my_help_code.filename
+            )
             if filename is not None:
                 logger.info("Perform ExampleAction on %s" % filename)
                 if self.preferences.editor is not None:

@@ -13,7 +13,16 @@
 # ------------------------------------------------------------------------------
 
 # Enthought library imports.
-from traits.api import Bool, HasTraits, Instance, Int, List, Property, Str, provides
+from traits.api import (
+    Bool,
+    HasTraits,
+    Instance,
+    Int,
+    List,
+    Property,
+    Str,
+    provides,
+)
 
 # Local imports.
 from .abstract_command import AbstractCommand
@@ -292,7 +301,9 @@ class CommandStack(HasTraits):
         redo_name = ""
 
         if len(self._macro_stack) == 0 and self._index + 1 < len(self._stack):
-            redo_name = self._stack[self._index + 1].command.name.replace("&", "")
+            redo_name = self._stack[self._index + 1].command.name.replace(
+                "&", ""
+            )
 
         return redo_name
 

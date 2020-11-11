@@ -62,7 +62,9 @@ class ObjectSerializer(HasTraits):
             #                obj = pickle.load(f)
             except Exception as ex:
                 print_exc()
-                logger.exception("Failed to load pickle file: %s, %s" % (path, ex))
+                logger.exception(
+                    "Failed to load pickle file: %s, %s" % (path, ex)
+                )
 
                 raise
         finally:
@@ -92,7 +94,8 @@ class ObjectSerializer(HasTraits):
         #            pickle.dump(obj, f, 1)
         except Exception as ex:
             logger.exception(
-                "Failed to pickle into file: %s, %s, object:%s" % (path, ex, obj)
+                "Failed to pickle into file: %s, %s, object:%s"
+                % (path, ex, obj)
             )
             print_exc()
         f.close()

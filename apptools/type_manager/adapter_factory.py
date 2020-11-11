@@ -42,8 +42,9 @@ class AdapterFactory(AbstractAdapterFactory):
     def _can_adapt(self, adaptee, target_class, *args, **kw):
         """ Returns True if the factory can produce an appropriate adapter. """
 
-        can_adapt = target_class is self.target_class and self.type_system.is_a(
-            adaptee, self.adaptee_class
+        can_adapt = (
+            target_class is self.target_class
+            and self.type_system.is_a(adaptee, self.adaptee_class)
         )
 
         return can_adapt

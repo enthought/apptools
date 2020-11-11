@@ -84,7 +84,9 @@ class H5File(Mapping):
         self.delete_existing = delete_existing
         self.auto_groups = auto_groups
         if h5filters is None:
-            self.h5filters = tables.Filters(complib="blosc", complevel=5, shuffle=True)
+            self.h5filters = tables.Filters(
+                complib="blosc", complevel=5, shuffle=True
+            )
         self._h5 = None
 
         if isinstance(filename, tables.File):
@@ -460,12 +462,17 @@ class H5Group(Mapping):
     @h5_group_wrapper(H5File.create_group)
     def create_group(self, group_subpath, delete_existing=False, **kwargs):
         return self._delegate_to_h5file(
-            "create_group", group_subpath, delete_existing=delete_existing, **kwargs
+            "create_group",
+            group_subpath,
+            delete_existing=delete_existing,
+            **kwargs
         )
 
     @h5_group_wrapper(H5File.remove_group)
     def remove_group(self, group_subpath, **kwargs):
-        return self._delegate_to_h5file("remove_group", group_subpath, **kwargs)
+        return self._delegate_to_h5file(
+            "remove_group", group_subpath, **kwargs
+        )
 
     @h5_group_wrapper(H5File.create_array)
     def create_array(
@@ -503,7 +510,9 @@ class H5Group(Mapping):
     def remove_node(self, node_subpath, **kwargs):
         return self._delegate_to_h5file("remove_node", node_subpath, **kwargs)
 
-    def _delegate_to_h5file(self, function_name, node_subpath, *args, **kwargs):
+    def _delegate_to_h5file(
+        self, function_name, node_subpath, *args, **kwargs
+    ):
         delete_existing = kwargs.pop("delete_existing", False)
         h5 = H5File(self._h5_group._v_file, delete_existing=delete_existing)
         group_path = h5.join_path(self.pathname, node_subpath)

@@ -98,7 +98,9 @@ class TestFilePath(unittest.TestCase):
         # "Move" the file elsewhere
         s.name = join(cwd, "foo", "test", "t.mv2")
         state = state_pickler.load_state(s)
-        self.assertEqual(state.f.abs_pth, join(cwd, "foo", "test", curdir, "t.vtk"))
+        self.assertEqual(
+            state.f.abs_pth, join(cwd, "foo", "test", curdir, "t.vtk")
+        )
 
         # Create a dummy file in a subdir.
         s = BytesIO()

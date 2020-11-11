@@ -82,7 +82,9 @@ class LoggerPreferencesPage(PreferencesPage):
             Group(
                 Group(
                     Group(
-                        Item(name="enable_agent", label="Enable quality agent"),
+                        Item(
+                            name="enable_agent", label="Enable quality agent"
+                        ),
                         show_left=False,
                     ),
                     Group(

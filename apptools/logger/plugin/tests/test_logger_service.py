@@ -8,7 +8,9 @@ from apptools.logger.plugin.logger_service import LoggerService
 class LoggerServiceTestCase(unittest.TestCase):
     def test_create_email_message(self):
         logger_service = LoggerService()
-        with mock.patch.object(logger_service, "whole_log_text") as mocked_log_txt:
+        with mock.patch.object(
+            logger_service, "whole_log_text"
+        ) as mocked_log_txt:
             mocked_log_txt.return_value = "Dummy log data"
             msg = logger_service.create_email_message(
                 fromaddr="", toaddrs="", ccaddrs="", subject="", priority=""
@@ -24,7 +26,9 @@ class LoggerServiceTestCase(unittest.TestCase):
                 return [lambda zip_file: None]
 
         logger_service = MockedLoggerService()
-        with mock.patch.object(logger_service, "whole_log_text") as mocked_log_txt:
+        with mock.patch.object(
+            logger_service, "whole_log_text"
+        ) as mocked_log_txt:
             mocked_log_txt.return_value = "Dummy log data"
             msg = logger_service.create_email_message(
                 fromaddr="",

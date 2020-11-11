@@ -14,7 +14,16 @@ import warnings
 import six
 import six.moves.builtins
 
-from traits.api import HasTraits, List, Str, Dict, Bool, Property, Int, Instance
+from traits.api import (
+    HasTraits,
+    List,
+    Str,
+    Dict,
+    Bool,
+    Property,
+    Int,
+    Instance,
+)
 from traits.util.camel_case import camel_case_to_python
 
 
@@ -233,14 +242,19 @@ class Recorder(HasTraits):
             tnames = [
                 t
                 for t in object.trait_names()
-                if not t.startswith("_") and not t.endswith("_") and t not in ignore
+                if not t.startswith("_")
+                and not t.endswith("_")
+                and t not in ignore
             ]
             # Find all list traits.
             trts = object.traits()
             list_names = []
             for t in tnames:
                 tt = trts[t].trait_type
-                if hasattr(tt, "default_value_type") and tt.default_value_type == 5:
+                if (
+                    hasattr(tt, "default_value_type")
+                    and tt.default_value_type == 5
+                ):
                     list_names.append(t)
         else:
             # No traits, so we can't do much.
@@ -301,13 +315,18 @@ class Recorder(HasTraits):
             try:
                 object.recorder = self
             except Exception as e:
-                msg = "Cannot set 'recorder' trait of object %r: " "%s" % (object, e)
+                msg = "Cannot set 'recorder' trait of object %r: " "%s" % (
+                    object,
+                    e,
+                )
                 warnings.warn(msg, warnings.RuntimeWarning)
 
         if isinstance(object, HasTraits):
             # Add handler for lists.
             for name in list_names:
-                object.on_trait_change(self._list_items_listner, "%s_items" % name)
+                object.on_trait_change(
+                    self._list_items_listner, "%s_items" % name
+                )
 
             # Register all sub-recordables.
             for name in sub_recordables:
@@ -317,9 +336,13 @@ class Recorder(HasTraits):
                     # children.
                     for i, child in enumerate(obj):
                         attr = "%s[%d]" % (name, i)
-                        self.register(child, parent=object, trait_name_on_parent=attr)
+                        self.register(
+                            child, parent=object, trait_name_on_parent=attr
+                        )
                 elif obj is not None:
-                    self.register(obj, parent=object, trait_name_on_parent=name)
+                    self.register(
+                        obj, parent=object, trait_name_on_parent=name
+                    )
                 # Listen for changes to the trait itself so the newly
                 # assigned object can also be listened to.
                 object.on_trait_change(self._object_changed_handler, name)
@@ -342,7 +365,10 @@ class Recorder(HasTraits):
             try:
                 object.recorder = None
             except Exception as e:
-                msg = "Cannot unset 'recorder' trait of object %r:" "%s" % (object, e)
+                msg = "Cannot unset 'recorder' trait of object %r:" "%s" % (
+                    object,
+                    e,
+                )
                 warnings.warn(msg, warnings.RuntimeWarning)
 
         if isinstance(object, HasTraits):
@@ -362,7 +388,9 @@ class Recorder(HasTraits):
                 elif obj is not None:
                     self.unregister(obj)
                 # Remove the trait handler for trait assignments.
-                object.on_trait_change(self._object_changed_handler, name, remove=True)
+                object.on_trait_change(
+                    self._object_changed_handler, name, remove=True
+                )
             # Now remove listner for the object itself.
             object.on_trait_change(self._listner, data.names, remove=True)
 
@@ -418,7 +446,9 @@ class Recorder(HasTraits):
         from pyface.api import FileDialog, OK
 
         wildcard = "Python files (*.py)|*.py|" + FileDialog.WILDCARD_ALL
-        dialog = FileDialog(title="Save Script", action="save as", wildcard=wildcard)
+        dialog = FileDialog(
+            title="Save Script", action="save as", wildcard=wildcard
+        )
         if dialog.open() == OK:
             fname = dialog.path
             f = open(fname, "w")
@@ -531,7 +561,9 @@ class Recorder(HasTraits):
         """Get the data for an object from registry."""
         data = self._registry.get(object)
         if data is None:
-            msg = "Recorder: Can't get script_id since object %s not registered"
+            msg = (
+                "Recorder: Can't get script_id since object %s not registered"
+            )
             raise RecorderError(msg % (object))
         return data
 
@@ -647,7 +679,8 @@ class Recorder(HasTraits):
 
         # Convert the keyword args.
         kwl = [
-            "%s=%s" % (key, self._object_as_string(value)) for key, value in kw.items()
+            "%s=%s" % (key, self._object_as_string(value))
+            for key, value in kw.items()
         ]
         argl.extend(kwl)
 

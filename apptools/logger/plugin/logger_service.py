@@ -75,7 +75,9 @@ class LoggerService(HasTraits):
         message["To"] = ", ".join(toaddrs)
         message["Cc"] = ", ".join(ccaddrs)
         message["From"] = fromaddr
-        message.preamble = "You will not see this in a MIME-aware mail " "reader.\n"
+        message.preamble = (
+            "You will not see this in a MIME-aware mail " "reader.\n"
+        )
         message.epilogue = " "  # To guarantee the message ends with a newline
 
         # First section is simple ASCII data ...
@@ -102,7 +104,9 @@ class LoggerService(HasTraits):
         # Include the log file ...
         logtext = self.whole_log_text()
         msg = MIMEText(logtext)
-        msg.add_header("Content-Disposition", "attachment", filename="logfile.txt")
+        msg.add_header(
+            "Content-Disposition", "attachment", filename="logfile.txt"
+        )
         message.attach(msg)
 
         # Include the environment variables ...
@@ -129,12 +133,16 @@ class LoggerService(HasTraits):
             zf.close()
 
             msg = MIMEApplication(f.getvalue())
-            msg.add_header("Content-Disposition", "attachment", filename="userdata.zip")
+            msg.add_header(
+                "Content-Disposition", "attachment", filename="userdata.zip"
+            )
             message.attach(msg)
 
         return message
 
-    def send_bug_report(self, smtp_server, fromaddr, toaddrs, ccaddrs, message):
+    def send_bug_report(
+        self, smtp_server, fromaddr, toaddrs, ccaddrs, message
+    ):
         """Send a bug report email."""
         try:
             import smtplib
@@ -151,10 +159,16 @@ class LoggerService(HasTraits):
     #### Traits stuff #########################################################
 
     def _get_mail_files(self):
-        return self.application.get_extensions("apptools.logger.plugin.mail_files")
+        return self.application.get_extensions(
+            "apptools.logger.plugin.mail_files"
+        )
 
     @on_trait_change("preferences.level_")
     def _level_changed(self, new):
-        if new is not None and new is not Undefined and self.handler is not None:
+        if (
+            new is not None
+            and new is not Undefined
+            and self.handler is not None
+        ):
             root_logger.setLevel(self.preferences.level_)
             self.handler.setLevel(self.preferences.level_)

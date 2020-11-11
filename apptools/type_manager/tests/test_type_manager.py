@@ -145,11 +145,15 @@ class TypeManagerTestCase(unittest.TestCase):
 
         # Register an adapter Foo->Bar on the INSTANCE (this one should take
         # precedence).
-        self.type_manager.register_instance_adapters(FooToBarAdapterFactory(), foo)
+        self.type_manager.register_instance_adapters(
+            FooToBarAdapterFactory(), foo
+        )
 
         # Register an adapter Foo->Bar on the TYPE (this will fail if it gets
         # picked up since it won't actually adapt 'Foo' objects!).
-        self.type_manager.register_instance_adapters(SubOfFooToBarAdapterFactory(), Foo)
+        self.type_manager.register_instance_adapters(
+            SubOfFooToBarAdapterFactory(), Foo
+        )
 
         # Adapt it to a Bar.
         bar = self.type_manager.object_as(foo, Bar)
@@ -225,7 +229,9 @@ class TypeManagerTestCase(unittest.TestCase):
         """ ignore an adapter on an object's actual class. """
 
         # Register an adapter SubOfFoo->Bar on the Foo class.
-        self.type_manager.register_type_adapters(SubOfFooToBarAdapterFactory(), Foo)
+        self.type_manager.register_type_adapters(
+            SubOfFooToBarAdapterFactory(), Foo
+        )
 
         # Create a Foo.
         foo = Foo(name="fred")
@@ -242,7 +248,9 @@ class TypeManagerTestCase(unittest.TestCase):
         """ ignore an adapter registered on a derived class. """
 
         # Register an adapter Foo->Bar on the SubOfFoo class.
-        self.type_manager.register_type_adapters(FooToBarAdapterFactory(), SubOfFoo)
+        self.type_manager.register_type_adapters(
+            FooToBarAdapterFactory(), SubOfFoo
+        )
 
         # Create a Foo.
         foo = Foo(name="fred")

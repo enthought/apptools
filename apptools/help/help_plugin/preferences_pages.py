@@ -106,7 +106,9 @@ class HelpDocPreferencesPage(PreferencesPage):
             show_border=True,
         ),
         Item("filename", show_label=True),
-        Label("Filename can be absolute, or relative to the Python directory."),
+        Label(
+            "Filename can be absolute, or relative to the Python directory."
+        ),
     )
 
 
@@ -142,7 +144,9 @@ class HelpDemoPreferencesPage(PreferencesPage):
 
     traits_view = View(
         Item("filename", show_label=True),
-        Label("Filename can be absolute, or relative to the Python directory."),
+        Label(
+            "Filename can be absolute, or relative to the Python directory."
+        ),
     )
 
 
@@ -178,5 +182,7 @@ class HelpExamplePreferencesPage(PreferencesPage):
 
     traits_view = View(
         Item("filename", show_label=True),
-        Label("Filename can be absolute, or relative to the Python directory."),
+        Label(
+            "Filename can be absolute, or relative to the Python directory."
+        ),
     )
