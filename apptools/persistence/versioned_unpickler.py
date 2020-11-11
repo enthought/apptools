@@ -134,14 +134,9 @@ class VersionedUnpickler(NewUnpickler):
             # check to see if this class needs to be mapped to a new class
             # or module name
             original_module, original_name  = module, name
-            #logger.debug('omodule:%s oname:%s' % (original_module, original_name))
             module, name = self.updater.get_latest(module, name)
-            #logger.debug('module:%s name:%s' % (module, name))
 
             # load the class...
-            '''__import__(module)
-            mod = sys.modules[module]
-            klass = getattr(mod, name)'''
             klass = self.import_name(module, name)
 
             # add the updater....  TODO - why the old name?
@@ -186,7 +181,6 @@ class VersionedUnpickler(NewUnpickler):
 
         else:
             pass
-            #print('No updater fn to worry about')
 
         return
 
@@ -204,7 +198,6 @@ class VersionedUnpickler(NewUnpickler):
                 # and run later when we have finished updating the class
                 name = '__setstate_original__'
 
-            #logger.debug('renaming __setstate__ to %s' % name)
             method = getattr(klass, '__setstate__')
             m = _unbound_method(method, klass)
             setattr(klass, name, m)
@@ -228,6 +221,5 @@ class VersionedUnpickler(NewUnpickler):
         objects that are required for v1 and v2 do not have to exist they only
         need to be placeholders for the state during an upgrade.
         """
-        #print("importing %s %s" % (name, module))
         module = __import__(module, globals(), locals(), [name])
         return vars(module)[name]
