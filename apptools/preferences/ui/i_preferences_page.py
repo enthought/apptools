@@ -21,3 +21,4 @@ class IPreferencesPage(Interface):
 
     def apply(self):
         """ Apply the page's preferences. """
+        pass
