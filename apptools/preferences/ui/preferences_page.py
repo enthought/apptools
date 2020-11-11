@@ -59,26 +59,6 @@ class PreferencesPage(PreferencesHelper):
 
         return
 
-    # fixme: We would like to be able to have the following API so that
-    # developers are not forced into using traits UI for their preferences
-    # pages, but at the moment I can't work out how to do it!
-##     def create_control(self, parent):
-##         """ Create the toolkit-specific control that represents the page. """
-
-##         if self._ui is None:
-##             self._ui = self.edit_traits(parent=parent, kind='subpanel')
-
-##         return self._ui.control
-
-##     def destroy_control(self):
-##         """ Destroy the toolkit-specific control that represents the page. """
-
-##         if self._ui is not None:
-##             self._ui.dispose()
-##             self._ui = None
-
-##         return
-
     ###########################################################################
     # Private interface.
     ###########################################################################

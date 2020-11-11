@@ -12,10 +12,6 @@ from traitsui.menu import Action
 from .preferences_node import PreferencesNode
 from .preferences_page import PreferencesPage
 
-# fixme: This is part of the attempt to allow developers to use non-Traits UI
-# preferences pages. It doesn't work yet!
-##from widget_editor import WidgetEditor
-
 
 # A tree editor for preferences nodes.
 tree_editor = TreeEditor(

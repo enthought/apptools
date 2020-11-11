@@ -111,7 +111,6 @@ import numpy
 from . import version_registry
 from .file_path import FilePath
 
-PY_VER = sys.version_info[0]
 NumpyArrayType = type(numpy.array([]))
 
 
@@ -130,7 +129,7 @@ def gunzip_string(data):
     """Given a gzipped string (`data`) this unzips the string and
     returns it.
     """
-    if PY_VER== 2 or (bytes is not str and type(data) is bytes):
+    if type(data) is bytes:
         s = BytesIO(data)
     else:
         s = StringIO(data)
@@ -442,10 +441,7 @@ class StatePickler:
 
     def _do_numeric(self, value):
         idx = self._register(value)
-        if PY_VER > 2:
-            data = base64.encodebytes(gzip_string(numpy.ndarray.dumps(value)))
-        else:
-            data = base64.encodestring(gzip_string(numpy.ndarray.dumps(value)))
+        data = base64.encodebytes(gzip_string(numpy.ndarray.dumps(value)))
         return dict(type='numeric', id=idx, data=data)
 
 
@@ -650,15 +646,11 @@ class StateUnpickler:
         return result
 
     def _do_numeric(self, value, path):
-        if PY_VER > 2:
-            data = value['data']
-            if isinstance(data, str):
-                data = value['data'].encode('utf-8')
-            junk = gunzip_string(base64.decodebytes(data))
-            result = pickle.loads(junk, encoding='bytes')
-        else:
-            junk = gunzip_string(value['data'].decode('base64'))
-            result = pickle.loads(junk)
+        data = value['data']
+        if isinstance(data, str):
+            data = value['data'].encode('utf-8')
+        junk = gunzip_string(base64.decodebytes(data))
+        result = pickle.loads(junk, encoding='bytes')
         self._numeric[value['id']] = (path, result)
         self._obj_cache[value['id']] = result
         return result

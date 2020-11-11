@@ -41,7 +41,6 @@ def save(fname, str):
 if __name__ == '__main__':
 
     # Create dummy test data .......
-    #from cStringIO import StringIO
     import pickle
 
     obj = Foo0()
@@ -80,4 +79,3 @@ if __name__ == '__main__':
     p = VersionedUnpickler(f, updater).load()
     print(p)
     print('Restored version %s %s' % (p.lastname, p.firstname))
-    #print(p.set)
