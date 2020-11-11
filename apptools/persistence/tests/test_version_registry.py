@@ -6,7 +6,6 @@
 # License: BSD Style.
 
 # Standard library imports.
-import sys
 from imp import reload
 import unittest
 
@@ -43,10 +42,7 @@ class Handler:
 class TestVersionRegistry(unittest.TestCase):
     def test_get_version(self):
         """Test the get_version function."""
-        if sys.version_info[0] > 2:
-            extra = [(('object', 'builtins'), -1)]
-        else:
-            extra = []
+        extra = [(('object', 'builtins'), -1)]
         c = Classic()
         v = version_registry.get_version(c)
         res = extra + [(('Classic', __name__), 0)]
