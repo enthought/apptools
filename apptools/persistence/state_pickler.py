@@ -129,7 +129,7 @@ def gunzip_string(data):
     """Given a gzipped string (`data`) this unzips the string and
     returns it.
     """
-    if (bytes is not str and type(data) is bytes):
+    if type(data) is bytes:
         s = BytesIO(data)
     else:
         s = StringIO(data)
