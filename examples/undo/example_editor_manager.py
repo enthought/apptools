@@ -132,7 +132,7 @@ class ExampleEditorManager(EditorManager):
 
         if tk_name == 'wx':
             ed = _wxLabelEditor(window=window, obj=obj)
-        elif tk_name == 'qt4':
+        elif tk_name == 'qt4' or tk_name == 'qt':
             ed = _PyQt4LabelEditor(window=window, obj=obj)
         else:
             raise NotImplementedError, "unsupported toolkit: %s" % tk_name
