@@ -117,13 +117,6 @@ class PyContext(Context, Referenceable):
         state = naming_manager.get_state_to_bind(obj, name,self)
         self.namespace[name] = state
 
-        # Trait event notification.
-        # An "added" event is fired by the bind method of the base calss (which calls
-        # this one), so we don't need to do the changed here (which would be the wrong
-        # thing anyway) -- LGV
-        #
-        # self.trait_property_changed('context_changed', None, None)
-
         return
 
     def _rebind(self, name, obj):
