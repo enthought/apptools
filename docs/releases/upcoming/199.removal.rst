@@ -1,0 +1,1 @@
+remove the ``apptools.sweet_pickle`` subpackage.  Note that users of sweet_pickle can transition to using ``apptools.persistance`` and pickle from the python standard library (see changes made in this PR to ``apptools.naming`` for more info) (#199)
