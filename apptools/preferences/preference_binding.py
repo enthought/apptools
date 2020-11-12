@@ -78,7 +78,7 @@ class PreferenceBinding(HasTraits):
     def _preferences_listener(self, node, key, old, new):
         """ Listener called when a preference value is changed. """
 
-        components = self.preference_path.split('.')
+        components = self.preference_path.split(".")
         if key == components[-1]:
             self._set_trait()
 
@@ -89,7 +89,7 @@ class PreferenceBinding(HasTraits):
     # fixme: This method is mostly duplicated in 'PreferencesHelper' (the only
     # difference is the line that gets the handler).
     def _get_value(self, trait_name, value):
-        """ Get the actual value to set.
+        """Get the actual value to set.
 
         This method makes sure that any required work is done to convert the
         preference value from a string.
@@ -125,8 +125,8 @@ class PreferenceBinding(HasTraits):
         self.obj.on_trait_change(self._on_trait_changed, self.trait_name)
 
         # Listen for the preference value being changed.
-        components = self.preference_path.split('.')
-        node       = '.'.join(components[:-1])
+        components = self.preference_path.split(".")
+        node = ".".join(components[:-1])
 
         self.preferences.add_preferences_listener(
             self._preferences_listener, node
@@ -140,7 +140,7 @@ class PreferenceBinding(HasTraits):
         value = self.preferences.get(self.preference_path, Undefined)
         if value is not Undefined:
             trait_value = self._get_value(self.trait_name, value)
-            traits      = {self.trait_name : trait_value}
+            traits = {self.trait_name: trait_value}
 
             self.obj.trait_set(trait_change_notify=notify, **traits)
 
@@ -164,12 +164,12 @@ def bind_preference(obj, trait_name, preference_path, preferences=None):
     # constructor (we could of course split that out, which may be the 'right'
     # way to do it ;^).
     traits = {
-        'obj'             : obj,
-        'trait_name'      : trait_name,
-        'preference_path' : preference_path
+        "obj": obj,
+        "trait_name": trait_name,
+        "preference_path": preference_path,
     }
 
     if preferences is not None:
-        traits['preferences'] = preferences
+        traits["preferences"] = preferences
 
     return PreferenceBinding(**traits)

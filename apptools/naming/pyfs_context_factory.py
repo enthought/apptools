@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ Object factory for Python File System contexts. """
 
 
@@ -33,7 +33,7 @@ class PyFSContextFactory(ObjectFactory):
 
         if isinstance(state, Reference):
             if len(state.addresses) > 0:
-                if state.addresses[0].type == 'pyfs_context':
+                if state.addresses[0].type == "pyfs_context":
                     path = state.addresses[0].content
                     obj = context._context_factory(name, path)
 

@@ -15,64 +15,68 @@ from traits.api import Either, File, Str
 from traitsui.api import Group, Item, Label, View
 
 # This module's package.
-PKG = '.'.join(__name__.split('.')[:-1])
+PKG = ".".join(__name__.split(".")[:-1])
+
 
 class HelpPreferencesPage(PreferencesPage):
-    """ Base class for root preference pages for the help plugin.
-    """
+    """Base class for root preference pages for the help plugin."""
+
     #### 'PreferencesPage' interface ##########################################
 
     # The page's category (e.g. 'General/Appearance'). The empty string means
     # that this is a top-level page.
-    category = ''
+    category = ""
 
     # The page's help identifier (optional). If a help ID *is* provided then
     # there will be a 'Help' button shown on the preference page.
-    help_id = ''
+    help_id = ""
 
     # The page name (this is what is shown in the preferences dialog.
-    name = 'Help'
+    name = "Help"
 
     # The path to the preferences node that contains the preferences.
     preferences_path = PKG
 
     traits_view = View()
 
+
 class DocumentsPreferencesPage(HelpPreferencesPage):
-    """ (Blank) page for the "Documents" preferences tree node.
-    """
-    name = 'Documents'
+    """(Blank) page for the "Documents" preferences tree node."""
+
+    name = "Documents"
+
 
 class DemosPreferencesPage(HelpPreferencesPage):
-    """ (Blank) page for the "Demos" preferences tree node.
-    """
-    name = 'Demos'
+    """(Blank) page for the "Demos" preferences tree node."""
+
+    name = "Demos"
+
 
 class ExamplesPreferencesPage(HelpPreferencesPage):
-    """ Page for the "Examples" preferences tree node.
-    """
-    name = 'Examples'
-    preferences_path = PKG + '.Examples'
+    """Page for the "Examples" preferences tree node."""
+
+    name = "Examples"
+    preferences_path = PKG + ".Examples"
 
     #### Preferences ###########################################################
 
     editor = Str
 
     traits_view = View(
-        Item( name='editor',
-              label='Command for external editor'),
+        Item(name="editor", label="Command for external editor"),
     )
 
+
 class HelpDocPreferencesPage(PreferencesPage):
-    """ Base class for preferences pages for help documents.
-    """
+    """Base class for preferences pages for help documents."""
+
     #### 'PreferencesPage' interface ##########################################
 
     # The page's category.
-    category = 'Documents'
+    category = "Documents"
 
     # The page's help identifier (optional).
-    help_id = ''
+    help_id = ""
 
     # The page name (this is what is shown in the preferences dialog.
     name = Str
@@ -93,31 +97,33 @@ class HelpDocPreferencesPage(PreferencesPage):
 
     # The program to use to view the document. 'browser' means the platform
     # default web browser.
-    viewer = Either('browser', File)
+    viewer = Either("browser", File)
 
     traits_view = View(
         Group(
-            Item('viewer', show_label=True),
+            Item("viewer", show_label=True),
             Label("Viewer can be 'browser' or a path to a program."),
             show_border=True,
         ),
-            Item('filename', show_label=True),
-            Label("Filename can be absolute, or relative to the Python directory."),
-
+        Item("filename", show_label=True),
+        Label(
+            "Filename can be absolute, or relative to the Python directory."
+        ),
     )
 
+
 class HelpDemoPreferencesPage(PreferencesPage):
-    """ Base class for preferences pages for help demos.
-    """
+    """Base class for preferences pages for help demos."""
+
     #### 'PreferencesPage' interface ##########################################
 
     # The page's category (e.g. 'General/Appearance'). The empty string means
     # that this is a top-level page.
-    category = 'Demos'
+    category = "Demos"
 
     # The page's help identifier (optional). If a help ID *is* provided then
     # there will be a 'Help' button shown on the preference page.
-    help_id = ''
+    help_id = ""
 
     # The page name (this is what is shown in the preferences dialog.
     name = Str
@@ -137,23 +143,25 @@ class HelpDemoPreferencesPage(PreferencesPage):
     filename = File
 
     traits_view = View(
-        Item('filename', show_label=True),
-        Label("Filename can be absolute, or relative to the Python directory."),
+        Item("filename", show_label=True),
+        Label(
+            "Filename can be absolute, or relative to the Python directory."
+        ),
     )
 
 
 class HelpExamplePreferencesPage(PreferencesPage):
-    """ Base class for preferences pages for help examples.
-    """
+    """Base class for preferences pages for help examples."""
+
     #### 'PreferencesPage' interface ##########################################
 
     # The page's category (e.g. 'General/Appearance'). The empty string means
     # that this is a top-level page.
-    category = 'Examples'
+    category = "Examples"
 
     # The page's help identifier (optional). If a help ID *is* provided then
     # there will be a 'Help' button shown on the preference page.
-    help_id = ''
+    help_id = ""
 
     # The page name (this is what is shown in the preferences dialog.
     name = Str
@@ -173,6 +181,8 @@ class HelpExamplePreferencesPage(PreferencesPage):
     filename = File
 
     traits_view = View(
-        Item('filename', show_label=True),
-        Label("Filename can be absolute, or relative to the Python directory."),
+        Item("filename", show_label=True),
+        Label(
+            "Filename can be absolute, or relative to the Python directory."
+        ),
     )

@@ -32,16 +32,16 @@ from .i_help_code import IHelpCode
 logger = logging.getLogger(__name__)
 
 # This module's package.
-PKG = '.'.join(__name__.split('.')[:-1])
+PKG = ".".join(__name__.split(".")[:-1])
+
 
 @provides(IExtensionPointUser)
 class HelpSubmenuManager(MenuManager):
-    """ Base class for managers of submenus of the Help menu.
+    """Base class for managers of submenus of the Help menu.
 
-        This class is adapted from
-        pyface.ui.workbench.action.view_menu_manager.ViewMenuManager.
+    This class is adapted from
+    pyface.ui.workbench.action.view_menu_manager.ViewMenuManager.
     """
-
 
     ### IExtensionPointUser interface
     extension_registry = Property(Instance(IExtensionRegistry))
@@ -97,20 +97,20 @@ class HelpSubmenuManager(MenuManager):
         """ Initializes a group containing the items. """
         raise NotImplementedError
 
+
 class DocumentsMenuManager(HelpSubmenuManager):
-    """ Controls the 'Help/Documents' menu.
-    """
+    """Controls the 'Help/Documents' menu."""
 
     #### 'ActionManager' interface ############################################
 
     # The manager's unique identifier (if it has one).
-    id = 'Documents'
+    id = "Documents"
 
     #### 'MenuManager' interface ##############################################
 
     # The menu manager's name (if the manager is a sub-menu, this is what its
     # label will be).
-    name = '&Documents'
+    name = "&Documents"
 
     #### 'DocMenuManager' interface ##########################################
 
@@ -118,7 +118,7 @@ class DocumentsMenuManager(HelpSubmenuManager):
     help_doc_list = List(IHelpDoc, allow_none=True)
 
     def _help_doc_list_default(self):
-        return self.extension_registry.get_extensions(PKG + '.help_docs')
+        return self.extension_registry.get_extensions(PKG + ".help_docs")
 
     ###########################################################################
     # Private interface.
@@ -131,27 +131,25 @@ class DocumentsMenuManager(HelpSubmenuManager):
         docs.sort(None, lambda doc: doc.label)
 
         for doc in docs:
-            #logger.info('Adding Helpaction for "%s", %s' % (doc.label, str(doc)))
-            group.append(
-                DocAction(name=doc.label, window=window)
-                )
+            # logger.info('Adding Helpaction for "%s", %s' % (doc.label, str(doc)))
+            group.append(DocAction(name=doc.label, window=window))
 
         return
 
+
 class DemosMenuManager(HelpSubmenuManager):
-    """ Controls the 'Help/Demos' menu.
-    """
+    """Controls the 'Help/Demos' menu."""
 
     #### 'ActionManager' interface ############################################
 
     # The manager's unique identifier (if it has one).
-    id = 'Demos'
+    id = "Demos"
 
     #### 'MenuManager' interface ##############################################
 
     # The menu manager's name (if the manager is a sub-menu, this is what its
     # label will be).
-    name = 'D&emos'
+    name = "D&emos"
 
     #### 'DemoMenuManager' interface ##########################################
 
@@ -159,7 +157,7 @@ class DemosMenuManager(HelpSubmenuManager):
     help_demo_list = List(IHelpCode, allow_none=True)
 
     def _help_demo_list_default(self):
-        return self.extension_registry.get_extensions(PKG + '.help_demos')
+        return self.extension_registry.get_extensions(PKG + ".help_demos")
 
     ###########################################################################
     # Private interface.
@@ -172,26 +170,24 @@ class DemosMenuManager(HelpSubmenuManager):
         demos.sort(None, lambda demo: demo.label)
 
         for demo in demos:
-            group.append(
-                DemoAction(name=demo.label, window=window)
-                )
+            group.append(DemoAction(name=demo.label, window=window))
 
         return
 
+
 class ExamplesMenuManager(HelpSubmenuManager):
-    """ Controls the 'Help/Examples' menu.
-    """
+    """Controls the 'Help/Examples' menu."""
 
     #### 'ActionManager' interface ############################################
 
     # The manager's unique identifier (if it has one).
-    id = 'Examples'
+    id = "Examples"
 
     #### 'MenuManager' interface ##############################################
 
     # The menu manager's name (if the manager is a sub-menu, this is what its
     # label will be).
-    name = '&Examples'
+    name = "&Examples"
 
     #### 'ExampleMenuManager' interface ##########################################
 
@@ -199,7 +195,7 @@ class ExamplesMenuManager(HelpSubmenuManager):
     help_example_list = List(IHelpCode, allow_none=True)
 
     def _help_example_list_default(self):
-        return self.extension_registry.get_extensions(PKG + '.help_examples')
+        return self.extension_registry.get_extensions(PKG + ".help_examples")
 
     # Preferences for examples
     preferences = Instance(ExamplesPreferences, ())
@@ -216,27 +212,27 @@ class ExamplesMenuManager(HelpSubmenuManager):
 
         for ex in examples:
             group.append(
-                ExampleAction(name=ex.label, window=window,
-                                  preferences=self.preferences)
+                ExampleAction(
+                    name=ex.label, window=window, preferences=self.preferences
                 )
+            )
 
         return
 
 
 class DownloadsMenuManager(HelpSubmenuManager):
-    """ Controls the 'Help/Downloads' or 'Downloads'menu.
-    """
+    """Controls the 'Help/Downloads' or 'Downloads'menu."""
 
     #### 'ActionManager' interface ############################################
 
     # The manager's unique identifier (if it has one).
-    id = 'Downloads'
+    id = "Downloads"
 
     #### 'MenuManager' interface ##############################################
 
     # The menu manager's name (if the manager is a sub-menu, this is what its
     # label will be).
-    name = '&Downloads'
+    name = "&Downloads"
 
     #### 'DocMenuManager' interface ##########################################
 
@@ -244,7 +240,7 @@ class DownloadsMenuManager(HelpSubmenuManager):
     help_download_list = List(IHelpDoc, allow_none=True)
 
     def _help_download_list_default(self):
-        return self.extension_registry.get_extensions(PKG + '.help_downloads')
+        return self.extension_registry.get_extensions(PKG + ".help_downloads")
 
     ###########################################################################
     # Private interface.
@@ -254,11 +250,9 @@ class DownloadsMenuManager(HelpSubmenuManager):
         """ Initializes a group containing the items. """
 
         urls = self.help_download_list
-        #docs.sort(None, lambda doc: doc.label)
+        # docs.sort(None, lambda doc: doc.label)
 
         for url in urls:
-            group.append(
-                LoadURLAction(name=url.label, window=window)
-                )
+            group.append(LoadURLAction(name=url.label, window=window))
 
         return

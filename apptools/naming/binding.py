@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ The representation of a name-to-object binding in a context. """
 
 
@@ -58,8 +58,10 @@ class Binding(HasTraits):
     def __str__(self):
         """ Returns an informal string representation of the object. """
 
-        return super(Binding, self).__str__() + '(name=%s, obj=%s)' % (
-               self.name, self.obj)
+        return super(Binding, self).__str__() + "(name=%s, obj=%s)" % (
+            self.name,
+            self.obj,
+        )
 
     ###########################################################################
     # 'Binding' interface.
@@ -78,7 +80,7 @@ class Binding(HasTraits):
             else:
                 klass = self.obj.__class__
 
-                class_name = '%s.%s' % (klass.__module__, klass.__name__)
+                class_name = "%s.%s" % (klass.__module__, klass.__name__)
 
         return class_name
 
@@ -97,10 +99,10 @@ class Binding(HasTraits):
             base = self.context.namespace_name
 
         else:
-            base = ''
+            base = ""
 
         if len(base) > 0:
-            namespace_name = base + '/' + self.name
+            namespace_name = base + "/" + self.name
 
         else:
             namespace_name = self.name

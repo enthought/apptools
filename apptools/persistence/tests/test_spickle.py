@@ -13,18 +13,21 @@ from pickle import dumps
 try:
     from apptools.persistence import spickle
 except ImportError:
-    raise unittest.SkipTest('spickle is not supported with Python3')
+    raise unittest.SkipTest("spickle is not supported with Python3")
 
 from traits.api import HasTraits, Float, Int
+
 
 class A:
     def __init__(self):
         self.a = 100
         self.array = numpy.linspace(0, 1, 5)
 
+
 class B(HasTraits):
     i = Int(10)
     f = Float(1.0)
+
 
 class Foo(object):
     def __init__(self, a=1):
@@ -33,6 +36,7 @@ class Foo(object):
         self.ref = self.a
         self.b = B()
         self.b.trait_set(i=20, f=2.0)
+
 
 class TestStatePickler(unittest.TestCase):
     def _test_object(self, x):

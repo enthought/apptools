@@ -20,11 +20,10 @@ from .i_help_code import IHelpCode
 
 @provides(IHelpCode)
 class HelpCode(PreferencesHelper):
-    """ The implementation for help codes.
+    """The implementation for help codes.
 
     A help code is defined by a UI label and a filename.
     """
-
 
     #### IHelpCode interface / Preferences #####################################
 
@@ -40,4 +39,3 @@ class HelpCode(PreferencesHelper):
     # The code to execute. This is executed when filename is None or an empty
     # string.
     code = Str
-

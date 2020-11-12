@@ -21,8 +21,7 @@ from pyface.workbench.action.workbench_action import WorkbenchAction
 from traits.api import Instance, provides, Property
 
 from apptools.help.help_plugin.api import HelpCode
-from apptools.help.help_plugin.examples_preferences import \
-    ExamplesPreferences
+from apptools.help.help_plugin.examples_preferences import ExamplesPreferences
 
 # Local import
 from .util import get_sys_prefix_relative_filename
@@ -31,13 +30,12 @@ from .util import get_sys_prefix_relative_filename
 logger = logging.getLogger(__name__)
 
 # This module's parent package.
-PARENT = '.'.join(__name__.split('.')[:-2])
+PARENT = ".".join(__name__.split(".")[:-2])
+
 
 @provides(IExtensionPointUser)
 class ExampleAction(WorkbenchAction):
-    """ (Pyface) Action for displaying a help example.
-    """
-
+    """(Pyface) Action for displaying a help example."""
 
     ### IExtensionPointUser interface
     extension_registry = Property(Instance(IExtensionRegistry))
@@ -54,25 +52,31 @@ class ExampleAction(WorkbenchAction):
     preferences = Instance(ExamplesPreferences)
 
     def _my_help_code_default(self):
-        exns = self.extension_registry.get_extensions(PARENT + '.help_examples')
+        exns = self.extension_registry.get_extensions(
+            PARENT + ".help_examples"
+        )
         for he in exns:
             if he.label == self.name:
                 return he
         return None
 
     def perform(self, event):
-        """ Perform the action by displaying the document.
-        """
+        """Perform the action by displaying the document."""
         if self.my_help_code is not None:
-            filename = get_sys_prefix_relative_filename(self.my_help_code.filename)
+            filename = get_sys_prefix_relative_filename(
+                self.my_help_code.filename
+            )
             if filename is not None:
-                logger.info('Perform ExampleAction on %s' % filename)
+                logger.info("Perform ExampleAction on %s" % filename)
                 if self.preferences.editor is not None:
                     # Run the editor, passing it the filename
                     try:
                         Popen([self.preferences.editor, filename])
                     except OSError as err:
                         logger.error(
-                        'Could not execute program for Example "%s":\n\n ' \
-                        % self.my_help_code.label + str(err) + '\n\nTry ' +\
-                        'changing Examples Preferences.')
+                            'Could not execute program for Example "%s":\n\n '
+                            % self.my_help_code.label
+                            + str(err)
+                            + "\n\nTry "
+                            + "changing Examples Preferences."
+                        )

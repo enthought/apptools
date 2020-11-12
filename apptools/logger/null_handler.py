@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought pyface package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ A null log handler. """
 
 
@@ -19,7 +19,7 @@ import logging
 
 
 class NullHandler(logging.Handler):
-    """ A null log handler.
+    """A null log handler.
 
     This is a quick hack so that we can start to refactor the 'logger'
     module since it used to add actual handlers at module load time.

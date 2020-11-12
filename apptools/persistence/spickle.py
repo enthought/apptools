@@ -16,15 +16,32 @@ NOTE: This module is not likely to work for very complex pickles but
 # License: BSD Style.
 
 import sys
+
 if sys.version_info[0] > 2:
     raise ImportError("This module does not work with Python 3.x")
 
 import warnings
 import pickle
 import struct
-from pickle import Pickler, Unpickler, dumps, BUILD, NEWOBJ, REDUCE, \
-     MARK, OBJ, INST, BUILD, PicklingError, GLOBAL, \
-     EXT1, EXT2, EXT4, _extension_registry, _keep_alive
+from pickle import (
+    Pickler,
+    Unpickler,
+    dumps,
+    BUILD,
+    NEWOBJ,
+    REDUCE,
+    MARK,
+    OBJ,
+    INST,
+    BUILD,
+    PicklingError,
+    GLOBAL,
+    EXT1,
+    EXT2,
+    EXT4,
+    _extension_registry,
+    _keep_alive,
+)
 
 from io import BytesIO
 
@@ -38,6 +55,7 @@ class State(dict):
     that has class specific details like the class name, module name
     etc.
     """
+
     def __init__(self, **kw):
         dict.__init__(self, **kw)
         self.__dict__ = self
@@ -64,26 +82,26 @@ class StatePickler(Pickler):
 
         if isinstance(obj, State):
             md = obj.__METADATA__
-            typ = md['type']
-            if typ == 'instance':
+            typ = md["type"]
+            if typ == "instance":
                 self._state_instance(obj)
-            elif typ in ['newobj', 'reduce']:
+            elif typ in ["newobj", "reduce"]:
                 self._state_reduce(obj)
-            elif typ in ['class']:
+            elif typ in ["class"]:
                 self._save_global(obj)
         else:
             Pickler.save(self, obj)
 
     def _state_instance(self, obj):
         md = obj.__METADATA__
-        cls = md.get('class')
+        cls = md.get("class")
         cls_md = cls.__METADATA__
 
-        memo  = self.memo
+        memo = self.memo
         write = self.write
-        save  = self.save
+        save = self.save
 
-        args = md.get('initargs')
+        args = md.get("initargs")
         if len(args) > 0:
             _keep_alive(args, memo)
 
@@ -97,15 +115,17 @@ class StatePickler(Pickler):
         else:
             for arg in args:
                 save(arg)
-            write(INST + cls_md.get('module') + '\n' + cls_md.get('name') + '\n')
+            write(
+                INST + cls_md.get("module") + "\n" + cls_md.get("name") + "\n"
+            )
 
         self.memoize(obj)
 
         stuff = dict(obj.__dict__)
-        stuff.pop('__METADATA__')
+        stuff.pop("__METADATA__")
 
-        if '__setstate_data__' in stuff:
-            data = stuff.pop('__setstate_data__')
+        if "__setstate_data__" in stuff:
+            data = stuff.pop("__setstate_data__")
             _keep_alive(data, memo)
             save(data)
         else:
@@ -117,11 +137,11 @@ class StatePickler(Pickler):
         # handling code and is likely to not work in all cases.
 
         md = obj.__METADATA__
-        func = md.get('class')
+        func = md.get("class")
         func_md = func.__METADATA__
-        args = md.get('initargs')
+        args = md.get("initargs")
         state = dict(obj.__dict__)
-        state.pop('__METADATA__')
+        state.pop("__METADATA__")
 
         # This API is called by some subclasses
 
@@ -130,11 +150,12 @@ class StatePickler(Pickler):
             if args is None:
                 # A hack for Jim Fulton's ExtensionClass, now deprecated.
                 # See load_reduce()
-                warnings.warn("__basicnew__ special case is deprecated",
-                              DeprecationWarning)
+                warnings.warn(
+                    "__basicnew__ special case is deprecated",
+                    DeprecationWarning,
+                )
             else:
-                raise PicklingError(
-                    "args from reduce() should be a tuple")
+                raise PicklingError("args from reduce() should be a tuple")
 
         save = self.save
         write = self.write
@@ -145,10 +166,12 @@ class StatePickler(Pickler):
             cls = args[0]
             if not hasattr(cls, "__new__"):
                 raise PicklingError(
-                    "args[0] from __newobj__ args has no __new__")
+                    "args[0] from __newobj__ args has no __new__"
+                )
             if obj is not None and cls is not obj.__class__:
                 raise PicklingError(
-                    "args[0] from __newobj__ args has the wrong class")
+                    "args[0] from __newobj__ args has the wrong class"
+                )
             args = args[1:]
             save(cls)
             save(args)
@@ -162,8 +185,8 @@ class StatePickler(Pickler):
             self.memoize(obj)
 
         if state is not None:
-            if '__setstate_data__' in state:
-                data = state.pop('__setstate_data__')
+            if "__setstate_data__" in state:
+                data = state.pop("__setstate_data__")
                 save(data)
             else:
                 save(state)
@@ -176,23 +199,23 @@ class StatePickler(Pickler):
         md = obj.__METADATA__
 
         if name is None:
-            name = md.get('name')
+            name = md.get("name")
 
-        module = md.get('module')
+        module = md.get("module")
 
         if self.proto >= 2:
             code = _extension_registry.get((module, name))
             if code:
                 assert code > 0
-                if code <= 0xff:
+                if code <= 0xFF:
                     write(EXT1 + chr(code))
-                elif code <= 0xffff:
-                    write("%c%c%c" % (EXT2, code&0xff, code>>8))
+                elif code <= 0xFFFF:
+                    write("%c%c%c" % (EXT2, code & 0xFF, code >> 8))
                 else:
                     write(EXT4 + pack("<i", code))
                 return
 
-        write(GLOBAL + module + '\n' + name + '\n')
+        write(GLOBAL + module + "\n" + name + "\n")
         self.memoize(obj)
 
 
@@ -201,9 +224,9 @@ class StatePickler(Pickler):
 ######################################################################
 class StateUnpickler(Unpickler):
     def _instantiate(self, klass, k):
-        args = tuple(self.stack[k+1:])
+        args = tuple(self.stack[k + 1 :])
         del self.stack[k:]
-        metadata = {'initargs': args, 'class': klass, 'type': 'instance'}
+        metadata = {"initargs": args, "class": klass, "type": "instance"}
         value = State(__METADATA__=metadata)
         self.append(value)
 
@@ -217,22 +240,24 @@ class StateUnpickler(Unpickler):
             state, slotstate = state
         if state:
             if isinstance(state, tuple):
-                inst.__dict__['__setstate_data__'] = state
+                inst.__dict__["__setstate_data__"] = state
             else:
                 inst.__dict__.update(state)
         if slotstate:
             for k, v in slotstate.items():
                 setattr(inst, k, v)
+
     Unpickler.dispatch[BUILD] = load_build
 
     def load_newobj(self):
         args = self.stack.pop()
         cls = self.stack[-1]
         cls_md = cls.__METADATA__
-        metadata = {'initargs': args, 'class': cls, 'type': 'newobj'}
-        obj = State(__METADATA__ = metadata)
-        #obj = cls.__new__(cls, *args)
+        metadata = {"initargs": args, "class": cls, "type": "newobj"}
+        obj = State(__METADATA__=metadata)
+        # obj = cls.__new__(cls, *args)
         self.stack[-1] = obj
+
     Unpickler.dispatch[NEWOBJ] = load_newobj
 
     def load_reduce(self):
@@ -240,9 +265,10 @@ class StateUnpickler(Unpickler):
         args = stack.pop()
         func = stack[-1]
         func_md = func.__METADATA__
-        metadata = {'initargs': args, 'class': func, 'type': 'reduce'}
-        value = State(__METADATA__ = metadata)
+        metadata = {"initargs": args, "class": func, "type": "reduce"}
+        value = State(__METADATA__=metadata)
         stack[-1] = value
+
     Unpickler.dispatch[REDUCE] = load_reduce
 
     def load(self):
@@ -260,8 +286,8 @@ class StateUnpickler(Unpickler):
         return ret
 
     def find_class(self, module, name):
-        metadata = {'module': module, 'name': name, 'type': 'class'}
-        value = State(__METADATA__ = metadata)
+        metadata = {"module": module, "name": name, "type": "class"}
+        value = State(__METADATA__=metadata)
         return value
 
 
@@ -273,9 +299,11 @@ def get_state(obj):
     str = dumps(obj)
     return StateUnpickler(BytesIO(str)).load()
 
+
 def dump_state(state, file, protocol=None, bin=None):
     """Dump the state (potentially modified) to given file."""
     StatePickler(file, protocol, bin).dump(state)
+
 
 def dumps_state(state, protocol=None, bin=None):
     """Dump the state (potentially modified) to a string and return
@@ -284,15 +312,18 @@ def dumps_state(state, protocol=None, bin=None):
     StatePickler(file, protocol, bin).dump(state)
     return file.getvalue()
 
+
 def state2object(state):
     """Creates an object from a state."""
     s = dumps_state(state)
     return pickle.loads(s)
 
+
 def load_state(file):
     """Loads the state from a file like object.  This does not import
     any modules."""
     return StateUnpickler(file).load()
+
 
 def loads_state(string):
     """Loads the state from a string object.  This does not import any

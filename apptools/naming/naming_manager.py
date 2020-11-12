@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ The naming manager. """
 
 
@@ -26,7 +26,7 @@ class NamingManager(HasTraits):
     ###########################################################################
 
     def get_state_to_bind(self, obj, name, context):
-        """ Returns the state of an object for binding.
+        """Returns the state of an object for binding.
 
         The naming manager asks the context for its list of STATE factories
         and then calls them one by one until it gets a non-None result
@@ -55,7 +55,7 @@ class NamingManager(HasTraits):
         return state
 
     def get_object_instance(self, info, name, context):
-        """ Creates an object using the specified state information.
+        """Creates an object using the specified state information.
 
         The naming manager asks the context for its list of OBJECT factories
         and calls them one by one until it gets a non-None result, indicating

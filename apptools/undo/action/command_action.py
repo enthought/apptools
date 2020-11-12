@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2007, Riverbank Computing Limited
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Riverbank Computing Limited
 # Description: <Enthought undo package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Enthought library imports.
 from pyface.action.api import Action
@@ -19,7 +19,7 @@ from ..i_command_stack import ICommandStack
 
 
 class CommandAction(Action):
-    """ The CommandAction class is an Action class that wraps undo/redo
+    """The CommandAction class is an Action class that wraps undo/redo
     commands.  It is only useful for commands that do not take any arguments or
     return any result.
     """
@@ -41,7 +41,7 @@ class CommandAction(Action):
     ###########################################################################
 
     def perform(self, event):
-        """ This is reimplemented to push a new command instance onto the
+        """This is reimplemented to push a new command instance onto the
         command stack.
         """
 

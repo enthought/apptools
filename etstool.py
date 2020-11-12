@@ -99,6 +99,7 @@ supported_runtimes = [
 ]
 
 dependencies = {
+    "flake8",
     "traitsui",
     "configobj",
     "coverage",
@@ -252,6 +253,28 @@ def cleanup(runtime, environment):
     click.echo("Cleaning up environment '{environment}'".format(**parameters))
     execute(commands, parameters)
     click.echo('Done cleanup')
+
+
+@cli.command()
+@click.option('--runtime', default=DEFAULT_RUNTIME)
+@click.option('--environment', default=None)
+def flake8(runtime, environment):
+    """ Run a flake8 check in a given environment.
+
+    """
+    parameters = get_parameters(runtime, environment)
+    targets = [
+        "apptools",
+        "docs",
+        "etstool.py",
+        "setup.py",
+        "examples",
+        "integrationtests",
+    ]
+    commands = [
+        "edm run -e {environment} -- python -m flake8 " + " ".join(targets)
+    ]
+    execute(commands, parameters)
 
 
 @cli.command(name='test-clean')

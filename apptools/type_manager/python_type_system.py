@@ -9,7 +9,7 @@ from .abstract_type_system import AbstractTypeSystem
 
 
 class PythonObject:
-    """ The root type in the type system.
+    """The root type in the type system.
 
     fixme: Python is currently a bit broken as it has dual type hierarchies,
     one for old-style and one for new-style classes. This class is used to

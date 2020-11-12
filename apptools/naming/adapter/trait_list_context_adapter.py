@@ -38,7 +38,7 @@ class TraitListContextAdapter(ListContextAdapter):
     def _get_namespace_name(self):
         """ Returns the name of the context within its own namespace. """
 
-        return self.context.namespace_name + '/' + self.trait_name
+        return self.context.namespace_name + "/" + self.trait_name
 
     ###########################################################################
     # Protected 'ListContext' interface.
@@ -49,7 +49,7 @@ class TraitListContextAdapter(ListContextAdapter):
     def _get_collection(self):
         """ Returns the collection that we are adapting. """
 
-        components = self.trait_name.split('.')
+        components = self.trait_name.split(".")
         if len(components) == 1:
             collection = getattr(self.adaptee, self.trait_name)
 

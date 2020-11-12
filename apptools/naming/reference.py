@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ A reference to an object that lives outside of the naming system. """
 
 
@@ -22,7 +22,7 @@ from .address import Address
 
 
 class Reference(HasPrivateTraits):
-    """ A reference to an object that lives outside of the naming system.
+    """A reference to an object that lives outside of the naming system.
 
     References provide a way to store the address(s) of objects that live
     outside of the naming system.  A reference consists of a list of

@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ A tree view of a naming system. """
 
 
@@ -50,7 +50,7 @@ class NamingTree(NodeTree):
         """ Make sure that the specified node is visible. """
 
         try:
-            components = node.namespace_name.split('/')
+            components = node.namespace_name.split("/")
 
             # Make sure that the tree is expanded down to the context that
             # contains the node.

@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ State factory for Python File System contexts. """
 
 
@@ -40,8 +40,8 @@ class PyFSStateFactory(StateFactory):
             # context then we create and bind a reference to it.
             if obj.parent.path != context.path:
                 state = Reference(
-                    class_name = obj.__class__.__name__,
-                    addresses  = [Address(type='file', content=obj.path)]
+                    class_name=obj.__class__.__name__,
+                    addresses=[Address(type="file", content=obj.path)],
                 )
 
         return state
