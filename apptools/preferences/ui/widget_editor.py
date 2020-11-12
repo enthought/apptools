@@ -7,8 +7,8 @@ from traits.api import Any
 from traitsui.api import EditorFactory
 
 # fixme: We need to import the 'Editor' class from the appropriate toolkit.
-toolkit = {'wx': 'wx', 'qt4': 'qt4', 'qt': 'qt4'}[ETSConfig.toolkit]
-exec(f'from traitsui.{toolkit}.editor import Editor')
+from traitsui.toolkit import toolkit_object
+Editor = toolkit_object('editor.Editor')
 
 
 class _WidgetEditor(Editor):
