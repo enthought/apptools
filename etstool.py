@@ -265,6 +265,7 @@ def flake8(runtime, environment):
     parameters = get_parameters(runtime, environment)
     targets = [
         "apptools",
+        "docs",
         "etstool.py",
         "setup.py",
         "examples",
