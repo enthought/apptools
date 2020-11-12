@@ -29,7 +29,7 @@ class InstanceContextAdapterFactory(ContextAdapterFactory):
     # Regular expressions that describe the names of attributes to exclude.  By
     # default we exclude 'protected' and 'private' attributes and any
     # attributes that are artifacts of the traits mechanism.
-    exclude = List(Str, ['_', 'trait_'])
+    exclude = List(Str, ["_", "trait_"])
 
     ###########################################################################
     # Protected 'AbstractAdapterFactory' interface.
@@ -39,11 +39,11 @@ class InstanceContextAdapterFactory(ContextAdapterFactory):
         """ Returns an adapter that adapts an object to the target class. """
 
         adapter = InstanceContextAdapter(
-            adaptee     = adaptee,
-            environment = environment,
-            context     = context,
-            include     = self.include,
-            exclude     = self.exclude
+            adaptee=adaptee,
+            environment=environment,
+            context=context,
+            include=self.include,
+            exclude=self.exclude,
         )
 
         return adapter

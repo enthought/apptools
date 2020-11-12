@@ -15,7 +15,7 @@ class AttachmentsTestCase(unittest.TestCase):
         self.addCleanup(shutil.rmtree, self.tmpdir)
 
         self.tmpfile = os.path.join(self.tmpdir, "dummy_file.txt")
-        with io.open(self.tmpfile, 'w', encoding='utf8') as filehandle:
+        with io.open(self.tmpfile, "w", encoding="utf8") as filehandle:
             filehandle.write("Dummy data in dummy file for dummies")
 
     def test_attaching_workspace(self):
@@ -24,12 +24,12 @@ class AttachmentsTestCase(unittest.TestCase):
 
         class MockedApplication(object):
             tmpdir = self.tmpdir
+
             def get_service(self, service_id):
                 return DummyWorkspace()
 
         attachments = Attachments(
-            application=MockedApplication(),
-            message=MIMEMultipart()
+            application=MockedApplication(), message=MIMEMultipart()
         )
         attachments.package_workspace()
 
@@ -44,12 +44,12 @@ class AttachmentsTestCase(unittest.TestCase):
 
         class MockedApplication(object):
             tmpdir = self.tmpdir
+
             def get_service(self, service_id):
                 return DummySingleProject()
 
         attachments = Attachments(
-            application=MockedApplication(),
-            message=MIMEMultipart()
+            application=MockedApplication(), message=MIMEMultipart()
         )
         attachments.package_single_project()
 

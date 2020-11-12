@@ -1,11 +1,11 @@
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 #
 #  Copyright (c) 2006 by Enthought, Inc.
 #  All rights reserved.
 #
 #  Author: Dave Peterson <dpeterson@enthought.com>
 #
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 """ Manages a singleton updater that acts as a global registry.
 
@@ -48,9 +48,10 @@ except ImportError:
 # function 'get_global_registry'
 ##############################################################################
 
+
 def get_global_registry():
-    """ Returns the global registry in a manner that allows for lazy
-        instantiation.
+    """Returns the global registry in a manner that allows for lazy
+    instantiation.
     """
     global _global_registry, _global_registry_lock
 
@@ -66,6 +67,7 @@ def get_global_registry():
         try:
             if _global_registry is None:
                 from .updater import Updater
+
                 _global_registry = Updater()
         finally:
             _global_registry_lock.release()
@@ -77,12 +79,13 @@ def get_global_registry():
 # private function '_clear_global_registry'
 ##############################################################################
 
-def _clear_global_registry():
-    """ Clears out the current global registry.
 
-        This exists purely to allow testing of the global registry and the
-        apptools.sweet_pickle framework.  THIS METHOD SHOULD NEVER BE
-        CALLED DURING NORMAL OPERATIONS!
+def _clear_global_registry():
+    """Clears out the current global registry.
+
+    This exists purely to allow testing of the global registry and the
+    apptools.sweet_pickle framework.  THIS METHOD SHOULD NEVER BE
+    CALLED DURING NORMAL OPERATIONS!
     """
     global _global_registry
     _global_registry = None

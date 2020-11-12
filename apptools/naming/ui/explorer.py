@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ A naming system explorer. """
 
 
@@ -27,7 +27,7 @@ from .naming_tree import NamingTree
 def explore(obj):
     """ View a Python object as a naming context. """
 
-    root = Binding(name='root', obj=PyContext(namespace=obj))
+    root = Binding(name="root", obj=PyContext(namespace=obj))
 
     explorer = Explorer(root=root, size=(1200, 400))
     explorer.open()
@@ -40,12 +40,12 @@ class Explorer(SplitApplicationWindow):
 
     #### 'Window' interface ###################################################
 
-    title = Str('Naming System Explorer')
+    title = Str("Naming System Explorer")
 
     #### 'SplitApplicationWindow' interface ###################################
 
     # The direction in which the panel is split.
-    direction = Str('vertical')
+    direction = Str("vertical")
 
     # The ratio of the size of the left/top pane to the right/bottom pane.
     ratio = Float(0.3)
@@ -84,12 +84,12 @@ class Explorer(SplitApplicationWindow):
         self._python_shell = python_shell = PythonShell(parent)
 
         # Bind useful names.
-        python_shell.bind('widget', self._tree)
-        python_shell.bind('w', self._tree)
-        python_shell.bind('window', self)
-        python_shell.bind('explore', explore)
+        python_shell.bind("widget", self._tree)
+        python_shell.bind("w", self._tree)
+        python_shell.bind("window", self)
+        python_shell.bind("explore", explore)
 
         # Execute useful commands to bind useful names ;^)
-        python_shell.execute_command('from apptools.naming.api import *')
+        python_shell.execute_command("from apptools.naming.api import *")
 
         return python_shell.control

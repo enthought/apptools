@@ -16,7 +16,7 @@ class ListContextAdapter(ContextAdapter):
     # fixme: We would like to specialize the 'adaptee' trait here, but if we
     # make it of type 'List' then, on assignment, traits will create a *copy*
     # of the actual list which I think you'll agree is not very adapter-like!
-##     adaptee = List
+    ##     adaptee = List
 
     #### 'ListContextAdapter' interface #######################################
 
@@ -51,7 +51,7 @@ class ListContextAdapter(ContextAdapter):
         """ Rebinds a name to an object in this context. """
 
         index = 0
-        for binding in self.list_bindings(''):
+        for binding in self.list_bindings(""):
             if binding.name == name:
                 self.collection[index] = obj
                 break
@@ -68,7 +68,7 @@ class ListContextAdapter(ContextAdapter):
         """ Unbinds a name from this context. """
 
         index = 0
-        for binding in self.list_bindings(''):
+        for binding in self.list_bindings(""):
             if binding.name == name:
                 del self.collection[index]
                 break
@@ -76,7 +76,7 @@ class ListContextAdapter(ContextAdapter):
             index = index + 1
 
         else:
-            raise SystemError('no binding with name %s' % name)
+            raise SystemError("no binding with name %s" % name)
 
         return
 
@@ -136,10 +136,10 @@ class ListContextAdapter(ContextAdapter):
     def _get_name(self, obj):
         """ Returns the name of an object. """
 
-        if hasattr(obj, 'name'):
+        if hasattr(obj, "name"):
             name = str(obj.name)
 
-        elif hasattr(obj, 'id'):
+        elif hasattr(obj, "id"):
             name = str(obj.id)
 
         else:
@@ -150,10 +150,10 @@ class ListContextAdapter(ContextAdapter):
     def _set_name(self, obj, name):
         """ Sets the name of an object. """
 
-        if hasattr(obj, 'name'):
+        if hasattr(obj, "name"):
             obj.name = name
 
-        elif hasattr(obj, 'id'):
+        elif hasattr(obj, "id"):
             obj.id = name
 
         return
@@ -161,7 +161,7 @@ class ListContextAdapter(ContextAdapter):
     def _get_binding_with_name(self, name):
         """ Returns the binding with the specified name. """
 
-        for binding in self.list_bindings(''):
+        for binding in self.list_bindings(""):
             if binding.name == name:
                 break
 
@@ -170,6 +170,6 @@ class ListContextAdapter(ContextAdapter):
         # 'Context' interface when we have already determined that the name
         # is bound
         else:
-            raise SystemError('no binding with name %s' % name)
+            raise SystemError("no binding with name %s" % name)
 
         return binding

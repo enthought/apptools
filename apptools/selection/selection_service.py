@@ -1,12 +1,14 @@
 from traits.api import Dict, HasTraits
 
 from apptools.selection.errors import (
-    ProviderNotRegisteredError, IDConflictError, ListenerNotConnectedError
+    ProviderNotRegisteredError,
+    IDConflictError,
+    ListenerNotConnectedError,
 )
 
 
 class SelectionService(HasTraits):
-    """ The selection service connects selection providers and listeners.
+    """The selection service connects selection providers and listeners.
 
     The selection service is a register of selection providers, i.e., objects
     that publish their current selection.
@@ -19,7 +21,7 @@ class SelectionService(HasTraits):
     #### 'SelectionService' protocol ##########################################
 
     def add_selection_provider(self, provider):
-        """ Add a selection provider.
+        """Add a selection provider.
 
         The provider is identified by its ID. If a provider with the same
         ID has been already registered, an :class:`~.IDConflictError`
@@ -44,7 +46,7 @@ class SelectionService(HasTraits):
         return provider_id in self._providers
 
     def remove_selection_provider(self, provider):
-        """ Remove a selection provider.
+        """Remove a selection provider.
 
         If the provider has not been registered, a
         :class:`~.ProviderNotRegisteredError` is raised.
@@ -62,7 +64,7 @@ class SelectionService(HasTraits):
         del self._providers[provider_id]
 
     def get_selection(self, provider_id):
-        """ Return the current selection of the provider with the given ID.
+        """Return the current selection of the provider with the given ID.
 
         If a provider with that ID has not been registered, a
         :class:`~.ProviderNotRegisteredError` is raised.
@@ -80,7 +82,7 @@ class SelectionService(HasTraits):
         return provider.get_selection()
 
     def set_selection(self, provider_id, items, ignore_missing=False):
-        """ Set the current selection in a provider to the given items.
+        """Set the current selection in a provider to the given items.
 
         If a provider with the given ID has not been registered, a
         :class:`~.ProviderNotRegisteredError` is raised.
@@ -107,7 +109,7 @@ class SelectionService(HasTraits):
         return provider.set_selection(items, ignore_missing=ignore_missing)
 
     def connect_selection_listener(self, provider_id, func):
-        """ Connect a listener to selection events from a specific provider.
+        """Connect a listener to selection events from a specific provider.
 
         The signature if the listener callback is ``func(i_selection)``.
         The listener is called:
@@ -134,7 +136,7 @@ class SelectionService(HasTraits):
             self._toggle_listener(provider_id, func, remove=False)
 
     def disconnect_selection_listener(self, provider_id, func):
-        """ Disconnect a listener from a specific provider.
+        """Disconnect a listener from a specific provider.
 
         Arguments:
             provider_id -- str
@@ -149,8 +151,9 @@ class SelectionService(HasTraits):
         try:
             self._listeners[provider_id].remove(func)
         except (ValueError, KeyError):
-            raise ListenerNotConnectedError(provider_id=provider_id,
-                                            listener=func)
+            raise ListenerNotConnectedError(
+                provider_id=provider_id, listener=func
+            )
 
     #### Private protocol #####################################################
 
@@ -160,10 +163,10 @@ class SelectionService(HasTraits):
 
     def _toggle_listener(self, provider_id, func, remove):
         provider = self._providers[provider_id]
-        provider.on_trait_change(func, 'selection', remove=remove)
+        provider.on_trait_change(func, "selection", remove=remove)
 
     def _connect_all_listeners(self, provider_id):
-        """ Connect all listeners connected to a provider.
+        """Connect all listeners connected to a provider.
 
         As soon as they are connected, they receive the initial selection.
         """

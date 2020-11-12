@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ Tests the default directory context. """
 
 
@@ -42,30 +42,30 @@ class DirContextTestCase(ContextTestCase):
 
         # Convenience.
         context = self.context
-        sub = self.context.lookup('sub')
+        sub = self.context.lookup("sub")
         self.assertIsInstance(sub, DirContext)
 
         #### Generic name resolution tests ####
 
         # Non-existent name.
-        self.assertRaises(NameNotFoundError, context.get_attributes, 'x')
+        self.assertRaises(NameNotFoundError, context.get_attributes, "x")
 
         # Attempt to resolve via a non-existent context.
-        self.assertRaises(NameNotFoundError, context.get_attributes, 'x/a')
+        self.assertRaises(NameNotFoundError, context.get_attributes, "x/a")
 
         # Attempt to resolve via an existing name that is not a context.
-        context.bind('sub/a', 1)
-        self.assertEqual(len(sub.list_bindings('')), 1)
-        self.assertRaises(NotContextError,context.get_attributes,'sub/a/x')
+        context.bind("sub/a", 1)
+        self.assertEqual(len(sub.list_bindings("")), 1)
+        self.assertRaises(NotContextError, context.get_attributes, "sub/a/x")
 
         #### Operation specific tests ####
 
         # Attributes of the root context.
-        attributes = self.context.get_attributes('')
+        attributes = self.context.get_attributes("")
         self.assertEqual(len(attributes), 0)
 
         # Attributes of a sub-context.
-        attributes = context.get_attributes('sub')
+        attributes = context.get_attributes("sub")
         self.assertEqual(len(attributes), 0)
 
         return
@@ -73,52 +73,52 @@ class DirContextTestCase(ContextTestCase):
     def test_set_get_attributes(self):
         """ get and set attributes """
 
-        defaults = {'colour' : 'blue'}
+        defaults = {"colour": "blue"}
 
         # Convenience.
         context = self.context
-        sub = self.context.lookup('sub')
+        sub = self.context.lookup("sub")
         self.assertIsInstance(sub, DirContext)
 
         #### Generic name resolution tests ####
 
         # Non-existent name.
         self.assertRaises(
-            NameNotFoundError, context.set_attributes, 'x', defaults
+            NameNotFoundError, context.set_attributes, "x", defaults
         )
 
         # Attempt to resolve via a non-existent context.
         self.assertRaises(
-            NameNotFoundError, context.set_attributes, 'x/a', defaults
+            NameNotFoundError, context.set_attributes, "x/a", defaults
         )
 
         # Attempt to resolve via an existing name that is not a context.
-        context.bind('sub/a', 1)
-        self.assertEqual(len(sub.list_bindings('')), 1)
+        context.bind("sub/a", 1)
+        self.assertEqual(len(sub.list_bindings("")), 1)
         self.assertRaises(
-            NotContextError, context.set_attributes, 'sub/a/xx', defaults
+            NotContextError, context.set_attributes, "sub/a/xx", defaults
         )
 
         #### Operation specific tests ####
 
         # Attributes of the root context.
-        attributes = self.context.get_attributes('')
+        attributes = self.context.get_attributes("")
         self.assertEqual(len(attributes), 0)
 
         # Set the attributes.
-        context.set_attributes('', defaults)
-        attributes = context.get_attributes('')
+        context.set_attributes("", defaults)
+        attributes = context.get_attributes("")
         self.assertEqual(len(attributes), 1)
-        self.assertEqual(attributes['colour'], 'blue')
+        self.assertEqual(attributes["colour"], "blue")
 
         # Attributes of a sub-context.
-        attributes = context.get_attributes('sub')
+        attributes = context.get_attributes("sub")
         self.assertEqual(len(attributes), 0)
 
         # Set the attributes.
-        context.set_attributes('sub', defaults)
-        attributes = context.get_attributes('sub')
+        context.set_attributes("sub", defaults)
+        attributes = context.get_attributes("sub")
         self.assertEqual(len(attributes), 1)
-        self.assertEqual(attributes['colour'], 'blue')
+        self.assertEqual(attributes["colour"], "blue")
 
         return

@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought logger package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Standard library imports
 from datetime import datetime
@@ -19,10 +19,16 @@ import logging
 # Enthought library imports.
 from pyface.api import ImageResource, clipboard
 from pyface.workbench.api import TraitsUIView
-from traits.api import Button, Instance, List, Property, Str, \
-    cached_property, on_trait_change
-from traitsui.api import View, Group, Item, CodeEditor, \
-    TabularEditor, spring
+from traits.api import (
+    Button,
+    Instance,
+    List,
+    Property,
+    Str,
+    cached_property,
+    on_trait_change,
+)
+from traitsui.api import View, Group, Item, CodeEditor, TabularEditor, spring
 from traitsui.tabular_adapter import TabularAdapter
 
 # Local imports
@@ -31,20 +37,25 @@ from apptools.logger.plugin import view
 from apptools.logger.plugin.logger_service import LoggerService
 
 # Constants
-_IMAGE_MAP = { logging.DEBUG: ImageResource('debug'),
-               logging.INFO: ImageResource('info'),
-               logging.WARNING: ImageResource('warning'),
-               logging.ERROR: ImageResource('error'),
-               logging.CRITICAL: ImageResource('crit_error') }
+_IMAGE_MAP = {
+    logging.DEBUG: ImageResource("debug"),
+    logging.INFO: ImageResource("info"),
+    logging.WARNING: ImageResource("warning"),
+    logging.ERROR: ImageResource("error"),
+    logging.CRITICAL: ImageResource("crit_error"),
+}
 
 
 class LogRecordAdapter(TabularAdapter):
-    """ A TabularEditor adapter for logging.LogRecord objects.
-    """
+    """A TabularEditor adapter for logging.LogRecord objects."""
 
-    columns = [ ('Level', 'level'), ('Date', 'date'), ('Time', 'time'),
-                ('Message', 'message') ]
-    column_widths = [ 80, 100, 120, -1 ]
+    columns = [
+        ("Level", "level"),
+        ("Date", "date"),
+        ("Time", "time"),
+        ("Message", "message"),
+    ]
+    column_widths = [80, 100, 120, -1]
 
     level_image = Property
     level_text = Property(Str)
@@ -72,60 +83,65 @@ class LogRecordAdapter(TabularAdapter):
     def _get_message_text(self):
         # Just display the first line of multiline messages, like stacktraces.
         msg = self.item.getMessage()
-        msgs = msg.strip().split('\n')
+        msgs = msg.strip().split("\n")
         if len(msgs) > 1:
-            suffix = '... [double click for details]'
+            suffix = "... [double click for details]"
         else:
-            suffix = ''
+            suffix = ""
         abbrev_msg = msgs[0] + suffix
         return abbrev_msg
 
 
 class LoggerView(TraitsUIView):
-    """ The Workbench View showing the list of log items.
-    """
+    """The Workbench View showing the list of log items."""
 
-    id = Str('apptools.logger.plugin.view.logger_view.LoggerView')
-    name = Str('Logger')
+    id = Str("apptools.logger.plugin.view.logger_view.LoggerView")
+    name = Str("Logger")
     service = Instance(LoggerService)
 
     log_records = List(Instance(logging.LogRecord))
-    formatted_records = Property(Str, depends_on='log_records')
+    formatted_records = Property(Str, depends_on="log_records")
 
     activated = Instance(logging.LogRecord)
-    activated_text = Property(Str, depends_on='activated')
+    activated_text = Property(Str, depends_on="activated")
     reset_button = Button("Reset Logs")
     show_button = Button("Complete Text Log")
     copy_button = Button("Copy Log to Clipboard")
 
-
-    code_editor = CodeEditor(lexer='null',
-                             show_line_numbers=False)
-    log_records_editor = TabularEditor(adapter=LogRecordAdapter(),
-                                       editable=False,
-                                       activated='activated')
-    trait_view = View(Group(Item('log_records',
-                                 editor=log_records_editor),
-                            Group(Item('reset_button'),
-                                  spring,
-                                  Item('show_button'),
-                                  Item('copy_button'),
-                                  orientation='horizontal',
-                                  show_labels=False),
-                            show_labels=False))
+    code_editor = CodeEditor(lexer="null", show_line_numbers=False)
+    log_records_editor = TabularEditor(
+        adapter=LogRecordAdapter(), editable=False, activated="activated"
+    )
+    trait_view = View(
+        Group(
+            Item("log_records", editor=log_records_editor),
+            Group(
+                Item("reset_button"),
+                spring,
+                Item("show_button"),
+                Item("copy_button"),
+                orientation="horizontal",
+                show_labels=False,
+            ),
+            show_labels=False,
+        )
+    )
 
     ###########################################################################
     # LogQueueHandler view interface
     ###########################################################################
 
     def update(self, force=False):
-        """ Update 'log_records' if our handler has new records or 'force' is
-            set.
+        """Update 'log_records' if our handler has new records or 'force' is
+        set.
         """
         service = self.service
         if service.handler.has_new_records() or force:
-            log_records = [ rec for rec in service.handler.get()
-                            if rec.levelno >= service.preferences.level_ ]
+            log_records = [
+                rec
+                for rec in service.handler.get()
+                if rec.levelno >= service.preferences.level_
+            ]
             log_records.reverse()
             self.log_records = log_records
 
@@ -133,7 +149,7 @@ class LoggerView(TraitsUIView):
     # Private interface
     ###########################################################################
 
-    @on_trait_change('service.preferences.level_')
+    @on_trait_change("service.preferences.level_")
     def _update_log_records(self):
         self.service.handler._view = self
         self.update(force=True)
@@ -143,21 +159,33 @@ class LoggerView(TraitsUIView):
         self.log_records = []
 
     def _show_button_fired(self):
-        self.edit_traits(view=View(Item('formatted_records',
-                                        editor=self.code_editor,
-                                        style='readonly',
-                                        show_label=False),
-                                   width=800, height=600, resizable=True,
-                                   buttons=[ 'OK' ],
-                                   title='Complete Text Log'))
+        self.edit_traits(
+            view=View(
+                Item(
+                    "formatted_records",
+                    editor=self.code_editor,
+                    style="readonly",
+                    show_label=False,
+                ),
+                width=800,
+                height=600,
+                resizable=True,
+                buttons=["OK"],
+                title="Complete Text Log",
+            )
+        )
 
     def _copy_button_fired(self):
         clipboard.text_data = self.formatted_records
 
     @cached_property
     def _get_formatted_records(self):
-        return '\n'.join([ self.service.handler.formatter.format(record)
-                           for record in self.log_records ])
+        return "\n".join(
+            [
+                self.service.handler.formatter.format(record)
+                for record in self.log_records
+            ]
+        )
 
     def _activated_changed(self):
         if self.activated is None:
@@ -167,17 +195,25 @@ class LoggerView(TraitsUIView):
             dialog = QualityAgentView(msg=msg, service=self.service)
             dialog.open()
         else:
-            self.edit_traits(view=View(Item('activated_text',
-                                            editor=self.code_editor,
-                                            style='readonly',
-                                            show_label=False),
-                                       width=800, height=600, resizable=True,
-                                       buttons=[ 'OK' ],
-                                       title='Log Message Detail'))
+            self.edit_traits(
+                view=View(
+                    Item(
+                        "activated_text",
+                        editor=self.code_editor,
+                        style="readonly",
+                        show_label=False,
+                    ),
+                    width=800,
+                    height=600,
+                    resizable=True,
+                    buttons=["OK"],
+                    title="Log Message Detail",
+                )
+            )
 
     @cached_property
     def _get_activated_text(self):
         if self.activated is None:
-            return ''
+            return ""
         else:
             return self.activated.getMessage()

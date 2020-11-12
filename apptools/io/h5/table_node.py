@@ -5,8 +5,8 @@ from tables.table import Table as PyTablesTable
 
 
 class _TableRowAccessor(object):
-    """ A simple object which provides read access to the rows in a Table.
-    """
+    """A simple object which provides read access to the rows in a Table."""
+
     def __init__(self, h5_table):
         self._h5_table = h5_table
 
@@ -15,7 +15,7 @@ class _TableRowAccessor(object):
 
 
 class H5TableNode(object):
-    """ A wrapper for PyTables Table nodes.
+    """A wrapper for PyTables Table nodes.
 
     Parameters
     ----------
@@ -28,16 +28,16 @@ class H5TableNode(object):
         from .file import H5Attrs
 
         assert self.is_table_node(node)
-        self._h5_table = node._h5_table if hasattr(node, '_h5_table') else node
+        self._h5_table = node._h5_table if hasattr(node, "_h5_table") else node
         self.attrs = H5Attrs(self._h5_table._v_attrs)
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     #  Creation methods
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     @classmethod
     def add_to_h5file(cls, h5, node_path, description, **kwargs):
-        """ Add table node to an H5 file at the specified path.
+        """Add table node to an H5 file at the specified path.
 
         Parameters
         ----------
@@ -63,16 +63,15 @@ class H5TableNode(object):
 
     @classmethod
     def is_table_node(cls, pytables_node):
-        """ Return True if pytables_node is a pytables.Table or a H5TableNode.
-        """
+        """Return True if pytables_node is a pytables.Table or a H5TableNode."""
         return isinstance(pytables_node, (PyTablesTable, H5TableNode))
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     #  Public interface
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def append(self, data):
-        """ Add some data to the table.
+        """Add some data to the table.
 
         Parameters
         ----------
@@ -83,7 +82,7 @@ class H5TableNode(object):
         self._h5_table.append(rows)
 
     def __getitem__(self, col_or_cols):
-        """ Return one or more columns of data from the table.
+        """Return one or more columns of data from the table.
 
         Parameters
         ----------
@@ -104,27 +103,27 @@ class H5TableNode(object):
 
     @property
     def ix(self):
-        """ Return an object which provides access to row data.
-        """
+        """Return an object which provides access to row data."""
         return _TableRowAccessor(self._h5_table)
 
     def keys(self):
         return self._h5_table.colnames
 
     def to_dataframe(self):
-        """ Return table data as a pandas `DataFrame`.
+        """Return table data as a pandas `DataFrame`.
 
         XXX: This does not work if the table contains a multidimensional column
 
         This method requires pandas to have been installed in the environment.
         """
         from pandas import DataFrame
+
         # Slicing rows gives a numpy struct array, which DataFrame understands.
         return DataFrame(self.ix[:])
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     #  Object interface
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def __repr__(self):
         return repr(self._h5_table)
@@ -132,12 +131,12 @@ class H5TableNode(object):
     def __len__(self):
         return self._h5_table.nrows
 
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     #  Private interface
-    #--------------------------------------------------------------------------
+    # --------------------------------------------------------------------------
 
     def _f_remove(self):
-        """ Implement the PyTables `Node._f_remove` method so that H5File
+        """Implement the PyTables `Node._f_remove` method so that H5File
         doesn't choke when trying to remove our node.
         """
         self._h5_table._f_remove()

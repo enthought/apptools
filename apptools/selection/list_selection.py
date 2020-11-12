@@ -5,7 +5,7 @@ from apptools.selection.i_selection import IListSelection
 
 @provides(IListSelection)
 class ListSelection(HasTraits):
-    """ Selection for ordered sequences of items.
+    """Selection for ordered sequences of items.
 
     This is the default implementation of the :class:`~.IListSelection`
     interface.
@@ -32,7 +32,7 @@ class ListSelection(HasTraits):
 
     @classmethod
     def from_available_items(cls, provider_id, selected, all_items):
-        """ Create a list selection given a list of all available items.
+        """Create a list selection given a list of all available items.
 
         Fills in the required information (in particular, the indices) based
         on a list of selected items and a list of all available items.
@@ -52,7 +52,7 @@ class ListSelection(HasTraits):
                     indices.append(index)
                     break
             else:
-                msg = 'Selected item: {!r}, could not be found'
+                msg = "Selected item: {!r}, could not be found"
                 raise ValueError(msg.format(item))
 
         return cls(provider_id=provider_id, items=selected, indices=indices)

@@ -25,14 +25,14 @@ def get_version(obj):
     res = []
     for cls in inspect.getmro(obj.__class__):
         class_name, module = cls.__name__, cls.__module__
-        if module in ['__builtin__']:
+        if module in ["__builtin__"]:
             # No point in versioning builtins.
             continue
         try:
             version = cls.__version__
         except AttributeError:
             version = -1
-        res.append( ( (class_name, module), version) )
+        res.append(((class_name, module), version))
     res.reverse()
     return res
 
@@ -62,22 +62,21 @@ class HandlerRegistry:
         """
         key = (class_name, module)
         if key in self.handlers:
-            msg = 'Overwriting version handler for (%s, %s)'%(key[0], key[1])
+            msg = "Overwriting version handler for (%s, %s)" % (key[0], key[1])
             logger.warn(msg)
         self.handlers[(class_name, module)] = handler
 
     def unregister(self, class_name, module):
-        """Unregisters any handlers for a class and module.
-        """
+        """Unregisters any handlers for a class and module."""
         self.handlers.pop((class_name, module))
 
     def update(self, state):
         """Updates the given state using the handlers.  Note that the
         state is modified in-place.
         """
-        if (not self.handlers) or  (not hasattr(state, '__metadata__')):
+        if (not self.handlers) or (not hasattr(state, "__metadata__")):
             return
-        versions = state.__metadata__['version']
+        versions = state.__metadata__["version"]
         for ver in versions:
             key = ver[0]
             try:
@@ -87,13 +86,12 @@ class HandlerRegistry:
 
 
 def _create_registry():
-    """Creates a reload safe, singleton registry.
-    """
+    """Creates a reload safe, singleton registry."""
     registry = None
     for key in sys.modules.keys():
-        if 'version_registry' in key:
+        if "version_registry" in key:
             mod = sys.modules[key]
-            if hasattr(mod, 'registry'):
+            if hasattr(mod, "registry"):
                 registry = mod.registry
                 break
     if not registry:
@@ -103,4 +101,3 @@ def _create_registry():
 
 # The singleton registry.
 registry = _create_registry()
-

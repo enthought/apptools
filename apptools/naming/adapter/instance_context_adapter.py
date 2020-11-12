@@ -29,7 +29,7 @@ class InstanceContextAdapter(ContextAdapter):
     # Regular expressions that describe the names of attributes to exclude.  By
     # default we exclude 'protected' and 'private' attributes and any
     # attributes that are artifacts of the traits mechanism.
-    exclude = List(Str, ['_', 'trait_'])
+    exclude = List(Str, ["_", "trait_"])
 
     ###########################################################################
     # 'Context' interface.
@@ -42,7 +42,7 @@ class InstanceContextAdapter(ContextAdapter):
 
         base = self.context.namespace_name
         if len(base) > 0:
-            base += '/'
+            base += "/"
 
         names = self.context.search(self.adaptee)
 
@@ -143,7 +143,7 @@ class InstanceContextAdapter(ContextAdapter):
         if isinstance(obj, HasTraits):
             names = obj.trait_names()
 
-        elif hasattr(obj, '__dict__'):
+        elif hasattr(obj, "__dict__"):
             names = list(self.adaptee.__dict__.keys())
 
         else:

@@ -24,9 +24,7 @@ class TupleContextAdapterFactory(ContextAdapterFactory):
         """ Returns an adapter that adapts an object to the target class. """
 
         adapter = TupleContextAdapter(
-            adaptee     = adaptee,
-            environment = environment,
-            context     = context
+            adaptee=adaptee, environment=environment, context=context
         )
 
         return adapter

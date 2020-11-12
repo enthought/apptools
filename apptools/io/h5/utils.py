@@ -4,7 +4,7 @@ from .file import H5File
 
 
 @contextmanager
-def open_h5file(filename, mode='r+', **kwargs):
+def open_h5file(filename, mode="r+", **kwargs):
     """Context manager for reading an HDF5 file as an H5File object.
 
     Parameters

@@ -2,10 +2,10 @@ import six
 
 
 def get_mro(obj_class):
-    """ Get a reasonable method resolution order of a class and its
+    """Get a reasonable method resolution order of a class and its
     superclasses for both old-style and new-style classes.
     """
-    if not hasattr(obj_class, '__mro__'):
+    if not hasattr(obj_class, "__mro__"):
         # Old-style class. Mix in object to make a fake new-style class.
         try:
             obj_class = type(obj_class.__name__, (obj_class, object), {})
@@ -20,16 +20,15 @@ def get_mro(obj_class):
 
 
 def _mod_name_key(typ):
-    """ Return a '__module__:__name__' key for a type.
-    """
-    module = getattr(typ, '__module__', None)
-    name = getattr(typ, '__name__', None)
-    key = '{0}:{1}'.format(module, name)
+    """Return a '__module__:__name__' key for a type."""
+    module = getattr(typ, "__module__", None)
+    name = getattr(typ, "__name__", None)
+    key = "{0}:{1}".format(module, name)
     return key
 
 
 class TypeRegistry(object):
-    """ Register objects for types.
+    """Register objects for types.
 
     Each type maintains a stack of registered objects that can be pushed and
     popped.
@@ -49,7 +48,7 @@ class TypeRegistry(object):
     #### TypeRegistry public interface ########################################
 
     def push(self, typ, obj):
-        """ Push an object onto the stack for the given type.
+        """Push an object onto the stack for the given type.
 
         Parameters
         ----------
@@ -73,7 +72,7 @@ class TypeRegistry(object):
             self.type_map[typ].append(obj)
 
     def push_abc(self, typ, obj):
-        """ Push an object onto the stack for the given ABC.
+        """Push an object onto the stack for the given ABC.
 
         Parameters
         ----------
@@ -85,7 +84,7 @@ class TypeRegistry(object):
         self.abc_map[typ].append(obj)
 
     def pop(self, typ):
-        """ Pop a registered object for the given type.
+        """Pop a registered object for the given type.
 
         Parameters
         ----------
@@ -122,7 +121,7 @@ class TypeRegistry(object):
         return old
 
     def lookup(self, instance):
-        """ Look up the registered object for the given instance.
+        """Look up the registered object for the given instance.
 
         Parameters
         ----------
@@ -142,7 +141,7 @@ class TypeRegistry(object):
         return self.lookup_by_type(type(instance))
 
     def lookup_by_type(self, typ):
-        """ Look up the registered object for a type.
+        """Look up the registered object for a type.
 
         Parameters
         ----------
@@ -161,7 +160,7 @@ class TypeRegistry(object):
         return self.lookup_all_by_type(typ)[-1]
 
     def lookup_all(self, instance):
-        """ Look up all the registered objects for the given instance.
+        """Look up all the registered objects for the given instance.
 
         Parameters
         ----------
@@ -182,7 +181,7 @@ class TypeRegistry(object):
         return self.lookup_all_by_type(type(instance))
 
     def lookup_all_by_type(self, typ):
-        """ Look up all the registered objects for a type.
+        """Look up all the registered objects for a type.
 
         Parameters
         ----------
@@ -217,7 +216,7 @@ class TypeRegistry(object):
     #### Private implementation ###############################################
 
     def _pop_value(self, mapping, key):
-        """ Pop a value from a keyed stack in a mapping, taking care to remove
+        """Pop a value from a keyed stack in a mapping, taking care to remove
         the key if the stack is depleted.
         """
         objs = mapping[key]
@@ -227,7 +226,7 @@ class TypeRegistry(object):
         return old
 
     def _in_name_map(self, typ):
-        """ Check if the given type is specified in the name map.
+        """Check if the given type is specified in the name map.
 
         Parameters
         ----------
@@ -248,7 +247,7 @@ class TypeRegistry(object):
 
 
 class LazyRegistry(TypeRegistry):
-    """ A type registry that will lazily import the registered objects.
+    """A type registry that will lazily import the registered objects.
 
     Register '__module__:__name__' strings for the lazily imported objects.
     These will only be imported when the matching type is looked up. The module
@@ -257,12 +256,11 @@ class LazyRegistry(TypeRegistry):
     """
 
     def lookup_by_type(self, typ):
-        """ Look up the registered object for a type.
-        """
+        """Look up the registered object for a type."""
         mod_name = TypeRegistry.lookup_by_type(self, typ)
         return self._import_object(mod_name)
 
     def _import_object(self, mod_object):
-        module, name = mod_object.split(':')
+        module, name = mod_object.split(":")
         mod = __import__(module, {}, {}, [name], 0)
         return getattr(mod, name)

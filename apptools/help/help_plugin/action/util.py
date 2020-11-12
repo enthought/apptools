@@ -13,7 +13,12 @@
 from os.path import isabs, join, normpath
 import sys
 
+
 def get_sys_prefix_relative_filename(filename):
-    return None if (filename is None) else \
-           filename if isabs(filename) else \
-           normpath(join(sys.prefix, filename))
+    return (
+        None
+        if (filename is None)
+        else filename
+        if isabs(filename)
+        else normpath(join(sys.prefix, filename))
+    )

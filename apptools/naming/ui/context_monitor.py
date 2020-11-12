@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ A monitor that detects changes to a naming context. """
 
 
@@ -30,11 +30,11 @@ class ContextMonitor(NodeMonitor):
 
         context = self.node.obj
 
-        context.on_trait_change(self._on_object_added, 'object_added')
-        context.on_trait_change(self._on_object_changed, 'object_changed')
-        context.on_trait_change(self._on_object_removed, 'object_removed')
-        context.on_trait_change(self._on_object_renamed, 'object_renamed')
-        context.on_trait_change(self._on_context_changed, 'context_changed')
+        context.on_trait_change(self._on_object_added, "object_added")
+        context.on_trait_change(self._on_object_changed, "object_changed")
+        context.on_trait_change(self._on_object_removed, "object_removed")
+        context.on_trait_change(self._on_object_renamed, "object_renamed")
+        context.on_trait_change(self._on_context_changed, "context_changed")
 
         return
 
@@ -44,23 +44,23 @@ class ContextMonitor(NodeMonitor):
         context = self.node.obj
 
         context.on_trait_change(
-            self._on_object_added, 'object_added', remove=True
+            self._on_object_added, "object_added", remove=True
         )
 
         context.on_trait_change(
-            self._on_object_changed, 'object_changed', remove=True
+            self._on_object_changed, "object_changed", remove=True
         )
 
         context.on_trait_change(
-            self._on_object_removed, 'object_removed', remove=True
+            self._on_object_removed, "object_removed", remove=True
         )
 
         context.on_trait_change(
-            self._on_object_renamed, 'object_renamed', remove=True
+            self._on_object_renamed, "object_renamed", remove=True
         )
 
         context.on_trait_change(
-            self._on_context_changed, 'context_changed', remove=True
+            self._on_context_changed, "context_changed", remove=True
         )
 
         return

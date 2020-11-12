@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ The node type for NON-contexts in a naming system. """
 
 
@@ -43,7 +43,7 @@ class ObjectNodeType(NodeType):
         return node.obj
 
     def is_editable(self, node):
-        """ Returns True if the node is editable, otherwise False.
+        """Returns True if the node is editable, otherwise False.
 
         If the node is editable, its text can be set via the UI.
 
@@ -63,7 +63,7 @@ class ObjectNodeType(NodeType):
         # contained in a context).
         parent = node.context
 
-        return len(text.strip()) > 0 and text not in parent.list_names('')
+        return len(text.strip()) > 0 and text not in parent.list_names("")
 
     def set_text(self, node, text):
         """ Sets the label text for a node. """

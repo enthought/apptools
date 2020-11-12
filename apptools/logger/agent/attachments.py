@@ -24,9 +24,8 @@ class Attachments(HasTraits):
 
     def __init__(self, message, **traits):
         traits = traits.copy()
-        traits['message'] = message
+        traits["message"] = message
         super(Attachments, self).__init__(**traits)
-
 
     # FIXME: all of the package_*() methods refer to deprecated project plugins.
 
@@ -34,7 +33,7 @@ class Attachments(HasTraits):
         if self.application is None:
             pass
 
-        workspace = self.application.get_service('envisage.project.IWorkspace')
+        workspace = self.application.get_service("envisage.project.IWorkspace")
         if workspace is not None:
             dir = workspace.path
             self._attach_directory(dir)
@@ -44,7 +43,9 @@ class Attachments(HasTraits):
         if self.application is None:
             pass
 
-        single_project = self.application.get_service('envisage.single_project.ModelService')
+        single_project = self.application.get_service(
+            "envisage.single_project.ModelService"
+        )
         if single_project is not None:
             dir = single_project.location
             self._attach_directory(dir)
@@ -60,25 +61,25 @@ class Attachments(HasTraits):
         import zipfile
         from io import BytesIO
 
-        ctype = 'application/octet-stream'
-        maintype, subtype = ctype.split('/', 1)
+        ctype = "application/octet-stream"
+        maintype, subtype = ctype.split("/", 1)
         msg = MIMEBase(maintype, subtype)
 
         file_object = BytesIO()
-        zip = zipfile.ZipFile(file_object, 'w')
+        zip = zipfile.ZipFile(file_object, "w")
         _append_to_zip_archive(zip, dir, relpath)
         zip.close()
 
         msg.set_payload(file_object.getvalue())
 
-        encoders.encode_base64(msg) # Encode the payload using Base64
-        msg.add_header('Content-Disposition', 'attachment', filename='project.zip')
+        encoders.encode_base64(msg)  # Encode the payload using Base64
+        msg.add_header(
+            "Content-Disposition", "attachment", filename="project.zip"
+        )
 
         self.message.attach(msg)
 
         file_object.close()
-
-
 
 
 def _append_to_zip_archive(zip, dir, relpath):
@@ -89,10 +90,11 @@ def _append_to_zip_archive(zip, dir, relpath):
         if os.path.isfile(path):
             name = os.path.join(relpath, filename)
             zip.write(path, name)
-            logger.debug('adding %s to error report' % path)
+            logger.debug("adding %s to error report" % path)
         else:
-            if filename != ".svn": # skip svn files if any
+            if filename != ".svn":  # skip svn files if any
                 subdir = os.path.join(dir, filename)
-                _append_to_zip_archive(zip, subdir, os.path.join(relpath, filename))
+                _append_to_zip_archive(
+                    zip, subdir, os.path.join(relpath, filename)
+                )
     return
-

@@ -15,8 +15,9 @@
 
 from traits.api import Interface, File, Str
 
+
 class IHelpCode(Interface):
-    """ The interface for help code.
+    """The interface for help code.
 
     A help code is defined by a UI label and a filename.
     """

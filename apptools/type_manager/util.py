@@ -11,7 +11,7 @@ from inspect import getclasstree
 
 
 def sort_by_class_tree(objs):
-    """ Sorts a list of objects by their class tree.
+    """Sorts a list of objects by their class tree.
 
     Each item in the list should inherit from a common base class.
 
