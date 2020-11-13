@@ -6,7 +6,7 @@ import os, tempfile, unittest
 from os.path import join
 
 # Major package imports.
-from pkg_resources import resource_filename
+from importlib_resources import files
 
 # Enthought library imports.
 from apptools.preferences.api import Preferences, PreferenceBinding
@@ -43,7 +43,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.preferences = set_default_preferences(Preferences())
 
         # The filename of the example preferences file.
-        self.example = resource_filename(PKG, "example.ini")
+        self.example = os.fspath(files(PKG) / "example.ini")
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """

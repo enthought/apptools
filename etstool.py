@@ -103,6 +103,7 @@ dependencies = {
     "traitsui",
     "configobj",
     "coverage",
+    "importlib_resources",
     "pytables",
     "pandas",
     "pyface",

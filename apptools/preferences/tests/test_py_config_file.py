@@ -6,7 +6,7 @@ import os, tempfile, unittest
 from os.path import join
 
 # Major package imports.
-from pkg_resources import resource_filename
+from importlib_resources import files
 
 # Enthought library imports.
 from .py_config_file import PyConfigFile
@@ -27,8 +27,8 @@ class PyConfigFileTestCase(unittest.TestCase):
         """ Prepares the test fixture before each test method is called. """
 
         # The filenames of the example preferences files.
-        self.example = resource_filename(PKG, "py_config_example.ini")
-        self.example_2 = resource_filename(PKG, "py_config_example_2.ini")
+        self.example = os.fspath(files(PKG) / "py_config_example.ini")
+        self.example_2 = os.fspath(files(PKG) / "py_config_example_2.ini")
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """

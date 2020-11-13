@@ -9,7 +9,7 @@ import time
 import unittest
 
 # Major package imports.
-from pkg_resources import resource_filename
+from importlib_resources import files
 
 # Enthought library imports.
 from apptools.preferences.api import Preferences, PreferencesHelper
@@ -55,7 +55,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.preferences = set_default_preferences(Preferences())
 
         # The filename of the example preferences file.
-        self.example = resource_filename(PKG, "example.ini")
+        self.example = os.fspath(files(PKG) / "example.ini")
 
         # A temporary directory that can safely be written to.
         self.tmpdir = tempfile.mkdtemp()
