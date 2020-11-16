@@ -337,6 +337,7 @@ def changelog(ctx):
             "deprecation": "Deprecations",
             "removal": "Removals",
             "doc": "Documentation changes",
+            "test": "Test suite",
         }
     }
 
