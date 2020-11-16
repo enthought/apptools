@@ -114,10 +114,6 @@ class QualityAgentView(Dialog):
 
         return sizer
 
-    def _on_help(self, event):
-        """Called when the 'Help' button is pressed. """
-        pass
-
     ### Utility methods #######################################################
 
     def _create_error_panel(self, parent):
