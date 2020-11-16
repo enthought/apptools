@@ -116,11 +116,7 @@ class QualityAgentView(Dialog):
 
     def _on_help(self, event):
         """Called when the 'Help' button is pressed. """
-
-        hp = self.service.application.get_service("apptools.help.IHelp")
-        hp.library.show_topic(self.help_id)
-
-        return
+        pass
 
     ### Utility methods #######################################################
 
