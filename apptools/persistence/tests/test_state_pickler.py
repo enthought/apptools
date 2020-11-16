@@ -157,9 +157,8 @@ class TestDictPickler(unittest.TestCase):
         self._check_instance_and_references(obj, data)
 
         num_attr = "numeric" if data["numeric"]["type"] == "numeric" else "ref"
-        decodestring = getattr(base64, "decodebytes", base64.decodestring)
         junk = state_pickler.gunzip_string(
-            decodestring(data[num_attr]["data"])
+            base64.decodebytes(data[num_attr]["data"])
         )
         num = pickle.loads(junk)
         self.assertEqual(numpy.alltrue(numpy.ravel(num == obj.numeric)), 1)
