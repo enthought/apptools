@@ -16,18 +16,16 @@
 
 # Enthought library imports.
 from traits.api import Any, Dict, Instance, Property, Str
+from traits.adaptation.api import Adapter
 
 # Local imports.
 from .context import Context
 
 
-class ContextAdapter(Context):
+class ContextAdapter(Adapter, Context):
     """ The base class for all context adapters. """
-
+    pass
     #### 'ContextAdapter' interface ###########################################
 
-    # The object that we are adapting.
-    adaptee = Any
-
     # The context that the object is in.
-    context = Instance(Context)
+    #context = Instance(Context)

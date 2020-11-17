@@ -17,7 +17,7 @@
 # Enthought library imports.
 from traits.api import Any, Dict, Event, HasTraits, Instance
 from traits.api import Property, Str
-from apptools.type_manager.api import TypeManager
+from traits.adaptation.api import adapt
 
 # Local imports.
 from .binding import Binding
@@ -36,17 +36,12 @@ INITIAL_CONTEXT_FACTORY = "apptools.naming.factory.initial"
 OBJECT_FACTORIES = "apptools.naming.factory.object"
 STATE_FACTORIES = "apptools.naming.factory.state"
 
-# Non-JNDI.
-TYPE_MANAGER = "apptools.naming.factory.type.manager"
-
 
 # The default environment.
 ENVIRONMENT = {
     # 'Context' properties.
     OBJECT_FACTORIES: [],
     STATE_FACTORIES: [],
-    # Non-JNDI.
-    TYPE_MANAGER: None,
 }
 
 
@@ -58,9 +53,6 @@ class Context(HasTraits):
     OBJECT_FACTORIES = OBJECT_FACTORIES
     STATE_FACTORIES = STATE_FACTORIES
 
-    # Non-JNDI.
-    TYPE_MANAGER = TYPE_MANAGER
-
     #### 'Context' interface ##################################################
 
     # The naming environment in effect for this context.
@@ -68,14 +60,6 @@ class Context(HasTraits):
 
     # The name of the context within its own namespace.
     namespace_name = Property(Str)
-
-    # The type manager in the context's environment (used to create context
-    # adapters etc.).
-    #
-    # fixme: This is an experimental 'convenience' trait, since it is common
-    # to get hold of the context's type manager to see if some object has a
-    # context adapter.
-    type_manager = Property(Instance(TypeManager))
 
     #### Events ####
 
@@ -132,16 +116,6 @@ class Context(HasTraits):
         # retrieve the current namespace_name value.
         # raise OperationNotSupportedError()
         return ""
-
-    def _get_type_manager(self):
-        """Returns the type manager in the context's environment.
-
-        This will return None if no type manager was used to create the initial
-        context.
-
-        """
-
-        return self.environment.get(self.TYPE_MANAGER)
 
     #### Methods ##############################################################
 
@@ -756,15 +730,5 @@ class Context(HasTraits):
         """Returns a context adapter for an object.
 
         Returns None if no such adapter is available.
-
         """
-
-        if self.type_manager is not None:
-            adapter = self.type_manager.object_as(
-                obj, Context, environment=self.environment, context=self
-            )
-
-        else:
-            adapter = None
-
-        return adapter
+        return adapt(obj, Context, default=None)

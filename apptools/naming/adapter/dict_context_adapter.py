@@ -8,16 +8,6 @@ from apptools.naming.api import Binding, ContextAdapter, naming_manager
 class DictContextAdapter(ContextAdapter):
     """ Context adapter for Python dictionaries. """
 
-    #### 'ContextAdapter' interface ###########################################
-
-    # The object that we are adapting.
-    #
-    #
-    # fixme: We would like to specialize the 'adaptee' trait here, but if we
-    # make it of type 'Dict' then, on assignment, traits will create a *copy*
-    # of the actual dict which I think you'll agree is not very adapter-like!
-    ##     adaptee = Dict
-
     ###########################################################################
     # Protected 'Context' interface.
     ###########################################################################
