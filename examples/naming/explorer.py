@@ -55,10 +55,7 @@ if __name__ == '__main__':
     register_factory(ListContextAdapter, list, Context)
 
     # Python objects.
-
-    #type_manager.register_type_adapters(
-    #    InstanceContextAdapterFactory(), object
-    #)
+    register_factory(InstanceContextAdapter, type, Context)
 
     # Get the path to the data directory
     data_path = os.path.join('examples','naming','data')
