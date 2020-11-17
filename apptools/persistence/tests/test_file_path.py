@@ -13,7 +13,7 @@ from os.path import abspath, dirname, basename, join
 from io import BytesIO
 
 # 3rd party imports.
-import pkg_resources
+from importlib_resources import files
 
 # Enthought library imports.
 from apptools.persistence import state_pickler
@@ -29,7 +29,7 @@ class TestFilePath(unittest.TestCase):
     def setUp(self):
         # If the cwd is somewhere under /tmp, that confuses the tests below.
         # Use the directory containing this file, instead.
-        test_cwd = pkg_resources.resource_filename("apptools.persistence", "")
+        test_cwd = os.fspath(files("apptools.persistence") / "")
         self.old_cwd = os.getcwd()
         os.chdir(test_cwd)
 
