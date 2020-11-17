@@ -25,7 +25,3 @@ from .context import Context
 class ContextAdapter(Adapter, Context):
     """ The base class for all context adapters. """
     pass
-    #### 'ContextAdapter' interface ###########################################
-
-    # The context that the object is in.
-    #context = Instance(Context)
