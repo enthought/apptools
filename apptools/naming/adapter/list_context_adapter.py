@@ -9,15 +9,6 @@ from traits.api import List, Property
 class ListContextAdapter(ContextAdapter):
     """ Context adapter for Python lists. """
 
-    #### 'ContextAdapter' interface ###########################################
-
-    # The object that we are adapting.
-    #
-    # fixme: We would like to specialize the 'adaptee' trait here, but if we
-    # make it of type 'List' then, on assignment, traits will create a *copy*
-    # of the actual list which I think you'll agree is not very adapter-like!
-    ##     adaptee = List
-
     #### 'ListContextAdapter' interface #######################################
 
     # The list that we are adapting.
