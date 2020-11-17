@@ -1,0 +1,1 @@
+remove NullHandler from ``apptools.logger`` (#216)
