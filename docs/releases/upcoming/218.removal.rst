@@ -1,0 +1,1 @@
+Remove deprecated create_log_file_handler function (#218)
