@@ -9,6 +9,7 @@ AppTools Documentation
     scripting/*
     undo/*
     selection/*
+    naming/*
     api
 
 * :ref:`search`
