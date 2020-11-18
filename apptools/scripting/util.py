@@ -15,8 +15,8 @@ from .package_globals import get_recorder, set_recorder
 def start_recording(object, ui=True, **kw):
     """Convenience function to start recording.  Returns the recorder.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
 
     object :  object to record.
 

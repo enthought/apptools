@@ -1,9 +1,6 @@
 """
 Code to support recording to a readable and executable Python script.
 
-TODO:
-    - Support for dictionaries?
-
 """
 # Author: Prabhu Ramachandran <prabhu@aero.iitb.ac.in>
 # Copyright (c) 2008-2015, Enthought, Inc.
@@ -150,10 +147,11 @@ class Recorder(HasTraits):
     def record(self, code):
         """Record a string to be stored to the output file.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
 
-        code - A string of text.
+        code : str 
+            A string of text.
         """
         if self.recording and not self._in_function:
             lines = self.lines
@@ -192,8 +190,8 @@ class Recorder(HasTraits):
         If the `object` has a trait named `recorder` then this recorder
         instance will be set to it if possible.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
 
         object : Instance(HasTraits)
             The object to register in the registry.
