@@ -1,6 +1,8 @@
 """
 Code to support recording to a readable and executable Python script.
 
+FIXME:
+    - Support for dictionaries?
 """
 # Author: Prabhu Ramachandran <prabhu@aero.iitb.ac.in>
 # Copyright (c) 2008-2015, Enthought, Inc.
