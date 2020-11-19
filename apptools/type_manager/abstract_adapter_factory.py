@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 class AbstractAdapterFactory(HasTraits):
-    """ Abstract base class for all adapter factories.
+    """Abstract base class for all adapter factories.
 
     Adapter factories define behavioural extensions for classes.
 
@@ -28,14 +28,14 @@ class AbstractAdapterFactory(HasTraits):
 
     # The type system used by the factory (it determines 'is_a' relationships
     # and type MROs etc). By default we use standard Python semantics.
-    type_system = Delegate('adapter_manager')
+    type_system = Delegate("adapter_manager")
 
     ###########################################################################
     # 'AbstractAdapterFactory' interface.
     ###########################################################################
 
     def adapt(self, adaptee, target_class, *args, **kw):
-        """ Returns an adapter that adapts an object to the target class.
+        """Returns an adapter that adapts an object to the target class.
 
         Returns None if the factory cannot produce such an adapter.
 
@@ -70,17 +70,17 @@ class AbstractAdapterFactory(HasTraits):
     ###########################################################################
 
     def _get_warning_message(self, adaptee, target_class):
-        """ Returns a warning message.
+        """Returns a warning message.
 
         The warning message is used when a factory fails to adapt something
         that it said it could!
 
         """
 
-        message = '%s failed to adapt %s to %s' % (
+        message = "%s failed to adapt %s to %s" % (
             self.__class__.__name__,
             str(adaptee),
-            target_class.__name__
+            target_class.__name__,
         )
 
         return message

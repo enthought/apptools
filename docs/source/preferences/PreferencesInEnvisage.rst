@@ -1,3 +1,5 @@
+.. _preferences-in-envisage:
+
 Preferences in Envisage
 =======================
 

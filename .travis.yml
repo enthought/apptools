@@ -28,6 +28,7 @@ install:
       edm run -- python etstool.py install --runtime=${RUNTIME} || exit;
     fi
 script:
+  - edm run -- python etstool.py flake8 --runtime=${RUNTIME} || exit
   - edm run -- python etstool.py test --runtime=${RUNTIME} || exit
 notifications:
   email:

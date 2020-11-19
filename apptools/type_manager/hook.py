@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought util package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ Implementation of hooked methods. """
 
 
@@ -21,12 +21,14 @@ def add_pre(klass, method_name, callable):
 
     return
 
+
 def add_post(klass, method_name, callable):
     """ Adds a post-hook to method 'method_name' on class 'klass'. """
 
     _add_hook(klass, method_name, callable, pre=False)
 
     return
+
 
 def remove_pre(klass, method_name, callable):
     """ Removes a pre-hook from method 'method_name' on class 'klass'. """
@@ -35,6 +37,7 @@ def remove_pre(klass, method_name, callable):
 
     return
 
+
 def remove_post(klass, method_name, callable):
     """ Removes a post-hook from method 'method_name' on class 'klass'. """
 
@@ -42,9 +45,11 @@ def remove_post(klass, method_name, callable):
 
     return
 
+
 ###############################################################################
 # Private functions.
 ###############################################################################
+
 
 def _add_hook(klass, method_name, callable, pre):
     """ Adds a pre/post hook to method 'method_name' on class 'klass'. """
@@ -53,11 +58,12 @@ def _add_hook(klass, method_name, callable, pre):
     method = getattr(klass, method_name)
 
     # Have we already hooked it?
-    if hasattr(method, '__pre__'):
+    if hasattr(method, "__pre__"):
         hooked_method = method
 
     # Obviously not!
     else:
+
         def hooked_method(self, *args, **kw):
             for pre in hooked_method.__pre__:
                 pre(self, *args, **kw)
@@ -76,7 +82,7 @@ def _add_hook(klass, method_name, callable, pre):
         except:
             pass
 
-        hooked_method.__pre__  = []
+        hooked_method.__pre__ = []
         hooked_method.__post__ = []
 
         # Is the original method actually defined on the class, or is it
@@ -87,7 +93,7 @@ def _add_hook(klass, method_name, callable, pre):
         #
         # fixme: Twisted uses 'method.im_func' instead of 'method' here, but
         # both seem to work just as well!
-        setattr(klass, '__hooked__' + method_name, method)
+        setattr(klass, "__hooked__" + method_name, method)
 
         # ... and put in the hooked one!
         setattr(klass, method_name, hooked_method)
@@ -100,6 +106,7 @@ def _add_hook(klass, method_name, callable, pre):
 
     return
 
+
 def _remove_hook(klass, method_name, callable, pre):
     """ Removes a pre/post hook from method 'method_name' on class 'klass'. """
 
@@ -107,7 +114,7 @@ def _remove_hook(klass, method_name, callable, pre):
     method = klass.__dict__[method_name]
 
     # Is it actually hooked?
-    if hasattr(method, '__pre__'):
+    if hasattr(method, "__pre__"):
         # Remove the hook.
         if pre:
             method.__pre__.remove(callable)
@@ -123,10 +130,10 @@ def _remove_hook(klass, method_name, callable, pre):
 
             # Otherwise, reinstate the original method.
             else:
-                original = getattr(klass, '__hooked__' + method_name)
+                original = getattr(klass, "__hooked__" + method_name)
                 setattr(klass, method_name, original)
 
             # Remove the saved original method.
-            delattr(klass, '__hooked__' + method_name)
+            delattr(klass, "__hooked__" + method_name)
 
     return

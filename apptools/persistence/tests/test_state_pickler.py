@@ -14,8 +14,20 @@ import tempfile
 
 import numpy
 
-from traits.api import Bool, Int, Array, Float, Complex, Any, \
-    Str, Instance, Tuple, List, Dict, HasTraits
+from traits.api import (
+    Bool,
+    Int,
+    Array,
+    Float,
+    Complex,
+    Any,
+    Str,
+    Instance,
+    Tuple,
+    List,
+    Dict,
+    HasTraits,
+)
 
 try:
     from tvtk.api import tvtk
@@ -29,9 +41,9 @@ from apptools.persistence import state_pickler
 
 # A simple class to test instances.
 class A(object):
-
     def __init__(self):
-        self.a = 'a'
+        self.a = "a"
+
 
 # NOTE: I think that TVTK specific testing should be moved to the
 #       TVTK package.
@@ -39,7 +51,6 @@ class A(object):
 
 # A classic class for testing the pickler.
 class TestClassic:
-
     def __init__(self):
         self.b = False
         self.i = 7
@@ -47,14 +58,14 @@ class TestClassic:
         self.f = math.pi
         self.c = complex(1.01234, 2.3)
         self.n = None
-        self.s = 'String'
-        self.u = u'Unicode'
+        self.s = "String"
+        self.u = "Unicode"
         self.inst = A()
-        self.tuple = (1, 2, 'a', A())
-        self.list = [1, 1.1, 'a', 1j, self.inst]
+        self.tuple = (1, 2, "a", A())
+        self.list = [1, 1.1, "a", 1j, self.inst]
         self.pure_list = list(range(5))
-        self.dict = {'a': 1, 'b': 2, 'ref': self.inst}
-        self.numeric = numpy.ones((2, 2, 2), 'f')
+        self.dict = {"a": 1, "b": 2, "ref": self.inst}
+        self.numeric = numpy.ones((2, 2, 2), "f")
         self.ref = self.numeric
         if TVTK_AVAILABLE:
             self._tvtk = tvtk.Property()
@@ -68,42 +79,40 @@ class TestTraits(HasTraits):
     f = Float(math.pi)
     c = Complex(complex(1.01234, 2.3))
     n = Any
-    s = Str('String')
-    u = Str(u'Unicode')
+    s = Str("String")
+    u = Str("Unicode")
     inst = Instance(A)
     tuple = Tuple
     list = List
     pure_list = List(list(range(5)))
     dict = Dict
-    numeric = Array(value=numpy.ones((2, 2, 2), 'f'))
+    numeric = Array(value=numpy.ones((2, 2, 2), "f"))
     ref = Array
     if TVTK_AVAILABLE:
         _tvtk = Instance(tvtk.Property, ())
 
     def __init__(self):
         self.inst = A()
-        self.tuple = (1, 2, 'a', A())
-        self.list = [1, 1.1, 'a', 1j, self.inst]
-        self.dict = {'a': 1, 'b': 2, 'ref': self.inst}
+        self.tuple = (1, 2, "a", A())
+        self.list = [1, 1.1, "a", 1j, self.inst]
+        self.dict = {"a": 1, "b": 2, "ref": self.inst}
         self.ref = self.numeric
 
 
 class TestDictPickler(unittest.TestCase):
-
     def set_object(self, obj):
         """Changes the objects properties to test things."""
         obj.b = True
         obj.i = 8
-        obj.s = 'string'
-        obj.u = u'unicode'
-        obj.inst.a = 'b'
+        obj.s = "string"
+        obj.u = "unicode"
+        obj.inst.a = "b"
         obj.list[0] = 2
-        obj.tuple[-1].a = 't'
-        obj.dict['a'] = 10
+        obj.tuple[-1].a = "t"
+        obj.dict["a"] = 10
         if TVTK_AVAILABLE:
             obj._tvtk.trait_set(
-                point_size=3, specular_color=(1, 0, 0),
-                representation='w'
+                point_size=3, specular_color=(1, 0, 0), representation="w"
             )
 
     def _check_instance_and_references(self, obj, data):
@@ -111,60 +120,60 @@ class TestDictPickler(unittest.TestCase):
         We need this as there isn't a guarantee as to which will be the
         reference and which will be the instance.
         """
-        inst = data['inst']
-        list_end = data['list']['data'][-1]
-        dict_ref = data['dict']['data']['ref']
+        inst = data["inst"]
+        list_end = data["list"]["data"][-1]
+        dict_ref = data["dict"]["data"]["ref"]
         all_inst = [inst, list_end, dict_ref]
-        types = [x['type'] for x in all_inst]
-        self.assertEqual(types.count('instance'), 1)
-        self.assertEqual(types.count('reference'), 2)
-        inst_state = all_inst[types.index('instance')]
-        self.assertEqual(inst_state['data']['data']['a'], 'b')
+        types = [x["type"] for x in all_inst]
+        self.assertEqual(types.count("instance"), 1)
+        self.assertEqual(types.count("reference"), 2)
+        inst_state = all_inst[types.index("instance")]
+        self.assertEqual(inst_state["data"]["data"]["a"], "b")
 
     def verify(self, obj, state):
-        data = state['data']
-        self.assertEqual(state['class_name'], obj.__class__.__name__)
-        data = data['data']
-        self.assertEqual(data['b'], obj.b)
-        self.assertEqual(data['i'], obj.i)
-        self.assertEqual(data['l'], obj.l)
-        self.assertEqual(data['f'], obj.f)
-        self.assertEqual(data['c'], obj.c)
-        self.assertEqual(data['n'], obj.n)
-        self.assertEqual(data['s'], obj.s)
-        self.assertEqual(data['u'], obj.u)
-        tup = data['tuple']['data']
+        data = state["data"]
+        self.assertEqual(state["class_name"], obj.__class__.__name__)
+        data = data["data"]
+        self.assertEqual(data["b"], obj.b)
+        self.assertEqual(data["i"], obj.i)
+        self.assertEqual(data["l"], obj.l)
+        self.assertEqual(data["f"], obj.f)
+        self.assertEqual(data["c"], obj.c)
+        self.assertEqual(data["n"], obj.n)
+        self.assertEqual(data["s"], obj.s)
+        self.assertEqual(data["u"], obj.u)
+        tup = data["tuple"]["data"]
         self.assertEqual(tup[:-1], obj.tuple[:-1])
-        self.assertEqual(tup[-1]['data']['data']['a'], 't')
-        lst = data['list']['data']
+        self.assertEqual(tup[-1]["data"]["data"]["a"], "t")
+        lst = data["list"]["data"]
         self.assertEqual(lst[:-1], obj.list[:-1])
 
-        pure_lst = data['pure_list']['data']
+        pure_lst = data["pure_list"]["data"]
         self.assertEqual(pure_lst, obj.pure_list)
-        dct = data['dict']['data']
-        self.assertEqual(dct['a'], obj.dict['a'])
-        self.assertEqual(dct['b'], obj.dict['b'])
+        dct = data["dict"]["data"]
+        self.assertEqual(dct["a"], obj.dict["a"])
+        self.assertEqual(dct["b"], obj.dict["b"])
 
         self._check_instance_and_references(obj, data)
 
-        num_attr = 'numeric' if data['numeric']['type'] == 'numeric' else 'ref'
-        decodestring = getattr(base64, 'decodebytes', base64.decodestring)
+        num_attr = "numeric" if data["numeric"]["type"] == "numeric" else "ref"
         junk = state_pickler.gunzip_string(
-            decodestring(data[num_attr]['data'])
+            base64.decodebytes(data[num_attr]["data"])
         )
         num = pickle.loads(junk)
         self.assertEqual(numpy.alltrue(numpy.ravel(num == obj.numeric)), 1)
 
-        self.assertIn(data['ref']['type'], ['reference', 'numeric'])
-        if data['ref']['type'] == 'numeric':
-            self.assertEqual(data['numeric']['type'], 'reference')
+        self.assertIn(data["ref"]["type"], ["reference", "numeric"])
+        if data["ref"]["type"] == "numeric":
+            self.assertEqual(data["numeric"]["type"], "reference")
         else:
-            self.assertEqual(data['numeric']['type'], 'numeric')
-        self.assertEqual(data['ref']['id'], data['numeric']['id'])
+            self.assertEqual(data["numeric"]["type"], "numeric")
+        self.assertEqual(data["ref"]["id"], data["numeric"]["id"])
 
     def verify_unpickled(self, obj, state):
-        self.assertEqual(state.__metadata__['class_name'],
-                         obj.__class__.__name__)
+        self.assertEqual(
+            state.__metadata__["class_name"], obj.__class__.__name__
+        )
         self.assertEqual(state.b, obj.b)
         self.assertEqual(state.i, obj.i)
         self.assertEqual(state.l, obj.l)
@@ -173,19 +182,19 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(state.n, obj.n)
         self.assertEqual(state.s, obj.s)
         self.assertEqual(state.u, obj.u)
-        self.assertEqual(state.inst.__metadata__['type'], 'instance')
+        self.assertEqual(state.inst.__metadata__["type"], "instance")
 
         tup = state.tuple
         self.assertTrue(state.tuple.has_instance)
         self.assertEqual(tup[:-1], obj.tuple[:-1])
-        self.assertEqual(tup[-1].a, 't')
+        self.assertEqual(tup[-1].a, "t")
         lst = state.list
         self.assertTrue(state.list.has_instance)
         self.assertEqual(lst[:-1], obj.list[:-1])
         # Make sure the reference is the same
         self.assertEqual(id(state.inst), id(lst[-1]))
 
-        self.assertEqual(lst[-1].a, 'b')
+        self.assertEqual(lst[-1].a, "b")
 
         pure_lst = state.pure_list
         self.assertEqual(pure_lst, obj.pure_list)
@@ -193,9 +202,9 @@ class TestDictPickler(unittest.TestCase):
 
         dct = state.dict
         self.assertTrue(dct.has_instance)
-        self.assertEqual(dct['a'], obj.dict['a'])
-        self.assertEqual(dct['b'], obj.dict['b'])
-        self.assertEqual(dct['ref'].__metadata__['type'], 'instance')
+        self.assertEqual(dct["a"], obj.dict["a"])
+        self.assertEqual(dct["b"], obj.dict["b"])
+        self.assertEqual(dct["ref"].__metadata__["type"], "instance")
 
         num = state.numeric
         self.assertEqual(numpy.alltrue(numpy.ravel(num == obj.numeric)), 1)
@@ -208,8 +217,7 @@ class TestDictPickler(unittest.TestCase):
             self.assertEqual(_tvtk.point_size, obj._tvtk.point_size)
 
     def verify_state(self, state1, state):
-        self.assertEqual(state.__metadata__,
-                         state1.__metadata__)
+        self.assertEqual(state.__metadata__, state1.__metadata__)
         self.assertEqual(state.b, state1.b)
         self.assertEqual(state.i, state1.i)
         self.assertEqual(state.l, state1.l)
@@ -222,19 +230,21 @@ class TestDictPickler(unittest.TestCase):
         # tests pass.  Note that the ID's only need be consistent not
         # identical!
         if TVTK_AVAILABLE:
-            instances = ('inst', '_tvtk')
+            instances = ("inst", "_tvtk")
         else:
-            instances = ('inst',)
+            instances = ("inst",)
 
         for attr in instances:
-            getattr(state1, attr).__metadata__['id'] = \
-                getattr(state, attr).__metadata__['id']
+            getattr(state1, attr).__metadata__["id"] = getattr(
+                state, attr
+            ).__metadata__["id"]
 
         if TVTK_AVAILABLE:
             self.assertEqual(state1._tvtk, state._tvtk)
 
-        state1.tuple[-1].__metadata__['id'] = \
-            state.tuple[-1].__metadata__['id']
+        state1.tuple[-1].__metadata__["id"] = state.tuple[-1].__metadata__[
+            "id"
+        ]
         self.assertEqual(state.inst.__metadata__, state1.inst.__metadata__)
 
         self.assertEqual(state.tuple, state1.tuple)
@@ -248,32 +258,30 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(id(state.ref), id(state.numeric))
         self.assertEqual(id(state1.ref), id(state1.numeric))
 
-
     def test_has_instance(self):
         """Test to check has_instance correctness."""
         a = A()
         r = state_pickler.get_state(a)
-        self.assertTrue(r.__metadata__['has_instance'])
+        self.assertTrue(r.__metadata__["has_instance"])
         l = [1, a]
         r = state_pickler.get_state(l)
         self.assertTrue(r.has_instance)
-        self.assertTrue(r[1].__metadata__['has_instance'])
-        d = {'a': l, 'b': 1}
+        self.assertTrue(r[1].__metadata__["has_instance"])
+        d = {"a": l, "b": 1}
         r = state_pickler.get_state(d)
         self.assertTrue(r.has_instance)
-        self.assertTrue(r['a'].has_instance)
-        self.assertTrue(r['a'][1].__metadata__['has_instance'])
+        self.assertTrue(r["a"].has_instance)
+        self.assertTrue(r["a"][1].__metadata__["has_instance"])
 
         class B:
-
             def __init__(self):
                 self.a = [1, A()]
 
         b = B()
         r = state_pickler.get_state(b)
-        self.assertTrue(r.__metadata__['has_instance'])
+        self.assertTrue(r.__metadata__["has_instance"])
         self.assertTrue(r.a.has_instance)
-        self.assertTrue(r.a[1].__metadata__['has_instance'])
+        self.assertTrue(r.a[1].__metadata__["has_instance"])
 
     def test_pickle_classic(self):
         """Test if classic classes can be pickled."""
@@ -283,8 +291,8 @@ class TestDictPickler(unittest.TestCase):
         state = state_pickler.StatePickler().dump_state(t)
 
         # First check if all the attributes are handled.
-        keys = sorted(state['data']['data'].keys())
-        expect = [x for x in t.__dict__.keys() if '__' not in x]
+        keys = sorted(state["data"]["data"].keys())
+        expect = [x for x in t.__dict__.keys() if "__" not in x]
         expect.sort()
         self.assertEqual(keys, expect)
         # Check each attribute.
@@ -322,23 +330,38 @@ class TestDictPickler(unittest.TestCase):
         # Now create a new instance and test the setter.
         t1 = state_pickler.create_instance(res)
 
-        keys = ['c', 'b', 'f', 'i', 'tuple', 'list', 'l', 'numeric',
-                'n', 's', 'u', 'pure_list', 'inst', 'ref', 'dict']
+        keys = [
+            "c",
+            "b",
+            "f",
+            "i",
+            "tuple",
+            "list",
+            "l",
+            "numeric",
+            "n",
+            "s",
+            "u",
+            "pure_list",
+            "inst",
+            "ref",
+            "dict",
+        ]
         ignore = list(keys)
-        ignore.remove('b')
-        first = ['b']
+        ignore.remove("b")
+        first = ["b"]
         last = []
         state_pickler.set_state(t1, res, ignore=ignore, first=first, last=last)
         # Only 'b' should have been set.
         self.assertTrue(t1.b)
         # Rest are unchanged.
         self.assertEqual(t1.i, 7)
-        self.assertEqual(t1.s, 'String')
-        self.assertEqual(t1.u, u'Unicode')
-        self.assertEqual(t1.inst.a, 'a')
+        self.assertEqual(t1.s, "String")
+        self.assertEqual(t1.u, "Unicode")
+        self.assertEqual(t1.inst.a, "a")
         self.assertEqual(t1.list[0], 1)
-        self.assertEqual(t1.tuple[-1].a, 'a')
-        self.assertEqual(t1.dict['a'], 1)
+        self.assertEqual(t1.tuple[-1].a, "a")
+        self.assertEqual(t1.dict["a"], 1)
 
         # Check if last works.
         last = ignore
@@ -357,8 +380,8 @@ class TestDictPickler(unittest.TestCase):
         state = state_pickler.StatePickler().dump_state(t)
 
         # First check if all the attributes are handled.
-        keys = sorted(state['data']['data'].keys())
-        expect = [x for x in t.__dict__.keys() if '__' not in x]
+        keys = sorted(state["data"]["data"].keys())
+        expect = [x for x in t.__dict__.keys() if "__" not in x]
         expect.sort()
         self.assertEqual(keys, expect)
         # Check each attribute.
@@ -390,11 +413,13 @@ class TestDictPickler(unittest.TestCase):
 
     def test_reference_cycle(self):
         """Test if reference cycles are handled when setting the state."""
+
         class A:
             pass
 
         class B:
             pass
+
         a = A()
         b = B()
         a.a = b
@@ -433,25 +458,26 @@ class TestDictPickler(unittest.TestCase):
 
     def test_get_pure_state(self):
         """Test if get_pure_state is called first."""
-        class B:
 
+        class B:
             def __init__(self):
-                self.a = 'dict'
+                self.a = "dict"
 
             def __get_pure_state__(self):
-                return {'a': 'get_pure_state'}
+                return {"a": "get_pure_state"}
 
             def __getstate__(self):
-                return {'a': 'getstate'}
+                return {"a": "getstate"}
+
         b = B()
         s = state_pickler.get_state(b)
-        self.assertEqual(s.a, 'get_pure_state')
+        self.assertEqual(s.a, "get_pure_state")
         del B.__get_pure_state__
         s = state_pickler.get_state(b)
-        self.assertEqual(s.a, 'getstate')
+        self.assertEqual(s.a, "getstate")
         del B.__getstate__
         s = state_pickler.get_state(b)
-        self.assertEqual(s.a, 'dict')
+        self.assertEqual(s.a, "dict")
 
     def test_dump_to_file_str(self):
         """Test if dump can take a str as file"""

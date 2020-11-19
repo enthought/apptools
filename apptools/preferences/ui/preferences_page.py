@@ -13,8 +13,6 @@ from .i_preferences_page import IPreferencesPage
 class PreferencesPage(PreferencesHelper):
     """ A page in a preferences dialog. """
 
-
-
     #### 'IPreferencesPage' interface #########################################
 
     # The page's category (e.g. 'General/Appearance'). The empty string means
@@ -53,31 +51,11 @@ class PreferencesPage(PreferencesHelper):
 
         for trait_name, value in self._changed.items():
             if self._is_preference_trait(trait_name):
-                self.preferences.set('%s.%s' % (path, trait_name), value)
+                self.preferences.set("%s.%s" % (path, trait_name), value)
 
         self._changed.clear()
 
         return
-
-    # fixme: We would like to be able to have the following API so that
-    # developers are not forced into using traits UI for their preferences
-    # pages, but at the moment I can't work out how to do it!
-##     def create_control(self, parent):
-##         """ Create the toolkit-specific control that represents the page. """
-
-##         if self._ui is None:
-##             self._ui = self.edit_traits(parent=parent, kind='subpanel')
-
-##         return self._ui.control
-
-##     def destroy_control(self):
-##         """ Destroy the toolkit-specific control that represents the page. """
-
-##         if self._ui is not None:
-##             self._ui.dispose()
-##             self._ui = None
-
-##         return
 
     ###########################################################################
     # Private interface.
@@ -86,7 +64,7 @@ class PreferencesPage(PreferencesHelper):
     #### Trait change handlers ################################################
 
     def _anytrait_changed(self, trait_name, old, new):
-        """ Static trait change handler.
+        """Static trait change handler.
 
         This is an important override! In the base-class when a trait is
         changed the preferences node is updated too. Here, we stop that from
@@ -97,7 +75,7 @@ class PreferencesPage(PreferencesHelper):
 
         # If the trait was a list or dict '_items' trait then just treat it as
         # if the entire list or dict was changed.
-        if trait_name.endswith('_items'):
+        if trait_name.endswith("_items"):
             trait_name = trait_name[:-6]
             if self._is_preference_trait(trait_name):
                 self._changed[trait_name] = getattr(self, trait_name)
@@ -112,8 +90,11 @@ class PreferencesPage(PreferencesHelper):
     def _is_preference_trait(self, trait_name):
         """ Return True if a trait represents a preference value. """
 
-        if trait_name.startswith('_') or trait_name.endswith('_') \
-           or trait_name in PreferencesPage.class_traits():
+        if (
+            trait_name.startswith("_")
+            or trait_name.endswith("_")
+            or trait_name in PreferencesPage.class_traits()
+        ):
             return False
 
         return True

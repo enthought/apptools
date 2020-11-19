@@ -13,7 +13,7 @@ from .python_type_system import PythonTypeSystem
 
 
 class TypeManager(HasTraits):
-    """ A type manager.
+    """A type manager.
 
     The type manager allows for objects to be created/adapted to a particular
     type.
@@ -34,7 +34,7 @@ class TypeManager(HasTraits):
     # By default this is None, but you can use it to set up a hierarchy of
     # type managers. If a type manager fails to adapt or create an object of
     # some target class then it will give its parent a chance to do so.
-    parent = Instance('TypeManager')
+    parent = Instance("TypeManager")
 
     # The type system used by the manager (it determines 'is_a' relationships
     # and type MROs etc).
@@ -61,7 +61,7 @@ class TypeManager(HasTraits):
     #### Methods ##############################################################
 
     def object_as(self, obj, target_class, *args, **kw):
-        """ Adapts or creates an object of the target class.
+        """Adapts or creates an object of the target class.
 
         Returns None if no appropriate adapter or factory is available.
 
@@ -79,7 +79,9 @@ class TypeManager(HasTraits):
 
         # Otherwise, see if the object can be adapted to the target class.
         else:
-            result = self._adapter_manager.adapt(obj, target_class, *args,**kw)
+            result = self._adapter_manager.adapt(
+                obj, target_class, *args, **kw
+            )
 
         # If this type manager couldn't do the job, then give its parent a go!
         if result is None and self.parent is not None:
@@ -89,7 +91,7 @@ class TypeManager(HasTraits):
 
     # Adapters.
     def register_adapters(self, factory, adaptee_class):
-        """ Registers an adapter factory.
+        """Registers an adapter factory.
 
         'adaptee_class' can be either a class or the name of a class.
 
@@ -107,7 +109,7 @@ class TypeManager(HasTraits):
         return
 
     def register_instance_adapters(self, factory, obj):
-        """ Registers an adapter factory for an individual instance.
+        """Registers an adapter factory for an individual instance.
 
         A factory can be in exactly one manager (as it uses the manager's type
         system).
@@ -119,7 +121,7 @@ class TypeManager(HasTraits):
         return
 
     def unregister_instance_adapters(self, factory, obj):
-        """ Unregisters an adapter factory for an individual instance.
+        """Unregisters an adapter factory for an individual instance.
 
         A factory can be in exactly one manager (as it uses the manager's type
         system).
@@ -131,7 +133,7 @@ class TypeManager(HasTraits):
         return
 
     def register_type_adapters(self, factory, adaptee_class):
-        """ Registers an adapter factory.
+        """Registers an adapter factory.
 
         'adaptee_class' can be either a class or the name of a class.
 
@@ -209,7 +211,8 @@ class TypeManager(HasTraits):
     def _is_factory_for(self, obj, target_class, *args, **kw):
         """ Returns True iff the object is a factory for the target class. """
 
-        is_factory_for = self.type_system.is_a(obj, Factory) \
-                         and obj.can_create(target_class, *args, **kw)
+        is_factory_for = self.type_system.is_a(
+            obj, Factory
+        ) and obj.can_create(target_class, *args, **kw)
 
         return is_factory_for

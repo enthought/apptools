@@ -99,9 +99,11 @@ supported_runtimes = [
 ]
 
 dependencies = {
+    "flake8",
     "traitsui",
     "configobj",
     "coverage",
+    "importlib_resources>=1.1.0",
     "pytables",
     "pandas",
     "pyface",
@@ -254,6 +256,28 @@ def cleanup(runtime, environment):
     click.echo('Done cleanup')
 
 
+@cli.command()
+@click.option('--runtime', default=DEFAULT_RUNTIME)
+@click.option('--environment', default=None)
+def flake8(runtime, environment):
+    """ Run a flake8 check in a given environment.
+
+    """
+    parameters = get_parameters(runtime, environment)
+    targets = [
+        "apptools",
+        "docs",
+        "etstool.py",
+        "setup.py",
+        "examples",
+        "integrationtests",
+    ]
+    commands = [
+        "edm run -e {environment} -- python -m flake8 " + " ".join(targets)
+    ]
+    execute(commands, parameters)
+
+
 @cli.command(name='test-clean')
 @click.option('--runtime', default=DEFAULT_RUNTIME)
 def test_clean(runtime):
@@ -314,6 +338,7 @@ def changelog(ctx):
             "deprecation": "Deprecations",
             "removal": "Removals",
             "doc": "Documentation changes",
+            "test": "Test suite",
         }
     }
 

@@ -30,10 +30,10 @@ class TraitDictContextAdapterFactory(ContextAdapterFactory):
         """ Returns an adapter that adapts an object to the target class. """
 
         adapter = TraitDictContextAdapter(
-            adaptee     = adaptee,
-            environment = environment,
-            context     = context,
-            trait_name  = self.trait_name
+            adaptee=adaptee,
+            environment=environment,
+            context=context,
+            trait_name=self.trait_name,
         )
 
         return adapter

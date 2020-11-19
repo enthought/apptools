@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought logger package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ Convenience functions for creating logging handlers etc. """
 
 
@@ -29,15 +29,15 @@ from .log_queue_handler import LogQueueHandler
 LEVEL = logging.DEBUG
 
 # The default formatter.
-FORMATTER = logging.Formatter('%(levelname)s|%(asctime)s|%(message)s')
+FORMATTER = logging.Formatter("%(levelname)s|%(asctime)s|%(message)s")
 
 
 class LogFileHandler(RotatingFileHandler):
-    """ The default log file handler.
-    """
+    """The default log file handler."""
 
-    def __init__(self, path, maxBytes=1000000, backupCount=3, level=None,
-        formatter=None):
+    def __init__(
+        self, path, maxBytes=1000000, backupCount=3, level=None, formatter=None
+    ):
         RotatingFileHandler.__init__(
             self, path, maxBytes=maxBytes, backupCount=3
         )
@@ -50,36 +50,9 @@ class LogFileHandler(RotatingFileHandler):
         self.setFormatter(formatter)
         self.setLevel(level)
 
-@deprecated('use "LogFileHandler"')
-def create_log_file_handler(path, maxBytes=1000000, backupCount=3, level=None,
-    formatter=None):
-    """ Creates a log file handler.
-
-    This is just a convenience function to make it easy to create the same
-    kind of handlers across applications.
-
-    It sets the handler's formatter to the default formatter, and its logging
-    level to the default logging level.
-
-    """
-    if level is None:
-        level = LEVEL
-    if formatter is None:
-        formatter = FORMATTER
-
-    handler = RotatingFileHandler(
-        path, maxBytes=maxBytes, backupCount=backupCount
-    )
-
-    handler.setFormatter(formatter)
-    handler.setLevel(level)
-
-    return handler
-
 
 def add_log_queue_handler(logger, level=None, formatter=None):
-    """ Adds a queueing log handler to a logger.
-    """
+    """Adds a queueing log handler to a logger."""
     if level is None:
         level = LEVEL
     if formatter is None:

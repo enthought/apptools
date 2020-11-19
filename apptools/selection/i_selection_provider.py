@@ -12,7 +12,7 @@ class ISelectionProvider(Interface):
     selection = Event
 
     def get_selection(self):
-        """ Return the current selection.
+        """Return the current selection.
 
         Returns:
             selection -- ISelection
@@ -20,7 +20,7 @@ class ISelectionProvider(Interface):
         """
 
     def set_selection(self, items, ignore_missing=False):
-        """ Set the current selection to the given items.
+        """Set the current selection to the given items.
 
         If ``ignore_missing`` is ``True``, items that are not available in the
         selection provider are silently ignored. If it is ``False`` (default),

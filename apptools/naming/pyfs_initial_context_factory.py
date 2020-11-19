@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ The initial context factory for Python file system contexts. """
 
 
@@ -46,4 +46,4 @@ class PyFSInitialContextFactory(InitialContextFactory):
         object_serializers = [ObjectSerializer()]
         environment[PyFSContext.OBJECT_SERIALIZERS] = object_serializers
 
-        return PyFSContext(path=r'', environment=environment)
+        return PyFSContext(path=r"", environment=environment)
