@@ -1,5 +1,6 @@
 from collections import Mapping, MutableMapping
 from functools import partial
+import inspect
 
 import numpy as np
 import tables
@@ -23,10 +24,10 @@ def _update_wrapped_docstring(wrapped, original=None):
 Note that the first argument is a nodepath relative to the group, rather than
 an absolute path. Below is the original docstring:
 
-    """.format(
+""".format(
         func_name=wrapped.__name__
     )
-    wrapped.__doc__ = PREAMBLE + original.__doc__
+    wrapped.__doc__ = PREAMBLE + inspect.cleandoc(original.__doc__)
     return wrapped
 
 
