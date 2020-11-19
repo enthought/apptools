@@ -27,7 +27,7 @@ class Attachments(HasTraits):
         traits["message"] = message
         super(Attachments, self).__init__(**traits)
 
-    # FIXME: all of the package_*() methods refer to deprecated project plugins.
+    # FIXME: all of the package_*() methods refer to deprecated project plugins
 
     def package_workspace(self):
         if self.application is None:

@@ -33,7 +33,6 @@ from traitsui.tabular_adapter import TabularAdapter
 
 # Local imports
 from apptools.logger.agent.quality_agent_view import QualityAgentView
-from apptools.logger.plugin import view
 from apptools.logger.plugin.logger_service import LoggerService
 
 # Constants

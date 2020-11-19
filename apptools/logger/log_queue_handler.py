@@ -44,7 +44,7 @@ class LogQueueHandler(Handler):
         if self._view is not None:
             try:
                 self._view.update()
-            except Exception as e:
+            except Exception:
                 pass
         self.dirty = True
         return
@@ -54,7 +54,7 @@ class LogQueueHandler(Handler):
 
         try:
             result = self.ring.get()
-        except Exception as msg:
+        except Exception:
             # we did our best and it won't cause too much damage
             # to just return a bogus message
             result = []
@@ -70,7 +70,7 @@ class LogQueueHandler(Handler):
         if self._view is not None:
             try:
                 self._view.update()
-            except Exception as e:
+            except Exception:
                 pass
         self.dirty = True
         return
