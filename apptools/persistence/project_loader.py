@@ -47,7 +47,6 @@ def load_project(
     # Finally we can import the project ...
     logger.info("loading %s" % latest_file)
     i_f = open(latest_file, "rb")
-    version = VersionedUnpickler(i_f).load(max_pass)
     project = VersionedUnpickler(i_f).load(max_pass)
     i_f.close()
 
@@ -103,7 +102,6 @@ def upgrade_project(
         updater = klass()
 
         # load and update this version of the project
-        version = VersionedUnpickler(i_f).load(max_pass)
         project = VersionedUnpickler(i_f, updater).load(max_pass)
         i_f.close()
 

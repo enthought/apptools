@@ -1,7 +1,7 @@
 # Standard library imports
-from pickle import *
+from pickle import BUILD, Unpickler, UnpicklingError
 import logging
-from types import GeneratorType, MethodType
+from types import GeneratorType
 
 # Enthought library imports
 from apptools.persistence.updater import __replacement_setstate__
@@ -136,7 +136,7 @@ class VersionedUnpickler(NewUnpickler):
             # version of the file...
             try:
                 klass = Unpickler.find_class(self, module, name)
-            except:
+            except Exception:
                 logger.error("Looking for [%s] [%s]" % (module, name))
                 logger.exception(
                     "Problem using default unpickle functionality"

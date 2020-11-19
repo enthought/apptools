@@ -100,7 +100,6 @@ Notes
 # Standard library imports.
 import base64
 import sys
-import types
 import pickle
 import gzip
 from io import BytesIO, StringIO
@@ -851,7 +850,7 @@ class StateSetter:
 
     def _do(self, obj, key, value):
         try:
-            attr = getattr(obj, key)
+            getattr(obj, key)
         except AttributeError:
             raise StateSetterError(
                 "Object %s does not have an attribute called: %s" % (obj, key)
