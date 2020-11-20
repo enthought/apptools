@@ -124,20 +124,20 @@ def loads(str, max_pass=-1):
 
 # We don't customize the Python pickler, though we do use the cPickle module
 # for improved performance.
-from six.moves.cPickle import Pickler
+from pickle import Pickler
 
 # Implement the dump and dumps methods so that all traits in a HasTraits object
 # get included in the pickle.
 def dump(obj, file, protocol=2):
     _flush_traits(obj)
-    from six.moves.cPickle import dump as d
+    from pickle import dump as d
 
     return d(obj, file, protocol)
 
 
 def dumps(obj, protocol=2):
     _flush_traits(obj)
-    from six.moves.cPickle import dumps as ds
+    from pickle import dumps as ds
 
     return ds(obj, protocol)
 

@@ -5,9 +5,6 @@
 from traits.api import Any, HasTraits, Instance, Str, Undefined
 from traits.api import Str
 
-# Third-party librart imports.
-import six
-
 # Local imports.
 from .i_preferences import IPreferences
 from .package_globals import get_default_preferences
@@ -104,7 +101,7 @@ class PreferenceBinding(HasTraits):
 
         # If the trait type is 'Str' then we convert the raw value.
         elif type(handler) is Str:
-            value = six.text_type(value)
+            value = str(value)
 
         # Otherwise, we eval it!
         else:
