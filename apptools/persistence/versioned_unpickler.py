@@ -83,7 +83,6 @@ class NewUnpickler(Unpickler):
     # point, we would have the dispatch still pointing to
     # NewPickler.load_build whereas the object being passed in will be an
     # Unpickler instance, causing a TypeError.
-    @classmethod
     def load_build(cls, obj):
         # Just save the instance in the list of objects.
         if isinstance(obj, NewUnpickler):
