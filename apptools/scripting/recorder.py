@@ -27,9 +27,9 @@ from traits.api import (
 from traits.util.camel_case import camel_case_to_python
 
 
-################################################################################
+###############################################################################
 # `_RegistryData` class.
-################################################################################
+###############################################################################
 class _RegistryData(HasTraits):
     # Object's script ID
     script_id = Property(Str)
@@ -54,9 +54,9 @@ class _RegistryData(HasTraits):
 
     _script_id = Str("")
 
-    ######################################################################
+    ###########################################################################
     # Non-public interface.
-    ######################################################################
+    ###########################################################################
     def _get_path(self):
         pdata = self.parent_data
         path = ""
@@ -88,16 +88,16 @@ class _RegistryData(HasTraits):
         self._script_id = id
 
 
-################################################################################
+###############################################################################
 # `RecorderError` class.
-################################################################################
+###############################################################################
 class RecorderError(Exception):
     pass
 
 
-################################################################################
+###############################################################################
 # `Recorder` class.
-################################################################################
+###############################################################################
 class Recorder(HasTraits):
 
     # The lines of code recorded.
@@ -144,9 +144,9 @@ class Recorder(HasTraits):
     # in which case we don't want to do any recording.
     _in_function = Bool(False)
 
-    ######################################################################
+    ###########################################################################
     # `Recorder` interface.
-    ######################################################################
+    ###########################################################################
     def record(self, code):
         """Record a string to be stored to the output file.
 
@@ -517,15 +517,14 @@ class Recorder(HasTraits):
                     # nothing.
                     result = self._import_class_string(obj.__class__)
                     cls = obj.__class__.__name__
-                    mod = obj.__module__
                     result += "\n%s = %s()" % (script_id, cls)
 
                 if len(result) > 0:
                     self.lines.extend(result.split("\n"))
 
-    ######################################################################
+    ###########################################################################
     # Non-public interface.
-    ######################################################################
+    ###########################################################################
     def _get_unique_name(self, obj):
         """Return a unique object name (a string).  Note that this does
         not cache the object, so if called with the same object 3 times
@@ -620,7 +619,6 @@ class Recorder(HasTraits):
             added = event.added
             nr = len(removed)
             slice = "[%d:%d]" % (index, index + nr)
-            na = len(added)
             rhs = [self._object_as_string(item) for item in added]
             rhs = ", ".join(rhs)
             obj = "%s.%s" % (sid, name[:-6])
@@ -642,7 +640,6 @@ class Recorder(HasTraits):
 
     def _analyze_code(self, code):
         """Analyze the code and return extra code if needed."""
-        known_ids = self._known_ids
         lhs = ""
         try:
             lhs = code.split()[0]
@@ -721,8 +718,7 @@ class Recorder(HasTraits):
     def _return_as_string(self, object):
         """Return a string given a returned object from a function."""
         result = ""
-        long_type = long if six.PY2 else int
-        ignore = (float, complex, bool, int, long_type, str)
+        ignore = (float, complex, bool, int, str)
         if object is not None and type(object) not in ignore:
             # If object is not know, register it.
             registry = self._registry
