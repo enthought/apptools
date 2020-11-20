@@ -323,7 +323,6 @@ class QualityAgentView(Dialog):
         return
 
     def _on_send(self, event):
-        import wx
 
         # Disable the Send button while we go through the possibly
         # time-consuming email-sending process.

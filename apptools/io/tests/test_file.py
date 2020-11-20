@@ -15,7 +15,10 @@
 
 
 # Standard library imports.
-import os, shutil, stat, unittest
+import os
+import shutil
+import stat
+import unittest
 
 # Enthought library imports.
 from apptools.io import File
@@ -31,11 +34,7 @@ class FileTestCase(unittest.TestCase):
     def setUp(self):
         """ Prepares the test fixture before each test method is called. """
 
-        try:
-            shutil.rmtree("data")
-
-        except:
-            pass
+        shutil.rmtree("data", ignore_errors=True)
 
         os.mkdir("data")
 

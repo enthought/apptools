@@ -37,7 +37,7 @@ class LoggerPlugin(Plugin):
     id = ID
     name = "Logger plugin"
 
-    #### Extension points for this plugin ######################################
+    #### Extension points for this plugin #####################################
 
     MAIL_FILES = "apptools.logger.plugin.mail_files"
 
@@ -55,7 +55,7 @@ class LoggerPlugin(Plugin):
         """,
     )
 
-    #### Contributions to extension points made by this plugin #################
+    #### Contributions to extension points made by this plugin ################
 
     PREFERENCES = "envisage.preferences"
     PREFERENCES_PAGES = "envisage.ui.workbench.preferences_pages"
@@ -78,7 +78,7 @@ class LoggerPlugin(Plugin):
     def _views_default(self):
         return [self._logger_view_factory]
 
-    #### Plugin interface ######################################################
+    #### Plugin interface #####################################################
 
     def start(self):
         """Starts the plugin."""
@@ -101,7 +101,7 @@ class LoggerPlugin(Plugin):
         service = self.application.get_service(ILOGGER)
         service.save_preferences()
 
-    #### LoggerPlugin private interface ########################################
+    #### LoggerPlugin private interface #######################################
 
     def _logger_view_factory(self, **traits):
         from apptools.logger.plugin.view.logger_view import LoggerView

@@ -63,7 +63,8 @@ class H5TableNode(object):
 
     @classmethod
     def is_table_node(cls, pytables_node):
-        """Return True if pytables_node is a pytables.Table or a H5TableNode."""
+        """Return True if pytables_node is a pytables.Table or a H5TableNode.
+        """
         return isinstance(pytables_node, (PyTablesTable, H5TableNode))
 
     # --------------------------------------------------------------------------
