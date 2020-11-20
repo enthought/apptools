@@ -33,4 +33,4 @@ class TraitDictContextAdapter(DictContextAdapter):
     def _get_namespace_name(self):
         """ Returns the name of the context within its own namespace. """
 
-        return self.context.namespace_name + '/' + self.trait_name
+        return self.context.namespace_name + "/" + self.trait_name

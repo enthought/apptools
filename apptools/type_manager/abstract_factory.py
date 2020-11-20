@@ -18,7 +18,7 @@ class AbstractFactory(HasTraits):
     ###########################################################################
 
     def create(self, target_class, *args, **kw):
-        """ Creates an object of the specified target class.
+        """Creates an object of the specified target class.
 
         Returns None if the factory cannot produce an object of the target
         class.
@@ -54,7 +54,7 @@ class AbstractFactory(HasTraits):
     ###########################################################################
 
     def _get_warning_message(self, target_class):
-        """ Returns a warning message.
+        """Returns a warning message.
 
         The warning message is used when a factory fails to create something
         that it said it could!
@@ -63,7 +63,7 @@ class AbstractFactory(HasTraits):
 
         message = "%s failed to create a %s" % (
             self.__class__.__name__,
-            target_class.__name__
+            target_class.__name__,
         )
 
         return message

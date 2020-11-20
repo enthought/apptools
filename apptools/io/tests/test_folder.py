@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,12 +10,15 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought IO package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ Tests folder operations. """
 
 
 # Standard library imports.
-import os, shutil, stat, unittest
+import os
+import shutil
+import stat
+import unittest
 from os.path import join
 
 # Enthought library imports.
@@ -32,20 +35,16 @@ class FolderTestCase(unittest.TestCase):
     def setUp(self):
         """ Prepares the test fixture before each test method is called. """
 
-        try:
-            shutil.rmtree('data')
+        shutil.rmtree("data", ignore_errors=True)
 
-        except:
-            pass
-
-        os.mkdir('data')
+        os.mkdir("data")
 
         return
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
 
-        shutil.rmtree('data')
+        shutil.rmtree("data")
 
         return
 
@@ -57,39 +56,39 @@ class FolderTestCase(unittest.TestCase):
         """ folder properties """
 
         # Properties of a non-existent folder.
-        f = File('data/bogus')
+        f = File("data/bogus")
 
         self.assertIn(os.path.abspath(os.path.curdir), f.absolute_path)
         self.assertIsNone(f.children)
-        self.assertEqual(f.ext, '')
+        self.assertEqual(f.ext, "")
         self.assertFalse(f.exists)
         self.assertFalse(f.is_file)
         self.assertFalse(f.is_folder)
         self.assertFalse(f.is_package)
         self.assertFalse(f.is_readonly)
-        self.assertEqual(f.mime_type, 'content/unknown')
-        self.assertEqual(f.name, 'bogus')
-        self.assertEqual(f.parent.path, 'data')
-        self.assertEqual(f.path, 'data/bogus')
+        self.assertEqual(f.mime_type, "content/unknown")
+        self.assertEqual(f.name, "bogus")
+        self.assertEqual(f.parent.path, "data")
+        self.assertEqual(f.path, "data/bogus")
         self.assertIn(os.path.abspath(os.path.curdir), f.url)
-        self.assertEqual(str(f), 'File(%s)' % f.path)
+        self.assertEqual(str(f), "File(%s)" % f.path)
 
         # Properties of an existing folder.
-        f = File('data/sub')
+        f = File("data/sub")
         f.create_folder()
 
         self.assertIn(os.path.abspath(os.path.curdir), f.absolute_path)
         self.assertEqual(len(f.children), 0)
-        self.assertEqual(f.ext, '')
+        self.assertEqual(f.ext, "")
         self.assertTrue(f.exists)
         self.assertFalse(f.is_file)
         self.assertTrue(f.is_folder)
         self.assertFalse(f.is_package)
         self.assertFalse(f.is_readonly)
-        self.assertEqual(f.mime_type, 'content/unknown')
-        self.assertEqual(f.name, 'sub')
-        self.assertEqual(f.parent.path, 'data')
-        self.assertEqual(f.path, 'data/sub')
+        self.assertEqual(f.mime_type, "content/unknown")
+        self.assertEqual(f.name, "sub")
+        self.assertEqual(f.parent.path, "data")
+        self.assertEqual(f.path, "data/sub")
         self.assertIn(os.path.abspath(os.path.curdir), f.url)
 
         # Make it readonly.
@@ -102,24 +101,24 @@ class FolderTestCase(unittest.TestCase):
         self.assertFalse(f.is_readonly)
 
         # Properties of a Python package folder.
-        f = File('data/package')
+        f = File("data/package")
         f.create_folder()
 
-        init = File('data/package/__init__.py')
+        init = File("data/package/__init__.py")
         init.create_file()
 
         self.assertIn(os.path.abspath(os.path.curdir), f.absolute_path)
         self.assertEqual(len(f.children), 1)
-        self.assertEqual(f.ext, '')
+        self.assertEqual(f.ext, "")
         self.assertTrue(f.exists)
         self.assertFalse(f.is_file)
         self.assertTrue(f.is_folder)
         self.assertTrue(f.is_package)
         self.assertFalse(f.is_readonly)
-        self.assertEqual(f.mime_type, 'content/unknown')
-        self.assertEqual(f.name, 'package')
-        self.assertEqual(f.parent.path, 'data')
-        self.assertEqual(f.path, 'data/package')
+        self.assertEqual(f.mime_type, "content/unknown")
+        self.assertEqual(f.name, "package")
+        self.assertEqual(f.parent.path, "data")
+        self.assertEqual(f.path, "data/package")
         self.assertIn(os.path.abspath(os.path.curdir), f.url)
 
         return
@@ -127,7 +126,7 @@ class FolderTestCase(unittest.TestCase):
     def test_copy(self):
         """ folder copy """
 
-        f = File('data/sub')
+        f = File("data/sub")
         self.assertFalse(f.exists)
 
         # Create the folder.
@@ -136,33 +135,33 @@ class FolderTestCase(unittest.TestCase):
         self.assertRaises(ValueError, f.create_folder)
 
         self.assertEqual(len(f.children), 0)
-        self.assertEqual(f.ext, '')
+        self.assertEqual(f.ext, "")
         self.assertFalse(f.is_file)
         self.assertTrue(f.is_folder)
-        self.assertEqual(f.mime_type, 'content/unknown')
-        self.assertEqual(f.name, 'sub')
-        self.assertEqual(f.path, 'data/sub')
+        self.assertEqual(f.mime_type, "content/unknown")
+        self.assertEqual(f.name, "sub")
+        self.assertEqual(f.path, "data/sub")
 
         # Copy the folder.
-        g = File('data/copy')
+        g = File("data/copy")
         self.assertFalse(g.exists)
 
         f.copy(g)
         self.assertTrue(g.exists)
 
         self.assertEqual(len(g.children), 0)
-        self.assertEqual(g.ext, '')
+        self.assertEqual(g.ext, "")
         self.assertFalse(g.is_file)
         self.assertTrue(g.is_folder)
-        self.assertEqual(g.mime_type, 'content/unknown')
-        self.assertEqual(g.name, 'copy')
-        self.assertEqual(g.path, 'data/copy')
+        self.assertEqual(g.mime_type, "content/unknown")
+        self.assertEqual(g.name, "copy")
+        self.assertEqual(g.path, "data/copy")
 
         # Attempt to copy a non-existent folder (should do nothing).
-        f = File('data/bogus')
+        f = File("data/bogus")
         self.assertFalse(f.exists)
 
-        g = File('data/bogus_copy')
+        g = File("data/bogus_copy")
         self.assertFalse(g.exists)
 
         f.copy(g)
@@ -173,16 +172,16 @@ class FolderTestCase(unittest.TestCase):
     def test_create_folder(self):
         """ folder creation """
 
-        f = File('data/sub')
+        f = File("data/sub")
         self.assertFalse(f.exists)
 
         # Create the folder.
         f.create_folder()
         self.assertTrue(f.exists)
 
-        parent = File('data')
+        parent = File("data")
         self.assertEqual(len(parent.children), 1)
-        self.assertEqual(parent.children[0].path, join('data', 'sub'))
+        self.assertEqual(parent.children[0].path, join("data", "sub"))
 
         # Try to create it again.
         self.assertRaises(ValueError, f.create_folder)
@@ -192,7 +191,7 @@ class FolderTestCase(unittest.TestCase):
     def test_create_folders(self):
         """ nested folder creation """
 
-        f = File('data/sub/foo')
+        f = File("data/sub/foo")
         self.assertFalse(f.exists)
 
         # Attempt to create the folder with 'create_folder' which requires
@@ -202,7 +201,7 @@ class FolderTestCase(unittest.TestCase):
         # Create the folder.
         f.create_folders()
         self.assertTrue(f.exists)
-        self.assertTrue(File('data/sub').exists)
+        self.assertTrue(File("data/sub").exists)
 
         # Try to create it again.
         self.assertRaises(ValueError, f.create_folders)
@@ -212,7 +211,7 @@ class FolderTestCase(unittest.TestCase):
     def test_delete(self):
         """ folder deletion """
 
-        f = File('data/sub')
+        f = File("data/sub")
         self.assertFalse(f.exists)
 
         # Create the folder.
@@ -221,19 +220,19 @@ class FolderTestCase(unittest.TestCase):
         self.assertRaises(ValueError, f.create_folder)
 
         self.assertEqual(len(f.children), 0)
-        self.assertEqual(f.ext, '')
+        self.assertEqual(f.ext, "")
         self.assertFalse(f.is_file)
         self.assertTrue(f.is_folder)
-        self.assertEqual(f.mime_type, 'content/unknown')
-        self.assertEqual(f.name, 'sub')
-        self.assertEqual(f.path, 'data/sub')
+        self.assertEqual(f.mime_type, "content/unknown")
+        self.assertEqual(f.name, "sub")
+        self.assertEqual(f.path, "data/sub")
 
         # Delete it.
         f.delete()
         self.assertFalse(f.exists)
 
         # Attempt to delete a non-existet folder (should do nothing).
-        f = File('data/bogus')
+        f = File("data/bogus")
         self.assertFalse(f.exists)
 
         f.delete()

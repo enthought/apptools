@@ -6,8 +6,7 @@ A Recorder subclass that presents a simple user interface.
 # License: BSD Style.
 
 from traits.api import Code, Button, Int, on_trait_change, Any
-from traitsui.api import (View, Item, Group, HGroup, CodeEditor,
-                                     spring, Handler)
+from traitsui.api import View, Item, Group, HGroup, CodeEditor, spring, Handler
 
 from .recorder import Recorder
 
@@ -33,10 +32,10 @@ class RecorderWithUI(Recorder):
     """
 
     # The code to display
-    code = Code(editor=CodeEditor(line='current_line'))
+    code = Code(editor=CodeEditor(line="current_line"))
 
     # Button to save script to file.
-    save_script = Button('Save Script')
+    save_script = Button("Save Script")
 
     # The current line to show, used by the editor.
     current_line = Int
@@ -47,20 +46,21 @@ class RecorderWithUI(Recorder):
     ########################################
     # Traits View.
     view = View(
-             Group(
-                HGroup(Item('recording', show_label=True),
-                       spring,
-                       Item('save_script', show_label=False),
-                ),
-                Group(Item('code', show_label=False)),
-                ),
-             width=600,
-             height=360,
-             id='apptools.scripting.recorder_with_ui',
-             buttons=['Cancel'],
-             resizable=True,
-             handler=CloseHandler()
-             )
+        Group(
+            HGroup(
+                Item("recording", show_label=True),
+                spring,
+                Item("save_script", show_label=False),
+            ),
+            Group(Item("code", show_label=False)),
+        ),
+        width=600,
+        height=360,
+        id="apptools.scripting.recorder_with_ui",
+        buttons=["Cancel"],
+        resizable=True,
+        handler=CloseHandler(),
+    )
 
     ######################################################################
     # RecorderWithUI interface.
@@ -81,7 +81,7 @@ class RecorderWithUI(Recorder):
     ######################################################################
     # Non-public interface.
     ######################################################################
-    @on_trait_change('lines[]')
+    @on_trait_change("lines[]")
     def _update_code(self):
         self.code = self.get_code()
         self.current_line = len(self.lines) + 1

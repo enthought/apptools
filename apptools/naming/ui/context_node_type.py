@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ The node type for contexts in a naming system. """
 
 from __future__ import print_function
@@ -45,12 +45,12 @@ class ContextNodeType(NodeType):
     def has_children(self, node):
         """ Returns True if a node has children, otherwise False. """
 
-        return len(node.obj.list_names('')) > 0
+        return len(node.obj.list_names("")) > 0
 
     def get_children(self, node):
         """ Returns the children of a node. """
 
-        return node.obj.list_bindings('')
+        return node.obj.list_bindings("")
 
     def get_drag_value(self, node):
         """ Get the value that is dragged for a node. """
@@ -74,13 +74,13 @@ class ContextNodeType(NodeType):
         # The parent context will NOT be None here (see 'is_editable').
         parent = node.context
 
-        return len(text.strip()) > 0 and text not in parent.list_names('')
+        return len(text.strip()) > 0 and text not in parent.list_names("")
 
     def set_text(self, node, text):
         """ Sets the label text for a node. """
 
-        print('Setting text on', node.name, node.obj)
-        print('Context details', node.obj.name, node.obj.path)
+        print("Setting text on", node.name, node.obj)
+        print("Context details", node.obj.name, node.obj.path)
 
         # Do the rename in the naming system.
         node.context.rename(node.name, text)

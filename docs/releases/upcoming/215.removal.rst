@@ -1,0 +1,1 @@
+Remove ``help`` subpackage (#215)

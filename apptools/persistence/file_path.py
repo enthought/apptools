@@ -8,7 +8,7 @@ context of persistent storage with the state_pickler.
 
 # Standard library imports.
 import os
-from os.path import abspath, normpath, dirname, commonprefix, join
+from os.path import abspath, normpath, dirname, join
 
 
 class FilePath(object):
@@ -19,7 +19,8 @@ class FilePath(object):
     stored relative path is used to set the absolute path correctly
     based on the path of the saved file.
     """
-    def __init__(self, value=''):
+
+    def __init__(self, value=""):
         self.set(value)
 
     def __str__(self):
@@ -29,18 +30,16 @@ class FilePath(object):
         return self.abs_pth.__repr__()
 
     def get(self):
-        """Get the path.
-        """
+        """Get the path."""
         return self.abs_pth
 
     def set(self, value):
-        """Sets the value of the path.
-        """
+        """Sets the value of the path."""
         self.rel_pth = value
         if value:
             self.abs_pth = normpath(abspath(value))
         else:
-            self.abs_pth = ''
+            self.abs_pth = ""
 
     def set_relative(self, base_f_name):
         """Sets the path relative to `base_f_name`.  Note that
@@ -55,7 +54,7 @@ class FilePath(object):
 
         # Now strip out any common prefix between the two paths.
         for part in _src.split(os.sep):
-            if _dst.startswith(part+os.sep):
+            if _dst.startswith(part + os.sep):
                 length = len(part) + 1
                 _src = _src[length:]
                 _dst = _dst[length:]
@@ -64,11 +63,11 @@ class FilePath(object):
 
         # For each directory in the source, we need to add a reference to
         # the parent directory to the destination.
-        ret = (_src.count(os.sep) * ('..' + os.sep)) + _dst
+        ret = (_src.count(os.sep) * (".." + os.sep)) + _dst
 
         # Make it posix style.
-        if os.sep != '/':
-            ret.replace(os.sep, '/')
+        if os.sep != "/":
+            ret.replace(os.sep, "/")
 
         # Store it.
         self.rel_pth = ret
@@ -82,4 +81,3 @@ class FilePath(object):
         file_name = join(dirname(base_f_name), rel_file_name)
         file_name = os.path.normpath(file_name)
         self.abs_pth = file_name
-

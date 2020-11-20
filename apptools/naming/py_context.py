@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 """ A naming context for a Python namespace. """
 
 
@@ -31,8 +31,8 @@ from .referenceable_state_factory import ReferenceableStateFactory
 # The default environment.
 ENVIRONMENT = {
     # 'Context' properties.
-    Context.OBJECT_FACTORIES : [PyObjectFactory()],
-    Context.STATE_FACTORIES  : [ReferenceableStateFactory()],
+    Context.OBJECT_FACTORIES: [PyObjectFactory()],
+    Context.STATE_FACTORIES: [ReferenceableStateFactory()],
 }
 
 
@@ -70,12 +70,12 @@ class PyContext(Context, Referenceable):
         super(PyContext, self).__init__(**traits)
 
         if type(self.namespace) is not dict:
-            if hasattr(self.namespace, '__dict__'):
+            if hasattr(self.namespace, "__dict__"):
                 self.obj = self.namespace
                 self.namespace = self.namespace.__dict__
 
             else:
-                raise ValueError('Need a dictionary or a __dict__ attribute')
+                raise ValueError("Need a dictionary or a __dict__ attribute")
 
         return
 
@@ -89,8 +89,8 @@ class PyContext(Context, Referenceable):
         """ Returns a reference to this object suitable for binding. """
 
         reference = Reference(
-            class_name = self.__class__.__name__,
-            addresses  = [Address(type='py_context', content=self.namespace)]
+            class_name=self.__class__.__name__,
+            addresses=[Address(type="py_context", content=self.namespace)],
         )
 
         return reference
@@ -114,7 +114,7 @@ class PyContext(Context, Referenceable):
     def _bind(self, name, obj):
         """ Binds a name to an object in this context. """
 
-        state = naming_manager.get_state_to_bind(obj, name,self)
+        state = naming_manager.get_state_to_bind(obj, name, self)
         self.namespace[name] = state
 
         return
@@ -132,7 +132,7 @@ class PyContext(Context, Referenceable):
         del self.namespace[name]
 
         # Trait event notification.
-        self.trait_property_changed('context_changed', None, None)
+        self.trait_property_changed("context_changed", None, None)
 
         return
 
@@ -159,7 +159,7 @@ class PyContext(Context, Referenceable):
         self.namespace[name] = sub
 
         # Trait event notification.
-        self.trait_property_changed('context_changed', None, None)
+        self.trait_property_changed("context_changed", None, None)
 
         return sub
 
@@ -169,7 +169,7 @@ class PyContext(Context, Referenceable):
         del self.namespace[name]
 
         # Trait event notification.
-        self.trait_property_changed('context_changed', None, None)
+        self.trait_property_changed("context_changed", None, None)
 
         return
 
@@ -178,8 +178,9 @@ class PyContext(Context, Referenceable):
 
         bindings = []
         for name, value in self.namespace.items():
-            bindings.append(Binding(name=name, obj=self._lookup(name),
-                                    context=self))
+            bindings.append(
+                Binding(name=name, obj=self._lookup(name), context=self)
+            )
         return bindings
 
     def _list_names(self):

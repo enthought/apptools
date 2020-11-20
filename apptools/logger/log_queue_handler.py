@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought logger package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Standard library imports.
 from logging import Handler
@@ -21,15 +21,14 @@ from .ring_buffer import RingBuffer
 
 class LogQueueHandler(Handler):
 
-    """ Buffers up the log messages so that we can display them later.
-        This is important on startup when log messages are generated before
-        the ui has started.  By putting them in this queue we can display
-        them once the ui is ready.
+    """Buffers up the log messages so that we can display them later.
+    This is important on startup when log messages are generated before
+    the ui has started.  By putting them in this queue we can display
+    them once the ui is ready.
     """
 
     # The view where updates will go
     _view = None
-
 
     def __init__(self, size=1000):
         Handler.__init__(self)
@@ -39,35 +38,31 @@ class LogQueueHandler(Handler):
         self.dirty = False
         return
 
-
     def emit(self, record):
         """ Actually this is more like an enqueue than an emit()."""
         self.ring.append(record)
         if self._view is not None:
             try:
                 self._view.update()
-            except Exception as e:
+            except Exception:
                 pass
         self.dirty = True
         return
-
 
     def get(self):
         self.dirty = False
 
         try:
             result = self.ring.get()
-        except Exception as msg:
+        except Exception:
             # we did our best and it won't cause too much damage
             # to just return a bogus message
             result = []
 
         return result
 
-
     def has_new_records(self):
         return self.dirty
-
 
     def reset(self):
         # start over with a new empty buffer
@@ -75,7 +70,7 @@ class LogQueueHandler(Handler):
         if self._view is not None:
             try:
                 self._view.update()
-            except Exception as e:
+            except Exception:
                 pass
         self.dirty = True
         return

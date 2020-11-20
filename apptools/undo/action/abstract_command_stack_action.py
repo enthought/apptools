@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Riverbank Computing Limited
 # Description: <Enthought undo package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Enthought library imports.
 from pyface.action.api import Action
@@ -21,7 +21,7 @@ from ..i_undo_manager import IUndoManager
 
 
 class AbstractCommandStackAction(Action):
-    """ The abstract base class for all actions that operate on a command
+    """The abstract base class for all actions that operate on a command
     stack.
     """
 
@@ -39,7 +39,9 @@ class AbstractCommandStackAction(Action):
 
         super(AbstractCommandStackAction, self).__init__(**traits)
 
-        self.undo_manager.on_trait_event(self._on_stack_updated, 'stack_updated')
+        self.undo_manager.on_trait_event(
+            self._on_stack_updated, "stack_updated"
+        )
 
         # Update the action to initialise it.
         self._update_action()
@@ -49,15 +51,16 @@ class AbstractCommandStackAction(Action):
     ###########################################################################
 
     def destroy(self):
-        """ Called when the action is no longer required.
+        """Called when the action is no longer required.
 
         By default this method does nothing, but this would be a great place to
         unhook trait listeners etc.
 
         """
 
-        self.undo_manager.on_trait_event(self._on_stack_updated,
-                                         'stack_updated', remove=True)
+        self.undo_manager.on_trait_event(
+            self._on_stack_updated, "stack_updated", remove=True
+        )
 
     ###########################################################################
     # Protected interface.

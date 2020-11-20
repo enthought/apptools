@@ -2,7 +2,7 @@
 from pickle import _Unpickler as Unpickler
 from pickle import UnpicklingError, BUILD
 import logging
-from types import GeneratorType, MethodType
+from types import GeneratorType
 
 # Enthought library imports
 from apptools.persistence.updater import __replacement_setstate__
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 # class 'NewUnpickler'
 ##############################################################################
 class NewUnpickler(Unpickler):
-    """ An unpickler that implements a two-stage pickling process to make it
+    """An unpickler that implements a two-stage pickling process to make it
     possible to unpickle complicated Python object hierarchies where the
     unserialized state of an object depends on the state of other objects in
     the same pickle.
@@ -48,14 +48,15 @@ class NewUnpickler(Unpickler):
 
         # Execute object's initialize to setup the generators.
         for obj in self.objects:
-            if hasattr(obj, '__initialize__') and \
-                   callable(obj.__initialize__):
+            if hasattr(obj, "__initialize__") and callable(obj.__initialize__):
                 ret = obj.__initialize__()
                 if isinstance(ret, GeneratorType):
                     generators.append((obj, ret))
                 elif ret is not None:
-                    raise UnpicklingError('Unexpected return value from '
-                        '__initialize__.  %s returned %s' % (obj, ret))
+                    raise UnpicklingError(
+                        "Unexpected return value from "
+                        "__initialize__.  %s returned %s" % (obj, ret)
+                    )
 
         # Ensure a maximum number of passes
         if max_pass < 0:
@@ -69,7 +70,10 @@ class NewUnpickler(Unpickler):
                 not_done = [x[0] for x in generators]
                 msg = """Reached maximum pass count %s.  You may have
                          a deadlock!  The following objects are
-                         uninitialized: %s""" % (max_pass, not_done)
+                         uninitialized: %s""" % (
+                    max_pass,
+                    not_done,
+                )
                 raise UnpicklingError(msg)
             for o, g in generators[:]:
                 try:
@@ -88,11 +92,12 @@ class NewUnpickler(Unpickler):
         if isinstance(obj, NewUnpickler):
             obj.objects.append(obj.stack[-2])
         Unpickler.load_build(obj)
+
     load_build = classmethod(load_build)
 
 
 class VersionedUnpickler(NewUnpickler):
-    """ This class reads in a pickled file created at revision version 'n'
+    """This class reads in a pickled file created at revision version 'n'
     and then applies the transforms specified in the updater class to
     generate a new set of objects which are at revision version 'n+1'.
 
@@ -104,15 +109,13 @@ class VersionedUnpickler(NewUnpickler):
     actual version numbers - all it needs to do is upgrade one release.
     """
 
-
     def __init__(self, file, updater=None):
         Unpickler.__init__(self, file)
         self.updater = updater
         return
 
-
     def find_class(self, module, name):
-        """ Overridden method from Unpickler.
+        """Overridden method from Unpickler.
 
         NB  __setstate__ is not called until later.
         """
@@ -120,7 +123,7 @@ class VersionedUnpickler(NewUnpickler):
         if self.updater:
             # check to see if this class needs to be mapped to a new class
             # or module name
-            original_module, original_name  = module, name
+            original_module, original_name = module, name
             module, name = self.updater.get_latest(module, name)
 
             # load the class...
@@ -134,20 +137,21 @@ class VersionedUnpickler(NewUnpickler):
             # version of the file...
             try:
                 klass = Unpickler.find_class(self, module, name)
-            except:
+            except Exception:
                 logger.error("Looking for [%s] [%s]" % (module, name))
-                logger.exception('Problem using default unpickle functionality')
+                logger.exception(
+                    "Problem using default unpickle functionality"
+                )
 
             # restore the original __setstate__ if necessary
-            fn = getattr(klass, '__setstate_original__', False)
+            fn = getattr(klass, "__setstate_original__", False)
             if fn:
-                setattr(klass, '__setstate__', fn)
+                setattr(klass, "__setstate__", fn)
 
         return klass
 
-
     def add_updater(self, module, name, klass):
-        """ If there is an updater defined for this class we will add it to the
+        """If there is an updater defined for this class we will add it to the
         class as the __setstate__ method.
         """
 
@@ -158,31 +162,29 @@ class VersionedUnpickler(NewUnpickler):
             self.backup_setstate(module, klass)
 
             # add the updater into the class
-            setattr(klass, '__updater__', fn)
+            setattr(klass, "__updater__", fn)
 
             # hook up our __setstate__ which updates self.__dict__
-            setattr(klass, '__setstate__', __replacement_setstate__)
+            setattr(klass, "__setstate__", __replacement_setstate__)
 
         else:
             pass
 
         return
 
-
     def backup_setstate(self, module, klass):
-        """ If the class has a user defined __setstate__ we back it up.
-        """
-        if getattr(klass, '__setstate__', False):
+        """If the class has a user defined __setstate__ we back it up."""
+        if getattr(klass, "__setstate__", False):
 
-            if getattr(klass, '__setstate_original__', False):
+            if getattr(klass, "__setstate_original__", False):
                 # don't overwrite the original __setstate__
-                name = '__setstate__%s' % self.updater.__class__
+                name = "__setstate__%s" % self.updater.__class__
             else:
                 # backup the original __setstate__ which we will restore
                 # and run later when we have finished updating the class
-                name = '__setstate_original__'
+                name = "__setstate_original__"
 
-            method = getattr(klass, '__setstate__')
+            method = getattr(klass, "__setstate__")
             setattr(klass, name, method)
 
         else:
@@ -190,7 +192,6 @@ class VersionedUnpickler(NewUnpickler):
             pass
 
         return
-
 
     def import_name(self, module, name):
         """

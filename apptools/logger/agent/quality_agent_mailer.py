@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought logger package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Standard library imports.
 import logging
@@ -24,8 +24,16 @@ from traits.util.home_directory import get_home_directory
 logger = logging.getLogger(__name__)
 
 
-def create_email_message(fromaddr, toaddrs, ccaddrs, subject, priority,
-                         include_project=False, stack_trace="", comments=""):
+def create_email_message(
+    fromaddr,
+    toaddrs,
+    ccaddrs,
+    subject,
+    priority,
+    include_project=False,
+    stack_trace="",
+    comments="",
+):
     # format a message suitable to be sent to the Roundup bug tracker
 
     from email.MIMEMultipart import MIMEMultipart
@@ -33,12 +41,12 @@ def create_email_message(fromaddr, toaddrs, ccaddrs, subject, priority,
     from email.MIMEBase import MIMEBase
 
     message = MIMEMultipart()
-    message['Subject'] = "%s [priority=%s]" % (subject, priority)
-    message['To'] = ', '.join(toaddrs)
-    message['Cc'] = ', '.join(ccaddrs)
-    message['From'] = fromaddr
-    message.preamble = 'You will not see this in a MIME-aware mail reader.\n'
-    message.epilogue = ' ' # To guarantee the message ends with a newline
+    message["Subject"] = "%s [priority=%s]" % (subject, priority)
+    message["To"] = ", ".join(toaddrs)
+    message["Cc"] = ", ".join(ccaddrs)
+    message["From"] = fromaddr
+    message.preamble = "You will not see this in a MIME-aware mail reader.\n"
+    message.epilogue = " "  # To guarantee the message ends with a newline
 
     # First section is simple ASCII data ...
     m = []
@@ -58,26 +66,28 @@ def create_email_message(fromaddr, toaddrs, ccaddrs, subject, priority,
         m.append(stack_trace)
         m.append("")
 
-    msg = MIMEText('\n'.join(m))
+    msg = MIMEText("\n".join(m))
     message.attach(msg)
 
     # Include the log file ...
     if True:
         try:
-            log = os.path.join(get_home_directory(), 'envisage.log')
-            f = open(log, 'r')
+            log = os.path.join(get_home_directory(), "envisage.log")
+            f = open(log, "r")
             entries = f.readlines()
             f.close()
 
-            ctype = 'application/octet-stream'
-            maintype, subtype = ctype.split('/', 1)
+            ctype = "application/octet-stream"
+            maintype, subtype = ctype.split("/", 1)
             msg = MIMEBase(maintype, subtype)
 
-            msg = MIMEText(''.join(entries))
-            msg.add_header('Content-Disposition', 'attachment', filename='logfile.txt')
+            msg = MIMEText("".join(entries))
+            msg.add_header(
+                "Content-Disposition", "attachment", filename="logfile.txt"
+            )
             message.attach(msg)
-        except:
-            logger.exception('Failed to include log file with message')
+        except Exception:
+            logger.exception("Failed to include log file with message")
 
     # Include the environment variables ...
     if True:
@@ -89,19 +99,21 @@ def create_email_message(fromaddr, toaddrs, ccaddrs, subject, priority,
         try:
             entries = []
             for key, value in os.environ.items():
-                entries.append('%30s : %s\n' % (key, value))
+                entries.append("%30s : %s\n" % (key, value))
 
-            ctype = 'application/octet-stream'
-            maintype, subtype = ctype.split('/', 1)
+            ctype = "application/octet-stream"
+            maintype, subtype = ctype.split("/", 1)
             msg = MIMEBase(maintype, subtype)
 
-            msg = MIMEText(''.join(entries))
-            msg.add_header('Content-Disposition', 'attachment', filename='environment.txt')
+            msg = MIMEText("".join(entries))
+            msg.add_header(
+                "Content-Disposition", "attachment", filename="environment.txt"
+            )
             message.attach(msg)
 
-        except:
-            logger.exception('Failed to include environment variables with message')
+        except Exception:
+            logger.exception(
+                "Failed to include environment variables with message"
+            )
 
     return message
-
-

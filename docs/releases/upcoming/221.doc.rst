@@ -1,0 +1,1 @@
+Add a brief section to documentation for ``apptools.naming`` (#221)

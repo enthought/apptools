@@ -12,7 +12,7 @@ class PyConfigFile(dict):
     ###########################################################################
 
     def __init__(self, file_or_filename=None):
-        """ Constructor.
+        """Constructor.
 
         If 'file_or_filename' is specified it will be loaded immediately. It
         can be either:-
@@ -50,7 +50,7 @@ class PyConfigFile(dict):
     ###########################################################################
 
     def load(self, file_or_filename):
-        """ Load the configuration from a file.
+        """Load the configuration from a file.
 
         'file_or_filename' can be either:-
 
@@ -70,12 +70,12 @@ class PyConfigFile(dict):
             #
             # If so then parse the preceding section (if there is one) and
             # start collecting the body of the new section.
-            if stripped.startswith('[') and stripped.endswith(']'):
+            if stripped.startswith("[") and stripped.endswith("]"):
                 if section_name is not None:
                     self._parse_section(section_name, section_body)
 
                 section_name = stripped[1:-1]
-                section_body = ''
+                section_body = ""
 
             # Otherwise, this is *not* a section header so add the line to the
             # body of the current section. If there is no current section then
@@ -91,7 +91,7 @@ class PyConfigFile(dict):
         f.close()
 
     def save(self, file_or_filename):
-        """ Save the configuration to a file.
+        """Save the configuration to a file.
 
         'file_or_filename' can be either:-
 
@@ -100,7 +100,7 @@ class PyConfigFile(dict):
 
         """
 
-        f = self._get_file(file_or_filename, 'w')
+        f = self._get_file(file_or_filename, "w")
 
         for section_name, section_data in self.items():
             self._write_section(f, section_name, section_data)
@@ -111,8 +111,8 @@ class PyConfigFile(dict):
     # Private interface.
     ###########################################################################
 
-    def _get_file(self, file_or_filename, mode='r'):
-        """ Return an open file object from a file or a filename.
+    def _get_file(self, file_or_filename, mode="r"):
+        """Return an open file object from a file or a filename.
 
         The mode is only used if a filename is specified.
 
@@ -129,7 +129,7 @@ class PyConfigFile(dict):
     def _get_namespace(self, section_name):
         """ Return the namespace that represents the section. """
 
-        components = section_name.split('.')
+        components = section_name.split(".")
         namespace = self._namespaces.setdefault(components[0], _Namespace())
 
         for component in components[1:]:
@@ -138,7 +138,7 @@ class PyConfigFile(dict):
         return namespace
 
     def _parse_section(self, section_name, section_body):
-        """ Parse a section.
+        """Parse a section.
 
         In this implementation, we don't actually 'parse' anything - we just
         execute the body of the section as Python code ;^)
@@ -169,7 +169,7 @@ class PyConfigFile(dict):
         # The '__builtins__' dictionary gets added to 'self._namespaces' as
         # by the call to 'exec'. However, we want 'self._namespaces' to only
         # contain '_Namespace' instances, so we do the cleanup here.
-        del self._namespaces['__builtins__']
+        del self._namespaces["__builtins__"]
 
         # Get the section's corresponding node in the 'dotted' namespace and
         # update it with the config values.
@@ -179,12 +179,12 @@ class PyConfigFile(dict):
     def _write_section(self, f, section_name, section_data):
         """ Write a section to a file. """
 
-        f.write('[%s]\n' % section_name)
+        f.write("[%s]\n" % section_name)
 
         for name, value in section_data.items():
-            f.write('%s = %s\n' % (name, repr(value)))
+            f.write("%s = %s\n" % (name, repr(value)))
 
-        f.write('\n')
+        f.write("\n")
 
     ###########################################################################
     # Debugging interface.
@@ -194,16 +194,17 @@ class PyConfigFile(dict):
         """ Pretty print the 'dotted' namespaces. """
 
         for name, value in self._namespaces.items():
-            print('Namespace:', name)
-            value.pretty_print('  ')
+            print("Namespace:", name)
+            value.pretty_print("  ")
 
 
 ###############################################################################
 # Internal use only.
 ###############################################################################
 
+
 class _Namespace(object):
-    """ An object that represents a node in a dotted namespace.
+    """An object that represents a node in a dotted namespace.
 
     We build up a dotted namespace so that config values can refer to other
     config values using familiar Python syntax.
@@ -236,13 +237,13 @@ class _Namespace(object):
     # Debugging interface.
     ###########################################################################
 
-    def pretty_print(self, indent=''):
+    def pretty_print(self, indent=""):
         """ Pretty print the namespace. """
 
         for name, value in self.__dict__.items():
             if isinstance(value, _Namespace):
-                print(indent, 'Namespace:', name)
-                value.pretty_print(indent + '  ')
+                print(indent, "Namespace:", name)
+                value.pretty_print(indent + "  ")
 
             else:
-                print(indent, name, ':', value)
+                print(indent, name, ":", value)

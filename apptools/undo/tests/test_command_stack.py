@@ -143,9 +143,9 @@ class TestCommandStack(unittest.TestCase):
         current_length = len(stack._stack)
         yield
         # N commands have been pushed...
-        self.assertEqual(len(stack._stack), current_length+n)
+        self.assertEqual(len(stack._stack), current_length + n)
         # ... and the state is at the tip of the stack...
-        self.assertEqual(stack._index, current_length+n-1)
+        self.assertEqual(stack._index, current_length + n - 1)
 
     @contextmanager
     def assert_n_commands_pushed_and_undone(self, stack, n):
@@ -155,12 +155,12 @@ class TestCommandStack(unittest.TestCase):
         # contains the commands...
         self.assertEqual(len(stack._stack), n)
         # ... but we are back to the initial (clean) state
-        self.assertEqual(stack._index, current_length-1)
+        self.assertEqual(stack._index, current_length - 1)
 
 
 def add_macro(stack, num_commands=2):
     command = SimpleCommand()
-    stack.begin_macro('Increment n times')
+    stack.begin_macro("Increment n times")
     try:
         for i in range(num_commands):
             stack.push(command)

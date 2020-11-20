@@ -12,7 +12,8 @@ Create a new file with a name like ``<pull-request>.<type>.rst``, where
 - ``bugfix``: Bug fixes
 - ``deprecation``: Deprecations of public API
 - ``removal``: Removal of public API
-- ``doc``: Documentation changes.
+- ``doc``: Documentation changes
+- ``test``: Changes to test suite ('end users' are distribution packagers)
 
 Then write a short sentence in the file that describes the changes for the
 end users, e.g. in ``123.removal.rst``::

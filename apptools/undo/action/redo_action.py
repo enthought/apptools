@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2007, Riverbank Computing Limited
 # All rights reserved.
 #
@@ -10,14 +10,14 @@
 #
 # Author: Riverbank Computing Limited
 # Description: <Enthought undo package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 # Local imports.
 from .abstract_command_stack_action import AbstractCommandStackAction
 
 
 class RedoAction(AbstractCommandStackAction):
-    """ An action that redos the last command undone of the active command
+    """An action that redos the last command undone of the active command
     stack.
     """
 

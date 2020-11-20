@@ -293,9 +293,7 @@ if __name__ == "__main__":
           long_description=get_long_description(),
           long_description_content_type="text/x-rst",
           include_package_data=True,
-          package_data={'apptools': ['help/help_plugin/*.ini',
-                                     'help/help_plugin/action/images/*.png',
-                                     'logger/plugin/*.ini',
+          package_data={'apptools': ['logger/plugin/*.ini',
                                      'logger/plugin/view/images/*.png',
                                      'naming/ui/images/*.png',
                                      'preferences/tests/*.ini'
@@ -306,6 +304,11 @@ if __name__ == "__main__":
               'six',
               'traitsui',
           ],
+          extras_require={
+              "test": [
+                  "importlib-resources>=1.1.0",
+              ],
+          },
           license='BSD',
           packages=find_packages(),
           platforms=["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
