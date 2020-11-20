@@ -11,7 +11,6 @@ TODO:
 
 import warnings
 
-import six
 import six.moves.builtins
 
 from traits.api import (
@@ -404,10 +403,7 @@ class Recorder(HasTraits):
         """Save the recorded lines to the given file.  It does not close
         the file.
         """
-        if six.PY3:
-            file.write(self.get_code())
-        else:
-            file.write(six.text_type(self.get_code(), encoding="utf-8"))
+        file.write(self.get_code())
         file.flush()
 
     def record_function(self, func, args, kw):
