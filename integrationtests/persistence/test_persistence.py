@@ -17,11 +17,11 @@ class Foo1:
 class Foo:
 
     def __str__(self):
-        result = ['-----------------------------------------------------------']
+        result = ['----------------------------------------------------------']
         keys = dir(self)
         for key in keys:
-             result.append('%s ---> %s' % (key, getattr(self, key)))
-        result.append('-----------------------------------------------------------')
+            result.append('%s ---> %s' % (key, getattr(self, key)))
+        result.append('------------------------------------------------------')
         return '\n'.join(result)
 
     def __setstate__(self, state):
@@ -30,9 +30,8 @@ class Foo:
         self.__dict__.update(state)
 
 
-
 def save(fname, str):
-    f=open(fname, 'w')
+    f = open(fname, 'w')
     f.write(str)
     f.close()
     return
@@ -45,7 +44,7 @@ if __name__ == '__main__':
 
     obj = Foo0()
     print(obj)
-    t0 = pickle.dumps(obj) #.replace('Foo0', 'Foo')
+    t0 = pickle.dumps(obj)
     save('foo0.txt', t0)
 
     '''obj = Foo1('duncan', 'child')
@@ -61,10 +60,9 @@ if __name__ == '__main__':
     save('foo3.txt', t3)
     '''
 
-    print('====================================================================')
+    print('==================================================================')
 
     from apptools.persistence.versioned_unpickler import VersionedUnpickler
-    from update1 import Update1
     # Try and read them back in ...
     f = open('foo0.txt')
 

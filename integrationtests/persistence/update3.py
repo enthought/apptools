@@ -11,6 +11,7 @@ def update_project(self, state):
     metadata['finished'] = True
     return state
 
+
 class Update3(Updater):
 
     def __init__(self):
@@ -20,5 +21,5 @@ class Update3(Updater):
         }
 
         self.setstates = {
-            ("cplab.project", "Project"):  update_project
+            ("cplab.project", "Project"): update_project
         }
