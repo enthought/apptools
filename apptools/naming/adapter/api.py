@@ -1,6 +1,0 @@
-from .dict_context_adapter import DictContextAdapter
-from .instance_context_adapter import InstanceContextAdapter
-from .list_context_adapter import ListContextAdapter
-from .trait_list_context_adapter import TraitListContextAdapter
-from .tuple_context_adapter import TupleContextAdapter
-from .trait_dict_context_adapter import TraitDictContextAdapter

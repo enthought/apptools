@@ -17,7 +17,6 @@
 # Enthought library imports.
 from traits.api import Any, Dict, Event, HasTraits, Instance
 from traits.api import Property, Str
-from traits.adaptation.api import adapt
 
 # Local imports.
 from .binding import Binding
@@ -365,8 +364,7 @@ class Context(HasTraits):
     def lookup_context(self, name):
         """Resolves a name relative to this context.
 
-        The name MUST resolve to a context. This method is useful to return
-        context adapters.
+        The name MUST resolve to a context.
 
         """
 
@@ -685,16 +683,8 @@ class Context(HasTraits):
         # If the object is a context then everything is just dandy.
         if isinstance(obj, Context):
             next_context = obj
-
-        # Otherwise, instead of just giving up, see if the context has a type
-        # manager that knows how to adapt the object to make it quack like a
-        # context.
         else:
-            next_context = self._get_context_adapter(obj)
-
-            # If no adapter was found then we cannot continue name resolution.
-            if next_context is None:
-                raise NotContextError(name)
+            raise NotContextError(name)
 
         return next_context
 
@@ -721,14 +711,3 @@ class Context(HasTraits):
                 path.pop()
 
         return
-
-    ###########################################################################
-    # Private interface.
-    ###########################################################################
-
-    def _get_context_adapter(self, obj):
-        """Returns a context adapter for an object.
-
-        Returns None if no such adapter is available.
-        """
-        return adapt(obj, Context, default=None)
