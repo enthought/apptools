@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Copyright (c) 2005, Enthought, Inc.
 # All rights reserved.
 #
@@ -10,12 +10,12 @@
 #
 # Author: Enthought, Inc.
 # Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 """ A simple naming example. """
 
 
 # Standard library imports.
-import os, sys
+import os
 
 # Enthought library imports.
 from apptools.naming.api import Context, InitialContext
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     # Set up the naming environment.
     klass_name = "apptools.naming.InitialContextFactory"
     klass_name = "apptools.naming.PyFSInitialContextFactory"
-    environment = {Context.INITIAL_CONTEXT_FACTORY : klass_name}
+    environment = {Context.INITIAL_CONTEXT_FACTORY: klass_name}
 
     # Create an initial context.
     context = InitialContext(environment)
