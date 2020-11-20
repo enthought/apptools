@@ -2,7 +2,7 @@
 
 
 # Enthought library imports.
-from traits.api import HasTraits, Instance, List, Property, Any, Bool, Dict
+from traits.api import HasTraits, Instance, List, Property, Bool
 from traitsui.api import Handler, HSplit, Item, TreeEditor
 from traitsui.api import TreeNode, View, HTMLEditor
 from traitsui.menu import Action

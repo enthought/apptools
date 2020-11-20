@@ -160,7 +160,7 @@ class PreferencesHelper(HasTraits):
 
             # If the eval fails then there is probably a syntax error, but
             # we will let the handler validation throw the exception.
-            except:
+            except Exception:
                 pass
 
         if handler.validate is not None:
