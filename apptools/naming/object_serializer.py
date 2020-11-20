@@ -55,13 +55,7 @@ class ObjectSerializer(HasTraits):
         f = open(path, "rb")
         try:
             try:
-<<<<<<< HEAD
                  obj = VersionedUnpickler(f).load()
-=======
-                obj = sweet_pickle.load(f)
-            #                obj = cPickle.load(f)
-            #                obj = pickle.load(f)
->>>>>>> master
             except Exception as ex:
                 print_exc()
                 logger.exception(
@@ -91,13 +85,7 @@ class ObjectSerializer(HasTraits):
         # Pickle the object.
         f = open(actual_path, "wb")
         try:
-<<<<<<< HEAD
             pickle.dump(obj, f, 1)
-=======
-            sweet_pickle.dump(obj, f, 1)
-        #            cPickle.dump(obj, f, 1)
-        #            pickle.dump(obj, f, 1)
->>>>>>> master
         except Exception as ex:
             logger.exception(
                 "Failed to pickle into file: %s, %s, object:%s"
