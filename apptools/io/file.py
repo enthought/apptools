@@ -15,7 +15,6 @@
 
 
 # Standard/built-in imports.
-from functools import total_ordering
 import mimetypes
 import os
 import shutil
@@ -26,7 +25,6 @@ from traits.api import Bool, HasPrivateTraits, Instance, List, Property
 from traits.api import Str
 
 
-@total_ordering
 class File(HasPrivateTraits):
     """ A representation of files and folders in a file system. """
 
@@ -86,24 +84,6 @@ class File(HasPrivateTraits):
         super(File, self).__init__(path=path, **traits)
 
         return
-
-    def __eq__(self, other):
-        if isinstance(other, File):
-            return self.path == other.path
-
-        return False
-
-    def __ne__(self, other):
-        if isinstance(other, File):
-            return not (self == other)
-
-        return True
-
-    def __lt__(self, other):
-        if isinstance(other, File):
-            return self.path < other.path
-
-        return False
 
     def __str__(self):
         """ Returns an 'informal' string representation of the object. """
