@@ -75,8 +75,6 @@ class PreferencesHelper(HasTraits):
         if self.preferences is None:
             return
 
-        # If we were the one that set the trait (because the underlying
-        # preferences node changed) then do nothing.
         if self._is_preference_trait(trait_name):
             self.preferences.set("%s.%s" % (self._get_path(), trait_name), new)
 
@@ -89,6 +87,9 @@ class PreferencesHelper(HasTraits):
                     '%s.%s' % (self._get_path(), trait_name),
                     getattr(self, trait_name)
                 )
+
+        # If the change refers to a trait defined on this class, then
+        # the trait is not a preference trait and we do nothing.
 
         return
 
