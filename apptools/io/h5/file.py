@@ -329,7 +329,7 @@ class H5File(Mapping):
         if i == 0:
             return "/", node_path[1:]
         else:
-            return node_path[:i], node_path[i + 1 :]
+            return node_path[:i], node_path[i + 1:]
 
     @classmethod
     def join_path(cls, *args):

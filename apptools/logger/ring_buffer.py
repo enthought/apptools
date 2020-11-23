@@ -43,7 +43,7 @@ class RingBufferFull:
         self.cur = (self.cur + 1) % self.max
 
     def get(self):
-        return self.data[self.cur :] + self.data[: self.cur]
+        return self.data[self.cur:] + self.data[: self.cur]
 
 
 # sample of use

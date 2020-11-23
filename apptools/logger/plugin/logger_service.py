@@ -112,9 +112,9 @@ class LoggerService(HasTraits):
         # Include the environment variables ...
         # FIXME: ask the user, maybe?
         if include_environment:
-            # Transmit the user's environment settings as well.  Main purpose is
-            # to work out the user name to help with following up on bug reports
-            # and in future we should probably send less data.
+            # Transmit the user's environment settings as well.  Main purpose
+            # is to work out the user name to help with following up on bug
+            # reports and in future we should probably send less data.
             entries = []
             for key, value in sorted(os.environ.items()):
                 entries.append("%30s : %s\n" % (key, value))
@@ -153,7 +153,7 @@ class LoggerService(HasTraits):
             # server.set_debuglevel(1)
             server.sendmail(fromaddr, toaddrs + ccaddrs, message.as_string())
             server.quit()
-        except Exception as e:
+        except Exception:
             logger.exception("Problem sending error report")
 
     #### Traits stuff #########################################################

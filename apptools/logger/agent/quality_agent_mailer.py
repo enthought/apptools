@@ -86,7 +86,7 @@ def create_email_message(
                 "Content-Disposition", "attachment", filename="logfile.txt"
             )
             message.attach(msg)
-        except:
+        except Exception:
             logger.exception("Failed to include log file with message")
 
     # Include the environment variables ...
@@ -111,7 +111,7 @@ def create_email_message(
             )
             message.attach(msg)
 
-        except:
+        except Exception:
             logger.exception(
                 "Failed to include environment variables with message"
             )

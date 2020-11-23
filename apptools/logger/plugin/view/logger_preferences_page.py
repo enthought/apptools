@@ -38,7 +38,7 @@ class LoggerPreferencesPage(PreferencesPage):
     # The path to the preferences node that contains the preferences.
     preferences_path = "apptools.logger"
 
-    #### Preferences ###########################################################
+    #### Preferences ##########################################################
 
     # The log levels
     level = Trait(

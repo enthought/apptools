@@ -1,6 +1,5 @@
 import numpy as np
 
-import six
 from tables.table import Table as PyTablesTable
 
 
@@ -63,7 +62,8 @@ class H5TableNode(object):
 
     @classmethod
     def is_table_node(cls, pytables_node):
-        """Return True if pytables_node is a pytables.Table or a H5TableNode."""
+        """Return True if pytables_node is a pytables.Table or a H5TableNode.
+        """
         return isinstance(pytables_node, (PyTablesTable, H5TableNode))
 
     # --------------------------------------------------------------------------
@@ -95,7 +95,7 @@ class H5TableNode(object):
             An array of column data with the column order matching that of
             `col_or_cols`.
         """
-        if isinstance(col_or_cols, six.string_types):
+        if isinstance(col_or_cols, str):
             return self._h5_table.col(col_or_cols)
 
         column_data = [self._h5_table.col(name) for name in col_or_cols]

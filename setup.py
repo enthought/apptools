@@ -301,9 +301,13 @@ if __name__ == "__main__":
                         },
           install_requires=[
               'configobj',
-              'six',
               'traitsui',
           ],
+          extras_require={
+              "test": [
+                  "importlib-resources>=1.1.0",
+              ],
+          },
           license='BSD',
           packages=find_packages(),
           platforms=["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],

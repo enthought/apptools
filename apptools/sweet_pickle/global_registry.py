@@ -39,9 +39,9 @@
 """
 
 try:
-    import six.moves._thread as _thread
+    import _thread
 except ImportError:
-    import six.moves._dummy_thread as _thread
+    import _dummy_thread
 
 
 ##############################################################################

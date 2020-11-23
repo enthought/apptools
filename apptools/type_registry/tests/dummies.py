@@ -1,7 +1,5 @@
 import abc
 
-import six
-
 
 class A(object):
     pass
@@ -23,7 +21,7 @@ class Mixed(A, D):
     pass
 
 
-class Abstract(six.with_metaclass(abc.ABCMeta, object)):
+class Abstract(metaclass=abc.ABCMeta):
     pass
 
 
