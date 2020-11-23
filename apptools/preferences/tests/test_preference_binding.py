@@ -2,15 +2,17 @@
 
 
 # Standard library imports.
-import os, tempfile, unittest
+import os
+import tempfile
+import unittest
 from os.path import join
 
 # Major package imports.
 from importlib_resources import files
 
 # Enthought library imports.
-from apptools.preferences.api import Preferences, PreferenceBinding
-from apptools.preferences.api import ScopedPreferences, bind_preference
+from apptools.preferences.api import Preferences
+from apptools.preferences.api import bind_preference
 from apptools.preferences.api import set_default_preferences
 from traits.api import Bool, HasTraits, Int, Float, Str
 
@@ -116,8 +118,6 @@ class PreferenceBindingTestCase(unittest.TestCase):
 
     def test_default_values(self):
         """ instance scope preferences path """
-
-        p = self.preferences
 
         class AcmeUI(HasTraits):
             """ The Acme UI class! """

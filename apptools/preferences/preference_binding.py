@@ -3,10 +3,6 @@
 
 # Enthought library imports.
 from traits.api import Any, HasTraits, Instance, Str, Undefined
-from traits.api import Str
-
-# Third-party librart imports.
-import six
 
 # Local imports.
 from .i_preferences import IPreferences
@@ -104,7 +100,7 @@ class PreferenceBinding(HasTraits):
 
         # If the trait type is 'Str' then we convert the raw value.
         elif type(handler) is Str:
-            value = six.text_type(value)
+            value = str(value)
 
         # Otherwise, we eval it!
         else:
@@ -113,7 +109,7 @@ class PreferenceBinding(HasTraits):
 
             # If the eval fails then there is probably a syntax error, but
             # we will let the handler validation throw the exception.
-            except:
+            except Exception:
                 pass
 
         return handler.validate(self, trait_name, value)

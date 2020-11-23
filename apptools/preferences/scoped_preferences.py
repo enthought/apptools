@@ -241,7 +241,8 @@ class ScopedPreferences(Preferences):
         return node.node_exists(path)
 
     def node_names(self, path=""):
-        """Return the names of the children of the node at the specified path."""
+        """Return the names of the children of the node at the specified path.
+        """
 
         # If the path contains a specific scope then get the names of the
         # children of the node in that scope.

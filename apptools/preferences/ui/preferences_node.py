@@ -16,7 +16,7 @@
 from __future__ import print_function
 
 # Enthought library imports.
-from traits.api import Delegate, Instance, Str
+from traits.api import Delegate, Instance
 
 # Local imports.
 from .i_preferences_page import IPreferencesPage

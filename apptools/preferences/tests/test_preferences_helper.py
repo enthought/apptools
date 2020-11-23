@@ -5,7 +5,6 @@
 import os
 import shutil
 import tempfile
-import time
 import unittest
 
 # Major package imports.
@@ -189,8 +188,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
     def test_default_values(self):
         """ default values """
 
-        p = self.preferences
-
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
 
@@ -241,14 +238,11 @@ class PreferencesHelperTestCase(unittest.TestCase):
         helper = AcmeUIPreferencesHelper()
 
         first_unicode_str = "U\xdc\xf2ser"
-        first_utf8_str = "U\xc3\x9c\xc3\xb2ser"
 
-        original_description = helper.description
         helper.description = first_unicode_str
         self.assertEqual(first_unicode_str, helper.description)
 
         second_unicode_str = "caf\xe9"
-        second_utf8_str = "caf\xc3\xa9"
         helper.description = second_unicode_str
         self.assertEqual(second_unicode_str, helper.description)
         self.assertEqual(second_unicode_str, p.get("acme.ui.description"))
@@ -318,6 +312,32 @@ class PreferencesHelperTestCase(unittest.TestCase):
                 new_preferences.get("my_section.list_of_list_of_str"),
                 str(helper.list_of_list_of_str)
             )
+
+    def test_sync_anytrait_items_not_event(self):
+        """ Test sychronizing trait with name *_items which is a normal trait
+        rather than an event trait for listening to list/dict/set mutation.
+        """
+
+        class MyPreferencesHelper(PreferencesHelper):
+            preferences_path = Str('my_section')
+
+            names_items = Str()
+
+        helper = MyPreferencesHelper(preferences=self.preferences)
+        helper.names_items = "Hello"
+
+        self.preferences.save(self.tmpfile)
+        new_preferences = Preferences()
+        new_preferences.load(self.tmpfile)
+
+        self.assertEqual(
+            sorted(new_preferences.keys("my_section")),
+            ["names_items"]
+        )
+        self.assertEqual(
+            new_preferences.get("my_section.names_items"),
+            str(helper.names_items),
+        )
 
     def test_no_preferences_path(self):
         """ no preferences path """

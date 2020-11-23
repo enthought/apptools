@@ -16,8 +16,6 @@
 
 import sys
 
-import six
-
 from traits.api import Trait, TraitHandler, TraitFactory
 
 from traits.trait_base import class_of, get_module_name
@@ -62,12 +60,12 @@ class NamingTraitHandler(TraitHandler):
         self.module = module
         self.aClass = aClass
         if (aClass is not None) and (
-            not isinstance(aClass, (six.string_types, type))
+            not isinstance(aClass, (str, type))
         ):
             self.aClass = aClass.__class__
 
     def validate(self, object, name, value):
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             if value == "":
                 if self.or_none:
                     return ""
@@ -78,7 +76,7 @@ class NamingTraitHandler(TraitHandler):
             except:
                 self.validate_failed(object, name, value)
 
-        if isinstance(self.aClass, six.string_types):
+        if isinstance(self.aClass, str):
             self.resolve_class(object, name, value)
 
         if isinstance(value, Binding) and (

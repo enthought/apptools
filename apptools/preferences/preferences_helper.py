@@ -75,21 +75,21 @@ class PreferencesHelper(HasTraits):
         if self.preferences is None:
             return
 
+        if self._is_preference_trait(trait_name):
+            self.preferences.set("%s.%s" % (self._get_path(), trait_name), new)
+
         # If the trait was a list or dict '_items' trait then just treat it as
         # if the entire list or dict was changed.
-        if trait_name.endswith('_items'):
+        elif trait_name.endswith('_items'):
             trait_name = trait_name[:-6]
             if self._is_preference_trait(trait_name):
                 self.preferences.set(
                     '%s.%s' % (self._get_path(), trait_name),
                     getattr(self, trait_name)
                 )
-                return
 
-        # If we were the one that set the trait (because the underlying
-        # preferences node changed) then do nothing.
-        if self._is_preference_trait(trait_name):
-            self.preferences.set("%s.%s" % (self._get_path(), trait_name), new)
+        # If the change refers to a trait defined on this class, then
+        # the trait is not a preference trait and we do nothing.
 
         return
 
@@ -160,7 +160,7 @@ class PreferencesHelper(HasTraits):
 
             # If the eval fails then there is probably a syntax error, but
             # we will let the handler validation throw the exception.
-            except:
+            except Exception:
                 pass
 
         if handler.validate is not None:
@@ -205,4 +205,4 @@ class PreferencesHelper(HasTraits):
         ):
             return False
 
-        return True
+        return trait_name in self.editable_traits()

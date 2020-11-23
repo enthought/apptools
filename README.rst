@@ -28,8 +28,6 @@ that is commonly needed by many applications
   listener of selected items in an application.
 - **apptools.scripting**: A framework for automatic recording of Python
   scripts.
-- **apptools.type_manager**: Manages type extensions, including factories
-  to generate adapters, and hooks for methods and functions.
 - **apptools.undo**: Supports undoing and scripting application commands.
 
 Prerequisites

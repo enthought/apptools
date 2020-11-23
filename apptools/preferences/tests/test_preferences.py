@@ -2,7 +2,9 @@
 
 
 # Standard library imports.
-import os, tempfile, unittest
+import os
+import tempfile
+import unittest
 from os.path import join
 
 # Major package imports.
@@ -10,7 +12,6 @@ from importlib_resources import files
 
 # Enthought library imports.
 from apptools.preferences.api import Preferences
-from traits.api import HasTraits, Int, Str
 
 
 # This module's package.

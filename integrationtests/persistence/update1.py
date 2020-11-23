@@ -3,6 +3,7 @@
 
 from apptools.persistence.updater import Updater
 
+
 def cleanup_foo(self, state):
 
     print('cleaning up Foo0')
@@ -16,7 +17,6 @@ def cleanup_foo(self, state):
         print('%s state ---> %s' % (key, state[key]))
     '''
 
-    #self.__setstate_original__(state)
     self.__dict__.update(state)
 
 
@@ -37,5 +37,5 @@ class Update1(Updater):
         }
 
         self.setstates = {
-            ("cplab.project", "Project"):  update_project
+            ("cplab.project", "Project"): update_project
         }

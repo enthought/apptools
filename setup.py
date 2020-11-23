@@ -266,52 +266,55 @@ def get_long_description():
 if __name__ == "__main__":
     version, git_revision = resolve_version()
 
-    setup(name='apptools',
-          version=version,
-          author='Enthought, Inc.',
-          author_email='info@enthought.com',
-          maintainer='ETS Developers',
-          maintainer_email='enthought-dev@enthought.com',
-          url='https://docs.enthought.com/apptools',
-          download_url=('https://www.github.com/enthought/apptools'),
-          classifiers=[c.strip() for c in """\
-                Development Status :: 5 - Production/Stable
-                Intended Audience :: Developers
-                Intended Audience :: Science/Research
-                License :: OSI Approved :: BSD License
-                Operating System :: MacOS
-                Operating System :: Microsoft :: Windows
-                Operating System :: OS Independent
-                Operating System :: POSIX
-                Operating System :: Unix
-                Programming Language :: Python
-                Topic :: Scientific/Engineering
-                Topic :: Software Development
-                Topic :: Software Development :: Libraries
-              """.splitlines() if len(c.strip()) > 0],
-          description='application tools',
-          long_description=get_long_description(),
-          long_description_content_type="text/x-rst",
-          include_package_data=True,
-          package_data={'apptools': ['logger/plugin/*.ini',
-                                     'logger/plugin/view/images/*.png',
-                                     'naming/ui/images/*.png',
-                                     'preferences/tests/*.ini'
-                                     ]
-                        },
-          install_requires=[
-              'configobj',
-              'six',
-              'traitsui',
-          ],
-          extras_require={
-              "test": [
-                  "importlib-resources>=1.1.0",
-              ],
-          },
-          license='BSD',
-          packages=find_packages(),
-          platforms=["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
-          zip_safe=False,
-          python_requires=">=3.6",
+    setup(
+        name='apptools',
+        version=version,
+        author='Enthought, Inc.',
+        author_email='info@enthought.com',
+        maintainer='ETS Developers',
+        maintainer_email='enthought-dev@enthought.com',
+        url='https://docs.enthought.com/apptools',
+        download_url=('https://www.github.com/enthought/apptools'),
+        classifiers=[
+            c.strip() for c in """\
+            Development Status :: 5 - Production/Stable
+            Intended Audience :: Developers
+            Intended Audience :: Science/Research
+            License :: OSI Approved :: BSD License
+            Operating System :: MacOS
+            Operating System :: Microsoft :: Windows
+            Operating System :: OS Independent
+            Operating System :: POSIX
+            Operating System :: Unix
+            Programming Language :: Python
+            Topic :: Scientific/Engineering
+            Topic :: Software Development
+            Topic :: Software Development :: Libraries
+            """.splitlines() if len(c.strip()) > 0],
+        description='application tools',
+        long_description=get_long_description(),
+        long_description_content_type="text/x-rst",
+        include_package_data=True,
+        package_data={
+            'apptools': [
+                'logger/plugin/*.ini',
+                'logger/plugin/view/images/*.png',
+                'naming/ui/images/*.png',
+                'preferences/tests/*.ini'
+            ]
+        },
+        install_requires=[
+            'configobj',
+            'traitsui',
+        ],
+        extras_require={
+            "test": [
+                "importlib-resources>=1.1.0",
+            ],
+        },
+        license='BSD',
+        packages=find_packages(),
+        platforms=["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
+        zip_safe=False,
+        python_requires=">=3.6",
     )

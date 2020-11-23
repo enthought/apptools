@@ -1,6 +1,5 @@
 import numpy as np
 
-import six
 from tables.table import Table as PyTablesTable
 
 
@@ -96,7 +95,7 @@ class H5TableNode(object):
             An array of column data with the column order matching that of
             `col_or_cols`.
         """
-        if isinstance(col_or_cols, six.string_types):
+        if isinstance(col_or_cols, str):
             return self._h5_table.col(col_or_cols)
 
         column_data = [self._h5_table.col(name) for name in col_or_cols]

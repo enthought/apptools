@@ -1,8 +1,6 @@
 """ A Python based configuration file with hierarchical sections. """
 from __future__ import print_function
 
-import six
-
 
 class PyConfigFile(dict):
     """ A Python based configuration file with hierarchical sections. """
@@ -63,6 +61,7 @@ class PyConfigFile(dict):
         f = self._get_file(file_or_filename)
 
         section_name = None
+        section_body = ""
         for line in f:
             stripped = line.strip()
 
@@ -118,7 +117,7 @@ class PyConfigFile(dict):
 
         """
 
-        if isinstance(file_or_filename, six.string_types):
+        if isinstance(file_or_filename, str):
             f = open(file_or_filename, mode)
 
         else:
