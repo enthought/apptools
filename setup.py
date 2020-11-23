@@ -301,7 +301,6 @@ if __name__ == "__main__":
                         },
           install_requires=[
               'configobj',
-              'six',
               'traitsui',
           ],
           extras_require={

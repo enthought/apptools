@@ -9,10 +9,8 @@ TODO:
 # Copyright (c) 2008-2015, Enthought, Inc.
 # License: BSD Style.
 
+import builtins
 import warnings
-
-import six
-import six.moves.builtins
 
 from traits.api import (
     HasTraits,
@@ -404,10 +402,7 @@ class Recorder(HasTraits):
         """Save the recorded lines to the given file.  It does not close
         the file.
         """
-        if six.PY3:
-            file.write(self.get_code())
-        else:
-            file.write(six.text_type(self.get_code(), encoding="utf-8"))
+        file.write(self.get_code())
         file.flush()
 
     def record_function(self, func, args, kw):
@@ -535,7 +530,7 @@ class Recorder(HasTraits):
         nm = self._name_map
         result = ""
         builtin = False
-        if cname in six.moves.builtins.__dict__:
+        if cname in builtins.__dict__:
             builtin = True
             if hasattr(obj, "__name__"):
                 cname = obj.__name__
@@ -721,8 +716,7 @@ class Recorder(HasTraits):
     def _return_as_string(self, object):
         """Return a string given a returned object from a function."""
         result = ""
-        long_type = long if six.PY2 else int
-        ignore = (float, complex, bool, int, long_type, str)
+        ignore = (float, complex, bool, int, str)
         if object is not None and type(object) not in ignore:
             # If object is not know, register it.
             registry = self._registry
@@ -739,7 +733,7 @@ class Recorder(HasTraits):
         """Import a class if needed."""
         cname = cls.__name__
         result = ""
-        if cname not in six.moves.builtins.__dict__:
+        if cname not in builtins.__dict__:
             mod = cls.__module__
             typename = "%s.%s" % (mod, cname)
             if typename not in self._known_types:
