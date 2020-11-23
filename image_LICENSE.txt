@@ -12,10 +12,3 @@ Unless stated in this file, icons are work of Enthought, and are released
 under BSD-like license.
 Files and original authors:
 ----------------------------------------------------------------
-apptools/help:
-                   help_action.png | GV
-
-apptools/naming/ui/images (and examples/naming/images):
-                 closed_folder.png | GV
-                      document.png | GV
-                   open_folder.png | GV
