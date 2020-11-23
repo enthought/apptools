@@ -9,9 +9,8 @@ TODO:
 # Copyright (c) 2008-2015, Enthought, Inc.
 # License: BSD Style.
 
+import builtins
 import warnings
-
-import six.moves.builtins
 
 from traits.api import (
     HasTraits,
@@ -530,7 +529,7 @@ class Recorder(HasTraits):
         nm = self._name_map
         result = ""
         builtin = False
-        if cname in six.moves.builtins.__dict__:
+        if cname in builtins.__dict__:
             builtin = True
             if hasattr(obj, "__name__"):
                 cname = obj.__name__
@@ -731,7 +730,7 @@ class Recorder(HasTraits):
         """Import a class if needed."""
         cname = cls.__name__
         result = ""
-        if cname not in six.moves.builtins.__dict__:
+        if cname not in builtins.__dict__:
             mod = cls.__module__
             typename = "%s.%s" % (mod, cname)
             if typename not in self._known_types:

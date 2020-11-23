@@ -3,9 +3,6 @@
 # Standard library imports
 import warnings
 
-# Third-party imports
-import six
-
 # Enthought library imports.
 from traits.api import Dict, HasTraits, Instance, Property
 
@@ -146,7 +143,7 @@ class AdapterManager(HasTraits):
 
         """
 
-        if isinstance(adaptee_class, six.string_types):
+        if isinstance(adaptee_class, str):
             adaptee_class_name = adaptee_class
 
         else:

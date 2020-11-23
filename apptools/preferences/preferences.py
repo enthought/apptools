@@ -6,9 +6,6 @@ from __future__ import print_function
 import logging
 import threading
 
-# Third-party library imports.
-import six
-
 # Enthought library imports.
 from traits.api import Any, Callable, Dict, HasTraits, Instance, List
 from traits.api import Property, Str, Undefined, provides
@@ -550,7 +547,7 @@ class Preferences(HasTraits):
         # everything must be unicode encoded so that ConfigObj configuration
         # can properly serialize the data. Python str are supposed to be ASCII
         # encoded.
-        value = six.text_type(value)
+        value = str(value)
 
         self._lk.acquire()
         old = self._preferences.get(key)
