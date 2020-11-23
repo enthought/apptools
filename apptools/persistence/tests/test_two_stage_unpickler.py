@@ -14,12 +14,14 @@ used to replace sweet_pickle functionality.
 
 import io
 import random
+import re
 import pickle
 import unittest
 
 from apptools.persistence.versioned_unpickler import VersionedUnpickler
 
 ########################################
+
 
 # Usecase1: generic case
 class A(object):
@@ -93,7 +95,6 @@ class GenericTestCase(unittest.TestCase):
 
 ########################################
 # Usecase2: Toy Application
-import re
 
 
 class StringFinder(object):
