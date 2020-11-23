@@ -313,6 +313,32 @@ class PreferencesHelperTestCase(unittest.TestCase):
                 str(helper.list_of_list_of_str)
             )
 
+    def test_sync_anytrait_items_not_event(self):
+        """ Test sychronizing trait with name *_items which is a normal trait
+        rather than an event trait for listening to list/dict/set mutation.
+        """
+
+        class MyPreferencesHelper(PreferencesHelper):
+            preferences_path = Str('my_section')
+
+            names_items = Str()
+
+        helper = MyPreferencesHelper(preferences=self.preferences)
+        helper.names_items = "Hello"
+
+        self.preferences.save(self.tmpfile)
+        new_preferences = Preferences()
+        new_preferences.load(self.tmpfile)
+
+        self.assertEqual(
+            sorted(new_preferences.keys("my_section")),
+            ["names_items"]
+        )
+        self.assertEqual(
+            new_preferences.get("my_section.names_items"),
+            str(helper.names_items),
+        )
+
     def test_no_preferences_path(self):
         """ no preferences path """
 

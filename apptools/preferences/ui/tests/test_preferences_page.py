@@ -2,7 +2,11 @@
 
 import unittest
 
-from traits.api import Enum, List, Str
+from traits.api import (
+    Enum, List, Str,
+    pop_exception_handler,
+    push_exception_handler,
+)
 from traitsui.api import Group, Item, View
 
 from apptools.preferences.api import Preferences
@@ -11,6 +15,10 @@ from apptools.preferences.ui.api import PreferencesPage
 
 class TestPreferencesPage(unittest.TestCase):
     """ Non-GUI Tests for PreferencesPage."""
+
+    def setUp(self):
+        push_exception_handler(reraise_exceptions=True)
+        self.addCleanup(pop_exception_handler)
 
     def test_preferences_page_apply(self):
         """ Test applying the preferences """
@@ -75,3 +83,27 @@ class TestPreferencesPage(unittest.TestCase):
 
         self.assertEqual(preferences.get("my_ref.pref.names"), str(["1", "2"]))
         self.assertEqual(preferences.keys("my_ref.pref"), ["names"])
+
+    def test_sync_anytrait_items_overload(self):
+        """ Test sychronizing trait with name *_items not to be mistaken
+        as the event trait for mutating list/dict/set
+        """
+
+        class MyPreferencesPage(PreferencesPage):
+            preferences_path = Str('my_section')
+
+            names_items = Str()
+
+        preferences = Preferences()
+        pref_page = MyPreferencesPage(preferences=preferences)
+        pref_page.names_items = "Hello"
+        pref_page.apply()
+
+        self.assertEqual(
+            sorted(preferences.keys("my_section")),
+            ["names_items"]
+        )
+        self.assertEqual(
+            preferences.get("my_section.names_items"),
+            "Hello",
+        )
