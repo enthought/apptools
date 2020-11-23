@@ -10,9 +10,10 @@ from traitsui.api import View, Item, Group, HGroup, CodeEditor, spring, Handler
 
 from .recorder import Recorder
 
-######################################################################
+
+###############################################################################
 # `CloseHandler` class.
-######################################################################
+###############################################################################
 class CloseHandler(Handler):
     """This class cleans up after the UI for the recorder is closed."""
 
@@ -23,9 +24,9 @@ class CloseHandler(Handler):
         return True
 
 
-################################################################################
+###############################################################################
 # `RecorderWithUI` class.
-################################################################################
+###############################################################################
 class RecorderWithUI(Recorder):
     """
     This class represents a Recorder but with a simple user interface.

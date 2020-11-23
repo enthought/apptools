@@ -3,7 +3,6 @@
 
 # Enthought library imports.
 from traits.api import Any, HasTraits, Instance, Str, Undefined
-from traits.api import Str
 
 # Local imports.
 from .i_preferences import IPreferences
@@ -110,7 +109,7 @@ class PreferenceBinding(HasTraits):
 
             # If the eval fails then there is probably a syntax error, but
             # we will let the handler validation throw the exception.
-            except:
+            except Exception:
                 pass
 
         return handler.validate(self, trait_name, value)

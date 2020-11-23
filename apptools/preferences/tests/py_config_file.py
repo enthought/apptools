@@ -61,6 +61,7 @@ class PyConfigFile(dict):
         f = self._get_file(file_or_filename)
 
         section_name = None
+        section_body = ""
         for line in f:
             stripped = line.strip()
 

@@ -5,7 +5,6 @@
 import os
 import shutil
 import tempfile
-import time
 import unittest
 
 # Major package imports.
@@ -189,8 +188,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
     def test_default_values(self):
         """ default values """
 
-        p = self.preferences
-
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
 
@@ -241,14 +238,11 @@ class PreferencesHelperTestCase(unittest.TestCase):
         helper = AcmeUIPreferencesHelper()
 
         first_unicode_str = "U\xdc\xf2ser"
-        first_utf8_str = "U\xc3\x9c\xc3\xb2ser"
 
-        original_description = helper.description
         helper.description = first_unicode_str
         self.assertEqual(first_unicode_str, helper.description)
 
         second_unicode_str = "caf\xe9"
-        second_utf8_str = "caf\xc3\xa9"
         helper.description = second_unicode_str
         self.assertEqual(second_unicode_str, helper.description)
         self.assertEqual(second_unicode_str, p.get("acme.ui.description"))

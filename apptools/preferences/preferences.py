@@ -3,7 +3,8 @@
 from __future__ import print_function
 
 # Standard library imports.
-import logging, threading
+import logging
+import threading
 
 # Enthought library imports.
 from traits.api import Any, Callable, Dict, HasTraits, Instance, List
@@ -268,7 +269,8 @@ class Preferences(HasTraits):
         return exists
 
     def node_names(self, path=""):
-        """Return the names of the children of the node at the specified path."""
+        """Return the names of the children of the node at the specified path.
+        """
 
         # If the path is empty then the operation takes place in this node.
         if len(path) == 0:
@@ -311,7 +313,7 @@ class Preferences(HasTraits):
 
         # If the path is empty then the operation takes place in this node.
         if len(path) == 0:
-            names = self._add_preferences_listener(listener)
+            self._add_preferences_listener(listener)
 
         # Otherwise, find the next node and pass the rest of the path to that.
         else:
@@ -327,7 +329,7 @@ class Preferences(HasTraits):
 
         # If the path is empty then the operation takes place in this node.
         if len(path) == 0:
-            names = self._remove_preferences_listener(listener)
+            self._remove_preferences_listener(listener)
 
         # Otherwise, find the next node and pass the rest of the path to that.
         else:
