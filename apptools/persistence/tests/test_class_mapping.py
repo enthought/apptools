@@ -59,8 +59,10 @@ class ClassMappingTestCase(unittest.TestCase):
         class TestUpdater(Updater):
             def __init__(self):
                 self.refactorings = {
-                    (Foo.__module__, Foo.__name__): (Bar.__module__, Bar.__name__),
-                    (Bar.__module__, Bar.__name__): (Baz.__module__, Baz.__name__),
+                    (Foo.__module__, Foo.__name__):
+                        (Bar.__module__, Bar.__name__),
+                    (Bar.__module__, Bar.__name__):
+                        (Baz.__module__, Baz.__name__),
                 }
                 self.setstates = {}
 
