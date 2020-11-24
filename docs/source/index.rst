@@ -10,6 +10,7 @@ AppTools Documentation
     undo/*
     selection/*
     naming/*
+    io/*
     api
 
 * :ref:`search`
