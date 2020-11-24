@@ -299,7 +299,6 @@ if __name__ == "__main__":
             'apptools': [
                 'logger/plugin/*.ini',
                 'logger/plugin/view/images/*.png',
-                'naming/ui/images/*.png',
                 'preferences/tests/*.ini'
             ]
         },
