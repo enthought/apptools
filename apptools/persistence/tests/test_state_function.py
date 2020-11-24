@@ -19,27 +19,12 @@ import unittest
 import logging
 
 # Enthought library imports
+from apptools.persistence.tests.state_function_classes import Foo, Bar, Baz
 from apptools.persistence.versioned_unpickler import VersionedUnpickler
 from apptools.persistence.updater import Updater
 
-from traits.api import Bool, Float, HasTraits, Int, Str
-
 
 logger = logging.getLogger(__name__)
-
-
-##############################################################################
-# Classes to use within the tests
-##############################################################################
-
-# Need complete package name so that mapping matches correctly.
-# The problem here is the Python loader that will load the same module with
-# multiple names in sys.modules due to relative naming. Nice.
-from apptools.persistence.tests.state_function_classes import Foo, Bar, Baz
-
-##############################################################################
-# State functions to use within the tests
-##############################################################################
 
 
 def bar_state_function(self, state):
@@ -59,7 +44,6 @@ class TestUpdater(Updater):
                 (Baz.__module__, Baz.__name__),
         }
         self.setstates = {}
-
 
 
 ##############################################################################
@@ -86,7 +70,6 @@ class StateFunctionTestCase(unittest.TestCase):
         """
 
         self.updater = TestUpdater()
-
 
     ##########################################################################
     # 'StateFunctionTestCase' interface
