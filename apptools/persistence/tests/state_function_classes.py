@@ -11,8 +11,6 @@
 import logging
 
 # Enthought library imports
-import apptools.sweet_pickle as sweet_pickle
-from apptools.sweet_pickle.global_registry import _clear_global_registry
 from traits.api import Bool, Float, HasTraits, Int, Str
 
 

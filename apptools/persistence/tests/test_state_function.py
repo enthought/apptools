@@ -7,8 +7,9 @@
 #
 # -----------------------------------------------------------------------------
 
-""" Tests the state function functionality of the apptools.sweet_pickle
-    framework.
+""" These tests were originally for the the state function functionality of the
+now deleted apptools.sweet_pickle framework.  They have been modified here to
+use apptools.persistence instead.
 """
 
 # Standard library imports.
@@ -34,7 +35,7 @@ logger = logging.getLogger(__name__)
 # Need complete package name so that mapping matches correctly.
 # The problem here is the Python loader that will load the same module with
 # multiple names in sys.modules due to relative naming. Nice.
-from apptools.sweet_pickle.tests.state_function_classes import Foo, Bar, Baz
+from apptools.persistence.tests.state_function_classes import Foo, Bar, Baz
 
 ##############################################################################
 # State functions to use within the tests
