@@ -44,8 +44,8 @@ class Baz:
 
 
 class ClassMappingTestCase(unittest.TestCase):
-    """Tests the class mapping functionality of the apptools.sweet_pickle
-    framework.
+    """Originally tests for the class mapping functionality of the now deleted
+    apptools.sweet_pickle framework, converted to use apptools.persistence.
     """
 
     ##########################################################################

@@ -52,8 +52,8 @@ class TestUpdater(Updater):
 
 
 class StateFunctionTestCase(unittest.TestCase):
-    """Tests the state function functionality of the apptools.sweet_pickle
-    framework.
+    """Originally tests for the state function functionality of the now deleted
+    apptools.sweet_pickle framework, converted to use apptools.persistence.
     """
 
     ##########################################################################
