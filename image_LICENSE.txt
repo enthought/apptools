@@ -10,5 +10,3 @@ OOo                     LGPL                      image_LICENSE_OOo.txt
 
 Unless stated in this file, icons are work of Enthought, and are released
 under BSD-like license.
-Files and original authors:
-----------------------------------------------------------------
