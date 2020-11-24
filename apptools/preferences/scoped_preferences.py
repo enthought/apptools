@@ -1,7 +1,5 @@
 """ A preferences node that adds the notion of preferences scopes. """
 
-from __future__ import print_function
-
 # Standard library imports.
 from os.path import join
 
