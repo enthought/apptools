@@ -81,11 +81,12 @@ class GenericTestCase(unittest.TestCase):
         # This will fail, even though we have a __setstate__ method.
         s = pickle.dumps(a)
         new_a = pickle.loads(s)
-        try:
-            new_a.x
+        # Accessing new_a.x is okay
+        new_a.x
+        # Accessing y directly would fail
+        with self.assertRaisesRegex(
+                AttributeError, "'B' object has no attribute 'y'"):
             new_a.b_ref.y
-        except Exception:
-            pass
 
         # This will work!
         s = pickle.dumps(a)
@@ -152,7 +153,7 @@ class Application(object):
         self.finder = StringFinder(self.reader, "e")
 
     def get(self):
-        pass
+        return (self.finder.data, self.reader.data)
 
 
 class ToyAppTestCase(unittest.TestCase):
@@ -162,11 +163,11 @@ class ToyAppTestCase(unittest.TestCase):
         a.get()
         s = pickle.dumps(a)
         b = pickle.loads(s)
-        # Won't work.
-        try:
+
+        with self.assertRaisesRegex(
+                AttributeError,
+                "'StringFinder' object has no attribute 'data'"):
             b.get()
-        except Exception:
-            pass
 
         # Works fine.
         c = VersionedUnpickler(io.BytesIO(s)).load()

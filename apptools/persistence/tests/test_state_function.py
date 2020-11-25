@@ -27,14 +27,6 @@ from apptools.persistence.updater import Updater
 logger = logging.getLogger(__name__)
 
 
-def bar_state_function(self, state):
-    for old, new in [("b1", "b2"), ("f1", "f2"), ("i1", "i2"), ("s1", "s2")]:
-        state[new] = state[old]
-        del state[old]
-    state["_enthought_pickle_version"] = 2
-    return state
-
-
 class TestUpdater(Updater):
     def __init__(self):
         self.refactorings = {
