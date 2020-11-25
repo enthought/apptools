@@ -15,15 +15,6 @@
 import apptools
 import enthought_sphinx_theme
 
-# Apptools offers an envisage plugin that requires importing from
-# envisage.
-try:
-    import envisage  # noqa
-except ImportError:
-    autodoc_mock_imports = [
-        'envisage',
-    ]
-
 # General configuration
 # ---------------------
 
@@ -59,6 +50,18 @@ version = release = apptools.__version__
 # today = ''
 # Else, today_fmt is used as the format for a strftime call.
 today_fmt = '%B %d, %Y'
+
+# Options for autodoc
+# -------------------
+
+# Apptools offers an envisage plugin that requires importing from
+# envisage.
+try:
+    import envisage  # noqa
+except ImportError:
+    autodoc_mock_imports = [
+        'envisage',
+    ]
 
 # Options for HTML output
 # -----------------------
