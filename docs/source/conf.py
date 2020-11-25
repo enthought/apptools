@@ -14,6 +14,15 @@
 import apptools
 import enthought_sphinx_theme
 
+# Apptools offers an envisage plugin that requires importing from
+# envisage.
+try:
+    import envisage
+except ImportError:
+    autodoc_mock_imports = [
+        'envisage',
+    ]
+
 # If your extensions are in another directory, add it here. If the directory
 # is relative to the documentation root, use os.path.abspath to make it
 # absolute, like shown here.
