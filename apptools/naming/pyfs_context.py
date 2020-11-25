@@ -19,9 +19,7 @@ import glob
 import logging
 import os
 from os.path import join, splitext
-
-# Third-party library imports.
-import six.moves.cPickle as pickle
+import pickle
 
 # Enthought library imports.
 from apptools.io.api import File

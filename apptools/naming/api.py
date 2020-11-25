@@ -18,8 +18,6 @@ from .exception import OperationNotSupportedError
 from .address import Address
 from .binding import Binding
 from .context import Context
-from .context_adapter import ContextAdapter
-from .context_adapter_factory import ContextAdapterFactory
 from .dynamic_context import DynamicContext
 from .dir_context import DirContext
 from .initial_context import InitialContext

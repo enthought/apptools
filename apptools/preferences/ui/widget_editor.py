@@ -2,7 +2,6 @@
 
 
 # Enthought library imports.
-from traits.etsconfig.api import ETSConfig
 from traits.api import Any
 from traitsui.api import EditorFactory
 from traitsui.toolkit import toolkit_object

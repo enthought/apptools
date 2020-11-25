@@ -15,7 +15,10 @@
 
 
 # Standard/built-in imports.
-import mimetypes, os, shutil, stat
+import mimetypes
+import os
+import shutil
+import stat
 
 # Enthought library imports.
 from traits.api import Bool, HasPrivateTraits, Instance, List, Property
@@ -81,13 +84,6 @@ class File(HasPrivateTraits):
         super(File, self).__init__(path=path, **traits)
 
         return
-
-    def __cmp__(self, other):
-        """ Comparison operators. """
-        if isinstance(other, File):
-            return cmp(self.path, other.path)
-
-        return 1
 
     def __str__(self):
         """ Returns an 'informal' string representation of the object. """

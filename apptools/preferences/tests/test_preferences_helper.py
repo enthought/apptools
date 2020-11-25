@@ -5,7 +5,6 @@
 import os
 import shutil
 import tempfile
-import time
 import unittest
 
 # Major package imports.
@@ -15,7 +14,10 @@ from importlib_resources import files
 from apptools.preferences.api import Preferences, PreferencesHelper
 from apptools.preferences.api import ScopedPreferences
 from apptools.preferences.api import set_default_preferences
-from traits.api import Any, Bool, HasTraits, Int, Float, List, Str
+from traits.api import (
+    Any, Bool, HasTraits, Int, Float, List, Str,
+    push_exception_handler, pop_exception_handler,
+)
 
 
 def width_listener(obj, trait_name, old, new):
@@ -59,6 +61,12 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         # A temporary directory that can safely be written to.
         self.tmpdir = tempfile.mkdtemp()
+
+        # Path to a temporary file
+        self.tmpfile = os.path.join(self.tmpdir, "tmp.ini")
+
+        push_exception_handler(reraise_exceptions=True)
+        self.addCleanup(pop_exception_handler)
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
@@ -180,8 +188,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
     def test_default_values(self):
         """ default values """
 
-        p = self.preferences
-
         class AcmeUIPreferencesHelper(PreferencesHelper):
             """ A helper! """
 
@@ -232,14 +238,11 @@ class PreferencesHelperTestCase(unittest.TestCase):
         helper = AcmeUIPreferencesHelper()
 
         first_unicode_str = "U\xdc\xf2ser"
-        first_utf8_str = "U\xc3\x9c\xc3\xb2ser"
 
-        original_description = helper.description
         helper.description = first_unicode_str
         self.assertEqual(first_unicode_str, helper.description)
 
         second_unicode_str = "caf\xe9"
-        second_utf8_str = "caf\xc3\xa9"
         helper.description = second_unicode_str
         self.assertEqual(second_unicode_str, helper.description)
         self.assertEqual(second_unicode_str, p.get("acme.ui.description"))
@@ -254,6 +257,87 @@ class PreferencesHelperTestCase(unittest.TestCase):
         self.assertEqual(second_unicode_str, p.get("acme.ui.description"))
         self.assertEqual("True", p.get("acme.ui.visible"))
         self.assertTrue(helper.visible)
+
+    def test_mutate_list_of_values(self):
+        """ Mutated list should be saved and _items events not to be
+        saved in the preferences.
+        """
+        # Regression test for enthought/apptools#129
+
+        class MyPreferencesHelper(PreferencesHelper):
+            preferences_path = Str('my_section')
+
+            list_of_str = List(Str)
+
+        helper = MyPreferencesHelper(list_of_str=["1"])
+
+        # Now modify the list to fire _items event
+        helper.list_of_str.append("2")
+        self.preferences.save(self.tmpfile)
+
+        new_preferences = Preferences()
+        new_preferences.load(self.tmpfile)
+
+        self.assertEqual(
+            new_preferences.get("my_section.list_of_str"), str(["1", "2"])
+        )
+        self.assertEqual(new_preferences.keys("my_section"), ["list_of_str"])
+
+    def test_nested_container_mutation_not_supported(self):
+        """ Known limitation: mutation on nested containers are not
+        synchronized
+        See enthought/apptools#194
+        """
+
+        class MyPreferencesHelper(PreferencesHelper):
+            preferences_path = Str('my_section')
+            list_of_list_of_str = List(List(Str))
+
+        helper = MyPreferencesHelper(list_of_list_of_str=[["1"]])
+        helper.list_of_list_of_str[0].append("9")
+
+        self.preferences.save(self.tmpfile)
+
+        new_preferences = Preferences()
+        new_preferences.load(self.tmpfile)
+
+        # The event trait is not saved.
+        self.assertEqual(
+            new_preferences.keys("my_section"), ["list_of_list_of_str"]
+        )
+
+        # The values are not synchronized
+        with self.assertRaises(AssertionError):
+            self.assertEqual(
+                new_preferences.get("my_section.list_of_list_of_str"),
+                str(helper.list_of_list_of_str)
+            )
+
+    def test_sync_anytrait_items_not_event(self):
+        """ Test sychronizing trait with name *_items which is a normal trait
+        rather than an event trait for listening to list/dict/set mutation.
+        """
+
+        class MyPreferencesHelper(PreferencesHelper):
+            preferences_path = Str('my_section')
+
+            names_items = Str()
+
+        helper = MyPreferencesHelper(preferences=self.preferences)
+        helper.names_items = "Hello"
+
+        self.preferences.save(self.tmpfile)
+        new_preferences = Preferences()
+        new_preferences.load(self.tmpfile)
+
+        self.assertEqual(
+            sorted(new_preferences.keys("my_section")),
+            ["names_items"]
+        )
+        self.assertEqual(
+            new_preferences.get("my_section.names_items"),
+            str(helper.names_items),
+        )
 
     def test_no_preferences_path(self):
         """ no preferences path """

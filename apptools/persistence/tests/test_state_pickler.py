@@ -54,7 +54,7 @@ class TestClassic:
     def __init__(self):
         self.b = False
         self.i = 7
-        self.l = 1234567890123456789
+        self.longi = 1234567890123456789
         self.f = math.pi
         self.c = complex(1.01234, 2.3)
         self.n = None
@@ -75,7 +75,7 @@ class TestClassic:
 class TestTraits(HasTraits):
     b = Bool(False)
     i = Int(7)
-    l = Int(12345678901234567890)
+    longi = Int(12345678901234567890)
     f = Float(math.pi)
     c = Complex(complex(1.01234, 2.3))
     n = Any
@@ -136,7 +136,7 @@ class TestDictPickler(unittest.TestCase):
         data = data["data"]
         self.assertEqual(data["b"], obj.b)
         self.assertEqual(data["i"], obj.i)
-        self.assertEqual(data["l"], obj.l)
+        self.assertEqual(data["longi"], obj.longi)
         self.assertEqual(data["f"], obj.f)
         self.assertEqual(data["c"], obj.c)
         self.assertEqual(data["n"], obj.n)
@@ -176,7 +176,7 @@ class TestDictPickler(unittest.TestCase):
         )
         self.assertEqual(state.b, obj.b)
         self.assertEqual(state.i, obj.i)
-        self.assertEqual(state.l, obj.l)
+        self.assertEqual(state.longi, obj.longi)
         self.assertEqual(state.f, obj.f)
         self.assertEqual(state.c, obj.c)
         self.assertEqual(state.n, obj.n)
@@ -220,7 +220,7 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(state.__metadata__, state1.__metadata__)
         self.assertEqual(state.b, state1.b)
         self.assertEqual(state.i, state1.i)
-        self.assertEqual(state.l, state1.l)
+        self.assertEqual(state.longi, state1.longi)
         self.assertEqual(state.f, state1.f)
         self.assertEqual(state.c, state1.c)
         self.assertEqual(state.n, state1.n)
@@ -263,11 +263,11 @@ class TestDictPickler(unittest.TestCase):
         a = A()
         r = state_pickler.get_state(a)
         self.assertTrue(r.__metadata__["has_instance"])
-        l = [1, a]
-        r = state_pickler.get_state(l)
+        lst = [1, a]
+        r = state_pickler.get_state(lst)
         self.assertTrue(r.has_instance)
         self.assertTrue(r[1].__metadata__["has_instance"])
-        d = {"a": l, "b": 1}
+        d = {"a": lst, "b": 1}
         r = state_pickler.get_state(d)
         self.assertTrue(r.has_instance)
         self.assertTrue(r["a"].has_instance)
@@ -337,7 +337,7 @@ class TestDictPickler(unittest.TestCase):
             "i",
             "tuple",
             "list",
-            "l",
+            "longi",
             "numeric",
             "n",
             "s",

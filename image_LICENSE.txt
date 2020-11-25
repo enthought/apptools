@@ -3,19 +3,9 @@ licensed accordingly to the original license:
 
 Project                 License                   File
 ----------------------------------------------------------------------------
-GV: Gael Varoquaux      BSD-like                  LICENSE.txt
 Enthought               BSD-like                  LICENSE.txt
 Nuvola                  LGPL                      image_LICENSE_Nuvola.txt
 OOo                     LGPL                      image_LICENSE_OOo.txt
 
 Unless stated in this file, icons are work of Enthought, and are released
 under BSD-like license.
-Files and original authors:
-----------------------------------------------------------------
-apptools/help:
-                   help_action.png | GV
-
-apptools/naming/ui/images (and examples/naming/images):
-                 closed_folder.png | GV
-                      document.png | GV
-                   open_folder.png | GV

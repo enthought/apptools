@@ -7,7 +7,7 @@ from apptools.persistence.updater import Updater
 def update_project(self, state):
     print('updating to v2')
     metadata = state['metadata']
-    metadata['version'] =  2
+    metadata['version'] = 2
     metadata['updater'] = 22
     return state
 
@@ -21,5 +21,5 @@ class Update2(Updater):
         }
 
         self.setstates = {
-            ("cplab.project", "Project"):  update_project
+            ("cplab.project", "Project"): update_project
         }

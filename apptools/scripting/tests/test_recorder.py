@@ -112,8 +112,8 @@ class TestRecorder(unittest.TestCase):
         self.assertEqual(tape._get_unique_name(t), "toy")
         t = (1, 2)
         self.assertEqual(tape._get_unique_name(t), "tuple0")
-        l = [1, 2]
-        self.assertEqual(tape._get_unique_name(l), "list0")
+        lst = [1, 2]
+        self.assertEqual(tape._get_unique_name(lst), "list0")
         d = {"a": 1}
         self.assertEqual(tape._get_unique_name(d), "dict0")
 
@@ -347,7 +347,7 @@ class TestRecorder(unittest.TestCase):
         def func(x, y):
             return x, y
 
-        result = func(1, 2)
+        func(1, 2)
         self.assertEqual(tape.lines[-1], "tuple0 = func(1, 2)")
 
     def test_non_has_traits(self):
@@ -384,7 +384,7 @@ class TestRecorder(unittest.TestCase):
         self.assertEqual(tape.lines[-2], "a = A(x=1)")
         self.assertEqual(tape.lines[-1], "tuple0 = a.f(1, 'asd')")
 
-        result = a.f(p, c)
+        a.f(p, c)
         # This should instantiate the parent first, get the child from
         # that and then record the call itself.
         self.assertEqual(tape.lines[-3], "parent = Parent()")
@@ -392,7 +392,7 @@ class TestRecorder(unittest.TestCase):
         self.assertEqual(tape.lines[-1], "tuple1 = a.f(parent, child)")
 
         # This should simply refer to the child.
-        result = a.g(c)
+        a.g(c)
         self.assertEqual(tape.lines[-1], "child = a.g(child)")
 
         # Should do nothing.
@@ -401,7 +401,7 @@ class TestRecorder(unittest.TestCase):
 
         # When a function is called with unknown args it should attempt
         # to create the objects.
-        r = a.g(Toy())
+        a.g(Toy())
         self.assertEqual(tape.lines[-3][-10:], "import Toy")
         self.assertEqual(tape.lines[-2], "toy = Toy()")
         self.assertEqual(tape.lines[-1], "toy = a.g(toy)")
@@ -410,7 +410,6 @@ class TestRecorder(unittest.TestCase):
         "Test if setting script_id at registration time works."
         tape = self.tape
         p = self.p
-        c = p.children[0]
         tape.register(p, script_id="child")
         tape.recording = True
         # Ask to be called child.

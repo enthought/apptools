@@ -6,7 +6,7 @@
 # License: BSD Style.
 
 # Standard library imports.
-from imp import reload
+from importlib import reload
 import unittest
 
 # Enthought library imports.

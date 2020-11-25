@@ -7,7 +7,7 @@ from traits.api import Bool, Str, Trait
 class LoggerPreferences(PreferencesHelper):
     """The persistent service exposing the Logger plugin's API."""
 
-    #### Preferences ###########################################################
+    #### Preferences ##########################################################
 
     # The log levels
     level = Trait(

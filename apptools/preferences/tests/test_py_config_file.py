@@ -2,7 +2,9 @@
 
 
 # Standard library imports.
-import os, tempfile, unittest
+import os
+import tempfile
+import unittest
 from os.path import join
 
 # Major package imports.

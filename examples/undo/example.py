@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Riverbank Computing Limited
 # Description: <Enthought undo package component>
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 # Standard library imports.
@@ -81,4 +81,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    import sys; main(sys.argv)
+    import sys
+    main(sys.argv)

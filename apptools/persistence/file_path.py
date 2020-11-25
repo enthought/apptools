@@ -8,7 +8,7 @@ context of persistent storage with the state_pickler.
 
 # Standard library imports.
 import os
-from os.path import abspath, normpath, dirname, commonprefix, join
+from os.path import abspath, normpath, dirname, join
 
 
 class FilePath(object):

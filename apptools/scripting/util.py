@@ -9,9 +9,9 @@ from .recorder_with_ui import RecorderWithUI
 from .package_globals import get_recorder, set_recorder
 
 
-################################################################################
+###############################################################################
 # Utility functions.
-################################################################################
+###############################################################################
 def start_recording(object, ui=True, **kw):
     """Convenience function to start recording.  Returns the recorder.
 

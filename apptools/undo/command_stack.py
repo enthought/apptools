@@ -198,7 +198,7 @@ class CommandStack(HasTraits):
             # Remove everything on the stack after the last command that was
             # done.
             self._index += 1
-            del self._stack[self._index :]
+            del self._stack[self._index:]
 
             # Create a new stack entry and add it to the stack.
             entry = _StackEntry(

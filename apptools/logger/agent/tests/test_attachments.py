@@ -4,7 +4,6 @@ import os
 import shutil
 import tempfile
 import unittest
-from unittest import mock
 
 from apptools.logger.agent.attachments import Attachments
 
