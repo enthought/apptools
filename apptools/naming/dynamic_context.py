@@ -82,7 +82,7 @@ class DynamicContext(Context):
         item = self._get_contributed_context_item(name)
         if item != (None, None):
             obj, trait = item
-            result = True if trait.is_context is True else False
+            result = trait.is_context is True
         else:
             result = False
 
