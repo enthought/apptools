@@ -71,7 +71,7 @@ class NamingTraitHandler(TraitHandler):
                     self.validate_failed(object, name, value)
             try:
                 value = self._get_binding_for(value)
-            except Exception:
+            except:  # noqa: E722
                 self.validate_failed(object, name, value)
 
         if isinstance(self.aClass, str):

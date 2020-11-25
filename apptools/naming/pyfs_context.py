@@ -231,7 +231,7 @@ class PyFSContext(DirContext, Referenceable):
                     # If the load fails then we create a generic file resource
                     # (the idea being that it might be useful to have access to
                     # the file to see what went wrong).
-                    except Exception:
+                    except:  # noqa: E722
                         state = File(path)
                         logger.exception("Error loading resource at %s" % path)
 
