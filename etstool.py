@@ -100,6 +100,7 @@ supported_runtimes = [
 
 dependencies = {
     "flake8",
+    "flake8_ets",
     "traitsui",
     "configobj",
     "coverage",
