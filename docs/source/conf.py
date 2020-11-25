@@ -51,6 +51,18 @@ version = release = apptools.__version__
 # Else, today_fmt is used as the format for a strftime call.
 today_fmt = '%B %d, %Y'
 
+# Options for autodoc
+# -------------------
+
+# Apptools offers an envisage plugin that requires importing from
+# envisage.
+try:
+    import envisage  # noqa
+except ImportError:
+    autodoc_mock_imports = [
+        'envisage',
+    ]
+
 # Options for HTML output
 # -----------------------
 

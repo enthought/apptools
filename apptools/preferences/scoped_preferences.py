@@ -25,21 +25,21 @@ class ScopedPreferences(Preferences):
 
     Path names passed to 'ScopedPreferences' nodes can be either::
 
-    a) a preference path as used in a standard 'Preferences' node, e.g::
+        a) a preference path as used in a standard 'Preferences' node, e.g::
 
-       'acme.widget.bgcolor'.
+        'acme.widget.bgcolor'.
 
-       In this case the operation either takes place in the primary scope
-       (for operations such as 'set' etc), or on all scopes in precedence order
-       (for operations such as 'get' etc).
+        In this case the operation either takes place in the primary scope
+        (for operations such as 'set' etc), or on all scopes in precedence
+        order (for operations such as 'get' etc).
 
-    or
+        or
 
-    b) a preference path that refers to a specific scope e.g::
+        b) a preference path that refers to a specific scope e.g::
 
-       'default/acme.widget.bgcolor'
+        'default/acme.widget.bgcolor'
 
-       In this case the operation takes place *only* in the specified scope.
+        In this case the operation takes place *only* in the specified scope.
 
     There is one drawback to this scheme. If you want to access a scope node
     itself via the 'clear', 'keys', 'node', 'node_exists' or 'node_names'
@@ -48,23 +48,23 @@ class ScopedPreferences(Preferences):
 
     e.g. To get the names of the children of the 'application' scope, use::
 
-      scoped.node_names('application/')
+        scoped.node_names('application/')
 
     If you did this::
 
-      scoped.node_names('application')
+        scoped.node_names('application')
 
     Then the node would get the primary scope and try to find its child node
     called 'application'.
 
     Of course you can just get the scope via::
 
-      application_scope = scoped.get_scope('application')
+        application_scope = scoped.get_scope('application')
 
     and then call whatever methods you like on it - which is definitely more
     intentional and is highly recommended::
 
-      application_scope.node_names()
+        application_scope.node_names()
 
     """
 
