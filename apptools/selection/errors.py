@@ -28,5 +28,5 @@ class ListenerNotConnectedError(Exception):
         self.listener = listener
 
     def __str__(self):
-        msg = "Selection listener {l} is not connected to provider '{id}'."
-        return msg.format(l=self.listener, id=self.provider_id)
+        msg = "Selection listener {lr} is not connected to provider '{id}'."
+        return msg.format(lr=self.listener, id=self.provider_id)

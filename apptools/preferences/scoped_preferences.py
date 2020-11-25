@@ -30,8 +30,8 @@ class ScopedPreferences(Preferences):
         'acme.widget.bgcolor'.
 
         In this case the operation either takes place in the primary scope
-        (for operations such as 'set' etc), or on all scopes in precedence order
-        (for operations such as 'get' etc).
+        (for operations such as 'set' etc), or on all scopes in precedence
+        order (for operations such as 'get' etc).
 
         or
 

@@ -150,7 +150,7 @@ class Recorder(HasTraits):
         Parameters
         ----------
 
-        code : str 
+        code : str
             A string of text.
         """
         if self.recording and not self._in_function:
