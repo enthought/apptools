@@ -30,6 +30,7 @@ class FooWithTraits(HasTraits):
     def _get_last_name(self):
         return self.full_name.split(" ")[-1]
 
+
 class TestObjectSerializer(unittest.TestCase):
 
     def setUp(self):

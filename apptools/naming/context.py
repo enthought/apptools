@@ -15,18 +15,15 @@
 
 
 # Enthought library imports.
-from traits.api import Any, Dict, Event, HasTraits, Instance
+from traits.api import Any, Dict, Event, HasTraits
 from traits.api import Property, Str
 
 # Local imports.
 from .binding import Binding
 from .exception import InvalidNameError, NameAlreadyBoundError
 from .exception import NameNotFoundError, NotContextError
-from .exception import OperationNotSupportedError
 from .naming_event import NamingEvent
 from .naming_manager import naming_manager
-from .object_factory import ObjectFactory
-from .state_factory import StateFactory
 from .unique_name import make_unique_name
 
 
@@ -703,7 +700,7 @@ class Context(HasTraits):
 
             if (
                 isinstance(binding.obj, Context)
-                and not binding.obj in searched
+                and binding.obj not in searched
             ):
                 path.append(binding.name)
                 searched[binding.obj] = True

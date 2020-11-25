@@ -55,7 +55,7 @@ class ObjectSerializer(HasTraits):
         f = open(path, "rb")
         try:
             try:
-                 obj = VersionedUnpickler(f).load()
+                obj = VersionedUnpickler(f).load()
             except Exception as ex:
                 print_exc()
                 logger.exception(

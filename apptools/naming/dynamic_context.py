@@ -82,7 +82,7 @@ class DynamicContext(Context):
         item = self._get_contributed_context_item(name)
         if item != (None, None):
             obj, trait = item
-            result = True == trait.is_context
+            result = trait.is_context is True
         else:
             result = False
 
@@ -168,7 +168,7 @@ class DynamicContext(Context):
         traits = [(t.context_order, n, t) for n, t in traits.items()]
         traits.sort()
 
-        # Convert these trait definitions into a list of name and object tuples.
+        # Convert these trait definitions into a list of name and object tuples
         result = [
             (t.context_name, getattr(self, n), t) for order, n, t in traits
         ]

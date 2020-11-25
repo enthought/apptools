@@ -30,7 +30,6 @@ from .address import Address
 from .binding import Binding
 from .context import Context
 from .dir_context import DirContext
-from .exception import NameNotFoundError, NotContextError
 from .naming_event import NamingEvent
 from .naming_manager import naming_manager
 from .object_serializer import ObjectSerializer
@@ -152,7 +151,7 @@ class PyFSContext(DirContext, Referenceable):
         if "root" in self.environment:
             root = self.environment["root"]
 
-            namespace_name = self.path[len(root) + 1 :]
+            namespace_name = self.path[len(root) + 1:]
 
         else:
             namespace_name = self.path
@@ -232,7 +231,7 @@ class PyFSContext(DirContext, Referenceable):
                     # If the load fails then we create a generic file resource
                     # (the idea being that it might be useful to have access to
                     # the file to see what went wrong).
-                    except:
+                    except:  # noqa: E722
                         state = File(path)
                         logger.exception("Error loading resource at %s" % path)
 

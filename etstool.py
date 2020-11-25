@@ -157,7 +157,8 @@ def install(runtime, environment, source):
     commands = [
         "edm environments create {environment} --force --version={runtime}",
         "edm install -y -e {environment} " + packages,
-        "edm run -e {environment} -- pip install -r ci-src-requirements.txt --no-dependencies",
+        "edm run -e {environment} -- pip install -r ci-src-requirements.txt"
+        " --no-dependencies",
         "edm run -e {environment} -- python setup.py clean --all",
         "edm run -e {environment} -- python setup.py develop"
     ]
@@ -213,6 +214,7 @@ def test(runtime, environment):
         execute(commands, parameters)
     click.echo('Done test')
 
+
 @cli.command()
 @click.option('--runtime', default=DEFAULT_RUNTIME)
 @click.option('--environment', default=None)
@@ -239,6 +241,7 @@ def docs(runtime, environment):
 
     commands = [apidoc_command, html_build_command]
     execute(commands, parameters)
+
 
 @cli.command()
 @click.option('--runtime', default=DEFAULT_RUNTIME)
@@ -290,6 +293,7 @@ def test_clean(runtime):
         test(args=args, standalone_mode=False)
     finally:
         cleanup(args=args, standalone_mode=False)
+
 
 @cli.command()
 @click.option('--runtime', default=DEFAULT_RUNTIME)
@@ -424,7 +428,9 @@ def get_parameters(runtime, environment):
     """ Set up parameters dictionary for format() substitution """
     parameters = {'runtime': runtime, 'environment': environment}
     if environment is None:
-        parameters['environment'] = 'apptools-test-{runtime}'.format(**parameters)
+        parameters['environment'] = 'apptools-test-{runtime}'.format(
+            **parameters
+        )
     return parameters
 
 

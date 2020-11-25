@@ -19,7 +19,7 @@ from traits.api import Dict
 
 # Local imports.
 from .context import Context
-from .exception import NameNotFoundError, NotContextError
+from .exception import NameNotFoundError
 
 
 class DirContext(Context):

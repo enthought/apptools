@@ -18,7 +18,15 @@
 import unittest
 
 # Enthought library imports.
-from apptools.naming.api import *
+from apptools.naming.api import (
+    Context,
+    InvalidNameError,
+    NameAlreadyBoundError,
+    NameNotFoundError,
+    NotContextError,
+    ObjectFactory,
+    StateFactory,
+)
 
 
 class ContextTestCase(unittest.TestCase):
@@ -480,7 +488,7 @@ class ContextTestCase(unittest.TestCase):
         # Convenience.
         context = self.context
         sub = self.context.lookup("sub")
-        sub_sibling = context.create_subcontext("sub sibling")
+        context.create_subcontext("sub sibling")
         sub_sub = sub.create_subcontext("sub sub")
 
         context.bind("one", 1)

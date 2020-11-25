@@ -15,7 +15,11 @@
 
 
 # Enthought library imports.
-from apptools.naming.api import *
+from apptools.naming.api import (
+    DirContext,
+    NameNotFoundError,
+    NotContextError,
+)
 
 # Local imports.
 from .test_context import ContextTestCase
