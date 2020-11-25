@@ -18,12 +18,10 @@
 import logging
 from traceback import print_exc
 from os.path import splitext
-
-# import cPickle
-# import pickle
+import pickle
 
 # Enthought library imports.
-import apptools.sweet_pickle as sweet_pickle
+from apptools.persistence.versioned_unpickler import VersionedUnpickler
 from traits.api import HasTraits, Str
 
 
@@ -57,9 +55,7 @@ class ObjectSerializer(HasTraits):
         f = open(path, "rb")
         try:
             try:
-                obj = sweet_pickle.load(f)
-            #                obj = cPickle.load(f)
-            #                obj = pickle.load(f)
+                 obj = VersionedUnpickler(f).load()
             except Exception as ex:
                 print_exc()
                 logger.exception(
@@ -89,9 +85,7 @@ class ObjectSerializer(HasTraits):
         # Pickle the object.
         f = open(actual_path, "wb")
         try:
-            sweet_pickle.dump(obj, f, 1)
-        #            cPickle.dump(obj, f, 1)
-        #            pickle.dump(obj, f, 1)
+            pickle.dump(obj, f, 1)
         except Exception as ex:
             logger.exception(
                 "Failed to pickle into file: %s, %s, object:%s"

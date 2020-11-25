@@ -1,5 +1,6 @@
 # Standard library imports
-from pickle import BUILD, Unpickler, UnpicklingError
+from pickle import _Unpickler as Unpickler
+from pickle import UnpicklingError, BUILD
 import logging
 from types import GeneratorType
 
@@ -81,9 +82,9 @@ class NewUnpickler(Unpickler):
                     generators.remove((o, g))
 
     # Make this a class method since dispatch is a class variable.
-    # Otherwise, supposing the initial sweet_pickle.load call (which would
-    # have overloaded the load_build method) makes a pickle.load call at some
-    # point, we would have the dispatch still pointing to
+    # Otherwise, supposing the initial VersionedUnpickler.load call (which
+    # would have overloaded the load_build method) makes a pickle.load call at
+    # some point, we would have the dispatch still pointing to
     # NewPickler.load_build whereas the object being passed in will be an
     # Unpickler instance, causing a TypeError.
     def load_build(cls, obj):

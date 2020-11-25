@@ -7,16 +7,21 @@
 #          Prabhu Ramachandran <prabhu@aero.iitb.ac.in>
 # -----------------------------------------------------------------------------
 
-# Test cases.
-from __future__ import print_function
+""" This was previously a test for the now deleted apptools.sweet_pickle
+sub package.  It is included here to showcase how apptools.persistance can be
+used to replace sweet_pickle functionality.
+"""
 
+import io
 import random
+import re
 import pickle
 import unittest
 
-import apptools.sweet_pickle as sweet_pickle
+from apptools.persistence.versioned_unpickler import VersionedUnpickler
 
 ########################################
+
 
 # Usecase1: generic case
 class A(object):
@@ -66,8 +71,6 @@ class B(object):
 
 class GenericTestCase(unittest.TestCase):
     def test_generic(self):
-        print("\nRunning generic test...")
-
         a = A()
         b = B()
         a.x = random.randint(1, 100)
@@ -78,25 +81,21 @@ class GenericTestCase(unittest.TestCase):
         # This will fail, even though we have a __setstate__ method.
         s = pickle.dumps(a)
         new_a = pickle.loads(s)
-        try:
-            print("\ta.x: %s" % new_a.x)
-            print("\ta.b_ref.y: %s" % new_a.b_ref.y)
-        except Exception as msg:
-            print("\t%s" % "Expected Error".center(75, "*"))
-            print("\t%s" % msg)
-            print("\t%s" % ("*" * 75))
+        # Accessing new_a.x is okay
+        new_a.x
+        # Accessing y directly would fail
+        with self.assertRaisesRegex(
+                AttributeError, "'B' object has no attribute 'y'"):
+            new_a.b_ref.y
 
         # This will work!
         s = pickle.dumps(a)
-        new_a = sweet_pickle.loads(s)
+        new_a = VersionedUnpickler(io.BytesIO(s)).load()
         assert new_a.x == new_a.b_ref.y == value
-
-        print("Generic test succesfull.\n\n")
 
 
 ########################################
 # Usecase2: Toy Application
-import re
 
 
 class StringFinder(object):
@@ -154,35 +153,22 @@ class Application(object):
         self.finder = StringFinder(self.reader, "e")
 
     def get(self):
-        print("\t%s" % self.finder.data)
-        print("\t%s" % self.reader.data)
+        return (self.finder.data, self.reader.data)
 
 
 class ToyAppTestCase(unittest.TestCase):
     def test_toy_app(self):
-        print("\nRunning toy app test...")
-
         a = Application()
         a.finder.find()
         a.get()
         s = pickle.dumps(a)
         b = pickle.loads(s)
-        # Won't work.
-        try:
+
+        with self.assertRaisesRegex(
+                AttributeError,
+                "'StringFinder' object has no attribute 'data'"):
             b.get()
-        except Exception as msg:
-            print("\t%s" % "Expected Error".center(75, "*"))
-            print("\t%s" % msg)
-            print("\t%s" % ("*" * 75))
 
         # Works fine.
-        c = sweet_pickle.loads(s)
+        c = VersionedUnpickler(io.BytesIO(s)).load()
         c.get()
-
-        print("Toy app test succesfull.\n\n")
-
-
-if __name__ == "__main__":
-    test_generic()
-    test_toy_app()
-    print("ALL TESTS SUCCESFULL\n")

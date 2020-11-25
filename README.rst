@@ -28,9 +28,6 @@ that is commonly needed by many applications
   listener of selected items in an application.
 - **apptools.scripting**: A framework for automatic recording of Python
   scripts.
-- **apptools.sweet_pickle**: Handles class-level versioning, to support
-  loading of saved data that exist over several generations of internal class
-  structures.
 - **apptools.undo**: Supports undoing and scripting application commands.
 
 Prerequisites
