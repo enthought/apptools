@@ -1,0 +1,1 @@
+Document the ``apptools.io`` and ``apptools.io.h5`` sub packages (#237)
