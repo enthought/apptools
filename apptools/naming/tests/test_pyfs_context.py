@@ -15,11 +15,20 @@
 
 
 # Standard library imports.
-import os, shutil, unittest
+import os
+import shutil
+import unittest
 
 # Enthought library imports.
 from apptools.io import File
-from apptools.naming.api import *
+from apptools.naming.api import (
+    DirContext,
+    InvalidNameError,
+    NameAlreadyBoundError,
+    NameNotFoundError,
+    NotContextError,
+    PyFSContext,
+)
 
 
 class PyFSContextTestCase(unittest.TestCase):
@@ -32,14 +41,10 @@ class PyFSContextTestCase(unittest.TestCase):
     def setUp(self):
         """ Prepares the test fixture before each test method is called. """
 
-        try:
-            if os.path.exists("data"):
-                shutil.rmtree("data")
-            if os.path.exists("other"):
-                shutil.rmtree("other")
-
-        except:
-            pass
+        if os.path.exists("data"):
+            shutil.rmtree("data", ignore_errors=True)
+        if os.path.exists("other"):
+            shutil.rmtree("other", ignore_errors=True)
 
         os.mkdir("data")
         os.mkdir("other")
@@ -248,7 +253,7 @@ class PyFSContextTestCase(unittest.TestCase):
         self.assertRaises(InvalidNameError, context.create_subcontext, "")
 
         # Create a sub-context.
-        a = context.create_subcontext("sub/a")
+        context.create_subcontext("sub/a")
         self.assertEqual(len(sub.list_bindings("")), 1)
         self.assertTrue(os.path.isdir(os.path.join(sub.path, "a")))
 
@@ -273,7 +278,7 @@ class PyFSContextTestCase(unittest.TestCase):
         self.assertRaises(InvalidNameError, context.destroy_subcontext, "")
 
         # Create a sub-context.
-        a = context.create_subcontext("sub/a")
+        context.create_subcontext("sub/a")
         self.assertEqual(len(sub.list_bindings("")), 1)
 
         # Destroy it.

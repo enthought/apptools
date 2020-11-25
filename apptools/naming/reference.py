@@ -15,7 +15,7 @@
 
 
 # Enthought library imports.
-from traits.api import Any, HasPrivateTraits, List, Str
+from traits.api import HasPrivateTraits, List, Str
 
 # Local imports.
 from .address import Address

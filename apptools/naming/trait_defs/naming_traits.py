@@ -20,8 +20,6 @@ from traits.api import Trait, TraitHandler, TraitFactory
 
 from traits.trait_base import class_of, get_module_name
 
-from traitsui.api import DropEditor
-
 from apptools.naming.api import Binding
 
 
@@ -56,7 +54,7 @@ class NamingTraitHandler(TraitHandler):
 
     def __init__(self, aClass, or_none, module):
         """Initializes the object."""
-        self.or_none = or_none != False
+        self.or_none = or_none is not False
         self.module = module
         self.aClass = aClass
         if (aClass is not None) and (
@@ -73,7 +71,7 @@ class NamingTraitHandler(TraitHandler):
                     self.validate_failed(object, name, value)
             try:
                 value = self._get_binding_for(value)
-            except:
+            except Exception:
                 self.validate_failed(object, name, value)
 
         if isinstance(self.aClass, str):
@@ -123,10 +121,10 @@ class NamingTraitHandler(TraitHandler):
 
         result = None
 
-        # FIXME: The following code makes this whole component have a dependency
-        # on envisage, and worse, assumes the use of a particular project
-        # plugin!  This is horrible and should be refactored out, possibly to
-        # a custom sub-class of whoever needs this behavior.
+        # FIXME: The following code makes this whole component have a
+        # dependency on envisage, and worse, assumes the use of a particular
+        # project plugin!  This is horrible and should be refactored out,
+        # possibly to a custom sub-class of whoever needs this behavior.
         try:
             from envisage import get_application
 
@@ -146,8 +144,8 @@ class NamingTraitHandler(TraitHandler):
         self.aClass = aClass
 
         # fixme: The following is quite ugly, because it wants to try and fix
-        # the trait referencing this handler to use the 'fast path' now that the
-        # actual class has been resolved. The problem is finding the trait,
+        # the trait referencing this handler to use the 'fast path' now that
+        # the actual class has been resolved. The problem is finding the trait,
         # especially in the case of List(Instance('foo')), where the
         # object.base_trait(...) value is the List trait, not the Instance
         # trait, so we need to check for this and pull out the List
@@ -165,11 +163,11 @@ class NamingTraitHandler(TraitHandler):
         col = aClass.rfind(".")
         if col >= 0:
             module = aClass[:col]
-            aClass = aClass[col + 1 :]
+            aClass = aClass[col + 1:]
         theClass = getattr(sys.modules.get(module), aClass, None)
         if (theClass is None) and (col >= 0):
             try:
                 theClass = getattr(__import__(module), aClass, None)
-            except:
+            except Exception:
                 pass
         return theClass

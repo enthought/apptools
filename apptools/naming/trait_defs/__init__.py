@@ -14,4 +14,4 @@
 #  Imports:
 # ------------------------------------------------------------------------------
 
-from apptools.naming.trait_defs.api import *
+from .naming_traits import NamingInstance
