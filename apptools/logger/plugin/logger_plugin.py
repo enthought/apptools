@@ -15,16 +15,10 @@
 """
 
 # Standard library imports.
-import sys
 import logging
-from unittest.mock import MagicMock
 
 # Enthought library imports.
-try:
-    from envisage.api import ExtensionPoint, Plugin
-except ModuleNotFoundError:
-    sys.modules['envisage.api'] = MagicMock()
-    from envisage.api import ExtensionPoint, Plugin
+from envisage.api import ExtensionPoint, Plugin
 from apptools.logger.log_queue_handler import LogQueueHandler
 from traits.api import Callable, List
 
