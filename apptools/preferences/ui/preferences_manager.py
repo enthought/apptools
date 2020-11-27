@@ -73,6 +73,7 @@ class PreferencesManagerHandler(Handler):
         """ Handle the **Apply** button being clicked. """
 
         info.object.apply()
+
     def init(self, info):
         """ Initialize the controls of a user interface. """
 

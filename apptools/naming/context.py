@@ -237,7 +237,6 @@ class Context(HasTraits):
             next_context = self._get_next_context(components[0])
             next_context.unbind("/".join(components[1:]))
 
-
     def rename(self, old_name, new_name):
         """ Binds a new name to an object. """
 

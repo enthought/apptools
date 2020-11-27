@@ -72,7 +72,6 @@ class PyFSContextTestCase(unittest.TestCase):
         context = PyFSContext(path="data")
         self.assertEqual(len(context.list_bindings("")), 3)
 
-
     def test_initialization_with_empty_environment(self):
         """ initialization with empty environmentt """
 
