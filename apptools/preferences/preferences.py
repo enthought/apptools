@@ -81,8 +81,6 @@ class Preferences(HasTraits):
         if len(self.filename) > 0:
             self.load()
 
-        return
-
     ###########################################################################
     # 'IPreferences' interface.
     ###########################################################################
@@ -168,8 +166,6 @@ class Preferences(HasTraits):
             if node is not None:
                 node.remove(".".join(components[1:]))
 
-        return
-
     def set(self, path, value):
         """ Set the value of the preference at the specified path. """
 
@@ -189,8 +185,6 @@ class Preferences(HasTraits):
             node = self._node(components[0])
             node.set(".".join(components[1:]), value)
 
-        return
-
     #### Methods where 'path' refers to a node ####
 
     def clear(self, path=""):
@@ -207,8 +201,6 @@ class Preferences(HasTraits):
             node = self._get_child(components[0])
             if node is not None:
                 node.clear(".".join(components[1:]))
-
-        return
 
     def keys(self, path=""):
         """ Return the preference keys of the node at the specified path. """
@@ -298,8 +290,6 @@ class Preferences(HasTraits):
 
         self.save()
 
-        return
-
     ###########################################################################
     # 'Preferences' interface.
     ###########################################################################
@@ -320,8 +310,6 @@ class Preferences(HasTraits):
             node = self._node(components[0])
             node.add_preferences_listener(listener, ".".join(components[1:]))
 
-        return
-
     def remove_preferences_listener(self, listener, path=""):
         """ Remove a listener for changes to a node's preferences. """
 
@@ -337,8 +325,6 @@ class Preferences(HasTraits):
             node.remove_preferences_listener(
                 listener, ".".join(components[1:])
             )
-
-        return
 
     #### Persistence methods ####
 
@@ -377,8 +363,6 @@ class Preferences(HasTraits):
             # Add the contents of the section to the node.
             self._add_dictionary_to_node(node, value)
 
-        return
-
     def save(self, file_or_filename=None):
         """Save the node's preferences to a file.
 
@@ -402,8 +386,6 @@ class Preferences(HasTraits):
             self._add_node_to_dictionary(self, config_obj)
             config_obj.write()
 
-        return
-
     ###########################################################################
     # Protected 'Preferences' interface.
     #
@@ -421,8 +403,6 @@ class Preferences(HasTraits):
         node._preferences.update(dictionary)
         self._lk.release()
 
-        return
-
     def _add_node_to_dictionary(self, node, dictionary):
         """ Add a node's preferences to a dictionary. """
 
@@ -437,8 +417,6 @@ class Preferences(HasTraits):
         for name in node._node_names():
             self._add_node_to_dictionary(node._get_child(name), dictionary)
 
-        return
-
     def _add_preferences_listener(self, listener):
         """ Add a listener for changes to thisnode's preferences. """
 
@@ -446,16 +424,12 @@ class Preferences(HasTraits):
         self._preferences_listeners.append(listener)
         self._lk.release()
 
-        return
-
     def _clear(self):
         """ Remove all preferences from this node. """
 
         self._lk.acquire()
         self._preferences.clear()
         self._lk.release()
-
-        return
 
     def _create_child(self, name):
         """ Create a child of this node with the specified name. """
@@ -527,8 +501,6 @@ class Preferences(HasTraits):
             del self._preferences[name]
         self._lk.release()
 
-        return
-
     def _remove_preferences_listener(self, listener):
         """ Remove a listener for changes to the node's preferences. """
 
@@ -536,8 +508,6 @@ class Preferences(HasTraits):
         if listener in self._preferences_listeners:
             self._preferences_listeners.remove(listener)
         self._lk.release()
-
-        return
 
     def _set(self, key, value):
         """ Set the value of a preference in this node. """
@@ -562,8 +532,6 @@ class Preferences(HasTraits):
         for listener in listeners:
             listener(self, key, old, value)
 
-        return
-
     ###########################################################################
     # Debugging interface.
     ###########################################################################
@@ -579,5 +547,3 @@ class Preferences(HasTraits):
 
         for child in self._children.values():
             child.dump(indent)
-
-        return

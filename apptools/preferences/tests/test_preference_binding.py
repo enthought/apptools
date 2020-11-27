@@ -29,8 +29,6 @@ def listener(obj, trait_name, old, new):
     listener.old = old
     listener.new = new
 
-    return
-
 
 class PreferenceBindingTestCase(unittest.TestCase):
     """ Tests for preference bindings. """
@@ -258,8 +256,6 @@ class PreferenceBindingTestCase(unittest.TestCase):
                 """ Static trait change handler. """
 
                 self.ratio = 3.0
-
-                return
 
         acme_ui = AcmeUI()
         acme_ui.on_trait_change(listener)

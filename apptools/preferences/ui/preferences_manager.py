@@ -73,8 +73,6 @@ class PreferencesManagerHandler(Handler):
         """ Handle the **Apply** button being clicked. """
 
         info.object.apply()
-        return
-
     def init(self, info):
         """ Initialize the controls of a user interface. """
 
@@ -101,7 +99,6 @@ class PreferencesManagerHandler(Handler):
 
         help_obj = PreferencesHelpWindow(**to_show)
         help_obj.edit_traits(kind="livemodal")
-        return
 
     ###########################################################################
     # Private interface.
@@ -115,8 +112,6 @@ class PreferencesManagerHandler(Handler):
         if len(root.children) > 0:
             node = root.children[0]
             info.object.selected_page = node.page
-
-        return
 
 
 class PreferencesManager(HasTraits):
@@ -259,8 +254,6 @@ class PreferencesManager(HasTraits):
         if self.selected_node:
             self.selected_page = self.selected_node.page
 
-        return
-
     #### Methods ##############################################################
 
     def apply(self):
@@ -268,8 +261,6 @@ class PreferencesManager(HasTraits):
 
         for page in self.pages:
             page.apply()
-
-        return
 
     ###########################################################################
     # Private interface.

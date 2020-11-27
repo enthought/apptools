@@ -52,8 +52,6 @@ class PreferencesHelper(HasTraits):
         if self.preferences:
             self._initialize(self.preferences)
 
-        return
-
     ###########################################################################
     # Private interface.
     ###########################################################################
@@ -91,8 +89,6 @@ class PreferencesHelper(HasTraits):
         # If the change refers to a trait defined on this class, then
         # the trait is not a preference trait and we do nothing.
 
-        return
-
     def _preferences_changed(self, old, new):
         """ Static trait change handler. """
 
@@ -107,8 +103,6 @@ class PreferencesHelper(HasTraits):
             # listener for preferences being changed in the new node).
             self._initialize(new, notify=True)
 
-        return
-
     #### Other observer pattern listeners #####################################
 
     def _preferences_changed_listener(self, node, key, old, new):
@@ -116,8 +110,6 @@ class PreferencesHelper(HasTraits):
 
         if key in self.trait_names():
             setattr(self, key, self._get_value(key, new))
-
-        return
 
     #### Methods ##############################################################
 
@@ -190,8 +182,6 @@ class PreferencesHelper(HasTraits):
         preferences.add_preferences_listener(
             self._preferences_changed_listener, path
         )
-
-        return
 
     # fixme: Pretty much duplicated in 'PreferencesPage' (except for the
     # class name of course!).

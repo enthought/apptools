@@ -43,8 +43,6 @@ class PreferenceBinding(HasTraits):
         # Wire-up trait change handlers etc.
         self._initialize()
 
-        return
-
     ###########################################################################
     # 'PreferenceBinding' interface.
     ###########################################################################
@@ -67,8 +65,6 @@ class PreferenceBinding(HasTraits):
 
         self.preferences.set(self.preference_path, new)
 
-        return
-
     #### Other observer pattern listeners #####################################
 
     def _preferences_listener(self, node, key, old, new):
@@ -77,8 +73,6 @@ class PreferenceBinding(HasTraits):
         components = self.preference_path.split(".")
         if key == components[-1]:
             self._set_trait()
-
-        return
 
     #### Methods ##############################################################
 
@@ -128,8 +122,6 @@ class PreferenceBinding(HasTraits):
             self._preferences_listener, node
         )
 
-        return
-
     def _set_trait(self, notify=True):
         """ Set the object's trait to the value of the preference. """
 
@@ -139,8 +131,6 @@ class PreferenceBinding(HasTraits):
             traits = {self.trait_name: trait_value}
 
             self.obj.trait_set(trait_change_notify=notify, **traits)
-
-        return
 
 
 # Factory function for creating bindings.

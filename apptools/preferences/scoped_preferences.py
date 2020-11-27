@@ -144,8 +144,6 @@ class ScopedPreferences(Preferences):
 
         node.remove(path)
 
-        return
-
     def set(self, path, value):
         """ Set the value of the preference at the specified path. """
 
@@ -163,8 +161,6 @@ class ScopedPreferences(Preferences):
             node = self._get_primary_scope()
 
         node.set(path, value)
-
-        return
 
     #### Methods where 'path' refers to a node ####
 
@@ -280,8 +276,6 @@ class ScopedPreferences(Preferences):
         for node in nodes:
             node.add_preferences_listener(listener, path)
 
-        return
-
     def remove_preferences_listener(self, listener, path=""):
         """ Remove a listener for changes to a node's preferences. """
 
@@ -297,8 +291,6 @@ class ScopedPreferences(Preferences):
 
         for node in nodes:
             node.remove_preferences_listener(listener, path)
-
-        return
 
     #### Persistence methods ####
 
@@ -319,8 +311,6 @@ class ScopedPreferences(Preferences):
         node = self._get_primary_scope()
         node.load(file_or_filename)
 
-        return
-
     def save(self, file_or_filename=None):
         """Save the node's preferences to a file.
 
@@ -338,8 +328,6 @@ class ScopedPreferences(Preferences):
         for scope in self.scopes:
             if scope is not self._get_primary_scope():
                 scope.save()
-
-        return
 
     ###########################################################################
     # 'ScopedPreferences' protocol.
@@ -454,5 +442,3 @@ class ScopedPreferences(Preferences):
 
         for child in self.scopes:
             child.dump(indent)
-
-        return
