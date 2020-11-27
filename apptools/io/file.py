@@ -83,8 +83,6 @@ class File(HasPrivateTraits):
 
         super(File, self).__init__(path=path, **traits)
 
-        return
-
     def __str__(self):
         """ Returns an 'informal' string representation of the object. """
 
@@ -215,8 +213,6 @@ class File(HasPrivateTraits):
         elif self.is_file:
             shutil.copyfile(self.path, destination.path)
 
-        return
-
     def create_file(self, contents=""):
         """ Creates a file at this path. """
 
@@ -226,8 +222,6 @@ class File(HasPrivateTraits):
         f = open(self.path, "w")
         f.write(contents)
         f.close()
-
-        return
 
     def create_folder(self):
         """Creates a folder at this path.
@@ -241,8 +235,6 @@ class File(HasPrivateTraits):
 
         os.mkdir(self.path)
 
-        return
-
     def create_folders(self):
         """Creates a folder at this path.
 
@@ -254,8 +246,6 @@ class File(HasPrivateTraits):
             raise ValueError("folder %s already exists" % self.path)
 
         os.makedirs(self.path)
-
-        return
 
     def create_package(self):
         """Creates a package at this path.
@@ -273,8 +263,6 @@ class File(HasPrivateTraits):
         # package!
         init = File(os.path.join(self.path, "__init__.py"))
         init.create_file()
-
-        return
 
     def delete(self):
         """Deletes this file/folder.
@@ -297,8 +285,6 @@ class File(HasPrivateTraits):
             # Delete it!
             os.remove(self.path)
 
-        return
-
     def make_writeable(self):
         """ Attempt to make the file/folder writeable. """
 
@@ -318,8 +304,6 @@ class File(HasPrivateTraits):
             if not os.access(self.path, os.W_OK):
                 os.chmod(self.path, stat.S_IWUSR)
 
-        return
-
     def move(self, destination):
         """ Moves this file/folder. """
 
@@ -332,5 +316,3 @@ class File(HasPrivateTraits):
 
         # Move it!
         shutil.move(self.path, destination.path)
-
-        return
