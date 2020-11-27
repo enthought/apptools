@@ -320,7 +320,6 @@ class QualityAgentView(Dialog):
             )
         else:
             cb.SetLabel("Include Workspace Files (will increase email size)")
-        return
 
     def _on_send(self, event):
 
@@ -343,8 +342,6 @@ class QualityAgentView(Dialog):
 
         # finally we close the dialog
         self._wx_on_ok(event)
-
-        return
 
     ## Private ################################################################
 

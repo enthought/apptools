@@ -37,7 +37,6 @@ class Attachments(HasTraits):
         if workspace is not None:
             dir = workspace.path
             self._attach_directory(dir)
-        return
 
     def package_single_project(self):
         if self.application is None:
@@ -53,7 +52,6 @@ class Attachments(HasTraits):
     def package_any_relevant_files(self):
         self.package_workspace()
         self.package_single_project()
-        return
 
     def _attach_directory(self, dir):
         relpath = os.path.basename(dir)
@@ -97,4 +95,3 @@ def _append_to_zip_archive(zip, dir, relpath):
                 _append_to_zip_archive(
                     zip, subdir, os.path.join(relpath, filename)
                 )
-    return

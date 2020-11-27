@@ -38,5 +38,3 @@ def custom_excepthook(type, value, traceback):
     )
     logger = logging.getLogger(name)
     logger.error(msg)
-
-    return
