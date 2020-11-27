@@ -3,8 +3,6 @@ def __replacement_setstate__(self, state):
     state = self.__updater__(state)
     self.__dict__.update(state)
 
-    return
-
 
 class Updater:
 
