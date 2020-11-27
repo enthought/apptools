@@ -158,8 +158,6 @@ class Context(HasTraits):
             next_context = self._get_next_context(components[0])
             next_context.bind("/".join(components[1:]), obj, make_contexts)
 
-        return
-
     def rebind(self, name, obj, make_contexts=False):
         """Binds an object to a name that may already be bound.
 
@@ -202,8 +200,6 @@ class Context(HasTraits):
             next_context = self._get_next_context(components[0])
             next_context.rebind("/".join(components[1:]), obj, make_contexts)
 
-        return
-
     def unbind(self, name):
         """ Unbinds a name. """
 
@@ -241,7 +237,6 @@ class Context(HasTraits):
             next_context = self._get_next_context(components[0])
             next_context.unbind("/".join(components[1:]))
 
-        return
 
     def rename(self, old_name, new_name):
         """ Binds a new name to an object. """
@@ -290,8 +285,6 @@ class Context(HasTraits):
 
             # Unbind the old one.
             self.unbind(old_name)
-
-        return
 
     def lookup(self, name):
         """ Resolves a name relative to this context. """
@@ -468,8 +461,6 @@ class Context(HasTraits):
             next_context = self._get_next_context(components[0])
             next_context.destroy_subcontext("/".join(components[1:]))
 
-        return
-
     # fixme: Non-JNDI
     def get_unique_name(self, prefix):
         """Returns a name that is unique within the context.
@@ -609,21 +600,15 @@ class Context(HasTraits):
         state = naming_manager.get_state_to_bind(obj, name, self)
         self._bindings[name] = state
 
-        return
-
     def _rebind(self, name, obj):
         """ Rebinds a name to an object in this context. """
 
         self._bind(name, obj)
 
-        return
-
     def _unbind(self, name):
         """ Unbinds a name from this context. """
 
         del self._bindings[name]
-
-        return
 
     def _rename(self, old_name, new_name):
         """ Renames an object in this context. """
@@ -633,8 +618,6 @@ class Context(HasTraits):
 
         # Unbind the old one.
         del self._bindings[old_name]
-
-        return
 
     def _create_subcontext(self, name):
         """ Creates a sub-context of this context. """
@@ -648,8 +631,6 @@ class Context(HasTraits):
         """ Destroys a sub-context of this context. """
 
         del self._bindings[name]
-
-        return
 
     def _list_bindings(self):
         """ Lists the bindings in this context. """
@@ -706,5 +687,3 @@ class Context(HasTraits):
                 searched[binding.obj] = True
                 binding.obj._search(obj, names, path, searched)
                 path.pop()
-
-        return

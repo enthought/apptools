@@ -89,8 +89,6 @@ class Binding(HasTraits):
 
         self._class_name = class_name
 
-        return
-
     # namespace_name
     def _get_namespace_name(self):
         """ Returns the name of the context within its own namespace. """

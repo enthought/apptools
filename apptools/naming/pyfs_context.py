@@ -136,8 +136,6 @@ class PyFSContext(DirContext, Referenceable):
         # serialized Python object return a reference to exactly the same one.
         self._cache = {}
 
-        return
-
     ###########################################################################
     # 'PyFSContext' interface.
     ###########################################################################
@@ -182,8 +180,6 @@ class PyFSContext(DirContext, Referenceable):
         self.context_changed = NamingEvent(
             new_binding=Binding(name=self.name, obj=self, context=None)
         )
-
-        return
 
     ###########################################################################
     # 'Referenceable' interface.
@@ -297,8 +293,6 @@ class PyFSContext(DirContext, Referenceable):
 
         self._bind(name, obj)
 
-        return
-
     def _unbind(self, name):
         """ Unbinds a name from this context. """
 
@@ -320,8 +314,6 @@ class PyFSContext(DirContext, Referenceable):
         if name in self._attributes:
             del self._attributes[name]
             self._save_attributes()
-
-        return
 
     def _rename(self, old_name, new_name):
         """ Renames an object in this context. """
@@ -406,8 +398,6 @@ class PyFSContext(DirContext, Referenceable):
             del self._attributes[old_name]
             self._save_attributes()
 
-        return
-
     def _create_subcontext(self, name):
         """ Creates a sub-context of this context. """
 
@@ -474,8 +464,6 @@ class PyFSContext(DirContext, Referenceable):
         self._attributes[name] = attributes
         self._save_attributes()
 
-        return
-
     ###########################################################################
     # Private interface.
     ###########################################################################
@@ -503,8 +491,6 @@ class PyFSContext(DirContext, Referenceable):
         f = open(path, "wb")
         pickle.dump(self._attributes, f, 1)
         f.close()
-
-        return
 
     #### Trait initializers ###################################################
 
@@ -561,5 +547,3 @@ class PyFSContext(DirContext, Referenceable):
         basename = os.path.basename(self.path)
 
         self.name, ext = os.path.splitext(basename)
-
-        return

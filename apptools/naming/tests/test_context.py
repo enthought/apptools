@@ -42,14 +42,10 @@ class ContextTestCase(unittest.TestCase):
         self.context = self.create_context()
         self.context.create_subcontext("sub")
 
-        return
-
     def tearDown(self):
         """ Called immediately after each test method has been called. """
 
         self.context = None
-
-        return
 
     ###########################################################################
     # 'ContextTestCase' interface.
@@ -93,8 +89,6 @@ class ContextTestCase(unittest.TestCase):
         # Try to bind it again.
         self.assertRaises(NameAlreadyBoundError, context.bind, "sub/a", 1)
 
-        return
-
     def test_bind_with_make_contexts(self):
         """ bind with make contexts """
 
@@ -119,8 +113,6 @@ class ContextTestCase(unittest.TestCase):
         context.bind("xx/foo/bar/baz", 42, True)
         self.assertEqual(len(context.list_bindings("xx/foo/bar")), 1)
         self.assertEqual(42, context.lookup("xx/foo/bar/baz"))
-
-        return
 
     def test_rebind(self):
         """ context rebind """
@@ -151,8 +143,6 @@ class ContextTestCase(unittest.TestCase):
         self.assertRaises(NotContextError, context.rebind, "sub/a/xx", 1)
         self.assertEqual(len(sub.list_bindings("")), 1)
 
-        return
-
     def test_rebind_with_make_contexts(self):
         """ rebind with make contexts """
 
@@ -182,8 +172,6 @@ class ContextTestCase(unittest.TestCase):
         context.rebind("xx/foo/bar/baz", 42, True)
         self.assertEqual(len(context.list_bindings("xx/foo/bar")), 1)
         self.assertEqual(42, context.lookup("xx/foo/bar/baz"))
-
-        return
 
     def test_unbind(self):
         """ context unbind """
@@ -216,8 +204,6 @@ class ContextTestCase(unittest.TestCase):
 
         # Try to unbind a non-existent name.
         self.assertRaises(NameNotFoundError, context.unbind, "sub/b")
-
-        return
 
     def test_rename_object(self):
         """ rename an object """
@@ -255,8 +241,6 @@ class ContextTestCase(unittest.TestCase):
         # Lookup using the old name.
         self.assertRaises(NameNotFoundError, context.lookup, "sub/a")
 
-        return
-
     def test_rename_context(self):
         """ rename a context """
 
@@ -289,8 +273,6 @@ class ContextTestCase(unittest.TestCase):
         # Lookup using the old name.
         self.assertRaises(NameNotFoundError, context.lookup, "sub/a")
 
-        return
-
     def test_lookup(self):
         """ lookup """
 
@@ -321,8 +303,6 @@ class ContextTestCase(unittest.TestCase):
 
         # Non-existent name.
         self.assertRaises(NameNotFoundError, context.lookup, "sub/b")
-
-        return
 
     def test_create_subcontext(self):
         """ create sub-context """
@@ -359,8 +339,6 @@ class ContextTestCase(unittest.TestCase):
             NotContextError, context.create_subcontext, "sub/b/xx"
         )
         self.assertEqual(len(sub.list_bindings("")), 2)
-
-        return
 
     def test_destroy_subcontext(self):
         """ single context destroy sub-context """
@@ -407,8 +385,6 @@ class ContextTestCase(unittest.TestCase):
         )
         self.assertEqual(len(sub.list_bindings("")), 1)
 
-        return
-
     def test_list_bindings(self):
         """ list bindings """
 
@@ -435,8 +411,6 @@ class ContextTestCase(unittest.TestCase):
         # Attempt to resolve via an existing name that is not a context.
         self.assertRaises(NotContextError, context.list_bindings, "sub/a/xx")
         self.assertEqual(len(sub.list_bindings("")), 1)
-
-        return
 
     def test_list_names(self):
         """ list names """
@@ -465,8 +439,6 @@ class ContextTestCase(unittest.TestCase):
         self.assertRaises(NotContextError, context.list_names, "sub/a/xx")
         self.assertEqual(len(sub.list_bindings("")), 1)
 
-        return
-
     def test_default_factories(self):
         """ default object and state factories. """
 
@@ -479,8 +451,6 @@ class ContextTestCase(unittest.TestCase):
         self.assertRaises(
             NotImplementedError, state_factory.get_state_to_bind, 0, 0, 0
         )
-
-        return
 
     def test_search(self):
         """ test retrieving the names of bound objects """
@@ -519,5 +489,3 @@ class ContextTestCase(unittest.TestCase):
         names = context.search(sub_sub)
         self.assertEqual(len(names), 1)
         self.assertEqual(names[0], "sub/sub sub")
-
-        return

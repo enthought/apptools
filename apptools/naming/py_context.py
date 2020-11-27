@@ -77,8 +77,6 @@ class PyContext(Context, Referenceable):
             else:
                 raise ValueError("Need a dictionary or a __dict__ attribute")
 
-        return
-
     ###########################################################################
     # 'Referenceable' interface.
     ###########################################################################
@@ -117,14 +115,10 @@ class PyContext(Context, Referenceable):
         state = naming_manager.get_state_to_bind(obj, name, self)
         self.namespace[name] = state
 
-        return
-
     def _rebind(self, name, obj):
         """ Rebinds a name to a object in this context. """
 
         self._bind(name, obj)
-
-        return
 
     def _unbind(self, name):
         """ Unbinds a name from this context. """
@@ -133,8 +127,6 @@ class PyContext(Context, Referenceable):
 
         # Trait event notification.
         self.trait_property_changed("context_changed", None, None)
-
-        return
 
     def _rename(self, old_name, new_name):
         """ Renames an object in this context. """
@@ -149,8 +141,6 @@ class PyContext(Context, Referenceable):
 
         # Trait event notification.
         self.context_changed = True
-
-        return
 
     def _create_subcontext(self, name):
         """ Creates a sub-context of this context. """
@@ -170,8 +160,6 @@ class PyContext(Context, Referenceable):
 
         # Trait event notification.
         self.trait_property_changed("context_changed", None, None)
-
-        return
 
     def _list_bindings(self):
         """ Lists the bindings in this context. """
