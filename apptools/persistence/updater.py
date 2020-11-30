@@ -7,6 +7,8 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
+
+
 def __replacement_setstate__(self, state):
     """"""
     state = self.__updater__(state)
