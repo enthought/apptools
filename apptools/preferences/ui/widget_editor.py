@@ -34,15 +34,11 @@ class _WidgetEditor(Editor):
         # Listen for the page being changed.
         self.object.on_trait_change(self._on_page_changed, "selected_page")
 
-        return
-
     def dispose(self):
         """ Dispose of the editor. """
 
         page = self.object.selected_page
         page.destroy_control()
-
-        return
 
     def update_editor(self):
         """ Update the editor. """
@@ -61,8 +57,6 @@ class _WidgetEditor(Editor):
 
         if new is not None:
             self.control = new.create_control(self.parent)
-
-        return
 
 
 class WidgetEditor(EditorFactory):

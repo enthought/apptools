@@ -101,8 +101,6 @@ class DirContext(Context):
                     "/".join(components[1:]), attributes
                 )
 
-        return
-
     # fixme: Non-JNDI
     def find_bindings(self, visitor):
         """Find bindings with attributes matching criteria in visitor.
@@ -140,8 +138,6 @@ class DirContext(Context):
 
         self._attributes[name] = attributes
 
-        return
-
     ###########################################################################
     # Protected 'Context' interface.
     ###########################################################################
@@ -154,8 +150,6 @@ class DirContext(Context):
         if name in self._attributes:
             del self._attributes[name]
 
-        return
-
     def _rename(self, old_name, new_name):
         """ Renames an object in this context. """
 
@@ -165,8 +159,6 @@ class DirContext(Context):
             self._attributes[new_name] = self._attributes[old_name]
             del self._attributes[old_name]
 
-        return
-
     def _destroy_subcontext(self, name):
         """ Destroys a sub-context of this context. """
 
@@ -174,5 +166,3 @@ class DirContext(Context):
 
         if name in self._attributes:
             del self._attributes[name]
-
-        return

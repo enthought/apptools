@@ -328,7 +328,6 @@ class StatePickler:
         are set in the `__dict__` so we can pickle it.
         """
         # Not needed with Traits3.
-        return
 
     def _do(self, obj):
         obj_type = type(obj)

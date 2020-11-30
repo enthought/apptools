@@ -55,8 +55,6 @@ class PreferencesPage(PreferencesHelper):
 
         self._changed.clear()
 
-        return
-
     ###########################################################################
     # Private interface.
     ###########################################################################
@@ -81,8 +79,6 @@ class PreferencesPage(PreferencesHelper):
             trait_name = trait_name[:-6]
             if self._is_preference_trait(trait_name):
                 self._changed[trait_name] = getattr(self, trait_name)
-
-        return
 
     # fixme: Pretty much duplicated in 'PreferencesHelper' (except for the
     # class name of course!).

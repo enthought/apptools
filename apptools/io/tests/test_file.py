@@ -38,14 +38,10 @@ class FileTestCase(unittest.TestCase):
 
         os.mkdir("data")
 
-        return
-
     def tearDown(self):
         """ Called immediately after each test method has been called. """
 
         shutil.rmtree("data")
-
-        return
 
     ###########################################################################
     # Tests.
@@ -99,8 +95,6 @@ class FileTestCase(unittest.TestCase):
         os.chmod(f.path, stat.S_IRUSR | stat.S_IWUSR)
         self.assertFalse(f.is_readonly)
 
-        return
-
     def test_copy(self):
         """ file copy """
 
@@ -147,8 +141,6 @@ class FileTestCase(unittest.TestCase):
         f.copy(g)
         self.assertFalse(g.exists)
 
-        return
-
     def test_create_file(self):
         """ file creation """
 
@@ -165,8 +157,6 @@ class FileTestCase(unittest.TestCase):
 
         # Try to create it again.
         self.assertRaises(ValueError, f.create_file, content)
-
-        return
 
     def test_delete(self):
         """ file deletion """
@@ -199,5 +189,3 @@ class FileTestCase(unittest.TestCase):
 
         f.delete()
         self.assertFalse(f.exists)
-
-        return

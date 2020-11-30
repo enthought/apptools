@@ -72,8 +72,6 @@ class DirContextTestCase(ContextTestCase):
         attributes = context.get_attributes("sub")
         self.assertEqual(len(attributes), 0)
 
-        return
-
     def test_set_get_attributes(self):
         """ get and set attributes """
 
@@ -124,5 +122,3 @@ class DirContextTestCase(ContextTestCase):
         attributes = context.get_attributes("sub")
         self.assertEqual(len(attributes), 1)
         self.assertEqual(attributes["colour"], "blue")
-
-        return

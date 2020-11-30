@@ -87,12 +87,10 @@ class TestRecorder(unittest.TestCase):
         c.toy = toy
         p.children.append(c)
         self.p = p
-        return
 
     def tearDown(self):
         self.tape.clear()
         set_recorder(None)
-        return
 
     def test_unique_name(self):
         "Does the get_unique_id method work."

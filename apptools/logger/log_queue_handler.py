@@ -36,7 +36,6 @@ class LogQueueHandler(Handler):
         self.size = size
         self.ring = RingBuffer(self.size)
         self.dirty = False
-        return
 
     def emit(self, record):
         """ Actually this is more like an enqueue than an emit()."""
@@ -47,7 +46,6 @@ class LogQueueHandler(Handler):
             except Exception:
                 pass
         self.dirty = True
-        return
 
     def get(self):
         self.dirty = False
@@ -73,4 +71,3 @@ class LogQueueHandler(Handler):
             except Exception:
                 pass
         self.dirty = True
-        return

@@ -51,8 +51,6 @@ class ExampleUndo(Workbench):
         if self.active_window.confirm('Ok to exit?') != YES:
             event.veto = True
 
-        return
-
 
 def main(argv):
     """ A simple example of using the the undo framework in a workbench. """
@@ -76,8 +74,6 @@ def main(argv):
 
     # Start the GUI event loop.
     gui.start_event_loop()
-
-    return
 
 
 if __name__ == '__main__':

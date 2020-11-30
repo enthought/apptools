@@ -54,8 +54,6 @@ class PyFSContextTestCase(unittest.TestCase):
         self.context.bind("x", 123)
         self.context.bind("y", 321)
 
-        return
-
     def tearDown(self):
         """ Called immediately after each test method has been called. """
 
@@ -63,8 +61,6 @@ class PyFSContextTestCase(unittest.TestCase):
 
         shutil.rmtree("data")
         shutil.rmtree("other")
-
-        return
 
     ###########################################################################
     # Tests.
@@ -76,15 +72,11 @@ class PyFSContextTestCase(unittest.TestCase):
         context = PyFSContext(path="data")
         self.assertEqual(len(context.list_bindings("")), 3)
 
-        return
-
     def test_initialization_with_empty_environment(self):
         """ initialization with empty environmentt """
 
         context = PyFSContext(path="other", environment={})
         self.assertEqual(len(context.list_names("")), 0)
-
-        return
 
     def test_bind(self):
         """ pyfs context bind """
@@ -125,8 +117,6 @@ class PyFSContextTestCase(unittest.TestCase):
         # Try to bind it again.
         self.assertRaises(NameAlreadyBoundError, context.bind, "sub/a", 1)
 
-        return
-
     def test_rebind(self):
         """ pyfs context rebind """
 
@@ -147,8 +137,6 @@ class PyFSContextTestCase(unittest.TestCase):
         # Rebind it.
         context.rebind("sub/a", 1)
         self.assertEqual(len(sub.list_bindings("")), 1)
-
-        return
 
     def test_unbind(self):
         """ pyfs context unbind """
@@ -173,8 +161,6 @@ class PyFSContextTestCase(unittest.TestCase):
 
         # Try to unbind a non-existent name.
         self.assertRaises(NameNotFoundError, context.unbind, "sub/b")
-
-        return
 
     def test_rename(self):
         """ multi-context rename """
@@ -237,8 +223,6 @@ class PyFSContextTestCase(unittest.TestCase):
         # Non-existent name.
         self.assertRaises(NameNotFoundError, context.lookup, "sub/b")
 
-        return
-
     def test_create_subcontext(self):
         """ pyfs context create sub-context """
 
@@ -261,8 +245,6 @@ class PyFSContextTestCase(unittest.TestCase):
         self.assertRaises(
             NameAlreadyBoundError, context.create_subcontext, "sub/a"
         )
-
-        return
 
     def test_destroy_subcontext(self):
         """ single context destroy sub-context """
@@ -293,14 +275,10 @@ class PyFSContextTestCase(unittest.TestCase):
         # Try to destroy it.
         self.assertRaises(NotContextError, context.destroy_subcontext, "sub/a")
 
-        return
-
         # Try to destroy a non-existent name.
         self.assertRaises(
             NameNotFoundError, context.destroy_subcontext, "sub/b"
         )
-
-        return
 
     def test_get_attributes(self):
         """ get attributes """
@@ -332,8 +310,6 @@ class PyFSContextTestCase(unittest.TestCase):
         # Attributes of a sub-context.
         attributes = context.get_attributes("sub")
         self.assertEqual(len(attributes), 0)
-
-        return
 
     def test_set_get_attributes(self):
         """ get and set attributes """
@@ -386,8 +362,6 @@ class PyFSContextTestCase(unittest.TestCase):
         self.assertEqual(len(attributes), 1)
         self.assertEqual(attributes["colour"], "blue")
 
-        return
-
     def test_namespace_name(self):
         """ get the name of a context within its namespace. """
 
@@ -398,5 +372,3 @@ class PyFSContextTestCase(unittest.TestCase):
 
         self.assertEqual(context.namespace_name, "data")
         self.assertEqual(sub.namespace_name, "data/sub")
-
-        return

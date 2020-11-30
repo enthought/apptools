@@ -39,14 +39,10 @@ class FolderTestCase(unittest.TestCase):
 
         os.mkdir("data")
 
-        return
-
     def tearDown(self):
         """ Called immediately after each test method has been called. """
 
         shutil.rmtree("data")
-
-        return
 
     ###########################################################################
     # Tests.
@@ -121,8 +117,6 @@ class FolderTestCase(unittest.TestCase):
         self.assertEqual(f.path, "data/package")
         self.assertIn(os.path.abspath(os.path.curdir), f.url)
 
-        return
-
     def test_copy(self):
         """ folder copy """
 
@@ -167,8 +161,6 @@ class FolderTestCase(unittest.TestCase):
         f.copy(g)
         self.assertFalse(g.exists)
 
-        return
-
     def test_create_folder(self):
         """ folder creation """
 
@@ -185,8 +177,6 @@ class FolderTestCase(unittest.TestCase):
 
         # Try to create it again.
         self.assertRaises(ValueError, f.create_folder)
-
-        return
 
     def test_create_folders(self):
         """ nested folder creation """
@@ -205,8 +195,6 @@ class FolderTestCase(unittest.TestCase):
 
         # Try to create it again.
         self.assertRaises(ValueError, f.create_folders)
-
-        return
 
     def test_delete(self):
         """ folder deletion """
@@ -237,5 +225,3 @@ class FolderTestCase(unittest.TestCase):
 
         f.delete()
         self.assertFalse(f.exists)
-
-        return

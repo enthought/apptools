@@ -112,7 +112,6 @@ class VersionedUnpickler(NewUnpickler):
     def __init__(self, file, updater=None):
         Unpickler.__init__(self, file)
         self.updater = updater
-        return
 
     def find_class(self, module, name):
         """Overridden method from Unpickler.
@@ -170,8 +169,6 @@ class VersionedUnpickler(NewUnpickler):
         else:
             pass
 
-        return
-
     def backup_setstate(self, module, klass):
         """If the class has a user defined __setstate__ we back it up."""
         if getattr(klass, "__setstate__", False):
@@ -190,8 +187,6 @@ class VersionedUnpickler(NewUnpickler):
         else:
             # the class has no __setstate__ method so do nothing
             pass
-
-        return
 
     def import_name(self, module, name):
         """

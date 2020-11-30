@@ -27,8 +27,6 @@ def width_listener(obj, trait_name, old, new):
     width_listener.old = old
     width_listener.new = new
 
-    return
-
 
 def bgcolor_listener(obj, trait_name, old, new):
 
@@ -36,8 +34,6 @@ def bgcolor_listener(obj, trait_name, old, new):
     bgcolor_listener.trait_name = trait_name
     bgcolor_listener.old = old
     bgcolor_listener.new = new
-
-    return
 
 
 # This module's package.
@@ -571,8 +567,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
                 """ Static trait change handler. """
 
                 self.ratio = 3.0
-
-                return
 
         helper = AcmeUIPreferencesHelper(preferences_path="acme.ui")
 
