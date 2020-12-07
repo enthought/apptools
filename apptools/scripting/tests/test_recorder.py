@@ -33,7 +33,7 @@ try:
     # Require Traits >= 6.1
     from traits.api import PrefixMap
 except ImportError:
-    from traits.api import Trait, TraitPrefixMap
+    from traits.api import TraitPrefixMap
     representation_trait = Trait(
         "surface", TraitPrefixMap({"surface": 2, "wireframe": 1, "points": 0})
     )
