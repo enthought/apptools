@@ -23,12 +23,24 @@ from traits.api import (
     HasStrictTraits,
     Tuple,
     Range,
-    TraitPrefixMap,
     Trait,
 )
 from apptools.scripting.recorder import Recorder
 from apptools.scripting.recordable import recordable
 from apptools.scripting.package_globals import set_recorder
+
+try:
+    # Require Traits >= 6.1
+    from traits.api import PrefixMap
+except ImportError:
+    from traits.api import Trait, TraitPrefixMap
+    representation_trait = Trait(
+        "surface", TraitPrefixMap({"surface": 2, "wireframe": 1, "points": 0})
+    )
+else:
+    representation_trait = PrefixMap(
+        {"surface": 2, "wireframe": 1, "points": 0}, default_value="surface"
+    )
 
 
 ######################################################################
@@ -36,9 +48,7 @@ from apptools.scripting.package_globals import set_recorder
 class Property(HasStrictTraits):
     color = Tuple(Range(0.0, 1.0), Range(0.0, 1.0), Range(0.0, 1.0))
     opacity = Range(0.0, 1.0, 1.0)
-    representation = Trait(
-        "surface", TraitPrefixMap({"surface": 2, "wireframe": 1, "points": 0})
-    )
+    representation = representation_trait
 
 
 class Toy(HasTraits):
