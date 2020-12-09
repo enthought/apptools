@@ -288,36 +288,6 @@ class PreferencesHelperTestCase(unittest.TestCase):
         )
         self.assertEqual(new_preferences.keys("my_section"), ["list_of_str"])
 
-    def test_nested_container_mutation_not_supported(self):
-        """ Known limitation: mutation on nested containers are not
-        synchronized
-        See enthought/apptools#194
-        """
-
-        class MyPreferencesHelper(PreferencesHelper):
-            preferences_path = Str('my_section')
-            list_of_list_of_str = List(List(Str))
-
-        helper = MyPreferencesHelper(list_of_list_of_str=[["1"]])
-        helper.list_of_list_of_str[0].append("9")
-
-        self.preferences.save(self.tmpfile)
-
-        new_preferences = Preferences()
-        new_preferences.load(self.tmpfile)
-
-        # The event trait is not saved.
-        self.assertEqual(
-            new_preferences.keys("my_section"), ["list_of_list_of_str"]
-        )
-
-        # The values are not synchronized
-        with self.assertRaises(AssertionError):
-            self.assertEqual(
-                new_preferences.get("my_section.list_of_list_of_str"),
-                str(helper.list_of_list_of_str)
-            )
-
     def test_sync_anytrait_items_not_event(self):
         """ Test sychronizing trait with name *_items which is a normal trait
         rather than an event trait for listening to list/dict/set mutation.
