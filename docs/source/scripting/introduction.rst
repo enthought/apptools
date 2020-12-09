@@ -16,8 +16,8 @@ This package is not just a toy framework and is powerful enough to
 provide full script recording to the Mayavi_ application.  Mayavi is a
 powerful 3D visualization tool that is part of ETS_.
 
-.. _Mayavi: http://code.enthought.com/projects/mayavi
-.. _ETS: http://code.enthought.com/projects/tool-suite.php
+.. _Mayavi: https://docs.enthought.com/mayavi/mayavi/
+.. _ETS: https://docs.enthought.com/ets/
 
 .. _scripting-api:
 
