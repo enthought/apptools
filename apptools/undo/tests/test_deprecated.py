@@ -14,10 +14,12 @@ import unittest
 class TestDeprecated(unittest.TestCase):
 
     def test_undo_deprecated(self):
-        warn_msg = ("apptools.undo is deprecated and will be removed in a "
-        "future release. The functionality is now available via pyface.undo")
+        warn_msg = (
+            "apptools.undo is deprecated and will be removed in a future "
+            "release. The functionality is now available via pyface.undo"
+        )
         with self.assertWarns(DeprecationWarning, msg=warn_msg):
-            import apptools.undo.api
+            import apptools.undo.api  # noqa: F401
 
         with self.assertWarns(DeprecationWarning, msg=warn_msg):
-            import apptools.undo.action.api
+            import apptools.undo.action.api  # noqa: F401
