@@ -387,6 +387,9 @@ def build_changelog(ctx):
     # still require some tweaking.
     contents = []
 
+    # Collect news fragment files as we go, and then optionally remove them.
+    handled_file_paths = []
+
     for type_, description in ctx.obj["type_to_description"].items():
         pattern = os.path.join(NEWS_FRAGMENT_DIR, f"*.{type_}.rst")
         file_paths = sorted(glob.glob(pattern))
@@ -399,6 +402,7 @@ def build_changelog(ctx):
         for filename in file_paths:
             with open(filename, "r", encoding="utf-8") as fp:
                 contents.append("* " + fp.read())
+            handled_file_paths.append(filename)
 
     # Prepend content to the changelog file.
 
@@ -415,9 +419,8 @@ def build_changelog(ctx):
         "Do you want to remove the news fragments?"
     )
     if should_clean:
-        rmtree(NEWS_FRAGMENT_DIR)
-        os.makedirs(NEWS_FRAGMENT_DIR)
-
+        for file_path in handled_file_paths:
+            os.remove(file_path)
 
 # ----------------------------------------------------------------------------
 # Utility routines
