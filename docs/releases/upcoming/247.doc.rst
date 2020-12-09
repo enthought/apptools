@@ -1,1 +1,0 @@
-Replace TraitPrefixMap with PrefixMap in documentation example (#247)
