@@ -44,7 +44,7 @@ The following example is taken from the test suite.  Consider a set of
 simple objects organized in a hierarchy::
 
     from traits.api import (HasTraits, Float, Instance,
-            Str, List, Bool, HasStrictTraits, Tuple, Range, TraitPrefixMap,
+            Str, List, Bool, HasStrictTraits, Tuple, PrefixMap, Range,
             Trait)
     from apptools.scripting.api import (Recorder, recordable,
         set_recorder)
@@ -52,10 +52,11 @@ simple objects organized in a hierarchy::
     class Property(HasStrictTraits):
         color = Tuple(Range(0.0, 1.0), Range(0.0, 1.0), Range(0.0, 1.0))
         opacity = Range(0.0, 1.0, 1.0)
-        representation = Trait('surface',
-                               TraitPrefixMap({'surface':2,
-                                               'wireframe': 1,
-                                               'points': 0}))
+        representation = PrefixMap(
+            {"surface": 2, "wireframe": 1, "points": 0},
+            default_value="surface"
+        )
+
     class Toy(HasTraits):
         color = Str
         type = Str
