@@ -37,9 +37,22 @@ All packages in apptools require:
 
 * `traits <https://github.com/enthought/traits>`_
 
+Certain sub-packages within apptools have their own specific dependencies,
+which are optional for apptools overall.
+
 The `apptools.preferences` package requires:
 
 * `configobj <http://pypi.python.org/pypi/configobj>`_
+
+The `apptools.io.h5` package requires:
+
+* `numpy <https://pypi.org/project/numpy/>`_
+* `pandas <https://pypi.org/project/pandas/>`_
+* `tables <https://pypi.org/project/tables/>`_
+
+The `apptools.persistence` package requires:
+
+* `numpy <https://pypi.org/project/numpy/>`_
 
 Many of the packages provide optional user interfaces using Pyface and
 Traitsui. In additon, many of the packages are designed to work with the
