@@ -415,6 +415,8 @@ def build_changelog(ctx):
         fp.write(original_changelog)
 
     click.echo(f"Changelog is updated. Please review it at {CHANGELOG_PATH}")
+
+    # Optionally clean up collected news fragments.
     should_clean = click.confirm(
         "Do you want to remove the news fragments?"
     )
