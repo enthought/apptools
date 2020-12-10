@@ -28,18 +28,18 @@ Removals
 * Remove ``permission`` subpackage (#175)
 * Remove ``lru_cache`` subpackage (#184)
 * Remove support for Python 2.7 and 3.5 (#190)
-* remove the ``apptools.sweet_pickle`` subpackage.  Note that users of
+* Remove the ``apptools.sweet_pickle`` subpackage.  Note that users of
   sweet_pickle can in some cases transition to using ``apptools.persistence``
   and pickle from the python standard library (see changes made in this PR to
   ``apptools.naming`` for more info) (#199)
 * Remove ``help`` subpackage (#215)
-* remove NullHandler from ``apptools.logger`` (#216)
+* Remove NullHandler from ``apptools.logger`` (#216)
 * Remove ``apptools.logger.filtering_handler`` and ``apptools.logger.util`` submodules (#217)
 * Remove deprecated create_log_file_handler function (#218)
 * Remove use of ``apptools.type_manager`` from ``apptools.naming``. Then,
   remove ``apptools.type_manager`` entirely.  Finally, remove
   ``apptools.naming.adapter``. (#219)
-* Remove ``apptools.persistence.spickle.py`` submodule (#220)
+* Remove ``apptools.persistence.spickle`` submodule (#220)
 * Remove ``apptools.naming.ui`` sub package (#233)
 
 Documentation changes
