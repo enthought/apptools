@@ -1,5 +1,5 @@
 ---
-name: Release Checklist
+name: (Maintainers only) Release Checklist
 about: Use this template for upcoming releases.
 title: "[Release Number] Release Checklist"
 ---
@@ -15,7 +15,10 @@ Release candidate
 - [ ] Verify that all relevant PRs have been merged to master.
 - [ ] Create a PR against master to bump version number, merge that PR
 - [ ] From the commit just before bumping the version, create a new branch `maint/<release version number>`
-- [ ] Update changelog and open PR targeting a new `maint/<release version number>` branch
+- [ ] Update changelog and open PR targeting a new `maint/<release version number>` branch. 
+      To do so, use the `python etstool.py changelog build` command to update the changelog
+      file.  You will still need to review / edit it and also confirm that all news fragments
+      were included / delete the files.
 - [ ] Update `ci-src-requirements.txt` if needed
 - [ ] Check MANIFEST and requirements are still up to date.
 - [ ] Update version in setup.py for the prerelease, open 2 PRs against `maint/<release version number>`
