@@ -13,5 +13,6 @@ import warnings
 warnings.warn(
     ("apptools.undo is deprecated and will be removed in a future release. The"
      " functionality is now available via pyface.undo"),
-    DeprecationWarning
+    DeprecationWarning,
+    stacklevel=2
 )
