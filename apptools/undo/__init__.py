@@ -10,3 +10,11 @@
 """ Supports undoing and scripting application commands.
     Part of the AppTools project of the Enthought Tool Suite.
 """
+import warnings
+
+warnings.warn(
+    ("apptools.undo is deprecated and will be removed in a future release. The"
+     " functionality is now available via pyface.undo"),
+    DeprecationWarning,
+    stacklevel=2
+)

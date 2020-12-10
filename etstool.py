@@ -426,6 +426,7 @@ def build_changelog(ctx):
 # Utility routines
 # ----------------------------------------------------------------------------
 
+
 def get_parameters(runtime, environment):
     """ Set up parameters dictionary for format() substitution """
     parameters = {'runtime': runtime, 'environment': environment}
