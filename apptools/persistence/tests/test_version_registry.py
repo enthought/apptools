@@ -19,7 +19,12 @@ import unittest
 # Enthought library imports.
 from traits.api import HasTraits
 
-from apptools.persistence import version_registry, state_pickler
+from apptools._testing.optional_dependencies import (
+    numpy as np,
+    requires_numpy,
+)
+if np is not None:
+    from apptools.persistence import version_registry, state_pickler
 
 
 class Classic:
@@ -52,6 +57,7 @@ class Handler:
         self.calls.append(("upgrade1", state, version))
 
 
+@requires_numpy
 class TestVersionRegistry(unittest.TestCase):
     def test_get_version(self):
         """Test the get_version function."""

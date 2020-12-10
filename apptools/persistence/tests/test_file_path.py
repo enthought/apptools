@@ -21,16 +21,24 @@ from io import BytesIO
 # 3rd party imports.
 from importlib_resources import files
 
+from apptools._testing.optional_dependencies import (
+    numpy as np,
+    requires_numpy,
+)
+
 # Enthought library imports.
-from apptools.persistence import state_pickler
-from apptools.persistence import file_path
+if np is not None:
+    from apptools.persistence import state_pickler
+    from apptools.persistence import file_path
 
 
+@requires_numpy
 class Test:
     def __init__(self):
         self.f = file_path.FilePath()
 
 
+@requires_numpy
 class TestFilePath(unittest.TestCase):
     def setUp(self):
         # If the cwd is somewhere under /tmp, that confuses the tests below.

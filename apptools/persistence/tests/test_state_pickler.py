@@ -19,7 +19,10 @@ import math
 import os
 import tempfile
 
-import numpy
+from apptools._testing.optional_dependencies import (
+    numpy,
+    requires_numpy,
+)
 
 from traits.api import (
     Bool,
@@ -43,69 +46,68 @@ except ImportError:
 else:
     TVTK_AVAILABLE = True
 
-from apptools.persistence import state_pickler
+if numpy is not None:
+    from apptools.persistence import state_pickler
 
+    # A simple class to test instances.
+    class A(object):
 
-# A simple class to test instances.
-class A(object):
-    def __init__(self):
-        self.a = "a"
+        def __init__(self):
+            self.a = "a"
 
+    # NOTE: I think that TVTK specific testing should be moved to the
+    #       TVTK package.
 
-# NOTE: I think that TVTK specific testing should be moved to the
-#       TVTK package.
+    # A classic class for testing the pickler.
+    class TestClassic:
+        def __init__(self):
+            self.b = False
+            self.i = 7
+            self.longi = 1234567890123456789
+            self.f = math.pi
+            self.c = complex(1.01234, 2.3)
+            self.n = None
+            self.s = "String"
+            self.u = "Unicode"
+            self.inst = A()
+            self.tuple = (1, 2, "a", A())
+            self.list = [1, 1.1, "a", 1j, self.inst]
+            self.pure_list = list(range(5))
+            self.dict = {"a": 1, "b": 2, "ref": self.inst}
+            self.numeric = numpy.ones((2, 2, 2), "f")
+            self.ref = self.numeric
+            if TVTK_AVAILABLE:
+                self._tvtk = tvtk.Property()
 
-
-# A classic class for testing the pickler.
-class TestClassic:
-    def __init__(self):
-        self.b = False
-        self.i = 7
-        self.longi = 1234567890123456789
-        self.f = math.pi
-        self.c = complex(1.01234, 2.3)
-        self.n = None
-        self.s = "String"
-        self.u = "Unicode"
-        self.inst = A()
-        self.tuple = (1, 2, "a", A())
-        self.list = [1, 1.1, "a", 1j, self.inst]
-        self.pure_list = list(range(5))
-        self.dict = {"a": 1, "b": 2, "ref": self.inst}
-        self.numeric = numpy.ones((2, 2, 2), "f")
-        self.ref = self.numeric
+    # A class with traits for testing the pickler.
+    class TestTraits(HasTraits):
+        b = Bool(False)
+        i = Int(7)
+        longi = Int(12345678901234567890)
+        f = Float(math.pi)
+        c = Complex(complex(1.01234, 2.3))
+        n = Any
+        s = Str("String")
+        u = Str("Unicode")
+        inst = Instance(A)
+        tuple = Tuple
+        list = List
+        pure_list = List(list(range(5)))
+        dict = Dict
+        numeric = Array(value=numpy.ones((2, 2, 2), "f"))
+        ref = Array
         if TVTK_AVAILABLE:
-            self._tvtk = tvtk.Property()
+            _tvtk = Instance(tvtk.Property, ())
+
+        def __init__(self):
+            self.inst = A()
+            self.tuple = (1, 2, "a", A())
+            self.list = [1, 1.1, "a", 1j, self.inst]
+            self.dict = {"a": 1, "b": 2, "ref": self.inst}
+            self.ref = self.numeric
 
 
-# A class with traits for testing the pickler.
-class TestTraits(HasTraits):
-    b = Bool(False)
-    i = Int(7)
-    longi = Int(12345678901234567890)
-    f = Float(math.pi)
-    c = Complex(complex(1.01234, 2.3))
-    n = Any
-    s = Str("String")
-    u = Str("Unicode")
-    inst = Instance(A)
-    tuple = Tuple
-    list = List
-    pure_list = List(list(range(5)))
-    dict = Dict
-    numeric = Array(value=numpy.ones((2, 2, 2), "f"))
-    ref = Array
-    if TVTK_AVAILABLE:
-        _tvtk = Instance(tvtk.Property, ())
-
-    def __init__(self):
-        self.inst = A()
-        self.tuple = (1, 2, "a", A())
-        self.list = [1, 1.1, "a", 1j, self.inst]
-        self.dict = {"a": 1, "b": 2, "ref": self.inst}
-        self.ref = self.numeric
-
-
+@requires_numpy
 class TestDictPickler(unittest.TestCase):
     def set_object(self, obj):
         """Changes the objects properties to test things."""
