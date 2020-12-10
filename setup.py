@@ -310,6 +310,14 @@ if __name__ == "__main__":
             "test": [
                 "importlib-resources>=1.1.0",
             ],
+            "h5": [
+                "numpy",
+                "pandas",
+                "tables",
+            ],
+            "persistence": [
+                "numpy",
+            ],
         },
         license='BSD',
         packages=find_packages(),
