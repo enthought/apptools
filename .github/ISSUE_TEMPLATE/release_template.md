@@ -63,6 +63,6 @@ Release
 Post-release
 -------------
 - [ ] Package update for `enthought/free` repository (for EDM)
-- [ ] Backport release note and change log to master, and possibly `maint/<release version number>` branch.
-- [ ] Update GitHub Release pages https://github.com/enthought/envisage/releases
+- [ ] Backport change log (and any deletion of news fragments) to master
+- [ ] Update GitHub Release pages https://github.com/enthought/apptools/releases
 - [ ] Announcement (e.g. Google Group)
