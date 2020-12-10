@@ -414,13 +414,21 @@ def build_changelog(ctx):
             print(*contents, sep="\n", file=fp)
         fp.write(original_changelog)
 
-    click.echo("Changelog is updated.")
+    click.echo(f"Changelog is updated. Please review it at {CHANGELOG_PATH}")
     should_clean = click.confirm(
         "Do you want to remove the news fragments?"
     )
     if should_clean:
         for file_path in handled_file_paths:
             os.remove(file_path)
+
+        # Report any leftover for developers to inspect.
+        leftovers = sorted(glob.glob(os.path.join(NEWS_FRAGMENT_DIR, "*.rst")))
+        if leftovers:
+            click.echo("These files are not collected:")
+            click.echo("\n  ".join([""] + leftovers))
+
+    click.echo("Done")
 
 # ----------------------------------------------------------------------------
 # Utility routines
