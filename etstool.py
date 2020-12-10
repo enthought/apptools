@@ -425,7 +425,7 @@ def build_changelog(ctx):
             os.remove(file_path)
 
         # Report any leftover for developers to inspect.
-        leftovers = sorted(glob.glob(os.path.join(NEWS_FRAGMENT_DIR, "*.rst")))
+        leftovers = sorted(glob.glob(os.path.join(NEWS_FRAGMENT_DIR, "*")))
         if leftovers:
             click.echo("These files are not collected:")
             click.echo("\n  ".join([""] + leftovers))
