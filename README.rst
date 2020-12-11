@@ -46,7 +46,7 @@ The `apptools.preferences` package requires:
 
 To install with `apptools.preferences` dependencies::
 
-    `$ pip install apptools[preferences]`
+    $ pip install apptools[preferences]
 
 The `apptools.io.h5` package requires:
 
@@ -56,7 +56,7 @@ The `apptools.io.h5` package requires:
 
 To install with `apptools.io.h5` dependencies::
 
-    `$ pip install apptools[h5]`
+    $ pip install apptools[h5]
 
 The `apptools.persistence` package requires:
 
@@ -64,7 +64,7 @@ The `apptools.persistence` package requires:
 
 To install with `apptools.persistence` dependencies::
 
-    `$ pip install apptools[persistence]`
+    $ pip install apptools[persistence]
 
 To install with additional test dependencies::
 
