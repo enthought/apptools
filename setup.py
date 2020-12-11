@@ -318,6 +318,9 @@ if __name__ == "__main__":
             "persistence": [
                 "numpy",
             ],
+            "preferences": [
+                "configobj",
+            ],
         },
         license='BSD',
         packages=find_packages(),
