@@ -11,19 +11,25 @@ import os
 from contextlib import closing
 import unittest
 
-import numpy as np
-from numpy import testing
-import tables
+from apptools._testing.optional_dependencies import (
+    numpy as np,
+    tables,
+    requires_numpy,
+    requires_tables,
+)
 
-from ..file import H5File
-from ..dict_node import H5DictNode
-from ..table_node import H5TableNode
-from .utils import open_h5file, temp_h5_file
+if np is not None and tables is not None:
+    from ..file import H5File
+    from ..dict_node import H5DictNode
+    from ..table_node import H5TableNode
+    from .utils import open_h5file, temp_h5_file
 
 
 H5_TEST_FILE = "_temp_test_filt.h5"
 
 
+@requires_numpy
+@requires_tables
 class FileTestCase(unittest.TestCase):
     def tearDown(self):
         try:
@@ -58,9 +64,9 @@ class FileTestCase(unittest.TestCase):
         with open_h5file(H5_TEST_FILE, mode="w") as h5:
             h5array = h5.create_array("/array", array)
             # Test returned array
-            testing.assert_allclose(h5array, array)
+            np.testing.assert_allclose(h5array, array)
             # Test stored array
-            testing.assert_allclose(h5["/array"], array)
+            np.testing.assert_allclose(h5["/array"], array)
 
     def test_create_array_with_H5Group(self):
         array = np.arange(3)
@@ -69,9 +75,9 @@ class FileTestCase(unittest.TestCase):
             group = h5.create_group("/tardigrade")
             h5array = group.create_array("array", array)
             # Test returned array
-            testing.assert_allclose(h5array, array)
+            np.testing.assert_allclose(h5array, array)
             # Test stored array
-            testing.assert_allclose(h5[node_path], array)
+            np.testing.assert_allclose(h5[node_path], array)
 
     def test_getitem_failure(self):
         array = np.arange(3)
@@ -117,28 +123,28 @@ class FileTestCase(unittest.TestCase):
         array = np.arange(3, dtype=np.uint8)
         with open_h5file(H5_TEST_FILE, mode="w") as h5:
             h5array = h5.create_array("/array", array, chunked=True)
-            testing.assert_allclose(h5array, array)
+            np.testing.assert_allclose(h5array, array)
             assert isinstance(h5array, tables.CArray)
 
     def test_create_chunked_array_with_H5Group(self):
         array = np.arange(3, dtype=np.uint8)
         with open_h5file(H5_TEST_FILE, mode="w") as h5:
             h5array = h5.root.create_array("/array", array, chunked=True)
-            testing.assert_allclose(h5array, array)
+            np.testing.assert_allclose(h5array, array)
             assert isinstance(h5array, tables.CArray)
 
     def test_create_extendable_array_with_H5File(self):
         array = np.arange(3, dtype=np.uint8)
         with open_h5file(H5_TEST_FILE, mode="w") as h5:
             h5array = h5.create_array("/array", array, extendable=True)
-            testing.assert_allclose(h5array, array)
+            np.testing.assert_allclose(h5array, array)
             assert isinstance(h5array, tables.EArray)
 
     def test_create_extendable_array_with_H5Group(self):
         array = np.arange(3, dtype=np.uint8)
         with open_h5file(H5_TEST_FILE, mode="w") as h5:
             h5array = h5.root.create_array("/array", array, extendable=True)
-            testing.assert_allclose(h5array, array)
+            np.testing.assert_allclose(h5array, array)
             assert isinstance(h5array, tables.EArray)
 
     def test_str_and_repr(self):
@@ -179,7 +185,7 @@ class FileTestCase(unittest.TestCase):
             h5.create_array("/array", old_array)
             # New array with the same node name should delete old array
             h5.create_array("/array", new_array)
-            testing.assert_allclose(h5["/array"], new_array)
+            np.testing.assert_allclose(h5["/array"], new_array)
 
     def test_delete_existing_array_with_H5Group(self):
         old_array = np.arange(3)
@@ -188,7 +194,7 @@ class FileTestCase(unittest.TestCase):
             h5.create_array("/array", old_array)
             # New array with the same node name should delete old array
             h5.root.create_array("/array", new_array, delete_existing=True)
-            testing.assert_allclose(h5["/array"], new_array)
+            np.testing.assert_allclose(h5["/array"], new_array)
 
     def test_delete_existing_dict_with_H5File(self):
         old_dict = {"a": "Goose"}
@@ -371,8 +377,8 @@ class FileTestCase(unittest.TestCase):
             group_b = group_a["b"]
             # Check that __contains__ works for arrays
             assert "array" in group_b
-            testing.assert_allclose(group_b["array"], array)
-            testing.assert_allclose(group_a["b/array"], array)
+            np.testing.assert_allclose(group_b["array"], array)
+            np.testing.assert_allclose(group_a["b/array"], array)
 
     def test_group_attributes(self):
         value_1 = "foo"
@@ -419,7 +425,7 @@ class FileTestCase(unittest.TestCase):
             assert len(h5) == 2
             assert "/group" in h5
             assert "/array" in h5
-            testing.assert_allclose(h5["/array"], array)
+            np.testing.assert_allclose(h5["/array"], array)
             assert set(n.name for n in h5) == set(["array", "group"])
 
     def test_mapping_interface_for_group(self):
@@ -431,7 +437,7 @@ class FileTestCase(unittest.TestCase):
             assert len(group) == 2
             assert "subgroup" in group
             assert "array" in group
-            testing.assert_allclose(group["array"], array)
+            np.testing.assert_allclose(group["array"], array)
             assert set(n.name for n in group) == set(["array", "subgroup"])
 
     def test_group_str_and_repr(self):
@@ -447,7 +453,7 @@ class FileTestCase(unittest.TestCase):
         with open_h5file(H5_TEST_FILE, mode="w") as h5:
             h5["/"].attrs["name"] = value_1
             assert isinstance(h5["/"].attrs["name"], np.ndarray)
-            testing.assert_allclose(h5["/"].attrs["name"], value_1_array)
+            np.testing.assert_allclose(h5["/"].attrs["name"], value_1_array)
 
     def test_get_attribute(self):
         with open_h5file(H5_TEST_FILE, mode="w") as h5:
