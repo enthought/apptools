@@ -14,6 +14,7 @@ Create a new file with a name like ``<pull-request>.<type>.rst``, where
 - ``removal``: Removal of public API
 - ``doc``: Documentation changes
 - ``test``: Changes to test suite ('end users' are distribution packagers)
+- ``build``: Build system changes that affect how the distribution is installed
 
 Then write a short sentence in the file that describes the changes for the
 end users, e.g. in ``123.removal.rst``::
