@@ -9,11 +9,16 @@
 # Thanks for using Enthought open source!
 import unittest
 
-import numpy
+from apptools._testing.optional_dependencies import (
+    numpy,
+    requires_numpy,
+)
 
-from apptools.selection.api import ListSelection
+if numpy is not None:
+    from apptools.selection.api import ListSelection
 
 
+@requires_numpy
 class TestListSelection(unittest.TestCase):
     def test_list_selection(self):
         all_items = ["a", "b", "c", "d"]
