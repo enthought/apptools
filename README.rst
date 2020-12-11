@@ -44,31 +44,15 @@ The `apptools.preferences` package requires:
 
 * `configobj <http://pypi.python.org/pypi/configobj>`_
 
-To install with `apptools.preferences` dependencies::
-
-    $ pip install apptools[preferences]
-
 The `apptools.io.h5` package requires:
 
 * `numpy <https://pypi.org/project/numpy/>`_
 * `pandas <https://pypi.org/project/pandas/>`_
 * `tables <https://pypi.org/project/tables/>`_
 
-To install with `apptools.io.h5` dependencies::
-
-    $ pip install apptools[h5]
-
 The `apptools.persistence` package requires:
 
 * `numpy <https://pypi.org/project/numpy/>`_
-
-To install with `apptools.persistence` dependencies::
-
-    $ pip install apptools[persistence]
-
-To install with additional test dependencies::
-
-    $ pip install apptools[test]
 
 Many of the packages provide optional user interfaces using Pyface and
 Traitsui. In additon, many of the packages are designed to work with the
@@ -77,3 +61,22 @@ Envisage plug-in system, althought most can be used independently:
 * `envisage <https://github.com/enthought/envisage>`_
 * `pyface <https://github.com/enthought/pyface>`_
 * `traitsui <https://github.com/enthought/traitsui>`_
+
+Installation
+------------
+
+To install with `apptools.preferences` dependencies::
+
+    $ pip install apptools[preferences]
+
+To install with `apptools.io.h5` dependencies::
+
+    $ pip install apptools[h5]
+
+To install with `apptools.persistence` dependencies::
+
+    $ pip install apptools[persistence]
+
+To install with additional test dependencies::
+
+    $ pip install apptools[test]
