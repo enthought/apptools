@@ -3,9 +3,6 @@ include CHANGES.txt
 include LICENSE.txt
 include MANIFEST.in
 include TODO.txt
-include image_LICENSE.txt
-include image_LICENSE_Nuvola.txt
-include image_LICENSE_OOo.txt
 graft docs
 prune docs/build
 recursive-exclude docs *.pyc
