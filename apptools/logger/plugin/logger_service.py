@@ -8,12 +8,10 @@
 #
 # Thanks for using Enthought open source!
 # Standard library imports
+from io import BytesIO
 import logging
 import os
 import zipfile
-
-# Third-party library imports
-from io import BytesIO
 
 # Enthought library imports
 from pyface.workbench.api import View as WorkbenchView
