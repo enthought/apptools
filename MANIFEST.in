@@ -4,6 +4,7 @@ include LICENSE.txt
 include MANIFEST.in
 include TODO.txt
 include image_LICENSE.txt
+include image_LICENSE_CP.txt
 graft docs
 prune docs/build
 recursive-exclude docs *.pyc
