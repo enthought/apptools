@@ -52,6 +52,11 @@ Documentation changes
 Test suite
 ----------
 * Fix AttributeError on Python 3.9 due to usage of ``base64.decodestring`` in tests (#210)
+* Make optional dependencies optional for tests (#260)
+
+Build System
+------------
+* Add extras_require to setup.py for optional dependencies (#257)
 
 Version 4.5.0
 ~~~~~~~~~~~~~
