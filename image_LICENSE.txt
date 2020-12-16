@@ -3,10 +3,10 @@ licensed accordingly to the original license:
 
   Crystal Project: LGPL license as described in image_LICENSE_CP.txt
 
-Unless stated in this file, icons are work of enthought, and are released
+Unless stated in this file, icons are work of Enthought, and are released
 under BSD-like license.
 
-Files and orginal authors:
+Files and original authors:
 ----------------------------------------------------------------
 about.png                 Crystal Project
 crit_error.png            Crystal Project
