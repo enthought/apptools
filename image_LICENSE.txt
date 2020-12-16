@@ -1,11 +1,15 @@
 The icons are mostly derived work from other icons. As such they are
 licensed accordingly to the original license:
 
-Project                 License                   File
-----------------------------------------------------------------------------
-Enthought               BSD-like                  LICENSE.txt
-Nuvola                  LGPL                      image_LICENSE_Nuvola.txt
-OOo                     LGPL                      image_LICENSE_OOo.txt
+  Crystal Project: LGPL license as described in image_LICENSE_CP.txt
 
 Unless stated in this file, icons are work of Enthought, and are released
 under BSD-like license.
+
+Files and original authors:
+----------------------------------------------------------------
+about.png                 Crystal Project
+crit_error.png            Crystal Project
+debug.png                 Crystal Project
+error.png                 Crystal Project
+warning.png               Crystal Project
