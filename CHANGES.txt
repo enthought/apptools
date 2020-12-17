@@ -4,7 +4,7 @@ Apptools CHANGELOG
 Version 5.0.0
 ~~~~~~~~~~~~~
 
-Released : DD MM YYYY
+Released : 2020-12-17
 
 This is a major release mainly relating to code modernization. In this release,
 support for Python versions < 3.6 have been dropped. Numerous dated
