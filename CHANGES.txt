@@ -1,6 +1,63 @@
 Apptools CHANGELOG
 ==================
 
+Version 5.0.0
+~~~~~~~~~~~~~
+
+Released : 2020-12-17
+
+This is a major release mainly relating to code modernization. In this release,
+support for Python versions < 3.6 have been dropped. Numerous dated
+sub-packages and code fragments have been removed. Additionally, there were
+various fixes and documentation updates.
+
+Fixes
+-----
+* Fix SyntaxWarning in persistence.file_path (#116)
+* Fix container items change event being saved in preferences (#196)
+* Fix synchronizing preference trait with name *_items (#226)
+
+Deprecations
+------------
+* Deprecate apptools.undo subpackage (undo was moved to pyface) (#250)
+
+Removals
+--------
+* Remove ``appscripting`` subpackage (#172)
+* Remove ``template`` subpackage (#173)
+* Remove ``permission`` subpackage (#175)
+* Remove ``lru_cache`` subpackage (#184)
+* Remove support for Python 2.7 and 3.5 (#190)
+* Remove the ``apptools.sweet_pickle`` subpackage.  Note that users of
+  sweet_pickle can in some cases transition to using ``apptools.persistence``
+  and pickle from the python standard library (see changes made in this PR to
+  ``apptools.naming`` for more info) (#199)
+* Remove ``help`` subpackage (#215)
+* Remove NullHandler from ``apptools.logger`` (#216)
+* Remove ``apptools.logger.filtering_handler`` and ``apptools.logger.util`` submodules (#217)
+* Remove deprecated create_log_file_handler function (#218)
+* Remove use of ``apptools.type_manager`` from ``apptools.naming``. Then,
+  remove ``apptools.type_manager`` entirely.  Finally, remove
+  ``apptools.naming.adapter``. (#219)
+* Remove ``apptools.persistence.spickle`` submodule (#220)
+* Remove ``apptools.naming.ui`` sub package (#233)
+
+Documentation changes
+---------------------
+* Update documentation for Preferences (#198)
+* Add a brief section to documentation for ``apptools.naming`` (#221)
+* Document the ``apptools.io`` and ``apptools.io.h5`` sub packages (#237)
+* Fix a few broken links in the documentation (#248)
+
+Test suite
+----------
+* Fix AttributeError on Python 3.9 due to usage of ``base64.decodestring`` in tests (#210)
+* Make optional dependencies optional for tests (#260)
+
+Build System
+------------
+* Add extras_require to setup.py for optional dependencies (#257)
+
 Version 4.5.0
 ~~~~~~~~~~~~~
 
