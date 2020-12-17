@@ -9,16 +9,23 @@
 # Thanks for using Enthought open source!
 import unittest
 
-import numpy as np
-from numpy.testing import assert_allclose
+from apptools._testing.optional_dependencies import (
+    numpy as np,
+    tables,
+    requires_numpy,
+    requires_tables,
+)
 
-from ..dict_node import H5DictNode
-from .utils import open_h5file, temp_h5_file, temp_file
+if np is not None and tables is not None:
+    from ..dict_node import H5DictNode
+    from .utils import open_h5file, temp_h5_file, temp_file
 
 
 NODE = "/dict_node"
 
 
+@requires_tables
+@requires_numpy
 class DictNodeTestCase(unittest.TestCase):
     def test_create(self):
         with temp_h5_file() as h5:
@@ -56,8 +63,8 @@ class DictNodeTestCase(unittest.TestCase):
 
             h5dict = H5DictNode.add_to_h5file(h5, NODE, data)
             assert h5dict["a"] == 10
-            assert_allclose(h5dict["foo"], foo)
-            assert_allclose(h5dict["bar"], bar)
+            np.testing.assert_allclose(h5dict["foo"], foo)
+            np.testing.assert_allclose(h5dict["bar"], bar)
 
     def test_load_saved_dict_node(self):
         with temp_file() as filename:
@@ -91,7 +98,7 @@ class DictNodeTestCase(unittest.TestCase):
             # Read dict node and make sure the data was saved.
             with open_h5file(filename, mode="r+") as h5:
                 h5dict = h5[NODE]
-                assert_allclose(h5dict["arr"], arr)
+                np.testing.assert_allclose(h5dict["arr"], arr)
                 # Change data for next test
                 h5dict["arr"] = arr1
                 h5dict["arr_old"] = arr
@@ -99,8 +106,8 @@ class DictNodeTestCase(unittest.TestCase):
             # Check that data is modified by the previous write.
             with open_h5file(filename) as h5:
                 h5dict = h5[NODE]
-                assert_allclose(h5dict["arr"], arr1)
-                assert_allclose(h5dict["arr_old"], arr)
+                np.testing.assert_allclose(h5dict["arr"], arr1)
+                np.testing.assert_allclose(h5dict["arr_old"], arr)
                 # Make sure that arrays come back as arrays
                 assert isinstance(h5dict["arr"], np.ndarray)
                 assert isinstance(h5dict["arr_old"], np.ndarray)

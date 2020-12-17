@@ -342,6 +342,7 @@ def changelog(ctx):
             "removal": "Removals",
             "doc": "Documentation changes",
             "test": "Test suite",
+            "build": "Build System",
         }
     }
 

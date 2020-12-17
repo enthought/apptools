@@ -19,7 +19,10 @@ import math
 import os
 import tempfile
 
-import numpy
+try:
+    import numpy
+except ImportError:
+    raise unittest.SkipTest("Can't import NumPy: skipping")
 
 from traits.api import (
     Bool,
@@ -48,6 +51,7 @@ from apptools.persistence import state_pickler
 
 # A simple class to test instances.
 class A(object):
+
     def __init__(self):
         self.a = "a"
 
