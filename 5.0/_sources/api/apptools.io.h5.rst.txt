@@ -1,0 +1,46 @@
+apptools.io.h5 package
+======================
+
+Submodules
+----------
+
+apptools.io.h5.dict\_node module
+--------------------------------
+
+.. automodule:: apptools.io.h5.dict_node
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.io.h5.file module
+--------------------------
+
+.. automodule:: apptools.io.h5.file
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.io.h5.table\_node module
+---------------------------------
+
+.. automodule:: apptools.io.h5.table_node
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.io.h5.utils module
+---------------------------
+
+.. automodule:: apptools.io.h5.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.io.h5
+   :members:
+   :undoc-members:
+   :show-inheritance:

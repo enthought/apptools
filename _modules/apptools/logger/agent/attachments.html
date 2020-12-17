@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.logger.agent.attachments &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../../index.html" >
+    <link rel="up" title="Module code" href="../../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <h1>Source code for apptools.logger.agent.attachments</h1><div class="highlight"><pre>
+<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="sd">&quot;&quot;&quot; Attach relevant project files.</span>
+
+<span class="sd">FIXME: there are no public project plugins for Envisage 3, yet. In any case,</span>
+<span class="sd">this stuff should not be hard-coded, but extensible via extension points. The</span>
+<span class="sd">code remains here because we can reuse the zip utility code in that extensible</span>
+<span class="sd">rewrite.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">from</span> <span class="nn">email</span> <span class="k">import</span> <span class="n">encoders</span>
+<span class="kn">from</span> <span class="nn">email.mime.base</span> <span class="k">import</span> <span class="n">MIMEBase</span>
+
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">HasTraits</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Attachments"><a class="viewcode-back" href="../../../../api/apptools.logger.agent.html#apptools.logger.agent.attachments.Attachments">[docs]</a><span class="k">class</span> <span class="nc">Attachments</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+
+    <span class="n">application</span> <span class="o">=</span> <span class="n">Any</span><span class="p">()</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">Any</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
+        <span class="n">traits</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">traits</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">message</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Attachments</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">traits</span><span class="p">)</span>
+
+    <span class="c1"># FIXME: all of the package_*() methods refer to deprecated project plugins</span>
+
+<div class="viewcode-block" id="Attachments.package_workspace"><a class="viewcode-back" href="../../../../api/apptools.logger.agent.html#apptools.logger.agent.attachments.Attachments.package_workspace">[docs]</a>    <span class="k">def</span> <span class="nf">package_workspace</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">application</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">workspace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span><span class="s2">&quot;envisage.project.IWorkspace&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">workspace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">dir</span> <span class="o">=</span> <span class="n">workspace</span><span class="o">.</span><span class="n">path</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attach_directory</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Attachments.package_single_project"><a class="viewcode-back" href="../../../../api/apptools.logger.agent.html#apptools.logger.agent.attachments.Attachments.package_single_project">[docs]</a>    <span class="k">def</span> <span class="nf">package_single_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">application</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">single_project</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">application</span><span class="o">.</span><span class="n">get_service</span><span class="p">(</span>
+            <span class="s2">&quot;envisage.single_project.ModelService&quot;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">single_project</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">dir</span> <span class="o">=</span> <span class="n">single_project</span><span class="o">.</span><span class="n">location</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_attach_directory</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Attachments.package_any_relevant_files"><a class="viewcode-back" href="../../../../api/apptools.logger.agent.html#apptools.logger.agent.attachments.Attachments.package_any_relevant_files">[docs]</a>    <span class="k">def</span> <span class="nf">package_any_relevant_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">package_workspace</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">package_single_project</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">_attach_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="p">):</span>
+        <span class="n">relpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+
+        <span class="kn">import</span> <span class="nn">zipfile</span>
+        <span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">BytesIO</span>
+
+        <span class="n">ctype</span> <span class="o">=</span> <span class="s2">&quot;application/octet-stream&quot;</span>
+        <span class="n">maintype</span><span class="p">,</span> <span class="n">subtype</span> <span class="o">=</span> <span class="n">ctype</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">MIMEBase</span><span class="p">(</span><span class="n">maintype</span><span class="p">,</span> <span class="n">subtype</span><span class="p">)</span>
+
+        <span class="n">file_object</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+        <span class="nb">zip</span> <span class="o">=</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">file_object</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="n">_append_to_zip_archive</span><span class="p">(</span><span class="nb">zip</span><span class="p">,</span> <span class="nb">dir</span><span class="p">,</span> <span class="n">relpath</span><span class="p">)</span>
+        <span class="nb">zip</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">msg</span><span class="o">.</span><span class="n">set_payload</span><span class="p">(</span><span class="n">file_object</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+
+        <span class="n">encoders</span><span class="o">.</span><span class="n">encode_base64</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>  <span class="c1"># Encode the payload using Base64</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">add_header</span><span class="p">(</span>
+            <span class="s2">&quot;Content-Disposition&quot;</span><span class="p">,</span> <span class="s2">&quot;attachment&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;project.zip&quot;</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">file_object</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<span class="k">def</span> <span class="nf">_append_to_zip_archive</span><span class="p">(</span><span class="nb">zip</span><span class="p">,</span> <span class="nb">dir</span><span class="p">,</span> <span class="n">relpath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Add all files in and below directory dir into zip archive&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">relpath</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+            <span class="nb">zip</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;adding </span><span class="si">%s</span><span class="s2"> to error report&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">filename</span> <span class="o">!=</span> <span class="s2">&quot;.svn&quot;</span><span class="p">:</span>  <span class="c1"># skip svn files if any</span>
+                <span class="n">subdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+                <span class="n">_append_to_zip_archive</span><span class="p">(</span>
+                    <span class="nb">zip</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">relpath</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+                <span class="p">)</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Dec 17, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

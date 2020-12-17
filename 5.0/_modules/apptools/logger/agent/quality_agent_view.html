@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.logger.agent.quality_agent_view &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../../index.html" >
+    <link rel="up" title="Module code" href="../../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <h1>Source code for apptools.logger.agent.quality_agent_view</h1><div class="highlight"><pre>
+<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+
+<span class="c1"># Standard library imports.</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">pyface.api</span> <span class="k">import</span> <span class="n">Dialog</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Tuple</span>
+
+
+<span class="c1"># Setup a logger for this module.</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="n">priority_levels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Low&quot;</span><span class="p">,</span> <span class="s2">&quot;Medium&quot;</span><span class="p">,</span> <span class="s2">&quot;High&quot;</span><span class="p">,</span> <span class="s2">&quot;Critical&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="QualityAgentView"><a class="viewcode-back" href="../../../../api/apptools.logger.agent.html#apptools.logger.agent.quality_agent_view.QualityAgentView">[docs]</a><span class="k">class</span> <span class="nc">QualityAgentView</span><span class="p">(</span><span class="n">Dialog</span><span class="p">):</span>
+
+    <span class="n">size</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">((</span><span class="mi">700</span><span class="p">,</span> <span class="mi">900</span><span class="p">))</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s2">&quot;Quality Agent&quot;</span><span class="p">)</span>
+
+    <span class="c1"># The associated LoggerService.</span>
+    <span class="n">service</span> <span class="o">=</span> <span class="n">Any</span><span class="p">()</span>
+
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">subject</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s2">&quot;Untitled Error Report&quot;</span><span class="p">)</span>
+    <span class="n">to_address</span> <span class="o">=</span> <span class="n">Str</span><span class="p">()</span>
+    <span class="n">cc_address</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">from_address</span> <span class="o">=</span> <span class="n">Str</span><span class="p">()</span>
+    <span class="n">smtp_server</span> <span class="o">=</span> <span class="n">Str</span><span class="p">()</span>
+    <span class="n">priority</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="n">priority_levels</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">comments</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s2">&quot;None&quot;</span><span class="p">)</span>
+    <span class="n">include_userdata</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Protected &#39;Dialog&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="c1"># fixme: Ideally, this should be passed in; this topic ID belongs to the</span>
+    <span class="c1">#        Enlib help project/plug-in.</span>
+    <span class="n">help_id</span> <span class="o">=</span> <span class="s2">&quot;enlib|HID_Quality_Agent_Dlg&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_create_dialog_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates the main content of the dialog. &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">wx</span>
+
+        <span class="n">parent</span><span class="o">.</span><span class="n">SetSizeHints</span><span class="p">(</span><span class="n">minW</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">minH</span><span class="o">=</span><span class="mi">575</span><span class="p">)</span>
+
+        <span class="c1"># Add the main panel</span>
+        <span class="n">sizer</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">VERTICAL</span><span class="p">)</span>
+        <span class="n">panel</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Panel</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">panel</span><span class="o">.</span><span class="n">SetSizer</span><span class="p">(</span><span class="n">sizer</span><span class="p">)</span>
+        <span class="n">panel</span><span class="o">.</span><span class="n">SetAutoLayout</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Add a descriptive label at the top ...</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Send a comment or bug report ...&quot;</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+        <span class="c1"># Add the stack trace view ...</span>
+        <span class="n">error_panel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_error_panel</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span>
+            <span class="n">error_panel</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">CLIP_CHILDREN</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="mi">5</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Update the layout:</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Fit</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+
+        <span class="c1"># Add the error report view ...</span>
+        <span class="n">report_panel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_report_panel</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span>
+            <span class="n">report_panel</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">CLIP_CHILDREN</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="mi">5</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Update the layout:</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Fit</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">panel</span>
+
+    <span class="k">def</span> <span class="nf">_create_buttons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates the buttons. &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">wx</span>
+
+        <span class="n">sizer</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">)</span>
+
+        <span class="c1"># &#39;Send&#39; button.</span>
+        <span class="n">send</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_OK</span><span class="p">,</span> <span class="s2">&quot;Send&quot;</span><span class="p">)</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_OK</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_send</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">send</span><span class="p">)</span>
+        <span class="n">send</span><span class="o">.</span><span class="n">SetDefault</span><span class="p">()</span>
+
+        <span class="c1"># &#39;Cancel&#39; button.</span>
+        <span class="n">cancel</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_CANCEL</span><span class="p">,</span> <span class="s2">&quot;Cancel&quot;</span><span class="p">)</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_CANCEL</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wx_on_cancel</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">cancel</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># &#39;Help&#39; button.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">help_id</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">help</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_HELP</span><span class="p">,</span> <span class="s2">&quot;Help&quot;</span><span class="p">)</span>
+            <span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_HELP</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wx_on_help</span><span class="p">)</span>
+            <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">help</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">sizer</span>
+
+    <span class="c1">### Utility methods #######################################################</span>
+
+    <span class="k">def</span> <span class="nf">_create_error_panel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">wx</span>
+
+        <span class="n">box</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticBox</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Message:&quot;</span><span class="p">)</span>
+        <span class="n">sizer</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticBoxSizer</span><span class="p">(</span><span class="n">box</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">VERTICAL</span><span class="p">)</span>
+
+        <span class="c1"># Print the stack trace</span>
+        <span class="n">label2</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span>
+            <span class="n">parent</span><span class="p">,</span>
+            <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;The following information will be included in the report:&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span>
+            <span class="n">label2</span><span class="p">,</span>
+            <span class="mi">0</span><span class="p">,</span>
+            <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">TOP</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">BOTTOM</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">CLIP_CHILDREN</span><span class="p">,</span>
+            <span class="n">border</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">details</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">TextCtrl</span><span class="p">(</span>
+            <span class="n">parent</span><span class="p">,</span>
+            <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">75</span><span class="p">),</span>
+            <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">TE_MULTILINE</span>
+            <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">TE_READONLY</span>
+            <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">HSCROLL</span>
+            <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">VSCROLL</span>
+            <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">TE_RICH2</span>
+            <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">CLIP_CHILDREN</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">details</span><span class="o">.</span><span class="n">SetSizeHints</span><span class="p">(</span><span class="n">minW</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">minH</span><span class="o">=</span><span class="mi">75</span><span class="p">)</span>
+        <span class="c1"># Set the font to not be proportional</span>
+        <span class="n">font</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Font</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">MODERN</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">NORMAL</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">NORMAL</span><span class="p">)</span>
+        <span class="n">details</span><span class="o">.</span><span class="n">SetStyle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">),</span> <span class="n">wx</span><span class="o">.</span><span class="n">TextAttr</span><span class="p">(</span><span class="n">font</span><span class="o">=</span><span class="n">font</span><span class="p">))</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">details</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">CLIP_CHILDREN</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">sizer</span>
+
+    <span class="k">def</span> <span class="nf">_create_report_panel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">wx</span>
+
+        <span class="n">box</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticBox</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Report Information:&quot;</span><span class="p">)</span>
+        <span class="n">sizer</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticBoxSizer</span><span class="p">(</span><span class="n">box</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">VERTICAL</span><span class="p">)</span>
+
+        <span class="c1"># Add email info ...</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_email_info</span><span class="p">(</span><span class="n">parent</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+        <span class="c1"># Add priority combo:</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_priority_combo</span><span class="p">(</span><span class="n">parent</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+        <span class="c1"># Extra comments from the user:</span>
+        <span class="n">label3</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Additional Comments:&quot;</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span>
+            <span class="n">label3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">TOP</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">BOTTOM</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">CLIP_CHILDREN</span><span class="p">,</span> <span class="mi">5</span>
+        <span class="p">)</span>
+
+        <span class="n">comments_field</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">TextCtrl</span><span class="p">(</span>
+            <span class="n">parent</span><span class="p">,</span>
+            <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">comments</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">75</span><span class="p">),</span>
+            <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">TE_MULTILINE</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">TE_RICH2</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">CLIP_CHILDREN</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">comments_field</span><span class="o">.</span><span class="n">SetSizeHints</span><span class="p">(</span><span class="n">minW</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">minH</span><span class="o">=</span><span class="mi">75</span><span class="p">)</span>
+        <span class="n">font</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Font</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">MODERN</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">NORMAL</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">NORMAL</span><span class="p">)</span>
+        <span class="n">comments_field</span><span class="o">.</span><span class="n">SetStyle</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comments</span><span class="p">),</span> <span class="n">wx</span><span class="o">.</span><span class="n">TextAttr</span><span class="p">(</span><span class="n">font</span><span class="o">=</span><span class="n">font</span><span class="p">))</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">comments_field</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">CLIP_CHILDREN</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">EVT_TEXT</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">comments_field</span><span class="o">.</span><span class="n">GetId</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_comments</span><span class="p">)</span>
+
+        <span class="c1"># Include the project combobox?</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">mail_files</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_project_upload</span><span class="p">(</span><span class="n">parent</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">sizer</span>
+
+    <span class="k">def</span> <span class="nf">_create_email_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">wx</span>
+
+        <span class="c1"># Layout setup ..</span>
+        <span class="n">sizer</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">FlexGridSizer</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">AddGrowableCol</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">title_label</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Subject:&quot;</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">title_label</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALIGN_RIGHT</span><span class="p">)</span>
+        <span class="n">title_field</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">TextCtrl</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span>
+            <span class="n">title_field</span><span class="p">,</span>
+            <span class="mi">1</span><span class="p">,</span>
+            <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALIGN_RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">CLIP_CHILDREN</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">EVT_TEXT</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">title_field</span><span class="o">.</span><span class="n">GetId</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_subject</span><span class="p">)</span>
+
+        <span class="n">to_label</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;To:&quot;</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">to_label</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALIGN_RIGHT</span><span class="p">)</span>
+        <span class="n">to_field</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">TextCtrl</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_address</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span>
+            <span class="n">to_field</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALIGN_RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">CLIP_CHILDREN</span>
+        <span class="p">)</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">EVT_TEXT</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">to_field</span><span class="o">.</span><span class="n">GetId</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_to</span><span class="p">)</span>
+
+        <span class="n">cc_label</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Cc:&quot;</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">cc_label</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALIGN_RIGHT</span><span class="p">)</span>
+        <span class="n">cc_field</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">TextCtrl</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span>
+            <span class="n">cc_field</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALIGN_RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">CLIP_CHILDREN</span>
+        <span class="p">)</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">EVT_TEXT</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">cc_field</span><span class="o">.</span><span class="n">GetId</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_cc</span><span class="p">)</span>
+
+        <span class="n">from_label</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;From:&quot;</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">from_label</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALIGN_RIGHT</span><span class="p">)</span>
+        <span class="n">from_field</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">TextCtrl</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_address</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span>
+            <span class="n">from_field</span><span class="p">,</span>
+            <span class="mi">1</span><span class="p">,</span>
+            <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALIGN_RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">CLIP_CHILDREN</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">EVT_TEXT</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">from_field</span><span class="o">.</span><span class="n">GetId</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_from</span><span class="p">)</span>
+
+        <span class="n">smtp_label</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;SMTP Server:&quot;</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">smtp_label</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALIGN_RIGHT</span><span class="p">)</span>
+        <span class="n">smtp_server_field</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">TextCtrl</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">smtp_server</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span>
+            <span class="n">smtp_server_field</span><span class="p">,</span>
+            <span class="mi">1</span><span class="p">,</span>
+            <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALIGN_RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">CLIP_CHILDREN</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">EVT_TEXT</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">smtp_server_field</span><span class="o">.</span><span class="n">GetId</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_smtp_server</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">sizer</span>
+
+    <span class="k">def</span> <span class="nf">_create_priority_combo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">wx</span>
+
+        <span class="n">sizer</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">)</span>
+
+        <span class="n">label</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;How critical is this issue?&quot;</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">cb</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">ComboBox</span><span class="p">(</span>
+            <span class="n">parent</span><span class="p">,</span>
+            <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">priority</span><span class="p">,</span>
+            <span class="n">wx</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span>
+            <span class="n">wx</span><span class="o">.</span><span class="n">Size</span><span class="p">(</span><span class="mi">95</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">priority_levels</span><span class="p">,</span>
+            <span class="n">wx</span><span class="o">.</span><span class="n">CB_READONLY</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">cb</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">CLIP_CHILDREN</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+        <span class="n">wx</span><span class="o">.</span><span class="n">EVT_COMBOBOX</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">cb</span><span class="o">.</span><span class="n">GetId</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_priority</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">sizer</span>
+
+    <span class="k">def</span> <span class="nf">_create_project_upload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">wx</span>
+
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">NewId</span><span class="p">()</span>
+        <span class="n">cb</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">CheckBox</span><span class="p">(</span>
+            <span class="n">parent</span><span class="p">,</span>
+            <span class="nb">id</span><span class="p">,</span>
+            <span class="s2">&quot;Include Workspace Files (will increase email size)        &quot;</span><span class="p">,</span>
+            <span class="n">wx</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mi">65</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span>
+            <span class="n">wx</span><span class="o">.</span><span class="n">Size</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+            <span class="n">wx</span><span class="o">.</span><span class="n">NO_BORDER</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">EVT_CHECKBOX</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_project</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cb</span>
+
+    <span class="c1">## UI Listeners ###########################################################</span>
+
+    <span class="k">def</span> <span class="nf">_on_subject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subject</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">GetEventObject</span><span class="p">()</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_on_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_address</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">GetEventObject</span><span class="p">()</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_on_cc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cc_address</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">GetEventObject</span><span class="p">()</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_on_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">from_address</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">GetEventObject</span><span class="p">()</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_on_smtp_server</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smtp_server</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">GetEventObject</span><span class="p">()</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_on_priority</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">GetEventObject</span><span class="p">()</span><span class="o">.</span><span class="n">GetStringSelection</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_on_comments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comments</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">GetEventObject</span><span class="p">()</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_on_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">include_userdata</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">Checked</span><span class="p">()</span>
+        <span class="n">cb</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">GetEventObject</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">Checked</span><span class="p">():</span>
+            <span class="n">cb</span><span class="o">.</span><span class="n">SetLabel</span><span class="p">(</span>
+                <span class="s2">&quot;Include Workspace Files (approx. </span><span class="si">%.2f</span><span class="s2"> MBytes)&quot;</span>
+                <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_project_size</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cb</span><span class="o">.</span><span class="n">SetLabel</span><span class="p">(</span><span class="s2">&quot;Include Workspace Files (will increase email size)&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_on_send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+
+        <span class="c1"># Disable the Send button while we go through the possibly</span>
+        <span class="c1"># time-consuming email-sending process.</span>
+        <span class="n">button</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">GetEventObject</span><span class="p">()</span>
+        <span class="n">button</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">fromaddr</span><span class="p">,</span> <span class="n">toaddrs</span><span class="p">,</span> <span class="n">ccaddrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_email_addresses</span><span class="p">()</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_email</span><span class="p">(</span><span class="n">fromaddr</span><span class="p">,</span> <span class="n">toaddrs</span><span class="p">,</span> <span class="n">ccaddrs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">send_bug_report</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">smtp_server</span><span class="p">,</span> <span class="n">fromaddr</span><span class="p">,</span> <span class="n">toaddrs</span><span class="p">,</span> <span class="n">ccaddrs</span><span class="p">,</span> <span class="n">message</span>
+        <span class="p">)</span>
+
+        <span class="c1"># save the user&#39;s preferences</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">smtp_server</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">smtp_server</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">to_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_address</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">from_address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_address</span>
+
+        <span class="c1"># finally we close the dialog</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_wx_on_ok</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+    <span class="c1">## Private ################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_create_email_addresses</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># utility function map addresses from ui into the standard format</span>
+        <span class="c1"># FIXME: We should use standard To: header parsing instead of this ad</span>
+        <span class="c1"># hoc whitespace-only approach.</span>
+        <span class="n">fromaddr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">from_address</span>
+        <span class="k">if</span> <span class="s2">&quot;&quot;</span> <span class="o">==</span> <span class="n">fromaddr</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="n">fromaddr</span> <span class="o">=</span> <span class="s2">&quot;anonymous&quot;</span>
+        <span class="n">toaddrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_address</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">ccaddrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cc_address</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">fromaddr</span><span class="p">,</span> <span class="n">toaddrs</span><span class="p">,</span> <span class="n">ccaddrs</span>
+
+    <span class="k">def</span> <span class="nf">_compute_project_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># determine size of email in MBytes</span>
+        <span class="n">fromaddr</span><span class="p">,</span> <span class="n">toaddrs</span><span class="p">,</span> <span class="n">ccaddrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_email_addresses</span><span class="p">()</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_email</span><span class="p">(</span><span class="n">fromaddr</span><span class="p">,</span> <span class="n">toaddrs</span><span class="p">,</span> <span class="n">ccaddrs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">as_string</span><span class="p">())</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">**</span> <span class="mi">20</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_create_email</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fromaddr</span><span class="p">,</span> <span class="n">toaddrs</span><span class="p">,</span> <span class="n">ccaddrs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">create_email_message</span><span class="p">(</span>
+            <span class="n">fromaddr</span><span class="p">,</span>
+            <span class="n">toaddrs</span><span class="p">,</span>
+            <span class="n">ccaddrs</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">priority</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">include_userdata</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">comments</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_to_address_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">to_address</span>
+
+    <span class="k">def</span> <span class="nf">_from_address_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">from_address</span>
+
+    <span class="k">def</span> <span class="nf">_smtp_server_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">preferences</span><span class="o">.</span><span class="n">smtp_server</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Dec 17, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

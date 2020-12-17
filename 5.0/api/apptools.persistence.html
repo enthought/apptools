@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.persistence package &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools package" href="apptools.html" >
+    <link rel="next" title="apptools.preferences package" href="apptools.preferences.html" >
+    <link rel="prev" title="apptools.naming.trait_defs package" href="apptools.naming.trait_defs.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../api.html" >API documentation</a></li>
+          <li class="active"><a href="modules.html" >apptools</a></li>
+          <li class="active"><a href="apptools.html" accesskey="U">apptools package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.preferences.html" title="apptools.preferences package"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.naming.trait_defs.html" title="apptools.naming.trait_defs package"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <div class="section" id="apptools-persistence-package">
+<h1>apptools.persistence package<a class="headerlink" href="#apptools-persistence-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-apptools.persistence.file_path">
+<span id="apptools-persistence-file-path-module"></span><h2>apptools.persistence.file_path module<a class="headerlink" href="#module-apptools.persistence.file_path" title="Permalink to this headline">¶</a></h2>
+<p>Simple class to support file path objects that work well in the
+context of persistent storage with the state_pickler.</p>
+<dl class="class">
+<dt id="apptools.persistence.file_path.FilePath">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.persistence.file_path.</code><code class="sig-name descname">FilePath</code><span class="sig-paren">(</span><em class="sig-param">value=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/file_path.html#FilePath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.file_path.FilePath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class stores two paths to the file.  A relative path and
+an absolute one.  The absolute path is used by the end user.  When
+this object is pickled the state_pickler sets the relative path
+relative to the file that is being generated.  When unpickled, the
+stored relative path is used to set the absolute path correctly
+based on the path of the saved file.</p>
+<dl class="method">
+<dt id="apptools.persistence.file_path.FilePath.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/file_path.html#FilePath.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.file_path.FilePath.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.persistence.file_path.FilePath.set">
+<code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/file_path.html#FilePath.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.file_path.FilePath.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the value of the path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.persistence.file_path.FilePath.set_absolute">
+<code class="sig-name descname">set_absolute</code><span class="sig-paren">(</span><em class="sig-param">base_f_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/file_path.html#FilePath.set_absolute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.file_path.FilePath.set_absolute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the absolute file name for the current relative file
+name with respect to the given <cite>base_f_name</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.persistence.file_path.FilePath.set_relative">
+<code class="sig-name descname">set_relative</code><span class="sig-paren">(</span><em class="sig-param">base_f_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/file_path.html#FilePath.set_relative"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.file_path.FilePath.set_relative" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the path relative to <cite>base_f_name</cite>.  Note that
+<cite>base_f_name</cite> and self.rel_pth should be valid file names
+correct on the current os.  The set name is a file name that
+has a POSIX path.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.persistence.project_loader">
+<span id="apptools-persistence-project-loader-module"></span><h2>apptools.persistence.project_loader module<a class="headerlink" href="#module-apptools.persistence.project_loader" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="apptools.persistence.project_loader.load_project">
+<code class="sig-prename descclassname">apptools.persistence.project_loader.</code><code class="sig-name descname">load_project</code><span class="sig-paren">(</span><em class="sig-param">pickle_filename</em>, <em class="sig-param">updater_path</em>, <em class="sig-param">application_version</em>, <em class="sig-param">protocol</em>, <em class="sig-param">max_pass=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/project_loader.html#load_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.project_loader.load_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a project from a pickle file and if necessary will update it to
+the latest version of the application.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.persistence.project_loader.upgrade_project">
+<code class="sig-prename descclassname">apptools.persistence.project_loader.</code><code class="sig-name descname">upgrade_project</code><span class="sig-paren">(</span><em class="sig-param">pickle_filename</em>, <em class="sig-param">updater_path</em>, <em class="sig-param">project_version</em>, <em class="sig-param">application_version</em>, <em class="sig-param">protocol</em>, <em class="sig-param">max_pass=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/project_loader.html#upgrade_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.project_loader.upgrade_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repeatedly read and write the project to disk updating it one version
+at a time.</p>
+<p>Example the p5.project is at version 0
+The application is at version 3</p>
+<p>p5.project    — Update1 —&gt; p5.project.v1
+p5.project.v1 — Update2 —&gt; p5.project.v2
+p5.project.v2 — Update3 —&gt; p5.project.v3
+p5.project.v3 —&gt; loaded into app</p>
+<p>The user then has the option to save the updated project as p5.project</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.persistence.state_pickler">
+<span id="apptools-persistence-state-pickler-module"></span><h2>apptools.persistence.state_pickler module<a class="headerlink" href="#module-apptools.persistence.state_pickler" title="Permalink to this headline">¶</a></h2>
+<p>This module provides code that allows one to pickle the state of a
+Python object to a dictionary.</p>
+<p>The motivation for this is simple.  The standard Python
+pickler/unpickler is best used to pickle simple objects and does not
+work too well for complex code.  Specifically, there are two major
+problems (1) the pickle file format is not easy to edit with a text
+editor and (2) when a pickle is unpickled, it creates all the
+necessary objects and sets the state of these objects.</p>
+<p>Issue (2) might not appear to be a problem.  However, often, the
+determination of the entire ‘state’ of an application requires the
+knowledge of the state of many objects that are not really in the
+users concern.  The user would ideally like to pickle just what he
+thinks is relevant.  Now, given that the user is not going to save the
+entire state of the application, the use of pickle is insufficient
+since the state is no longer completely known (or worth knowing).  The
+default <cite>Unpickler</cite> recreates the objects and the typical
+implementation of <cite>__setstate__</cite> is usually to simply update the
+object’s <cite>__dict__</cite> attribute.  This is inadequate because the pickled
+information is taken out of the real context when it was saved.</p>
+<p>The <cite>StatePickler</cite> basically pickles the ‘state’ of an object into a
+large dictionary.  This pickled data may be easily unpickled and
+modified on the interpreter or edited with a text editor
+(<cite>pprint.saferepr</cite> is a friend).  The second problem is also
+eliminated.  When this state is unpickled using <cite>StateUnpickler</cite>, what
+you get is a special dictionary (a <cite>State</cite> instance).  This allows one
+to navigate the state just like the original object.  Its up to the
+user to create any new objects and set their states using this
+information.  This allows for a lot of flexibility while allowing one
+to save and set the state of (almost) any Python object.</p>
+<p>The <cite>StateSetter</cite> class helps set the state of a known instance.  When
+setting the state of an instance it checks to see if there is a
+<cite>__set_pure_state__</cite> method that in turn calls <cite>StateSetter.set</cite>
+appropriately.</p>
+<p>Additionally, there is support for versioning.  The class’ version is
+obtain from the <cite>__version__</cite> class attribute.  This version along
+with the versions of the bases of a class is embedded into the
+metadata of the state and stored.  By using <cite>version_registry.py</cite> a
+user may register a handler for a particular class and module.  When
+the state of an object is set using <cite>StateSetter.set_state</cite>, then
+these handlers are called in reverse order of their MRO.  This gives
+the handler an opportunity to upgrade the state depending on its
+version.  Builtin classes are not scanned for versions.  If a class
+has no version, then by default it is assumed to be -1.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>       <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="s1">&#39;a&#39;</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">state_pickler</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">state_pickler</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>               <span class="c1"># Dump the state of `a`.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state</span> <span class="o">=</span> <span class="n">state_pickler</span><span class="o">.</span><span class="n">loads_state</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>     <span class="c1"># Get the state back.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">state_pickler</span><span class="o">.</span><span class="n">create_instance</span><span class="p">(</span><span class="n">state</span><span class="p">)</span> <span class="c1"># Create the object.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state_pickler</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>        <span class="c1"># Set the object&#39;s state.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">b</span><span class="o">.</span><span class="n">a</span> <span class="o">==</span> <span class="mi">100</span>
+</pre></div>
+</div>
+<div class="section" id="features">
+<h3>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>The output is a plain old dictionary so is easy to parse, edit etc.</p></li>
+<li><p>Handles references to avoid duplication.</p></li>
+<li><p>Gzips Numeric arrays when dumping them.</p></li>
+<li><p>Support for versioning.</p></li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="caveats">
+<h3>Caveats<a class="headerlink" href="#caveats" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li><p>Does not pickle a whole bunch of stuff including code objects and
+functions.</p></li>
+<li><p>The output is a pure dictionary and does not contain instances.  So
+using this <em>as it is</em> in <cite>__setstate__</cite> will not work.  Instead
+define a <cite>__set_pure_state__</cite> and use the <cite>StateSetter</cite> class or
+the <cite>set_state</cite> function provided by this module.</p></li>
+</ul>
+</div></blockquote>
+<p class="rubric">Notes</p>
+<p>Browsing the code from <a class="reference external" href="http://www.dezentral.de/soft/XMarshaL">XMarshaL</a> and pickle.py proved useful for
+ideas.  None of the code is taken from there though.</p>
+<dl class="class">
+<dt id="apptools.persistence.state_pickler.State">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">State</code><span class="sig-paren">(</span><em class="sig-param">**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#State"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.State" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+<p>Used to encapsulate the state of an instance in a very
+convenient form.  The ‘__metadata__’ attribute/key is a dictionary
+that has class specific details like the class name, module name
+etc.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="apptools.persistence.state_pickler.StateDict">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">StateDict</code><span class="sig-paren">(</span><em class="sig-param">**kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#StateDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.StateDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+<p>Used to encapsulate a dictionary stored in a <cite>State</cite> instance.
+The has_instance attribute specifies if the dict has an instance
+embedded in it.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="apptools.persistence.state_pickler.StateList">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">StateList</code><span class="sig-paren">(</span><em class="sig-param">seq=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#StateList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.StateList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
+<p>Used to encapsulate a list stored in a <cite>State</cite> instance.  The
+has_instance attribute specifies if the list has an instance
+embedded in it.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="apptools.persistence.state_pickler.StatePickler">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">StatePickler</code><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#StatePickler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.StatePickler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Pickles the state of an object into a dictionary.  The
+dictionary is itself either saved as a pickled file (<cite>dump</cite>) or
+pickled string (<cite>dumps</cite>).  Alternatively, the <cite>dump_state</cite> method
+will return the dictionary that is pickled.</p>
+<p>The format of the state dict is quite strightfoward.  Basic types
+(bool, int, long, float, complex, None, string) are
+represented as they are.  Everything else is stored as a
+dictionary containing metadata information on the object’s type
+etc. and also the actual object in the ‘data’ key.  For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">StatePickler</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">dump_state</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mf">2.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">dump_state</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+<span class="go">{&#39;data&#39;: [1, 2.0, None, {&#39;data&#39;: [1, 2, 3], &#39;type&#39;: &#39;list&#39;, &#39;id&#39;: 1}],</span>
+<span class="go"> &#39;id&#39;: 0,</span>
+<span class="go"> &#39;type&#39;: &#39;list&#39;}</span>
+</pre></div>
+</div>
+<p>Classes are also represented similarly.  The state in this case is
+obtained from the <cite>__getstate__</cite> method or from the <cite>__dict__</cite>.
+Here is an example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">__version__</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># State version</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">attribute</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">StatePickler</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="o">.</span><span class="n">dump_state</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="go">{&#39;class_name&#39;: &#39;A&#39;,</span>
+<span class="go"> &#39;data&#39;: {&#39;data&#39;: {&#39;attribute&#39;: 1}, &#39;type&#39;: &#39;dict&#39;, &#39;id&#39;: 2},</span>
+<span class="go"> &#39;id&#39;: 0,</span>
+<span class="go"> &#39;initargs&#39;: {&#39;data&#39;: (), &#39;type&#39;: &#39;tuple&#39;, &#39;id&#39;: 1},</span>
+<span class="go"> &#39;module&#39;: &#39;__main__&#39;,</span>
+<span class="go"> &#39;type&#39;: &#39;instance&#39;,</span>
+<span class="go"> &#39;version&#39;: [((&#39;A&#39;, &#39;__main__&#39;), 1)]}</span>
+</pre></div>
+</div>
+<p>When pickling data, references are taken care of.  Numeric arrays
+can be pickled and are stored as a gzipped base64 encoded string.</p>
+<dl class="method">
+<dt id="apptools.persistence.state_pickler.StatePickler.dump">
+<code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">file</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#StatePickler.dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.StatePickler.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pickles the state of the object (<cite>value</cite>) into the passed
+file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.persistence.state_pickler.StatePickler.dump_state">
+<code class="sig-name descname">dump_state</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#StatePickler.dump_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.StatePickler.dump_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary or a basic type representing the
+complete state of the object (<cite>value</cite>).</p>
+<p>This value is pickled by the <cite>dump</cite> and <cite>dumps</cite> methods.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.persistence.state_pickler.StatePickler.dumps">
+<code class="sig-name descname">dumps</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#StatePickler.dumps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.StatePickler.dumps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pickles the state of the object (<cite>value</cite>) and returns a
+string.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="apptools.persistence.state_pickler.StatePicklerError">
+<em class="property">exception </em><code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">StatePicklerError</code><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#StatePicklerError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.StatePicklerError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="apptools.persistence.state_pickler.StateSetter">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">StateSetter</code><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#StateSetter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.StateSetter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This is a convenience class that helps a user set the
+attributes of an object given its saved state.  For instances it
+checks to see if a <cite>__set_pure_state__</cite> method exists and calls
+that when it sets the state.</p>
+<dl class="method">
+<dt id="apptools.persistence.state_pickler.StateSetter.set">
+<code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">state</em>, <em class="sig-param">ignore=None</em>, <em class="sig-param">first=None</em>, <em class="sig-param">last=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#StateSetter.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.StateSetter.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the state of the object.</p>
+<p>This is to be used as a means to simplify loading the state of
+an object from its <cite>__setstate__</cite> method using the dictionary
+describing its state.  Note that before the state is set, the
+registered handlers for the particular class are called in
+order to upgrade the version of the state to the latest
+version.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<em>-</em>) – The object whose state is to be set.  If this is <cite>None</cite>
+(default) then the object is created.</p></li>
+<li><p><strong>state</strong> (<em>-</em>) – The dictionary representing the state of the object.</p></li>
+<li><p><strong>ignore</strong> (<em>-</em>) – The list of attributes specified in this list are ignored
+and the state of these attributes are not set (this excludes
+the ones specified in <cite>first</cite> and <cite>last</cite>).  If one specifies
+a ‘*’ then all attributes are ignored except the ones
+specified in <cite>first</cite> and <cite>last</cite>.</p></li>
+<li><p><strong>first</strong> (<em>-</em>) – The list of attributes specified in this list are set first (in
+order), before any other attributes are set.</p></li>
+<li><p><strong>last</strong> (<em>-</em>) – The list of attributes specified in this list are set last (in
+order), after all other attributes are set.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="apptools.persistence.state_pickler.StateSetterError">
+<em class="property">exception </em><code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">StateSetterError</code><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#StateSetterError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.StateSetterError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="apptools.persistence.state_pickler.StateTuple">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">StateTuple</code><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#StateTuple"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.StateTuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<p>Used to encapsulate a tuple stored in a <cite>State</cite> instance.  The
+has_instance attribute specifies if the tuple has an instance
+embedded in it.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="apptools.persistence.state_pickler.StateUnpickler">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">StateUnpickler</code><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#StateUnpickler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.StateUnpickler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Unpickles the state of an object saved using StatePickler.</p>
+<p>Please note that unlike the standard Unpickler, no instances of
+any user class are created.  The data for the state is obtained
+from the file or string, reference objects are setup to refer to
+the same state value and this state is returned in the form
+usually in the form of a dictionary.  For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="gp">... </span>        <span class="bp">self</span><span class="o">.</span><span class="n">attribute</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">StatePickler</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">up</span> <span class="o">=</span> <span class="n">StateUnpickler</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state</span> <span class="o">=</span> <span class="n">up</span><span class="o">.</span><span class="n">loads_state</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+<span class="go">&#39;State&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state</span><span class="o">.</span><span class="n">attribute</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">state</span><span class="o">.</span><span class="n">__metadata__</span>
+<span class="go">{&#39;class_name&#39;: &#39;A&#39;,</span>
+<span class="go"> &#39;has_instance&#39;: True,</span>
+<span class="go"> &#39;id&#39;: 0,</span>
+<span class="go"> &#39;initargs&#39;: (),</span>
+<span class="go"> &#39;module&#39;: &#39;__main__&#39;,</span>
+<span class="go"> &#39;type&#39;: &#39;instance&#39;,</span>
+<span class="go"> &#39;version&#39;: [((&#39;A&#39;, &#39;__main__&#39;), -1)]}</span>
+</pre></div>
+</div>
+<p>Note that the state is actually a <cite>State</cite> instance and is
+navigable just like the original object.  The details of the
+instance are stored in the <cite>__metadata__</cite> attribute.  This is
+highly convenient since it is possible for someone to view and
+modify the state very easily.</p>
+<dl class="method">
+<dt id="apptools.persistence.state_pickler.StateUnpickler.load_state">
+<code class="sig-name descname">load_state</code><span class="sig-paren">(</span><em class="sig-param">file</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#StateUnpickler.load_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.StateUnpickler.load_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the state of an object loaded from the pickled data
+in the given file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.persistence.state_pickler.StateUnpickler.loads_state">
+<code class="sig-name descname">loads_state</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#StateUnpickler.loads_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.StateUnpickler.loads_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the state of an object loaded from the pickled data
+in the given string.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="apptools.persistence.state_pickler.StateUnpicklerError">
+<em class="property">exception </em><code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">StateUnpicklerError</code><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#StateUnpicklerError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.StateUnpicklerError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.persistence.state_pickler.create_instance">
+<code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">create_instance</code><span class="sig-paren">(</span><em class="sig-param">state</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#create_instance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.create_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an instance from the state if possible.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.persistence.state_pickler.dump">
+<code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param">value</em>, <em class="sig-param">file</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pickles the state of the object (<cite>value</cite>) into the passed file
+(or file name).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.persistence.state_pickler.dumps">
+<code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">dumps</code><span class="sig-paren">(</span><em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#dumps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.dumps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pickles the state of the object (<cite>value</cite>) and returns a string.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.persistence.state_pickler.get_state">
+<code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">get_state</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#get_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.get_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the state of the object (usually as a dictionary).  The
+returned state may be used directy to set the state of the object
+via <cite>set_state</cite>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.persistence.state_pickler.gunzip_string">
+<code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">gunzip_string</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#gunzip_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.gunzip_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a gzipped string (<cite>data</cite>) this unzips the string and
+returns it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.persistence.state_pickler.gzip_string">
+<code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">gzip_string</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#gzip_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.gzip_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a string (<cite>data</cite>) this gzips the string and returns it.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.persistence.state_pickler.load_state">
+<code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">load_state</code><span class="sig-paren">(</span><em class="sig-param">file</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#load_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.load_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the state of an object loaded from the pickled data in
+the given file (or file name).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.persistence.state_pickler.loads_state">
+<code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">loads_state</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#loads_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.loads_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the state of an object loaded from the pickled data
+in the given string.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.persistence.state_pickler.set_state">
+<code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">set_state</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">state</em>, <em class="sig-param">ignore=None</em>, <em class="sig-param">first=None</em>, <em class="sig-param">last=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#set_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.set_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the state of the object.</p>
+<p>This is to be used as a means to simplify loading the state of
+an object from its <cite>__setstate__</cite> method using the dictionary
+describing its state.  Note that before the state is set, the
+registered handlers for the particular class are called in
+order to upgrade the version of the state to the latest
+version.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<em>-</em>) – The object whose state is to be set.  If this is <cite>None</cite>
+(default) then the object is created.</p></li>
+<li><p><strong>state</strong> (<em>-</em>) – The dictionary representing the state of the object.</p></li>
+<li><p><strong>ignore</strong> (<em>-</em>) – The list of attributes specified in this list are ignored
+and the state of these attributes are not set (this excludes
+the ones specified in <cite>first</cite> and <cite>last</cite>).  If one specifies
+a ‘*’ then all attributes are ignored except the ones
+specified in <cite>first</cite> and <cite>last</cite>.</p></li>
+<li><p><strong>first</strong> (<em>-</em>) – The list of attributes specified in this list are set first (in
+order), before any other attributes are set.</p></li>
+<li><p><strong>last</strong> (<em>-</em>) – The list of attributes specified in this list are set last (in
+order), after all other attributes are set.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.persistence.state_pickler.update_state">
+<code class="sig-prename descclassname">apptools.persistence.state_pickler.</code><code class="sig-name descname">update_state</code><span class="sig-paren">(</span><em class="sig-param">state</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/state_pickler.html#update_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.state_pickler.update_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the state of an object, this updates the state to the
+latest version using the handlers given in the version registry.
+The state is modified in-place.</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="module-apptools.persistence.updater">
+<span id="apptools-persistence-updater-module"></span><h2>apptools.persistence.updater module<a class="headerlink" href="#module-apptools.persistence.updater" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.persistence.updater.Updater">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.persistence.updater.</code><code class="sig-name descname">Updater</code><a class="reference internal" href="../_modules/apptools/persistence/updater.html#Updater"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.updater.Updater" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>An abstract class to provide functionality common to the updaters.</p>
+<dl class="method">
+<dt id="apptools.persistence.updater.Updater.get_latest">
+<code class="sig-name descname">get_latest</code><span class="sig-paren">(</span><em class="sig-param">module</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/updater.html#Updater.get_latest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.updater.Updater.get_latest" title="Permalink to this definition">¶</a></dt>
+<dd><p>The refactorings dictionary contains mappings between old and new
+module names.  Since we only bump the version number one increment
+there is only one possible answer.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.persistence.updater.Updater.strip">
+<code class="sig-name descname">strip</code><span class="sig-paren">(</span><em class="sig-param">string</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/updater.html#Updater.strip"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.updater.Updater.strip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.persistence.version_registry">
+<span id="apptools-persistence-version-registry-module"></span><h2>apptools.persistence.version_registry module<a class="headerlink" href="#module-apptools.persistence.version_registry" title="Permalink to this headline">¶</a></h2>
+<p>A version registry that manages handlers for different state
+versions.</p>
+<dl class="class">
+<dt id="apptools.persistence.version_registry.HandlerRegistry">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.persistence.version_registry.</code><code class="sig-name descname">HandlerRegistry</code><a class="reference internal" href="../_modules/apptools/persistence/version_registry.html#HandlerRegistry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.version_registry.HandlerRegistry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A simple version conversion handler registry.  Classes register
+handlers in order to convert the state version to the latest
+version.  When an object’s state is about to be set, the <cite>update</cite>
+method of the registy is called.  This in turn calls any handlers
+registered for the class/module and this handler is then called
+with the state and the version of the state.  The state is
+modified in-place by the handlers.</p>
+<dl class="method">
+<dt id="apptools.persistence.version_registry.HandlerRegistry.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param">class_name</em>, <em class="sig-param">module</em>, <em class="sig-param">handler</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/version_registry.html#HandlerRegistry.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.version_registry.HandlerRegistry.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register <cite>handler</cite> that handles versioning for class having
+class name (<cite>class_name</cite>) and module name (<cite>module</cite>).  The
+handler function will be passed the state and its version to fix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.persistence.version_registry.HandlerRegistry.unregister">
+<code class="sig-name descname">unregister</code><span class="sig-paren">(</span><em class="sig-param">class_name</em>, <em class="sig-param">module</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/version_registry.html#HandlerRegistry.unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.version_registry.HandlerRegistry.unregister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregisters any handlers for a class and module.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.persistence.version_registry.HandlerRegistry.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><em class="sig-param">state</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/version_registry.html#HandlerRegistry.update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.version_registry.HandlerRegistry.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the given state using the handlers.  Note that the
+state is modified in-place.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.persistence.version_registry.get_version">
+<code class="sig-prename descclassname">apptools.persistence.version_registry.</code><code class="sig-name descname">get_version</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/version_registry.html#get_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.version_registry.get_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Walks the class hierarchy and obtains the versions of the
+various classes and returns a list of tuples of the form
+((class_name, module), version) in reverse order of the MRO.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.persistence.versioned_unpickler">
+<span id="apptools-persistence-versioned-unpickler-module"></span><h2>apptools.persistence.versioned_unpickler module<a class="headerlink" href="#module-apptools.persistence.versioned_unpickler" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.persistence.versioned_unpickler.NewUnpickler">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.persistence.versioned_unpickler.</code><code class="sig-name descname">NewUnpickler</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">*</em>, <em class="sig-param">fix_imports=True</em>, <em class="sig-param">encoding='ASCII'</em>, <em class="sig-param">errors='strict'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/versioned_unpickler.html#NewUnpickler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.versioned_unpickler.NewUnpickler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pickle._Unpickler</span></code></p>
+<p>An unpickler that implements a two-stage pickling process to make it
+possible to unpickle complicated Python object hierarchies where the
+unserialized state of an object depends on the state of other objects in
+the same pickle.</p>
+<dl class="method">
+<dt id="apptools.persistence.versioned_unpickler.NewUnpickler.initialize">
+<code class="sig-name descname">initialize</code><span class="sig-paren">(</span><em class="sig-param">max_pass</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/versioned_unpickler.html#NewUnpickler.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.versioned_unpickler.NewUnpickler.initialize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="apptools.persistence.versioned_unpickler.NewUnpickler.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">max_pass=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/versioned_unpickler.html#NewUnpickler.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.versioned_unpickler.NewUnpickler.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read a pickled object representation from the open file.</p>
+<p>Return the reconstituted object hierarchy specified in the file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.persistence.versioned_unpickler.NewUnpickler.load_build">
+<em class="property">classmethod </em><code class="sig-name descname">load_build</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/versioned_unpickler.html#NewUnpickler.load_build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.versioned_unpickler.NewUnpickler.load_build" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="apptools.persistence.versioned_unpickler.VersionedUnpickler">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.persistence.versioned_unpickler.</code><code class="sig-name descname">VersionedUnpickler</code><span class="sig-paren">(</span><em class="sig-param">file</em>, <em class="sig-param">updater=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/versioned_unpickler.html#VersionedUnpickler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.versioned_unpickler.VersionedUnpickler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#apptools.persistence.versioned_unpickler.NewUnpickler" title="apptools.persistence.versioned_unpickler.NewUnpickler"><code class="xref py py-class docutils literal notranslate"><span class="pre">apptools.persistence.versioned_unpickler.NewUnpickler</span></code></a></p>
+<p>This class reads in a pickled file created at revision version ‘n’
+and then applies the transforms specified in the updater class to
+generate a new set of objects which are at revision version ‘n+1’.</p>
+<p>I decided to keep the loading of the updater out of this generic class
+because we will want updaters to be generated for each plugin’s type
+of project.</p>
+<p>This ensures that the VersionedUnpickler can remain ignorant about the
+actual version numbers - all it needs to do is upgrade one release.</p>
+<dl class="method">
+<dt id="apptools.persistence.versioned_unpickler.VersionedUnpickler.add_updater">
+<code class="sig-name descname">add_updater</code><span class="sig-paren">(</span><em class="sig-param">module</em>, <em class="sig-param">name</em>, <em class="sig-param">klass</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/versioned_unpickler.html#VersionedUnpickler.add_updater"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.versioned_unpickler.VersionedUnpickler.add_updater" title="Permalink to this definition">¶</a></dt>
+<dd><p>If there is an updater defined for this class we will add it to the
+class as the __setstate__ method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.persistence.versioned_unpickler.VersionedUnpickler.backup_setstate">
+<code class="sig-name descname">backup_setstate</code><span class="sig-paren">(</span><em class="sig-param">module</em>, <em class="sig-param">klass</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/versioned_unpickler.html#VersionedUnpickler.backup_setstate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.versioned_unpickler.VersionedUnpickler.backup_setstate" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the class has a user defined __setstate__ we back it up.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.persistence.versioned_unpickler.VersionedUnpickler.find_class">
+<code class="sig-name descname">find_class</code><span class="sig-paren">(</span><em class="sig-param">module</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/versioned_unpickler.html#VersionedUnpickler.find_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.versioned_unpickler.VersionedUnpickler.find_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overridden method from Unpickler.</p>
+<p>NB  __setstate__ is not called until later.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.persistence.versioned_unpickler.VersionedUnpickler.import_name">
+<code class="sig-name descname">import_name</code><span class="sig-paren">(</span><em class="sig-param">module</em>, <em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/versioned_unpickler.html#VersionedUnpickler.import_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.versioned_unpickler.VersionedUnpickler.import_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the class is needed for the latest version of the application then
+it should presumably exist.</p>
+<p>If the class no longer exists then we should perhaps return
+a proxy of the class.</p>
+<p>If the persisted file is at v1 say and the application is at v3 then
+objects that are required for v1 and v2 do not have to exist they only
+need to be placeholders for the state during an upgrade.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.persistence">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-apptools.persistence" title="Permalink to this headline">¶</a></h2>
+<p>Supports flexible pickling and unpickling of the state of a Python object
+to a dictionary. Part of the AppTools project of the Enthought Tool Suite.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">apptools.persistence package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-apptools.persistence.file_path">apptools.persistence.file_path module</a></li>
+<li><a class="reference internal" href="#module-apptools.persistence.project_loader">apptools.persistence.project_loader module</a></li>
+<li><a class="reference internal" href="#module-apptools.persistence.state_pickler">apptools.persistence.state_pickler module</a><ul>
+<li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#caveats">Caveats</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-apptools.persistence.updater">apptools.persistence.updater module</a></li>
+<li><a class="reference internal" href="#module-apptools.persistence.version_registry">apptools.persistence.version_registry module</a></li>
+<li><a class="reference internal" href="#module-apptools.persistence.versioned_unpickler">apptools.persistence.versioned_unpickler module</a></li>
+<li><a class="reference internal" href="#module-apptools.persistence">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.naming.trait_defs.html"
+                        title="previous chapter">apptools.naming.trait_defs package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.preferences.html"
+                        title="next chapter">apptools.preferences package</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.persistence.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Dec 17, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

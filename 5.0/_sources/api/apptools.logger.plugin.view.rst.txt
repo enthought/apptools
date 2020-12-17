@@ -1,0 +1,30 @@
+apptools.logger.plugin.view package
+===================================
+
+Submodules
+----------
+
+apptools.logger.plugin.view.logger\_preferences\_page module
+------------------------------------------------------------
+
+.. automodule:: apptools.logger.plugin.view.logger_preferences_page
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.logger.plugin.view.logger\_view module
+-----------------------------------------------
+
+.. automodule:: apptools.logger.plugin.view.logger_view
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.logger.plugin.view
+   :members:
+   :undoc-members:
+   :show-inheritance:

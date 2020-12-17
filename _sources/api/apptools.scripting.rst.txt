@@ -1,0 +1,62 @@
+apptools.scripting package
+==========================
+
+Submodules
+----------
+
+apptools.scripting.api module
+-----------------------------
+
+.. automodule:: apptools.scripting.api
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.scripting.package\_globals module
+------------------------------------------
+
+.. automodule:: apptools.scripting.package_globals
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.scripting.recordable module
+------------------------------------
+
+.. automodule:: apptools.scripting.recordable
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.scripting.recorder module
+----------------------------------
+
+.. automodule:: apptools.scripting.recorder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.scripting.recorder\_with\_ui module
+--------------------------------------------
+
+.. automodule:: apptools.scripting.recorder_with_ui
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.scripting.util module
+------------------------------
+
+.. automodule:: apptools.scripting.util
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.scripting
+   :members:
+   :undoc-members:
+   :show-inheritance:

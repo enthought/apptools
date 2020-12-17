@@ -1,0 +1,62 @@
+apptools.persistence package
+============================
+
+Submodules
+----------
+
+apptools.persistence.file\_path module
+--------------------------------------
+
+.. automodule:: apptools.persistence.file_path
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.persistence.project\_loader module
+-------------------------------------------
+
+.. automodule:: apptools.persistence.project_loader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.persistence.state\_pickler module
+------------------------------------------
+
+.. automodule:: apptools.persistence.state_pickler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.persistence.updater module
+-----------------------------------
+
+.. automodule:: apptools.persistence.updater
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.persistence.version\_registry module
+---------------------------------------------
+
+.. automodule:: apptools.persistence.version_registry
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.persistence.versioned\_unpickler module
+------------------------------------------------
+
+.. automodule:: apptools.persistence.versioned_unpickler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.persistence
+   :members:
+   :undoc-members:
+   :show-inheritance:

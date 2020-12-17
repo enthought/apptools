@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>Undo Framework &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="next" title="The selection service" href="../selection/selection.html" >
+    <link rel="prev" title="Automatic script recording" href="../scripting/introduction.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="../selection/selection.html" title="The selection service"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="../scripting/introduction.html" title="Automatic script recording"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <div class="section" id="undo-framework">
+<h1>Undo Framework<a class="headerlink" href="#undo-framework" title="Permalink to this headline">¶</a></h1>
+<p>The Undo Framework is a component of the Enthought Tool Suite that provides
+developers with an API that implements the standard pattern for do/undo/redo
+commands.</p>
+<p>The framework is completely configurable.  Alternate implementations of all
+major components can be provided if necessary.</p>
+<div class="section" id="framework-concepts">
+<h2>Framework Concepts<a class="headerlink" href="#framework-concepts" title="Permalink to this headline">¶</a></h2>
+<p>The following are the concepts supported by the framework.</p>
+<ul>
+<li><p>Command</p>
+<p>A command is an application defined operation that can be done (i.e.
+executed), undone (i.e. reverted) and redone (i.e. repeated).</p>
+<p>A command operates on some data and maintains sufficient state to allow it to
+revert or repeat a change to the data.</p>
+<p>Commands may be merged so that potentially long sequences of similar
+commands (e.g. to add a character to some text) can be collapsed into a
+single command (e.g. to add a word to some text).</p>
+</li>
+<li><p>Macro</p>
+<p>A macro is a sequence of commands that is treated as a single command when
+being undone or redone.</p>
+</li>
+<li><p>Command Stack</p>
+<p>A command is done by pushing it onto a command stack.  The last command can
+be undone and redone by calling appropriate command stack methods.  It is
+also possible to move the stack’s position to any point and the command stack
+will ensure that commands are undone or redone as required.</p>
+<p>A command stack maintains a <em>clean</em> state which is updated as commands are
+done and undone.  It may be explicitly set, for example when the data being
+manipulated by the commands is saved to disk.</p>
+<p>Canned PyFace actions are provided as wrappers around command stack methods
+to implement common menu items.</p>
+</li>
+<li><p>Undo Manager</p>
+<p>An undo manager is responsible for one or more command stacks and maintains
+a reference to the currently active stack.  It provides convenience undo and
+redo methods that operate on the currently active stack.</p>
+<p>An undo manager ensures that each command execution is allocated a unique
+sequence number, irrespective of which command stack it is pushed to.  Using
+this it is possible to synchronise multiple command stacks and restore them
+to a particular point in time.</p>
+<p>An undo manager will generate an event whenever the clean state of the active
+stack changes.  This can be used to maintain some sort of GUI status
+indicator to tell the user that their data has been modified since it was
+last saved.</p>
+</li>
+</ul>
+<p>Typically an application will have one undo manager and one undo stack for
+each data type that can be edited.  However this is not a requirement: how the
+command stack’s in particular are organised and linked (with the user
+manager’s sequence number) can need careful thought so as not to confuse the
+user - particularly in a plugin based application that may have many editors.</p>
+<p>To support this typical usage the PyFace <code class="docutils literal notranslate"><span class="pre">Workbench</span></code> class has an
+<code class="docutils literal notranslate"><span class="pre">undo_manager</span></code> trait and the PyFace <code class="docutils literal notranslate"><span class="pre">Editor</span></code> class has a <code class="docutils literal notranslate"><span class="pre">command_stack</span></code>
+trait.  Both are lazy loaded so can be completely ignored if they are not used.</p>
+</div>
+<div class="section" id="api-overview">
+<h2>API Overview<a class="headerlink" href="#api-overview" title="Permalink to this headline">¶</a></h2>
+<p>This section gives a brief overview of the various classes implemented in the
+framework.  The complete <a class="reference external" href="api/index.html">API</a> documentation is available as endo generated
+HTML.</p>
+<p>The <a class="reference external" href="https://svn.enthought.com/enthought/browser/AppTools/trunk/examples/undo/">example</a> application demonstrates all the major features of the framework.</p>
+<div class="section" id="undomanager">
+<h3>UndoManager<a class="headerlink" href="#undomanager" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">UndoManager</span></code> class is the default implementation of the <code class="docutils literal notranslate"><span class="pre">IUndoManager</span></code>
+interface.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">active_stack</span></code></dt><dd><p>This trait is a reference to the currently active command stack and may be
+None.  Typically it is set when some sort of editor becomes active.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">active_stack_clean</span></code></dt><dd><p>This boolean trait reflects the clean state of the currently active
+command stack.  It is intended to support a “document modified” indicator
+in the GUI.  It is maintained by the undo manager.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">stack_updated</span></code></dt><dd><p>This event is fired when the index of a command stack is changed.  A
+reference to the stack is passed as an argument to the event and may not
+be the currently active stack.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">undo_name</span></code></dt><dd><p>This Str trait is the name of the command that can be undone, and will
+be empty if there is no such command.  It is maintained by the undo
+manager.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">redo_name</span></code></dt><dd><p>This Str trait is the name of the command that can be redone, and will
+be empty if there is no such command.  It is maintained by the undo
+manager.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sequence_nr</span></code></dt><dd><p>This integer trait is the sequence number of the next command to be
+executed.  It is incremented immediately before a command’s <code class="docutils literal notranslate"><span class="pre">do()</span></code>
+method is called.  A particular sequence number identifies the state of
+all command stacks handled by the undo manager and allows those stacks to
+be set to the point they were at at a particular point in time.  In other
+words, the sequence number allows otherwise independent command stacks to
+be synchronised.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">undo()</span></code></dt><dd><p>This method calls the <code class="docutils literal notranslate"><span class="pre">undo()</span></code> method of the last command on the active
+command stack.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">redo()</span></code></dt><dd><p>This method calls the <code class="docutils literal notranslate"><span class="pre">redo()</span></code> method of the last undone command on the
+active command stack.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="commandstack">
+<h3>CommandStack<a class="headerlink" href="#commandstack" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">CommandStack</span></code> class is the default implementation of the
+<code class="docutils literal notranslate"><span class="pre">ICommandStack</span></code> interface.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">clean</span></code></dt><dd><p>This boolean traits reflects the clean state of the command stack.  Its
+value changes as commands are executed, undone and redone.  It may also be
+explicitly set to mark the current stack position as being clean (when
+data is saved to disk for example).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">undo_name</span></code></dt><dd><p>This Str trait is the name of the command that can be undone, and will
+be empty if there is no such command.  It is maintained by the command
+stack.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">redo_name</span></code></dt><dd><p>This Str trait is the name of the command that can be redone, and will
+be empty if there is no such command.  It is maintained by the command
+stack.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">undo_manager</span></code></dt><dd><p>This trait is a reference to the undo manager that manages the command
+stack.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">push(command)</span></code></dt><dd><p>This method executes the given command by calling its <code class="docutils literal notranslate"><span class="pre">do()</span></code> method.
+Any value returned by <code class="docutils literal notranslate"><span class="pre">do()</span></code> is returned by <code class="docutils literal notranslate"><span class="pre">push()</span></code>.  If the command
+couldn’t be merged with the previous one then it is saved on the command
+stack.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">undo(sequence_nr=0)</span></code></dt><dd><p>This method undoes the last command.  If a sequence number is given then
+all commands are undone up to an including the sequence number.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">redo(sequence_nr=0)</span></code></dt><dd><p>This method redoes the last command and returns any result.  If a sequence
+number is given then all commands are redone up to an including the
+sequence number and any result of the last of these is returned.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">clear()</span></code></dt><dd><p>This method clears the command stack, without undoing or redoing any
+commands, and leaves the stack in a clean state.  It is typically used
+when all changes to the data have been abandoned.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">begin_macro(name)</span></code></dt><dd><p>This method begins a macro by creating an empty command with the given
+name.  The commands passed to all subsequent calls to <code class="docutils literal notranslate"><span class="pre">push()</span></code> will be
+contained in the macro until the next call to <code class="docutils literal notranslate"><span class="pre">end_macro()</span></code>.  Macros may
+be nested.  The command stack is disabled (ie. nothing can be undone or
+redone) while a macro is being created (ie. while there is an outstanding
+<code class="docutils literal notranslate"><span class="pre">end_macro()</span></code> call).</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">end_macro()</span></code></dt><dd><p>This method ends the current macro.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="icommand">
+<h3>ICommand<a class="headerlink" href="#icommand" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">ICommand</span></code> interface defines the interface that must be implemented by
+any undoable/redoable command.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">data</span></code></dt><dd><p>This optional trait is a reference to the data object that the command
+operates on.  It is not used by the framework itself.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">name</span></code></dt><dd><p>This Str trait is the name of the command as it will appear in any GUI
+element (e.g. in the text of an undo and redo menu entry).  It may include
+<code class="docutils literal notranslate"><span class="pre">&amp;</span></code> to indicate a keyboard shortcut which will be automatically removed
+whenever it is inappropriate.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">__init__(*args)</span></code></dt><dd><p>If the command takes arguments then the command must ensure that deep
+copies should be made if appropriate.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">do()</span></code></dt><dd><p>This method is called by a command stack to execute the command and to
+return any result.  The command must save any state necessary for the
+<code class="docutils literal notranslate"><span class="pre">undo()</span></code> and <code class="docutils literal notranslate"><span class="pre">redo()</span></code> methods to work.  It is guaranteed that this
+will only ever be called once and that it will be called before any call
+to <code class="docutils literal notranslate"><span class="pre">undo()</span></code> or <code class="docutils literal notranslate"><span class="pre">redo()</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">undo()</span></code></dt><dd><p>This method is called by a command stack to undo the command.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">redo()</span></code></dt><dd><p>This method is called by a command stack to redo the command and to return
+any result.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">merge(other)</span></code></dt><dd><p>This method is called by the command stack to try and merge the <code class="docutils literal notranslate"><span class="pre">other</span></code>
+command with this one.  True should be returned if the commands were
+merged.  If the commands are merged then <code class="docutils literal notranslate"><span class="pre">other</span></code> will not be placed on
+the command stack.  A subsequent undo or redo of this modified command
+must have the same effect as the two original commands.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="abstractcommand">
+<h3>AbstractCommand<a class="headerlink" href="#abstractcommand" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">AbstractCommand</span></code> is an abstract base class that implements the <code class="docutils literal notranslate"><span class="pre">ICommand</span></code>
+interface.  It provides a default implementation of the <code class="docutils literal notranslate"><span class="pre">merge()</span></code> method.</p>
+</div>
+<div class="section" id="commandaction">
+<h3>CommandAction<a class="headerlink" href="#commandaction" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">CommandAction</span></code> class is a sub-class of the PyFace <code class="docutils literal notranslate"><span class="pre">Action</span></code> class that
+is used to wrap commands.</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">command</span></code></dt><dd><p>This callable trait must be set to a factory that will return an object
+that implements <code class="docutils literal notranslate"><span class="pre">ICommand</span></code>.  It will be called when the action is invoked
+and the object created pushed onto the command stack.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">command_stack</span></code></dt><dd><p>This instance trait must be set to the command stack that commands invoked
+by the action are pushed to.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">data</span></code></dt><dd><p>This optional trait is a reference to the data object that will be passed
+to the <code class="docutils literal notranslate"><span class="pre">command</span></code> factory when it is called.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="undoaction">
+<h3>UndoAction<a class="headerlink" href="#undoaction" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">UndoAction</span></code> class is a canned PyFace action that undoes the last
+command of the active command stack.</p>
+</div>
+<div class="section" id="redoaction">
+<h3>RedoAction<a class="headerlink" href="#redoaction" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">RedoAction</span></code> class is a canned PyFace action that redoes the last
+command undone of the active command stack.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Undo Framework</a><ul>
+<li><a class="reference internal" href="#framework-concepts">Framework Concepts</a></li>
+<li><a class="reference internal" href="#api-overview">API Overview</a><ul>
+<li><a class="reference internal" href="#undomanager">UndoManager</a></li>
+<li><a class="reference internal" href="#commandstack">CommandStack</a></li>
+<li><a class="reference internal" href="#icommand">ICommand</a></li>
+<li><a class="reference internal" href="#abstractcommand">AbstractCommand</a></li>
+<li><a class="reference internal" href="#commandaction">CommandAction</a></li>
+<li><a class="reference internal" href="#undoaction">UndoAction</a></li>
+<li><a class="reference internal" href="#redoaction">RedoAction</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../scripting/introduction.html"
+                        title="previous chapter">Automatic script recording</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../selection/selection.html"
+                        title="next chapter">The selection service</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/undo/Introduction.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Dec 17, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

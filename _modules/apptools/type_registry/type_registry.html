@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.type_registry.type_registry &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <h1>Source code for apptools.type_registry.type_registry</h1><div class="highlight"><pre>
+<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+
+
+<div class="viewcode-block" id="get_mro"><a class="viewcode-back" href="../../../api/apptools.type_registry.html#apptools.type_registry.type_registry.get_mro">[docs]</a><span class="k">def</span> <span class="nf">get_mro</span><span class="p">(</span><span class="n">obj_class</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a reasonable method resolution order of a class and its</span>
+<span class="sd">    superclasses for both old-style and new-style classes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj_class</span><span class="p">,</span> <span class="s2">&quot;__mro__&quot;</span><span class="p">):</span>
+        <span class="c1"># Old-style class. Mix in object to make a fake new-style class.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">obj_class</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj_class</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="p">(</span><span class="n">obj_class</span><span class="p">,</span> <span class="nb">object</span><span class="p">),</span> <span class="p">{})</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="c1"># Old-style extension type that does not descend from object.</span>
+            <span class="n">mro</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj_class</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mro</span> <span class="o">=</span> <span class="n">obj_class</span><span class="o">.</span><span class="vm">__mro__</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mro</span> <span class="o">=</span> <span class="n">obj_class</span><span class="o">.</span><span class="vm">__mro__</span>
+    <span class="k">return</span> <span class="n">mro</span></div>
+
+
+<span class="k">def</span> <span class="nf">_mod_name_key</span><span class="p">(</span><span class="n">typ</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return a &#39;__module__:__name__&#39; key for a type.&quot;&quot;&quot;</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="s2">&quot;__module__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="s2">&quot;__name__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">:</span><span class="si">{1}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">key</span>
+
+
+<div class="viewcode-block" id="TypeRegistry"><a class="viewcode-back" href="../../../api/apptools.type_registry.html#apptools.type_registry.type_registry.TypeRegistry">[docs]</a><span class="k">class</span> <span class="nc">TypeRegistry</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Register objects for types.</span>
+
+<span class="sd">    Each type maintains a stack of registered objects that can be pushed and</span>
+<span class="sd">    popped.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Map types to lists of registered objects. The last is the most</span>
+        <span class="c1"># current and will be the one that is returned on lookup.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Map &#39;__module__:__name__&#39; strings to lists of registered objects.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_map</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Map abstract base classes to lists of registered objects.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">abc_map</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1">#### TypeRegistry public interface ########################################</span>
+
+<div class="viewcode-block" id="TypeRegistry.push"><a class="viewcode-back" href="../../../api/apptools.type_registry.html#apptools.type_registry.type_registry.TypeRegistry.push">[docs]</a>    <span class="k">def</span> <span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Push an object onto the stack for the given type.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        typ : type or &#39;__module__:__name__&#39; string for a type</span>
+<span class="sd">        obj : object</span>
+<span class="sd">            The object to register.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="c1"># Check the cached types.</span>
+            <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">_mod_name_key</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">==</span> <span class="n">typ</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="p">[</span><span class="bp">cls</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">typ</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_map</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">name_map</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">name_map</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">typ</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TypeRegistry.push_abc"><a class="viewcode-back" href="../../../api/apptools.type_registry.html#apptools.type_registry.type_registry.TypeRegistry.push_abc">[docs]</a>    <span class="k">def</span> <span class="nf">push_abc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Push an object onto the stack for the given ABC.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        typ : abc.ABCMeta</span>
+<span class="sd">        obj : object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">typ</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">abc_map</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">abc_map</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">abc_map</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TypeRegistry.pop"><a class="viewcode-back" href="../../../api/apptools.type_registry.html#apptools.type_registry.type_registry.TypeRegistry.pop">[docs]</a>    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pop a registered object for the given type.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        typ : type or &#39;__module__:__name__&#39; string for a type</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        obj : object</span>
+<span class="sd">            The last registered object for the type.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        KeyError if the type is not registered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">typ</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_map</span><span class="p">:</span>
+                <span class="c1"># We may have it cached in the type map. We will have to</span>
+                <span class="c1"># iterate over all of the types to check.</span>
+                <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">_mod_name_key</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">==</span> <span class="n">typ</span><span class="p">:</span>
+                        <span class="n">old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pop_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span>
+                        <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;No registered value for </span><span class="si">{0!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">typ</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pop_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name_map</span><span class="p">,</span> <span class="n">typ</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">typ</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="p">:</span>
+                <span class="n">old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pop_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="p">,</span> <span class="n">typ</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">typ</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">abc_map</span><span class="p">:</span>
+                <span class="n">old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pop_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">abc_map</span><span class="p">,</span> <span class="n">typ</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pop_value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name_map</span><span class="p">,</span> <span class="n">_mod_name_key</span><span class="p">(</span><span class="n">typ</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">old</span></div>
+
+<div class="viewcode-block" id="TypeRegistry.lookup"><a class="viewcode-back" href="../../../api/apptools.type_registry.html#apptools.type_registry.type_registry.TypeRegistry.lookup">[docs]</a>    <span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Look up the registered object for the given instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instance : object</span>
+<span class="sd">            An instance of a possibly registered type.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        obj : object</span>
+<span class="sd">            The registered object for the type of the instance, one of the</span>
+<span class="sd">            type&#39;s superclasses, or else one of the ABCs the type implements.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        KeyError if the instance&#39;s type has not been registered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup_by_type</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">instance</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="TypeRegistry.lookup_by_type"><a class="viewcode-back" href="../../../api/apptools.type_registry.html#apptools.type_registry.type_registry.TypeRegistry.lookup_by_type">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_by_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Look up the registered object for a type.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        typ  : type</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        obj : object</span>
+<span class="sd">            The registered object for the type, one of its superclasses, or</span>
+<span class="sd">            else one of the ABCs it implements.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        KeyError if the type has not been registered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup_all_by_type</span><span class="p">(</span><span class="n">typ</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="TypeRegistry.lookup_all"><a class="viewcode-back" href="../../../api/apptools.type_registry.html#apptools.type_registry.type_registry.TypeRegistry.lookup_all">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Look up all the registered objects for the given instance.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        instance : object</span>
+<span class="sd">            An instance of a possibly registered type.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        objs : list of objects</span>
+<span class="sd">            The list of registered objects for the instance. If the given</span>
+<span class="sd">            instance is not registered, its superclasses are searched. If none</span>
+<span class="sd">            of the superclasses are registered, search the possible ABCs.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        KeyError if the instance&#39;s type has not been registered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup_all_by_type</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">instance</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="TypeRegistry.lookup_all_by_type"><a class="viewcode-back" href="../../../api/apptools.type_registry.html#apptools.type_registry.type_registry.TypeRegistry.lookup_all_by_type">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_all_by_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Look up all the registered objects for a type.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        typ  : type</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        objs : list of objects</span>
+<span class="sd">            The list of registered objects for the type. If the given type is</span>
+<span class="sd">            not registered, its superclasses are searched. If none of the</span>
+<span class="sd">            superclasses are registered, search the possible ABCs.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        KeyError if the type has not been registered.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># If a concrete superclass is registered use it.</span>
+        <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">get_mro</span><span class="p">(</span><span class="n">typ</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_name_map</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+                <span class="n">objs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="p">[</span><span class="bp">cls</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">objs</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">objs</span>
+
+        <span class="c1"># None of the concrete superclasses. Check the ABCs.</span>
+        <span class="k">for</span> <span class="n">abstract</span><span class="p">,</span> <span class="n">objs</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">abc_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">abstract</span><span class="p">)</span> <span class="ow">and</span> <span class="n">objs</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">objs</span>
+
+        <span class="c1"># If we have reached here, the lookup failed.</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;No registered value for </span><span class="si">{0!r}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">typ</span><span class="p">))</span></div>
+
+    <span class="c1">#### Private implementation ###############################################</span>
+
+    <span class="k">def</span> <span class="nf">_pop_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pop a value from a keyed stack in a mapping, taking care to remove</span>
+<span class="sd">        the key if the stack is depleted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">objs</span> <span class="o">=</span> <span class="n">mapping</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="n">old</span> <span class="o">=</span> <span class="n">objs</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">objs</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">mapping</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">old</span>
+
+    <span class="k">def</span> <span class="nf">_in_name_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if the given type is specified in the name map.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        typ : type</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        is_in_name_map : bool</span>
+<span class="sd">            If True, the registered value will be moved over to the type map</span>
+<span class="sd">            for future lookups.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">_mod_name_key</span><span class="p">(</span><span class="n">typ</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_map</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="p">[</span><span class="n">typ</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_map</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="LazyRegistry"><a class="viewcode-back" href="../../../api/apptools.type_registry.html#apptools.type_registry.type_registry.LazyRegistry">[docs]</a><span class="k">class</span> <span class="nc">LazyRegistry</span><span class="p">(</span><span class="n">TypeRegistry</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A type registry that will lazily import the registered objects.</span>
+
+<span class="sd">    Register &#39;__module__:__name__&#39; strings for the lazily imported objects.</span>
+<span class="sd">    These will only be imported when the matching type is looked up. The module</span>
+<span class="sd">    name must be a fully-qualified absolute name with all of the parent</span>
+<span class="sd">    packages specified.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LazyRegistry.lookup_by_type"><a class="viewcode-back" href="../../../api/apptools.type_registry.html#apptools.type_registry.type_registry.LazyRegistry.lookup_by_type">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_by_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Look up the registered object for a type.&quot;&quot;&quot;</span>
+        <span class="n">mod_name</span> <span class="o">=</span> <span class="n">TypeRegistry</span><span class="o">.</span><span class="n">lookup_by_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">typ</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_import_object</span><span class="p">(</span><span class="n">mod_name</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_import_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mod_object</span><span class="p">):</span>
+        <span class="n">module</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">mod_object</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="nb">__import__</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="p">{},</span> <span class="p">{},</span> <span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Dec 17, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

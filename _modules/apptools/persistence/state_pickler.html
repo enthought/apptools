@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.persistence.state_pickler &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <h1>Source code for apptools.persistence.state_pickler</h1><div class="highlight"><pre>
+<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="sd">&quot;&quot;&quot;This module provides code that allows one to pickle the state of a</span>
+<span class="sd">Python object to a dictionary.</span>
+
+<span class="sd">The motivation for this is simple.  The standard Python</span>
+<span class="sd">pickler/unpickler is best used to pickle simple objects and does not</span>
+<span class="sd">work too well for complex code.  Specifically, there are two major</span>
+<span class="sd">problems (1) the pickle file format is not easy to edit with a text</span>
+<span class="sd">editor and (2) when a pickle is unpickled, it creates all the</span>
+<span class="sd">necessary objects and sets the state of these objects.</span>
+
+<span class="sd">Issue (2) might not appear to be a problem.  However, often, the</span>
+<span class="sd">determination of the entire &#39;state&#39; of an application requires the</span>
+<span class="sd">knowledge of the state of many objects that are not really in the</span>
+<span class="sd">users concern.  The user would ideally like to pickle just what he</span>
+<span class="sd">thinks is relevant.  Now, given that the user is not going to save the</span>
+<span class="sd">entire state of the application, the use of pickle is insufficient</span>
+<span class="sd">since the state is no longer completely known (or worth knowing).  The</span>
+<span class="sd">default `Unpickler` recreates the objects and the typical</span>
+<span class="sd">implementation of `__setstate__` is usually to simply update the</span>
+<span class="sd">object&#39;s `__dict__` attribute.  This is inadequate because the pickled</span>
+<span class="sd">information is taken out of the real context when it was saved.</span>
+
+<span class="sd">The `StatePickler` basically pickles the &#39;state&#39; of an object into a</span>
+<span class="sd">large dictionary.  This pickled data may be easily unpickled and</span>
+<span class="sd">modified on the interpreter or edited with a text editor</span>
+<span class="sd">(`pprint.saferepr` is a friend).  The second problem is also</span>
+<span class="sd">eliminated.  When this state is unpickled using `StateUnpickler`, what</span>
+<span class="sd">you get is a special dictionary (a `State` instance).  This allows one</span>
+<span class="sd">to navigate the state just like the original object.  Its up to the</span>
+<span class="sd">user to create any new objects and set their states using this</span>
+<span class="sd">information.  This allows for a lot of flexibility while allowing one</span>
+<span class="sd">to save and set the state of (almost) any Python object.</span>
+
+<span class="sd">The `StateSetter` class helps set the state of a known instance.  When</span>
+<span class="sd">setting the state of an instance it checks to see if there is a</span>
+<span class="sd">`__set_pure_state__` method that in turn calls `StateSetter.set`</span>
+<span class="sd">appropriately.</span>
+
+<span class="sd">Additionally, there is support for versioning.  The class&#39; version is</span>
+<span class="sd">obtain from the `__version__` class attribute.  This version along</span>
+<span class="sd">with the versions of the bases of a class is embedded into the</span>
+<span class="sd">metadata of the state and stored.  By using `version_registry.py` a</span>
+<span class="sd">user may register a handler for a particular class and module.  When</span>
+<span class="sd">the state of an object is set using `StateSetter.set_state`, then</span>
+<span class="sd">these handlers are called in reverse order of their MRO.  This gives</span>
+<span class="sd">the handler an opportunity to upgrade the state depending on its</span>
+<span class="sd">version.  Builtin classes are not scanned for versions.  If a class</span>
+<span class="sd">has no version, then by default it is assumed to be -1.</span>
+
+
+<span class="sd">Example::</span>
+
+<span class="sd">  &gt;&gt;&gt; class A:</span>
+<span class="sd">  ...    def __init__(self):</span>
+<span class="sd">  ...        self.a = &#39;a&#39;</span>
+<span class="sd">  ...</span>
+<span class="sd">  &gt;&gt;&gt; a = A()</span>
+<span class="sd">  &gt;&gt;&gt; a.a = 100</span>
+<span class="sd">  &gt;&gt;&gt; import state_pickler</span>
+<span class="sd">  &gt;&gt;&gt; s = state_pickler.dumps(a)               # Dump the state of `a`.</span>
+<span class="sd">  &gt;&gt;&gt; state = state_pickler.loads_state(s)     # Get the state back.</span>
+<span class="sd">  &gt;&gt;&gt; b = state_pickler.create_instance(state) # Create the object.</span>
+<span class="sd">  &gt;&gt;&gt; state_pickler.set_state(b, state)        # Set the object&#39;s state.</span>
+<span class="sd">  &gt;&gt;&gt; assert b.a == 100</span>
+
+
+<span class="sd">Features</span>
+<span class="sd">--------</span>
+
+<span class="sd"> - The output is a plain old dictionary so is easy to parse, edit etc.</span>
+<span class="sd"> - Handles references to avoid duplication.</span>
+<span class="sd"> - Gzips Numeric arrays when dumping them.</span>
+<span class="sd"> - Support for versioning.</span>
+
+
+<span class="sd">Caveats</span>
+<span class="sd">-------</span>
+
+<span class="sd"> - Does not pickle a whole bunch of stuff including code objects and</span>
+<span class="sd">   functions.</span>
+<span class="sd"> - The output is a pure dictionary and does not contain instances.  So</span>
+<span class="sd">   using this *as it is* in `__setstate__` will not work.  Instead</span>
+<span class="sd">   define a `__set_pure_state__` and use the `StateSetter` class or</span>
+<span class="sd">   the `set_state` function provided by this module.</span>
+
+
+<span class="sd">Notes</span>
+<span class="sd">-----</span>
+
+<span class="sd">  Browsing the code from XMarshaL_ and pickle.py proved useful for</span>
+<span class="sd">  ideas.  None of the code is taken from there though.</span>
+
+<span class="sd">.. _XMarshaL:  http://www.dezentral.de/soft/XMarshaL</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Author: Prabhu Ramachandran &lt;prabhu_r@users.sf.net&gt;</span>
+<span class="c1"># Copyright (c) 2005-2015, Enthought, Inc.</span>
+<span class="c1"># License: BSD Style.</span>
+
+<span class="c1"># Standard library imports.</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">gzip</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">BytesIO</span><span class="p">,</span> <span class="n">StringIO</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">version_registry</span>
+<span class="kn">from</span> <span class="nn">.file_path</span> <span class="k">import</span> <span class="n">FilePath</span>
+
+<span class="n">NumpyArrayType</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([]))</span>
+
+
+<div class="viewcode-block" id="gzip_string"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.gzip_string">[docs]</a><span class="k">def</span> <span class="nf">gzip_string</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Given a string (`data`) this gzips the string and returns it.&quot;&quot;&quot;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">()</span>
+    <span class="n">writer</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">GzipFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">fileobj</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="gunzip_string"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.gunzip_string">[docs]</a><span class="k">def</span> <span class="nf">gunzip_string</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Given a gzipped string (`data`) this unzips the string and</span>
+<span class="sd">    returns it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">writer</span> <span class="o">=</span> <span class="n">gzip</span><span class="o">.</span><span class="n">GzipFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rb&quot;</span><span class="p">,</span> <span class="n">fileobj</span><span class="o">=</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">writer</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="StatePicklerError"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.StatePicklerError">[docs]</a><span class="k">class</span> <span class="nc">StatePicklerError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="StateUnpicklerError"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.StateUnpicklerError">[docs]</a><span class="k">class</span> <span class="nc">StateUnpicklerError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="StateSetterError"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.StateSetterError">[docs]</a><span class="k">class</span> <span class="nc">StateSetterError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+<span class="c1">######################################################################</span>
+<span class="c1"># `State` class</span>
+<span class="c1">######################################################################</span>
+<div class="viewcode-block" id="State"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.State">[docs]</a><span class="k">class</span> <span class="nc">State</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Used to encapsulate the state of an instance in a very</span>
+<span class="sd">    convenient form.  The &#39;__metadata__&#39; attribute/key is a dictionary</span>
+<span class="sd">    that has class specific details like the class name, module name</span>
+<span class="sd">    etc.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="nb">dict</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">=</span> <span class="bp">self</span></div>
+
+
+<span class="c1">######################################################################</span>
+<span class="c1"># `StateDict` class</span>
+<span class="c1">######################################################################</span>
+<div class="viewcode-block" id="StateDict"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.StateDict">[docs]</a><span class="k">class</span> <span class="nc">StateDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Used to encapsulate a dictionary stored in a `State` instance.</span>
+<span class="sd">    The has_instance attribute specifies if the dict has an instance</span>
+<span class="sd">    embedded in it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="nb">dict</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_instance</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<span class="c1">######################################################################</span>
+<span class="c1"># `StateList` class</span>
+<span class="c1">######################################################################</span>
+<div class="viewcode-block" id="StateList"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.StateList">[docs]</a><span class="k">class</span> <span class="nc">StateList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Used to encapsulate a list stored in a `State` instance.  The</span>
+<span class="sd">    has_instance attribute specifies if the list has an instance</span>
+<span class="sd">    embedded in it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">seq</span><span class="p">:</span>
+            <span class="nb">list</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">list</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_instance</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+<span class="c1">######################################################################</span>
+<span class="c1"># `StateTuple` class</span>
+<span class="c1">######################################################################</span>
+<div class="viewcode-block" id="StateTuple"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.StateTuple">[docs]</a><span class="k">class</span> <span class="nc">StateTuple</span><span class="p">(</span><span class="nb">tuple</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Used to encapsulate a tuple stored in a `State` instance.  The</span>
+<span class="sd">    has_instance attribute specifies if the tuple has an instance</span>
+<span class="sd">    embedded in it.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">seq</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">seq</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">StateTuple</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">StateTuple</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">has_instance</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+
+<span class="c1">######################################################################</span>
+<span class="c1"># `StatePickler` class</span>
+<span class="c1">######################################################################</span>
+<div class="viewcode-block" id="StatePickler"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.StatePickler">[docs]</a><span class="k">class</span> <span class="nc">StatePickler</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Pickles the state of an object into a dictionary.  The</span>
+<span class="sd">    dictionary is itself either saved as a pickled file (`dump`) or</span>
+<span class="sd">    pickled string (`dumps`).  Alternatively, the `dump_state` method</span>
+<span class="sd">    will return the dictionary that is pickled.</span>
+
+<span class="sd">    The format of the state dict is quite strightfoward.  Basic types</span>
+<span class="sd">    (bool, int, long, float, complex, None, string) are</span>
+<span class="sd">    represented as they are.  Everything else is stored as a</span>
+<span class="sd">    dictionary containing metadata information on the object&#39;s type</span>
+<span class="sd">    etc. and also the actual object in the &#39;data&#39; key.  For example::</span>
+
+<span class="sd">        &gt;&gt;&gt; p = StatePickler()</span>
+<span class="sd">        &gt;&gt;&gt; p.dump_state(1)</span>
+<span class="sd">        1</span>
+<span class="sd">        &gt;&gt;&gt; l = [1,2.0, None, [1,2,3]]</span>
+<span class="sd">        &gt;&gt;&gt; p.dump_state(l)</span>
+<span class="sd">        {&#39;data&#39;: [1, 2.0, None, {&#39;data&#39;: [1, 2, 3], &#39;type&#39;: &#39;list&#39;, &#39;id&#39;: 1}],</span>
+<span class="sd">         &#39;id&#39;: 0,</span>
+<span class="sd">         &#39;type&#39;: &#39;list&#39;}</span>
+
+<span class="sd">    Classes are also represented similarly.  The state in this case is</span>
+<span class="sd">    obtained from the `__getstate__` method or from the `__dict__`.</span>
+<span class="sd">    Here is an example::</span>
+
+<span class="sd">        &gt;&gt;&gt; class A:</span>
+<span class="sd">        ...     __version__ = 1  # State version</span>
+<span class="sd">        ...     def __init__(self):</span>
+<span class="sd">        ...         self.attribute = 1</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; a = A()</span>
+<span class="sd">        &gt;&gt;&gt; p = StatePickler()</span>
+<span class="sd">        &gt;&gt;&gt; p.dump_state(a)</span>
+<span class="sd">        {&#39;class_name&#39;: &#39;A&#39;,</span>
+<span class="sd">         &#39;data&#39;: {&#39;data&#39;: {&#39;attribute&#39;: 1}, &#39;type&#39;: &#39;dict&#39;, &#39;id&#39;: 2},</span>
+<span class="sd">         &#39;id&#39;: 0,</span>
+<span class="sd">         &#39;initargs&#39;: {&#39;data&#39;: (), &#39;type&#39;: &#39;tuple&#39;, &#39;id&#39;: 1},</span>
+<span class="sd">         &#39;module&#39;: &#39;__main__&#39;,</span>
+<span class="sd">         &#39;type&#39;: &#39;instance&#39;,</span>
+<span class="sd">         &#39;version&#39;: [((&#39;A&#39;, &#39;__main__&#39;), 1)]}</span>
+
+<span class="sd">    When pickling data, references are taken care of.  Numeric arrays</span>
+<span class="sd">    can be pickled and are stored as a gzipped base64 encoded string.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear</span><span class="p">()</span>
+        <span class="n">type_map</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nb">bool</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_basic_type</span><span class="p">,</span>
+            <span class="nb">complex</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_basic_type</span><span class="p">,</span>
+            <span class="nb">float</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_basic_type</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_basic_type</span><span class="p">,</span>
+            <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_basic_type</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_basic_type</span><span class="p">,</span>
+            <span class="nb">bytes</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_basic_type</span><span class="p">,</span>
+            <span class="nb">tuple</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_tuple</span><span class="p">,</span>
+            <span class="nb">list</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_list</span><span class="p">,</span>
+            <span class="nb">dict</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_dict</span><span class="p">,</span>
+            <span class="n">NumpyArrayType</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_numeric</span><span class="p">,</span>
+            <span class="n">State</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_state</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span> <span class="o">=</span> <span class="n">type_map</span>
+
+<div class="viewcode-block" id="StatePickler.dump"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.StatePickler.dump">[docs]</a>    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pickles the state of the object (`value`) into the passed</span>
+<span class="sd">        file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Store the file name we are writing to so we can munge</span>
+            <span class="c1"># file paths suitably.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file_name</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">file</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StatePickler.dumps"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.StatePickler.dumps">[docs]</a>    <span class="k">def</span> <span class="nf">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Pickles the state of the object (`value`) and returns a</span>
+<span class="sd">        string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">value</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="StatePickler.dump_state"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.StatePickler.dump_state">[docs]</a>    <span class="k">def</span> <span class="nf">dump_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a dictionary or a basic type representing the</span>
+<span class="sd">        complete state of the object (`value`).</span>
+
+<span class="sd">        This value is pickled by the `dump` and `dumps` methods.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+    <span class="c1">######################################################################</span>
+    <span class="c1"># Non-public methods</span>
+    <span class="c1">######################################################################</span>
+    <span class="k">def</span> <span class="nf">_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Stores the file name of the file being used to dump the</span>
+        <span class="c1"># state.  This is used to change any embedded paths relative</span>
+        <span class="c1"># to the saved file.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="c1"># Caches id&#39;s to handle references.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obj_cache</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Misc cache to cache things that are not persistent.  For</span>
+        <span class="c1"># example, object.__getstate__()/__getinitargs__() usually</span>
+        <span class="c1"># returns a copy of a dict/tuple that could possibly be reused</span>
+        <span class="c1"># on another object&#39;s __getstate__.  Caching these prevents</span>
+        <span class="c1"># some wierd problems with the `id` of the object.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_misc_cache</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">_flush_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Checks if the object has traits and ensures that the traits</span>
+<span class="sd">        are set in the `__dict__` so we can pickle it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Not needed with Traits3.</span>
+
+    <span class="k">def</span> <span class="nf">_do</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="n">obj_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_id</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj_cache</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_reference</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">obj_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="p">[</span><span class="n">obj_type</span><span class="p">](</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+            <span class="c1"># Takes care of StateTuples.</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_tuple</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="c1"># Takes care of TraitListObjects.</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_list</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="c1"># Takes care of TraitDictObjects.</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_dict</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;__dict__&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_instance</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="nb">id</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">key</span>
+
+    <span class="k">def</span> <span class="nf">_register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_id</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj_cache</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cache</span><span class="p">)</span>
+        <span class="n">cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
+        <span class="k">return</span> <span class="n">idx</span>
+
+    <span class="k">def</span> <span class="nf">_do_basic_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">_do_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_id</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj_cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;reference&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">idx</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_do_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="c1"># Flush out the traits.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_flush_traits</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># Setup the relative paths of FilePaths before dumping.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_name</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">FilePath</span><span class="p">):</span>
+            <span class="n">value</span><span class="o">.</span><span class="n">set_relative</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">)</span>
+
+        <span class="c1"># Get the initargs.</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;__getinitargs__&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">__getinitargs__</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">__getinitargs__</span><span class="p">()</span>
+
+        <span class="c1"># Get the object state.</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;__get_pure_state__&quot;</span><span class="p">):</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">__get_pure_state__</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;__getstate__&quot;</span><span class="p">):</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="vm">__dict__</span>
+
+        <span class="n">state</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;__traits_version__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># Cache the args and state since they are likely to be gc&#39;d.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_misc_cache</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">args</span><span class="p">,</span> <span class="n">state</span><span class="p">])</span>
+        <span class="c1"># Register and process.</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">args_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+        <span class="c1"># Get the version of the object.</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">version_registry</span><span class="o">.</span><span class="n">get_version</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">module</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__module__</span>
+        <span class="n">class_name</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;instance&quot;</span><span class="p">,</span>
+            <span class="n">module</span><span class="o">=</span><span class="n">module</span><span class="p">,</span>
+            <span class="n">class_name</span><span class="o">=</span><span class="n">class_name</span><span class="p">,</span>
+            <span class="n">version</span><span class="o">=</span><span class="n">version</span><span class="p">,</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">idx</span><span class="p">,</span>
+            <span class="n">initargs</span><span class="o">=</span><span class="n">args_data</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_do_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">__metadata__</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;initargs&quot;</span><span class="p">)</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;__metadata__&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_misc_cache</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">args</span><span class="p">,</span> <span class="n">state</span><span class="p">])</span>
+
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">args_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;instance&quot;</span><span class="p">,</span>
+            <span class="n">module</span><span class="o">=</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">],</span>
+            <span class="n">class_name</span><span class="o">=</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;class_name&quot;</span><span class="p">],</span>
+            <span class="n">version</span><span class="o">=</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">],</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">idx</span><span class="p">,</span>
+            <span class="n">initargs</span><span class="o">=</span><span class="n">args_data</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_do_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">value</span><span class="p">])</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;tuple&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">idx</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_do_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;list&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">idx</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_do_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">vals</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;dict&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">idx</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_do_numeric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_register</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">encodebytes</span><span class="p">(</span><span class="n">gzip_string</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s2">&quot;numeric&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">idx</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<span class="c1">######################################################################</span>
+<span class="c1"># `StateUnpickler` class</span>
+<span class="c1">######################################################################</span>
+<div class="viewcode-block" id="StateUnpickler"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.StateUnpickler">[docs]</a><span class="k">class</span> <span class="nc">StateUnpickler</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Unpickles the state of an object saved using StatePickler.</span>
+
+<span class="sd">    Please note that unlike the standard Unpickler, no instances of</span>
+<span class="sd">    any user class are created.  The data for the state is obtained</span>
+<span class="sd">    from the file or string, reference objects are setup to refer to</span>
+<span class="sd">    the same state value and this state is returned in the form</span>
+<span class="sd">    usually in the form of a dictionary.  For example::</span>
+
+<span class="sd">        &gt;&gt;&gt; class A:</span>
+<span class="sd">        ...     def __init__(self):</span>
+<span class="sd">        ...         self.attribute = 1</span>
+<span class="sd">        ...</span>
+<span class="sd">        &gt;&gt;&gt; a = A()</span>
+<span class="sd">        &gt;&gt;&gt; p = StatePickler()</span>
+<span class="sd">        &gt;&gt;&gt; s = p.dumps(a)</span>
+<span class="sd">        &gt;&gt;&gt; up = StateUnpickler()</span>
+<span class="sd">        &gt;&gt;&gt; state = up.loads_state(s)</span>
+<span class="sd">        &gt;&gt;&gt; state.__class__.__name__</span>
+<span class="sd">        &#39;State&#39;</span>
+<span class="sd">        &gt;&gt;&gt; state.attribute</span>
+<span class="sd">        1</span>
+<span class="sd">        &gt;&gt;&gt; state.__metadata__</span>
+<span class="sd">        {&#39;class_name&#39;: &#39;A&#39;,</span>
+<span class="sd">         &#39;has_instance&#39;: True,</span>
+<span class="sd">         &#39;id&#39;: 0,</span>
+<span class="sd">         &#39;initargs&#39;: (),</span>
+<span class="sd">         &#39;module&#39;: &#39;__main__&#39;,</span>
+<span class="sd">         &#39;type&#39;: &#39;instance&#39;,</span>
+<span class="sd">         &#39;version&#39;: [((&#39;A&#39;, &#39;__main__&#39;), -1)]}</span>
+
+<span class="sd">    Note that the state is actually a `State` instance and is</span>
+<span class="sd">    navigable just like the original object.  The details of the</span>
+<span class="sd">    instance are stored in the `__metadata__` attribute.  This is</span>
+<span class="sd">    highly convenient since it is possible for someone to view and</span>
+<span class="sd">    modify the state very easily.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;reference&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_reference</span><span class="p">,</span>
+            <span class="s2">&quot;instance&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_instance</span><span class="p">,</span>
+            <span class="s2">&quot;tuple&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_tuple</span><span class="p">,</span>
+            <span class="s2">&quot;list&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_list</span><span class="p">,</span>
+            <span class="s2">&quot;dict&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_dict</span><span class="p">,</span>
+            <span class="s2">&quot;numeric&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_numeric</span><span class="p">,</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="StateUnpickler.load_state"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.StateUnpickler.load_state">[docs]</a>    <span class="k">def</span> <span class="nf">load_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the state of an object loaded from the pickled data</span>
+<span class="sd">        in the given file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">file_name</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="StateUnpickler.loads_state"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.StateUnpickler.loads_state">[docs]</a>    <span class="k">def</span> <span class="nf">loads_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the state of an object loaded from the pickled data</span>
+<span class="sd">        in the given string.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+    <span class="c1">######################################################################</span>
+    <span class="c1"># Non-public methods</span>
+    <span class="c1">######################################################################</span>
+    <span class="k">def</span> <span class="nf">_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># The file from which we are being loaded.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="c1"># Cache of the objects.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_obj_cache</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Paths to the instances.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Caches the references.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_refs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Numeric arrays.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_numeric</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span> <span class="nf">_set_has_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">State</span><span class="p">):</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">__metadata__</span><span class="p">[</span><span class="s2">&quot;has_instance&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="n">StateDict</span><span class="p">,</span> <span class="n">StateList</span><span class="p">,</span> <span class="n">StateTuple</span><span class="p">)):</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">has_instance</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="c1"># Setup all the Numeric arrays.  Do this first since</span>
+        <span class="c1"># references use this.</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_numeric</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">StateTuple</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                <span class="n">exec</span><span class="p">(</span><span class="s2">&quot;result</span><span class="si">%s</span><span class="s2"> = val&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">StateTuple</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">exec</span><span class="p">(</span><span class="s2">&quot;result</span><span class="si">%s</span><span class="s2"> = val&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+
+        <span class="c1"># Setup the references so they really are references.</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">paths</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_refs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_obj_cache</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">StateTuple</span><span class="p">):</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                    <span class="n">exec</span><span class="p">(</span><span class="s2">&quot;result</span><span class="si">%s</span><span class="s2"> = x&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">StateTuple</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">exec</span><span class="p">(</span><span class="s2">&quot;result</span><span class="si">%s</span><span class="s2"> = x&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+                <span class="c1"># if the reference is to an instance append its path.</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">State</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="c1"># Now setup the &#39;has_instance&#39; attribute.  If &#39;has_instance&#39;</span>
+        <span class="c1"># is True then the object contains an instance somewhere</span>
+        <span class="c1"># inside it.</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span><span class="p">:</span>
+            <span class="n">pth</span> <span class="o">=</span> <span class="n">path</span>
+            <span class="k">while</span> <span class="n">pth</span><span class="p">:</span>
+                <span class="n">ns</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">}</span>
+                <span class="n">exec</span><span class="p">(</span><span class="s2">&quot;val = result</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">pth</span><span class="p">,</span> <span class="n">ns</span><span class="p">,</span> <span class="n">ns</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_set_has_instance</span><span class="p">(</span><span class="n">ns</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">],</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">pth</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span>
+                <span class="n">pth</span> <span class="o">=</span> <span class="n">pth</span><span class="p">[:</span><span class="n">end</span><span class="p">]</span>
+            <span class="c1"># Now make sure that the first element also has_instance.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set_has_instance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_do</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">dict</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]](</span><span class="n">data</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">data</span>
+
+    <span class="k">def</span> <span class="nf">_do_reference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_refs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_refs</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_refs</span><span class="p">[</span><span class="nb">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">State</span><span class="p">(</span><span class="n">__metadata__</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_handle_file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;class_name&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;FilePath&quot;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;file_path&quot;</span> <span class="ow">in</span> <span class="n">value</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">])</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_name</span>
+        <span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+            <span class="n">fp</span> <span class="o">=</span> <span class="n">FilePath</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;rel_pth&quot;</span><span class="p">])</span>
+            <span class="n">fp</span><span class="o">.</span><span class="n">set_absolute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">file_name</span><span class="p">)</span>
+            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;abs_pth&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fp</span><span class="o">.</span><span class="n">abs_pth</span>
+
+    <span class="k">def</span> <span class="nf">_do_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">initargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span>
+            <span class="n">value</span><span class="p">[</span><span class="s2">&quot;initargs&quot;</span><span class="p">],</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;.__metadata__[&quot;initargs&quot;]&#39;</span>
+        <span class="p">)</span>
+        <span class="c1"># Handle FilePaths.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_handle_file_path</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">],</span> <span class="n">path</span><span class="p">)</span>
+        <span class="n">md</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;instance&quot;</span><span class="p">,</span>
+            <span class="n">module</span><span class="o">=</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">],</span>
+            <span class="n">class_name</span><span class="o">=</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;class_name&quot;</span><span class="p">],</span>
+            <span class="n">version</span><span class="o">=</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;version&quot;</span><span class="p">],</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">],</span>
+            <span class="n">initargs</span><span class="o">=</span><span class="n">initargs</span><span class="p">,</span>
+            <span class="n">has_instance</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">State</span><span class="p">(</span><span class="o">**</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">__metadata__</span> <span class="o">=</span> <span class="n">md</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_obj_cache</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_do_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]):</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;[</span><span class="si">%d</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">))</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">StateTuple</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_obj_cache</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_do_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">StateList</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]):</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;[</span><span class="si">%d</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_obj_cache</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_do_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">StateDict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">value</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;[&quot;</span><span class="si">%s</span><span class="s1">&quot;]&#39;</span> <span class="o">%</span> <span class="n">key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_obj_cache</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_do_numeric</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="n">junk</span> <span class="o">=</span> <span class="n">gunzip_string</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">decodebytes</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">junk</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;bytes&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_numeric</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_obj_cache</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+
+<span class="c1">######################################################################</span>
+<span class="c1"># `StateSetter` class</span>
+<span class="c1">######################################################################</span>
+<div class="viewcode-block" id="StateSetter"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.StateSetter">[docs]</a><span class="k">class</span> <span class="nc">StateSetter</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This is a convenience class that helps a user set the</span>
+<span class="sd">    attributes of an object given its saved state.  For instances it</span>
+<span class="sd">    checks to see if a `__set_pure_state__` method exists and calls</span>
+<span class="sd">    that when it sets the state.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Stores the ids of instances already done.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_instance_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">State</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_instance</span><span class="p">,</span>
+            <span class="n">StateTuple</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_tuple</span><span class="p">,</span>
+            <span class="n">StateList</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_list</span><span class="p">,</span>
+            <span class="n">StateDict</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_dict</span><span class="p">,</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="StateSetter.set"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.StateSetter.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">first</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">last</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets the state of the object.</span>
+
+<span class="sd">        This is to be used as a means to simplify loading the state of</span>
+<span class="sd">        an object from its `__setstate__` method using the dictionary</span>
+<span class="sd">        describing its state.  Note that before the state is set, the</span>
+<span class="sd">        registered handlers for the particular class are called in</span>
+<span class="sd">        order to upgrade the version of the state to the latest</span>
+<span class="sd">        version.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        - obj : `object`</span>
+
+<span class="sd">          The object whose state is to be set.  If this is `None`</span>
+<span class="sd">          (default) then the object is created.</span>
+
+<span class="sd">        - state : `dict`</span>
+
+<span class="sd">          The dictionary representing the state of the object.</span>
+
+<span class="sd">        - ignore : `list(str)`</span>
+
+<span class="sd">          The list of attributes specified in this list are ignored</span>
+<span class="sd">          and the state of these attributes are not set (this excludes</span>
+<span class="sd">          the ones specified in `first` and `last`).  If one specifies</span>
+<span class="sd">          a &#39;*&#39; then all attributes are ignored except the ones</span>
+<span class="sd">          specified in `first` and `last`.</span>
+
+<span class="sd">        - first : `list(str)`</span>
+
+<span class="sd">          The list of attributes specified in this list are set first (in</span>
+<span class="sd">          order), before any other attributes are set.</span>
+
+<span class="sd">        - last : `list(str)`</span>
+
+<span class="sd">          The list of attributes specified in this list are set last (in</span>
+<span class="sd">          order), after all other attributes are set.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">State</span><span class="p">))</span> <span class="ow">and</span> <span class="n">state</span><span class="o">.</span><span class="n">__metadata__</span><span class="p">[</span>
+            <span class="s2">&quot;type&quot;</span>
+        <span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;instance&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StateSetterError</span><span class="p">(</span>
+                <span class="s2">&quot;Can only set the attributes of an instance.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Upgrade the state to the latest using the registry.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_and_check_state</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_register</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+        <span class="c1"># This wierdness is needed since the state&#39;s own `keys` might</span>
+        <span class="c1"># be set to something else.</span>
+        <span class="n">state_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">keys</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+        <span class="n">state_keys</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;__metadata__&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">first</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">first</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">last</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">last</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Remove all the ignored keys.</span>
+        <span class="k">if</span> <span class="n">ignore</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;*&quot;</span> <span class="ow">in</span> <span class="n">ignore</span><span class="p">:</span>
+                <span class="n">state_keys</span> <span class="o">=</span> <span class="n">first</span> <span class="o">+</span> <span class="n">last</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">ignore</span><span class="p">:</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">state_keys</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                        <span class="k">pass</span>
+
+        <span class="c1"># Do the `first` attributes.</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">first</span><span class="p">:</span>
+            <span class="n">state_keys</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">state</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+        <span class="c1"># Remove the `last` attributes.</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">last</span><span class="p">:</span>
+            <span class="n">state_keys</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="c1"># Set the remaining attributes.</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">state_keys</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">state</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+        <span class="c1"># Do the last ones in order.</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">last</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_do</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">state</span><span class="p">[</span><span class="n">key</span><span class="p">])</span></div>
+
+    <span class="c1">######################################################################</span>
+    <span class="c1"># Non-public methods.</span>
+    <span class="c1">######################################################################</span>
+    <span class="k">def</span> <span class="nf">_register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="nb">id</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_ids</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_instance_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_is_registered</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">id</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instance_ids</span>
+
+    <span class="k">def</span> <span class="nf">_has_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given something (`value`) that is part of the state this</span>
+<span class="sd">        returns if the value has an instance embedded in it or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">State</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">StateDict</span><span class="p">,</span> <span class="n">StateList</span><span class="p">,</span> <span class="n">StateTuple</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">has_instance</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">_get_pure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the Python representation of the object (usually a</span>
+<span class="sd">        list, tuple or dict) that has no instances embedded within it.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_instance</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">StateSetterError</span><span class="p">(</span><span class="s2">&quot;Value has an instance: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">StateList</span><span class="p">,</span> <span class="n">StateTuple</span><span class="p">)):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_pure</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">StateTuple</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">StateDict</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_pure</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_update_and_check_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Updates the state from the registry and then checks if the</span>
+<span class="sd">        object and state have same class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Upgrade this state object to the latest using the registry.</span>
+        <span class="c1"># This is done before testing because updating may change the</span>
+        <span class="c1"># class name/module.</span>
+        <span class="n">version_registry</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+        <span class="c1"># Make sure object and state have the same class and module names.</span>
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">__metadata__</span>
+        <span class="bp">cls</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span>
+        <span class="k">if</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;class_name&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StateSetterError</span><span class="p">(</span>
+                <span class="s2">&quot;Instance (</span><span class="si">%s</span><span class="s2">) and state (</span><span class="si">%s</span><span class="s2">) do not have the same class&quot;</span>
+                <span class="s2">&quot; name!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;class_name&quot;</span><span class="p">])</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__module__</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StateSetterError</span><span class="p">(</span>
+                <span class="s2">&quot;Instance (</span><span class="si">%s</span><span class="s2">) and state (</span><span class="si">%s</span><span class="s2">) do not have the same module&quot;</span>
+                <span class="s2">&quot; name!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">])</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_do</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StateSetterError</span><span class="p">(</span>
+                <span class="s2">&quot;Object </span><span class="si">%s</span><span class="s2"> does not have an attribute called: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">State</span><span class="p">,</span> <span class="n">StateDict</span><span class="p">,</span> <span class="n">StateList</span><span class="p">,</span> <span class="n">StateTuple</span><span class="p">)):</span>
+            <span class="c1"># Special handlers are needed.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_instance</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_pure</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">StateTuple</span><span class="p">):</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_tuple</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">),</span> <span class="n">value</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_do_object</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">),</span> <span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_do_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_map</span><span class="p">[</span><span class="n">state</span><span class="o">.</span><span class="vm">__class__</span><span class="p">](</span><span class="n">obj</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_do_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_registered</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_register</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+        <span class="n">metadata</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">__metadata__</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;__set_pure_state__&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_and_check_state</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">__set_pure_state__</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;tvtk_classes&quot;</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;module&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_and_check_state</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_pure</span><span class="p">(</span><span class="n">StateDict</span><span class="p">(</span><span class="o">**</span><span class="n">state</span><span class="p">))</span>
+            <span class="k">del</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;__metadata__&quot;</span><span class="p">]</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">__setstate__</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># No need to update or check since `set` does it for us.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_do_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_instance</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_pure</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_do_list</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_do_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">obj</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_instance</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">]):</span>
+                    <span class="n">obj</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_pure</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">):</span>
+                    <span class="n">obj</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_tuple</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_do_object</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">state</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">StateSetterError</span><span class="p">(</span>
+                <span class="s2">&quot;Cannot set state of list of incorrect size.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_do_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_instance</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+                <span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_pure</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_tuple</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_do_object</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<span class="c1">######################################################################</span>
+<span class="c1"># Internal Utility functions.</span>
+<span class="c1">######################################################################</span>
+<span class="k">def</span> <span class="nf">_get_file_read</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;read&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_get_file_write</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;write&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span>
+
+
+<span class="c1">######################################################################</span>
+<span class="c1"># Utility functions.</span>
+<span class="c1">######################################################################</span>
+<div class="viewcode-block" id="dump"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.dump">[docs]</a><span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Pickles the state of the object (`value`) into the passed file</span>
+<span class="sd">    (or file name).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">_get_file_write</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">StatePickler</span><span class="p">()</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">f</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="dumps"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.dumps">[docs]</a><span class="k">def</span> <span class="nf">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Pickles the state of the object (`value`) and returns a string.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">StatePickler</span><span class="p">()</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_state"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.load_state">[docs]</a><span class="k">def</span> <span class="nf">load_state</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the state of an object loaded from the pickled data in</span>
+<span class="sd">    the given file (or file name).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">_get_file_read</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">StateUnpickler</span><span class="p">()</span><span class="o">.</span><span class="n">load_state</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">f</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">file</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">state</span></div>
+
+
+<div class="viewcode-block" id="loads_state"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.loads_state">[docs]</a><span class="k">def</span> <span class="nf">loads_state</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the state of an object loaded from the pickled data</span>
+<span class="sd">    in the given string.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">StateUnpickler</span><span class="p">()</span><span class="o">.</span><span class="n">loads_state</span><span class="p">(</span><span class="n">string</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_state"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.get_state">[docs]</a><span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the state of the object (usually as a dictionary).  The</span>
+<span class="sd">    returned state may be used directy to set the state of the object</span>
+<span class="sd">    via `set_state`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">dumps</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">loads_state</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="set_state"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.set_state">[docs]</a><span class="k">def</span> <span class="nf">set_state</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">ignore</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">first</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">last</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">StateSetter</span><span class="p">()</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">ignore</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span></div>
+
+
+<span class="n">set_state</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">StateSetter</span><span class="o">.</span><span class="n">set</span><span class="o">.</span><span class="vm">__doc__</span>
+
+
+<div class="viewcode-block" id="update_state"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.update_state">[docs]</a><span class="k">def</span> <span class="nf">update_state</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Given the state of an object, this updates the state to the</span>
+<span class="sd">    latest version using the handlers given in the version registry.</span>
+<span class="sd">    The state is modified in-place.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">version_registry</span><span class="o">.</span><span class="n">registry</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">state</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="create_instance"><a class="viewcode-back" href="../../../api/apptools.persistence.html#apptools.persistence.state_pickler.create_instance">[docs]</a><span class="k">def</span> <span class="nf">create_instance</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create an instance from the state if possible.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">State</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span>
+        <span class="s2">&quot;class_name&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">__metadata__</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="n">StateSetterError</span><span class="p">(</span><span class="s2">&quot;No class information in state&quot;</span><span class="p">)</span>
+    <span class="n">metadata</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">__metadata__</span>
+    <span class="n">class_name</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;class_name&quot;</span><span class="p">)</span>
+    <span class="n">mod_name</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;module&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;tvtk_classes&quot;</span> <span class="ow">in</span> <span class="n">mod_name</span><span class="p">:</span>
+        <span class="c1"># FIXME: This sort of special-case is probably indicative of something</span>
+        <span class="c1"># that needs more thought, plus it makes it tought to decide whether</span>
+        <span class="c1"># this component depends on tvtk!</span>
+        <span class="kn">from</span> <span class="nn">tvtk.api</span> <span class="k">import</span> <span class="n">tvtk</span>
+
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">tvtk</span><span class="p">,</span> <span class="n">class_name</span><span class="p">)()</span>
+
+    <span class="n">initargs</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;initargs&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">initargs</span><span class="o">.</span><span class="n">has_instance</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">StateUnpicklerError</span><span class="p">(</span><span class="s2">&quot;Cannot unpickle non-trivial initargs&quot;</span><span class="p">)</span>
+
+    <span class="nb">__import__</span><span class="p">(</span><span class="n">mod_name</span><span class="p">,</span> <span class="nb">globals</span><span class="p">(),</span> <span class="nb">locals</span><span class="p">(),</span> <span class="n">class_name</span><span class="p">)</span>
+    <span class="n">mod</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">mod_name</span><span class="p">]</span>
+    <span class="bp">cls</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">class_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">*</span><span class="n">initargs</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Dec 17, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

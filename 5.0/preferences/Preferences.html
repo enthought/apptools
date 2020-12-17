@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>Preferences &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="next" title="Preferences in Envisage" href="PreferencesInEnvisage.html" >
+    <link rel="prev" title="AppTools Documentation" href="../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="PreferencesInEnvisage.html" title="Preferences in Envisage"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="../index.html" title="AppTools Documentation"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <div class="section" id="preferences">
+<h1>Preferences<a class="headerlink" href="#preferences" title="Permalink to this headline">¶</a></h1>
+<p>The preferences package provides a simple API for managing application
+preferences. The classes in the package are implemented using a layered
+approach where the lowest layer provides access to the raw preferences
+mechanism and each layer on top providing more convenient ways to get and set
+preference values.</p>
+<div class="section" id="the-basic-preferences-mechanism">
+<h2>The Basic Preferences Mechanism<a class="headerlink" href="#the-basic-preferences-mechanism" title="Permalink to this headline">¶</a></h2>
+<p>Lets start by taking a look at the lowest layer which consists of the
+<a class="reference internal" href="../api/apptools.preferences.html#apptools.preferences.i_preferences.IPreferences" title="apptools.preferences.i_preferences.IPreferences"><code class="xref py py-class docutils literal notranslate"><span class="pre">IPreferences</span></code></a> interface and its default implementation in the <a class="reference internal" href="../api/apptools.preferences.html#apptools.preferences.preferences.Preferences" title="apptools.preferences.preferences.Preferences"><code class="xref py py-class docutils literal notranslate"><span class="pre">Preferences</span></code></a>
+class. This layer implements the basic preferences system which is a
+hierarchical arrangement of preferences ‘nodes’ (where each node is simply an
+object that implements the <a class="reference internal" href="../api/apptools.preferences.html#apptools.preferences.i_preferences.IPreferences" title="apptools.preferences.i_preferences.IPreferences"><code class="xref py py-class docutils literal notranslate"><span class="pre">IPreferences</span></code></a> interface). Nodes in the hierarchy can
+contain preference settings and/or child nodes. This layer also provides a
+default way to read and write preferences from the filesystem using the
+excellent <a class="reference external" href="https://configobj.readthedocs.io/en/latest">ConfigObj</a> package.</p>
+<p>This all sounds a bit complicated but, believe me, it isn’t! To prove it
+(hopefully) lets look at an example. Say I have the following preferences in
+a file ‘example.ini’:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">acme</span><span class="o">.</span><span class="n">ui</span><span class="p">]</span>
+<span class="n">bgcolor</span> <span class="o">=</span> <span class="n">blue</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">ratio</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">visible</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="p">[</span><span class="n">acme</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">splash_screen</span><span class="p">]</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">splash</span>
+<span class="n">fgcolor</span> <span class="o">=</span> <span class="n">red</span>
+</pre></div>
+</div>
+<p>I can create a preferences hierarchy from this file by:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">apptools.preferences.api</span> <span class="k">import</span> <span class="n">Preferences</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span> <span class="o">=</span> <span class="n">Preferences</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;example.ini&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
+
+<span class="go"> Node() {}</span>
+<span class="go">   Node(acme) {}</span>
+<span class="go">     Node(ui) {&#39;bgcolor&#39;: &#39;blue&#39;, &#39;width&#39;: &#39;50&#39;, &#39;ratio&#39;: &#39;1.0&#39;, &#39;visible&#39;: &#39;True&#39;}</span>
+<span class="go">       Node(splash_screen) {&#39;image&#39;: &#39;splash&#39;, &#39;fgcolor&#39;: &#39;red&#39;}</span>
+</pre></div>
+</div>
+<p>The ‘dump’ method (useful for debugging etc) simply ‘pretty prints’ a
+preferences hierarchy. The dictionary next to each node contains the node’s
+actual preferences. In this case, the root node (the node with no name) is the
+preferences object that we created. This node now has one child node ‘acme’,
+which contains no preferences. The ‘acme’ node has one child, ‘ui’, which
+contains some preferences (e.g. ‘bgcolor’) and also a child node
+‘splash_screen’ which also contains preferences (e.g. ‘image’).</p>
+<p>To look up a preference we use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.bgcolor&#39;</span><span class="p">)</span>
+<span class="go">&#39;blue&#39;</span>
+</pre></div>
+</div>
+<p>If no such preferences exists then, by default, None is returned:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.bogus&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>You can also specify an explicit default value:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.bogus&#39;</span><span class="p">,</span> <span class="s1">&#39;fred&#39;</span><span class="p">)</span>
+<span class="go">&#39;fred&#39;</span>
+</pre></div>
+</div>
+<p>To set a preference we use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;acme.ui.bgcolor&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.bgcolor&#39;</span><span class="p">)</span>
+<span class="go">&#39;red&#39;</span>
+</pre></div>
+</div>
+<p>And to make sure the preferences are saved back to disk:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>To add a new preference value we simply set it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;acme.ui.fgcolor&#39;</span><span class="p">,</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.fgcolor&#39;</span><span class="p">)</span>
+<span class="go">&#39;black&#39;</span>
+</pre></div>
+</div>
+<p>Any missing nodes in a call to ‘set’ are created automatically, hence:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;acme.ui.button.fgcolor&#39;</span><span class="p">,</span> <span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.button.fgcolor&#39;</span><span class="p">)</span>
+<span class="go">&#39;white&#39;</span>
+</pre></div>
+</div>
+<p>Preferences can also be ‘inherited’. e.g. Notice that the ‘splash_screen’
+node does not contain a ‘bgcolor’ preference, and hence:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.splash_screen.bgcolor&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>But if we allow the ‘inheritance’ of preference values then:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.splash_screen.bgcolor&#39;</span><span class="p">,</span> <span class="n">inherit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">&#39;red&#39;</span>
+</pre></div>
+</div>
+<p>By using ‘inheritance’ here the preferences system will try the following
+preferences:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;acme.ui.splash_screen.bgcolor&#39;</span>
+<span class="s1">&#39;acme.ui.bgcolor&#39;</span>
+<span class="s1">&#39;acme.bgcolor&#39;</span>
+<span class="s1">&#39;bgcolor&#39;</span>
+</pre></div>
+</div>
+<div class="section" id="strings-glorious-strings">
+<h3>Strings, Glorious Strings<a class="headerlink" href="#strings-glorious-strings" title="Permalink to this headline">¶</a></h3>
+<p>At this point it is worth mentioning that preferences are <em>always</em> stored and
+returned as strings. This is because of the limitations of the traditional
+‘.ini’ file format i.e. they don’t contain any type information! Now before you
+start panicking, this doesn’t mean that all of your preferences have to be
+strings! Currently the preferences system allows, strings(!), booleans, ints,
+longs, floats and complex numbers. When you store a non-string value it gets
+converted to a string for you, but you <em>always</em> get a string back:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.width&#39;</span><span class="p">)</span>
+<span class="go">&#39;50&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;acme.ui.width&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.width&#39;</span><span class="p">)</span>
+<span class="go">&#39;100&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.visible&#39;</span><span class="p">)</span>
+<span class="go">&#39;True&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;acme.ui.visible&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.visible&#39;</span><span class="p">)</span>
+<span class="go">&#39;False&#39;</span>
+</pre></div>
+</div>
+<p>This is obviously not terribly convenient, and so the following section
+discusses how we associate type information with our preferences to make
+getting and setting them more natural.</p>
+</div>
+</div>
+<div class="section" id="preferences-and-types">
+<h2>Preferences and Types<a class="headerlink" href="#preferences-and-types" title="Permalink to this headline">¶</a></h2>
+<p>As mentioned previously, we would like to be able to get and set non-string
+preferences in a more convenient way. This is where the <a class="reference internal" href="../api/apptools.preferences.html#apptools.preferences.preferences_helper.PreferencesHelper" title="apptools.preferences.preferences_helper.PreferencesHelper"><code class="xref py py-class docutils literal notranslate"><span class="pre">PreferencesHelper</span></code></a>
+class comes in.</p>
+<p>Let’s take another look at ‘example.ini’:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">acme</span><span class="o">.</span><span class="n">ui</span><span class="p">]</span>
+<span class="n">bgcolor</span> <span class="o">=</span> <span class="n">blue</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">ratio</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">visible</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="p">[</span><span class="n">acme</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">splash_screen</span><span class="p">]</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">splash</span>
+<span class="n">fgcolor</span> <span class="o">=</span> <span class="n">red</span>
+</pre></div>
+</div>
+<p>Say, I am interested in the preferences in the ‘acme.ui’ section. I can use a
+preferences helper as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">apptools.preferences.api</span> <span class="k">import</span> <span class="n">PreferencesHelper</span>
+
+<span class="k">class</span> <span class="nc">SplashScreenPreferences</span><span class="p">(</span><span class="n">PreferencesHelper</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A preferences helper for the splash screen. &quot;&quot;&quot;</span>
+
+    <span class="n">preferences_path</span> <span class="o">=</span> <span class="s1">&#39;acme.ui&#39;</span>
+
+    <span class="n">bgcolor</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="n">width</span>   <span class="o">=</span> <span class="n">Int</span>
+    <span class="n">ratio</span>   <span class="o">=</span> <span class="n">Float</span>
+    <span class="n">visible</span> <span class="o">=</span> <span class="n">Bool</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">preferences</span> <span class="o">=</span> <span class="n">Preferences</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;example.ini&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">helper</span> <span class="o">=</span> <span class="n">SplashScreenPreferences</span><span class="p">(</span><span class="n">preferences</span><span class="o">=</span><span class="n">preferences</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">helper</span><span class="o">.</span><span class="n">bgcolor</span>
+<span class="s1">&#39;blue&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">helper</span><span class="o">.</span><span class="n">width</span>
+<span class="mi">50</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">helper</span><span class="o">.</span><span class="n">ratio</span>
+<span class="mf">1.0</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">helper</span><span class="o">.</span><span class="n">visible</span>
+<span class="kc">True</span>
+</pre></div>
+</div>
+<p>And, obviously, I can set the value of the preferences via the helper too:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">helper</span><span class="o">.</span><span class="n">ratio</span> <span class="o">=</span> <span class="mf">0.5</span>
+</pre></div>
+</div>
+<p>And if you want to prove to yourself it really did set the preference:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.ratio&#39;</span><span class="p">)</span>
+<span class="go">&#39;0.5&#39;</span>
+</pre></div>
+</div>
+<p>Using a preferences helper you also get notified via the usual trait
+mechanism when the preferences are changed (either via the helper or via the
+preferences node directly:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">listener</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">trait_name</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">new</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">helper</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">helper</span><span class="o">.</span><span class="n">ratio</span> <span class="o">=</span> <span class="mf">0.75</span>
+<span class="n">ratio</span> <span class="mf">0.5</span> <span class="mf">0.75</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;acme.ui.ratio&#39;</span><span class="p">,</span> <span class="mf">0.33</span><span class="p">)</span>
+<span class="n">ratio</span> <span class="mf">0.75</span> <span class="mf">0.33</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="scoped-preferences">
+<h2>Scoped Preferences<a class="headerlink" href="#scoped-preferences" title="Permalink to this headline">¶</a></h2>
+<p>In many applications the idea of preferences scopes is useful. In a scoped
+system, an actual preference value can be stored in any scope and when a call
+is made to the ‘get’ method the scopes are searched in order of precedence.</p>
+<p>The default implementation (in the <a class="reference internal" href="../api/apptools.preferences.html#apptools.preferences.scoped_preferences.ScopedPreferences" title="apptools.preferences.scoped_preferences.ScopedPreferences"><code class="xref py py-class docutils literal notranslate"><span class="pre">ScopedPreferences</span></code></a> class) provides two
+scopes by default:</p>
+<ol class="arabic simple">
+<li><p>The application scope</p></li>
+</ol>
+<p>This scope stores itself in the ‘ETSConfig.application_home’ directory. This
+scope is generally used when <em>setting</em> any user preferences.</p>
+<ol class="arabic simple" start="2">
+<li><p>The default scope</p></li>
+</ol>
+<p>This scope is transient (i.e. it does not store itself anywhere). This scope
+is generally used to load any predefined default values into the preferences
+system.</p>
+<p>If you are happy with the default arrangement, then using the scoped
+preferences is just like using the plain old non-scoped version:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">apptools.preferences.api</span> <span class="k">import</span> <span class="n">ScopedPreferences</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span> <span class="o">=</span> <span class="n">ScopedPreferences</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;example.ini&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;example.ini&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
+
+<span class="go"> Node() {}</span>
+<span class="go">   Node(application) {}</span>
+<span class="go">     Node(acme) {}</span>
+<span class="go">       Node(ui) {&#39;bgcolor&#39;: &#39;blue&#39;, &#39;width&#39;: &#39;50&#39;, &#39;ratio&#39;: &#39;1.0&#39;, &#39;visible&#39;: &#39;True&#39;}</span>
+<span class="go">         Node(splash_screen) {&#39;image&#39;: &#39;splash&#39;, &#39;fgcolor&#39;: &#39;red&#39;}</span>
+<span class="go">   Node(default) {}</span>
+</pre></div>
+</div>
+<p>Here you can see that the root node now has a child node representing each
+scope.</p>
+<p>When we are getting and setting preferences using scopes we generally want the
+following behaviour:</p>
+<p>a) When we get a preference we want to look it up in each scope in order. The
+first scope that contains a value ‘wins’.</p>
+<p>b) When we set a preference, we want to set it in the first scope. By default
+this means that when we set a preference it will be set in the application
+scope. This is exactly what we want as the application scope is the scope that
+is persistent.</p>
+<p>So usually, we just use the scoped preferences as before:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;acme.ui.bgcolor&#39;</span><span class="p">)</span>
+<span class="go">&#39;blue&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;acme.ui.bgcolor&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
+
+<span class="go"> Node() {}</span>
+<span class="go">   Node(application) {}</span>
+<span class="go">     Node(acme) {}</span>
+<span class="go">       Node(ui) {&#39;bgcolor&#39;: &#39;red&#39;, &#39;width&#39;: &#39;50&#39;, &#39;ratio&#39;: &#39;1.0&#39;, &#39;visible&#39;: &#39;True&#39;}</span>
+<span class="go">         Node(splash_screen) {&#39;image&#39;: &#39;splash&#39;, &#39;fgcolor&#39;: &#39;red&#39;}</span>
+<span class="go">   Node(default) {}</span>
+</pre></div>
+</div>
+<p>And, conveniently, preference helpers work just the same with scoped
+preferences too:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">helper</span> <span class="o">=</span> <span class="n">SplashScreenPreferences</span><span class="p">(</span><span class="n">preferences</span><span class="o">=</span><span class="n">preferences</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">helper</span><span class="o">.</span><span class="n">bgcolor</span>
+<span class="go">&#39;red&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">helper</span><span class="o">.</span><span class="n">width</span>
+<span class="go">50</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">helper</span><span class="o">.</span><span class="n">ratio</span>
+<span class="go">1.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">helper</span><span class="o">.</span><span class="n">visible</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="section" id="accessing-a-particular-scope">
+<h3>Accessing a particular scope<a class="headerlink" href="#accessing-a-particular-scope" title="Permalink to this headline">¶</a></h3>
+<p>Should you care about getting or setting a preference in a particular scope
+then you use the following syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;default/acme.ui.bgcolor&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;default/acme.ui.bgcolor&#39;</span><span class="p">)</span>
+<span class="go">&#39;red&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">preferences</span><span class="o">.</span><span class="n">dump</span><span class="p">()</span>
+
+<span class="go"> Node() {}</span>
+<span class="go">   Node(application) {}</span>
+<span class="go">     Node(acme) {}</span>
+<span class="go">       Node(ui) {&#39;bgcolor&#39;: &#39;red&#39;, &#39;width&#39;: &#39;50&#39;, &#39;ratio&#39;: &#39;1.0&#39;, &#39;visible&#39;: &#39;True&#39;}</span>
+<span class="go">         Node(splash_screen) {&#39;image&#39;: &#39;splash&#39;, &#39;fgcolor&#39;: &#39;red&#39;}</span>
+<span class="go">   Node(default) {}</span>
+<span class="go">     Node(acme) {}</span>
+<span class="go">       Node(ui) {&#39;bgcolor&#39;: &#39;red&#39;}</span>
+</pre></div>
+</div>
+<p>You can also get hold of a scope via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">default</span> <span class="o">=</span> <span class="n">preferences</span><span class="o">.</span><span class="n">get_scope</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And then perform any of the usual operations on it.</p>
+</div>
+</div>
+<div class="section" id="further-reading">
+<h2>Further Reading<a class="headerlink" href="#further-reading" title="Permalink to this headline">¶</a></h2>
+<p>So that’s a quick tour around the basic useage of the preferences API. For more
+information about what is provided take a look at the <a class="reference internal" href="../api.html#api-documentation"><span class="std std-ref">API documentation</span></a>.</p>
+<p>If you are using Envisage to build your applications then you might also be
+interested in the <a class="reference internal" href="PreferencesInEnvisage.html#preferences-in-envisage"><span class="std std-ref">Preferences in Envisage</span></a> section.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Preferences</a><ul>
+<li><a class="reference internal" href="#the-basic-preferences-mechanism">The Basic Preferences Mechanism</a><ul>
+<li><a class="reference internal" href="#strings-glorious-strings">Strings, Glorious Strings</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#preferences-and-types">Preferences and Types</a></li>
+<li><a class="reference internal" href="#scoped-preferences">Scoped Preferences</a><ul>
+<li><a class="reference internal" href="#accessing-a-particular-scope">Accessing a particular scope</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#further-reading">Further Reading</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../index.html"
+                        title="previous chapter">AppTools Documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="PreferencesInEnvisage.html"
+                        title="next chapter">Preferences in Envisage</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/preferences/Preferences.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Dec 17, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

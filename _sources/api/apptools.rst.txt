@@ -1,0 +1,25 @@
+apptools package
+================
+
+Subpackages
+-----------
+
+.. toctree::
+
+   apptools.io
+   apptools.logger
+   apptools.naming
+   apptools.persistence
+   apptools.preferences
+   apptools.scripting
+   apptools.selection
+   apptools.type_registry
+   apptools.undo
+
+Module contents
+---------------
+
+.. automodule:: apptools
+   :members:
+   :undoc-members:
+   :show-inheritance:

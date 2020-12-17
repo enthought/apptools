@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.naming.naming_manager &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <h1>Source code for apptools.naming.naming_manager</h1><div class="highlight"><pre>
+<span></span><span class="c1"># (C) Copyright 2005-2020 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="sd">&quot;&quot;&quot; The naming manager. &quot;&quot;&quot;</span>
+
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="n">HasTraits</span>
+
+
+<div class="viewcode-block" id="NamingManager"><a class="viewcode-back" href="../../../api/apptools.naming.html#apptools.naming.naming_manager.NamingManager">[docs]</a><span class="k">class</span> <span class="nc">NamingManager</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The naming manager. &quot;&quot;&quot;</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;NamingManager&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+<div class="viewcode-block" id="NamingManager.get_state_to_bind"><a class="viewcode-back" href="../../../api/apptools.naming.html#apptools.naming.naming_manager.NamingManager.get_state_to_bind">[docs]</a>    <span class="k">def</span> <span class="nf">get_state_to_bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the state of an object for binding.</span>
+
+<span class="sd">        The naming manager asks the context for its list of STATE factories</span>
+<span class="sd">        and then calls them one by one until it gets a non-None result</span>
+<span class="sd">        indicating that the factory recognised the object and created state</span>
+<span class="sd">        information for it.</span>
+
+<span class="sd">        If none of the factories recognize the object (or if the context</span>
+<span class="sd">        has no factories) then the object itself is returned.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Local imports.</span>
+        <span class="kn">from</span> <span class="nn">.context</span> <span class="k">import</span> <span class="n">Context</span>
+
+        <span class="c1"># We get the state factories from the context&#39;s environment.</span>
+        <span class="n">state_factories</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">environment</span><span class="p">[</span><span class="n">Context</span><span class="o">.</span><span class="n">STATE_FACTORIES</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">state_factory</span> <span class="ow">in</span> <span class="n">state_factories</span><span class="p">:</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">state_factory</span><span class="o">.</span><span class="n">get_state_to_bind</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">obj</span>
+
+        <span class="k">return</span> <span class="n">state</span></div>
+
+<div class="viewcode-block" id="NamingManager.get_object_instance"><a class="viewcode-back" href="../../../api/apptools.naming.html#apptools.naming.naming_manager.NamingManager.get_object_instance">[docs]</a>    <span class="k">def</span> <span class="nf">get_object_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Creates an object using the specified state information.</span>
+
+<span class="sd">        The naming manager asks the context for its list of OBJECT factories</span>
+<span class="sd">        and calls them one by one until it gets a non-None result, indicating</span>
+<span class="sd">        that the factory recognised the information and created an object.</span>
+
+<span class="sd">        If none of the factories recognize the state information (or if the</span>
+<span class="sd">        context has no factories) then the state information itself is</span>
+<span class="sd">        returned.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Local imports.</span>
+        <span class="kn">from</span> <span class="nn">.context</span> <span class="k">import</span> <span class="n">Context</span>
+
+        <span class="c1"># We get the object factories from the context&#39;s environment.</span>
+        <span class="n">object_factories</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">environment</span><span class="p">[</span><span class="n">Context</span><span class="o">.</span><span class="n">OBJECT_FACTORIES</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">object_factory</span> <span class="ow">in</span> <span class="n">object_factories</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">object_factory</span><span class="o">.</span><span class="n">get_object_instance</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">info</span>
+
+        <span class="k">return</span> <span class="n">obj</span></div></div>
+
+
+<span class="c1"># Singleton instance.</span>
+<span class="n">naming_manager</span> <span class="o">=</span> <span class="n">NamingManager</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Dec 17, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

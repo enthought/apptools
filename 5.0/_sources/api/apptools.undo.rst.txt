@@ -1,0 +1,77 @@
+apptools.undo package
+=====================
+
+Subpackages
+-----------
+
+.. toctree::
+
+   apptools.undo.action
+
+Submodules
+----------
+
+apptools.undo.abstract\_command module
+--------------------------------------
+
+.. automodule:: apptools.undo.abstract_command
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.undo.api module
+------------------------
+
+.. automodule:: apptools.undo.api
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.undo.command\_stack module
+-----------------------------------
+
+.. automodule:: apptools.undo.command_stack
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.undo.i\_command module
+-------------------------------
+
+.. automodule:: apptools.undo.i_command
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.undo.i\_command\_stack module
+--------------------------------------
+
+.. automodule:: apptools.undo.i_command_stack
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.undo.i\_undo\_manager module
+-------------------------------------
+
+.. automodule:: apptools.undo.i_undo_manager
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+apptools.undo.undo\_manager module
+----------------------------------
+
+.. automodule:: apptools.undo.undo_manager
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.undo
+   :members:
+   :undoc-members:
+   :show-inheritance:

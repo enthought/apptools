@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>Automatic script recording &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="next" title="Undo Framework" href="../undo/Introduction.html" >
+    <link rel="prev" title="Preferences in Envisage" href="../preferences/PreferencesInEnvisage.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="../undo/Introduction.html" title="Undo Framework"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="../preferences/PreferencesInEnvisage.html" title="Preferences in Envisage"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <div class="section" id="automatic-script-recording">
+<span id="id1"></span><h1>Automatic script recording<a class="headerlink" href="#automatic-script-recording" title="Permalink to this headline">¶</a></h1>
+<p>This package provides a very handy and powerful Python script recording
+facility.  This can be used to:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>record all actions performed on a traits based UI into a <em>human
+readable</em>, Python script that should be able to recreate your UI
+actions.</p></li>
+<li><p>easily learn the scripting API of an application.</p></li>
+</ul>
+</div></blockquote>
+<p>This package is not just a toy framework and is powerful enough to
+provide full script recording to the <a class="reference external" href="https://docs.enthought.com/mayavi/mayavi/">Mayavi</a> application.  Mayavi is a
+powerful 3D visualization tool that is part of <a class="reference external" href="https://docs.enthought.com/ets/">ETS</a>.</p>
+<div class="section" id="the-scripting-api">
+<span id="scripting-api"></span><h2>The scripting API<a class="headerlink" href="#the-scripting-api" title="Permalink to this headline">¶</a></h2>
+<p>The scripting API primarily allows you to record UI actions for objects
+that have Traits.  Technically the framework listens to all trait
+changes so will work outside a UI.  We do not document the full API
+here, the best place to look for that is the
+<code class="docutils literal notranslate"><span class="pre">apptools.scripting.recorder</span></code> module which is reasonably well
+documented.  We provide a high level overview of the library.</p>
+<p>The quickest way to get started is to look at a small example.</p>
+<div class="section" id="a-tour-by-example">
+<span id="scripting-api-example"></span><h3>A tour by example<a class="headerlink" href="#a-tour-by-example" title="Permalink to this headline">¶</a></h3>
+<p>The following example is taken from the test suite.  Consider a set of
+simple objects organized in a hierarchy:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">traits.api</span> <span class="k">import</span> <span class="p">(</span><span class="n">HasTraits</span><span class="p">,</span> <span class="n">Float</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span>
+        <span class="n">Str</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Bool</span><span class="p">,</span> <span class="n">HasStrictTraits</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">PrefixMap</span><span class="p">,</span> <span class="n">Range</span><span class="p">,</span>
+        <span class="n">Trait</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">apptools.scripting.api</span> <span class="k">import</span> <span class="p">(</span><span class="n">Recorder</span><span class="p">,</span> <span class="n">recordable</span><span class="p">,</span>
+    <span class="n">set_recorder</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Property</span><span class="p">(</span><span class="n">HasStrictTraits</span><span class="p">):</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span><span class="n">Range</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">Range</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">Range</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+    <span class="n">opacity</span> <span class="o">=</span> <span class="n">Range</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">representation</span> <span class="o">=</span> <span class="n">PrefixMap</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;surface&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;wireframe&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;points&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+        <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;surface&quot;</span>
+    <span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Toy</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="n">Str</span>
+    <span class="c1"># Note the use of the trait metadata to ignore this trait.</span>
+    <span class="n">ignore</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="n">record</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Child</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span><span class="s1">&#39;child&#39;</span><span class="p">)</span>
+    <span class="n">age</span> <span class="o">=</span> <span class="n">Float</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
+    <span class="c1"># The recorder walks through sub-instances if they are marked</span>
+    <span class="c1"># with record=True</span>
+    <span class="nb">property</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Property</span><span class="p">,</span> <span class="p">(),</span> <span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">toy</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Toy</span><span class="p">,</span> <span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">friends</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Str</span><span class="p">)</span>
+
+    <span class="c1"># The decorator records the method.</span>
+    <span class="nd">@recordable</span>
+    <span class="k">def</span> <span class="nf">grow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Increase age by x years.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">age</span> <span class="o">+=</span> <span class="n">x</span>
+
+<span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="n">children</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Child</span><span class="p">,</span> <span class="n">record</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">recorder</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">Recorder</span><span class="p">,</span> <span class="n">record</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Using these simple classes we first create a simple object hierarchy as
+follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">Parent</span><span class="p">()</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">Child</span><span class="p">()</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">Toy</span><span class="p">()</span>
+<span class="n">c</span><span class="o">.</span><span class="n">toy</span> <span class="o">=</span> <span class="n">t</span>
+<span class="n">p</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Given this hierarchy, we’d like to be able to record a script.  To do
+this we setup the recording infrastructure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mayavi.core.recorder</span> <span class="k">import</span> <span class="n">Recorder</span><span class="p">,</span> <span class="n">set_recorder</span>
+<span class="c1"># Create a recorder.</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">Recorder</span><span class="p">()</span>
+<span class="c1"># Set the global recorder so the decorator works.</span>
+<span class="n">set_recorder</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="n">r</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="n">r</span><span class="o">.</span><span class="n">recording</span> <span class="o">=</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>The key method here is the <code class="docutils literal notranslate"><span class="pre">r.register(p)</span></code> call above.  It looks at
+the traits of <code class="docutils literal notranslate"><span class="pre">p</span></code> and finds all traits and nested objects that specify
+a <code class="docutils literal notranslate"><span class="pre">record=True</span></code> in their trait metadata (all methods starting and
+ending with <code class="docutils literal notranslate"><span class="pre">_</span></code> are ignored).  All sub-objects are in turn registered
+with the recorder and so on.  Callbacks are attached to traits changes
+and these are wired up to produce readable and executable code.  The
+<code class="docutils literal notranslate"><span class="pre">set_recorder(r)</span></code> call is also very important and sets the global
+recorder so the framework listens to any functions that are decorated
+with the <code class="docutils literal notranslate"><span class="pre">recordable</span></code> decorator.</p>
+<p>Now lets test this out like so:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The following will be recorded.</span>
+<span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Shiva&#39;</span>
+<span class="n">c</span><span class="o">.</span><span class="n">property</span><span class="o">.</span><span class="n">representation</span> <span class="o">=</span> <span class="s1">&#39;w&#39;</span>
+<span class="n">c</span><span class="o">.</span><span class="n">property</span><span class="o">.</span><span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="n">c</span><span class="o">.</span><span class="n">grow</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To see what’s been recorded do this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">script</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This prints:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">child</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">child</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Shiva&#39;</span>
+<span class="n">child</span><span class="o">.</span><span class="n">property</span><span class="o">.</span><span class="n">representation</span> <span class="o">=</span> <span class="s1">&#39;wireframe&#39;</span>
+<span class="n">child</span><span class="o">.</span><span class="n">property</span><span class="o">.</span><span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.40000000000000002</span>
+<span class="n">child</span><span class="o">.</span><span class="n">grow</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The recorder internally maintains a mapping between objects and unique
+names for each object.  It also stores the information about the
+location of a particular object in the object hierarchy.  For example,
+the path to the <code class="docutils literal notranslate"><span class="pre">Toy</span></code> instance in the hierarchy above is
+<code class="docutils literal notranslate"><span class="pre">parent.children[0].toy</span></code>.  Since scripting with lists this way can be
+tedious, the recorder first instantiates the <code class="docutils literal notranslate"><span class="pre">child</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">child</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Subsequent lines use the <code class="docutils literal notranslate"><span class="pre">child</span></code> attribute.  The recorder always tries
+to instantiate the object referred to using its path information in this
+manner.</p>
+<p>To record a function or method call one must simply decorate the
+function/method with the <code class="docutils literal notranslate"><span class="pre">recordable</span></code> decorator.  Nested recordable
+functions are not recorded and trait changes are also not recorded if
+done inside a recordable function.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>It is very important to note that the global recorder must be set
+via the <code class="docutils literal notranslate"><span class="pre">set_recorder</span></code> method.  The <code class="docutils literal notranslate"><span class="pre">recordable</span></code> decorator
+relies on this being set to work.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">recordable</span></code> decorator will work with plain Python classes
+and with functions too.</p></li>
+</ol>
+</div>
+<p>To stop recording do this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">r</span><span class="o">.</span><span class="n">unregister</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+<span class="n">r</span><span class="o">.</span><span class="n">recording</span> <span class="o">=</span> <span class="kc">False</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">r.unregister(p)</span></code> reverses the <code class="docutils literal notranslate"><span class="pre">r.register(p)</span></code> call and
+unregisters all nested objects as well.</p>
+</div>
+<div class="section" id="advanced-use-cases">
+<span id="recorder-advanced-uses"></span><h3>Advanced use cases<a class="headerlink" href="#advanced-use-cases" title="Permalink to this headline">¶</a></h3>
+<p>Here are a few advanced use cases.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The API also provides a <code class="docutils literal notranslate"><span class="pre">RecorderWithUI</span></code> class that provides a
+simple user interface that prints the recorded script and allows the
+user to save the script.</p></li>
+<li><p>Sometimes it is not enough to just record trait changes, one may want
+to pass an arbitrary string or command when recording is occurring.
+To allow for this, if one defines a <code class="docutils literal notranslate"><span class="pre">recorder</span></code> trait on the object,
+it is set to the current recorder.  One can then use this recorder to
+do whatever one wants.  This is very convenient.</p></li>
+<li><p>To ignore specific traits one must specify either a <code class="docutils literal notranslate"><span class="pre">record=False</span></code>
+metadata to the trait definition or specify a list of strings to the
+<code class="docutils literal notranslate"><span class="pre">register</span></code> method in the <code class="docutils literal notranslate"><span class="pre">ignore</span></code> keyword argument.</p></li>
+<li><p>If you want to use a specific name for an object on the script you
+can pass the <code class="docutils literal notranslate"><span class="pre">script_id</span></code> parameter to the register function.</p></li>
+</ul>
+</div></blockquote>
+<p>For more details on the recorder itself we suggest reading the module
+source code.  It is fairly well documented and with the above background
+should be enough to get you going.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Automatic script recording</a><ul>
+<li><a class="reference internal" href="#the-scripting-api">The scripting API</a><ul>
+<li><a class="reference internal" href="#a-tour-by-example">A tour by example</a></li>
+<li><a class="reference internal" href="#advanced-use-cases">Advanced use cases</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../preferences/PreferencesInEnvisage.html"
+                        title="previous chapter">Preferences in Envisage</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../undo/Introduction.html"
+                        title="next chapter">Undo Framework</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/scripting/introduction.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Dec 17, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>
