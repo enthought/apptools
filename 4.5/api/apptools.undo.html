@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.undo package &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '4.6.0.dev77',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools package" href="apptools.html" >
+    <link rel="next" title="apptools.undo.action package" href="apptools.undo.action.html" >
+    <link rel="prev" title="apptools.type_registry package" href="apptools.type_registry.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../api.html" >API documentation</a></li>
+          <li class="active"><a href="modules.html" >apptools</a></li>
+          <li class="active"><a href="apptools.html" accesskey="U">apptools package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.undo.action.html" title="apptools.undo.action package"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.type_registry.html" title="apptools.type_registry package"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body">
+            
+  <div class="section" id="apptools-undo-package">
+<h1>apptools.undo package<a class="headerlink" href="#apptools-undo-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="apptools.undo.action.html">apptools.undo.action package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apptools.undo.action.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apptools.undo.action.html#module-apptools.undo.action.abstract_command_stack_action">apptools.undo.action.abstract_command_stack_action module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apptools.undo.action.html#module-apptools.undo.action.api">apptools.undo.action.api module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apptools.undo.action.html#module-apptools.undo.action.command_action">apptools.undo.action.command_action module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apptools.undo.action.html#module-apptools.undo.action.redo_action">apptools.undo.action.redo_action module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apptools.undo.action.html#module-apptools.undo.action.undo_action">apptools.undo.action.undo_action module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apptools.undo.action.html#module-apptools.undo.action">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-apptools.undo.abstract_command">
+<span id="apptools-undo-abstract-command-module"></span><h2>apptools.undo.abstract_command module<a class="headerlink" href="#module-apptools.undo.abstract_command" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.undo.abstract_command.AbstractCommand">
+<em class="property">class </em><code class="descclassname">apptools.undo.abstract_command.</code><code class="descname">AbstractCommand</code><a class="reference internal" href="../_modules/apptools/undo/abstract_command.html#AbstractCommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.abstract_command.AbstractCommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>The AbstractCommand class is an abstract base class that implements the
+ICommand interface.</p>
+<dl class="method">
+<dt id="apptools.undo.abstract_command.AbstractCommand.do">
+<code class="descname">do</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/abstract_command.html#AbstractCommand.do"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.abstract_command.AbstractCommand.do" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called by the command stack to do the command and to return
+any value.  The command must save any state necessary for the ‘redo()’
+and ‘undo()’ methods to work.  The class’s __init__() must also ensure
+that deep copies of any arguments are made if appropriate.  It is
+guaranteed that this will only ever be called once and that it will be
+called before any call to ‘redo()’ or ‘undo()’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.abstract_command.AbstractCommand.merge">
+<code class="descname">merge</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/abstract_command.html#AbstractCommand.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.abstract_command.AbstractCommand.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called by the command stack to try and merge another
+command with this one.  True is returned if the commands were merged.
+‘other’ is the command that is about to be executed.  If the commands
+are merged then ‘other’ will discarded and not placed on the command
+stack.  A subsequent undo or redo of this modified command must have
+the same effect as the two original commands.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.abstract_command.AbstractCommand.redo">
+<code class="descname">redo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/abstract_command.html#AbstractCommand.redo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.abstract_command.AbstractCommand.redo" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called by the command stack to redo the command.  Any
+returned value will replace the value that the command stack references
+from the original call to ‘do()’ or previous call to ‘redo()’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.abstract_command.AbstractCommand.undo">
+<code class="descname">undo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/abstract_command.html#AbstractCommand.undo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.abstract_command.AbstractCommand.undo" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called by the command stack to undo the command.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.undo.api">
+<span id="apptools-undo-api-module"></span><h2>apptools.undo.api module<a class="headerlink" href="#module-apptools.undo.api" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-apptools.undo.command_stack">
+<span id="apptools-undo-command-stack-module"></span><h2>apptools.undo.command_stack module<a class="headerlink" href="#module-apptools.undo.command_stack" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.undo.command_stack.CommandStack">
+<em class="property">class </em><code class="descclassname">apptools.undo.command_stack.</code><code class="descname">CommandStack</code><a class="reference internal" href="../_modules/apptools/undo/command_stack.html#CommandStack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.command_stack.CommandStack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>The CommandStack class is the default implementation of the
+ICommandStack interface.</p>
+<dl class="method">
+<dt id="apptools.undo.command_stack.CommandStack.begin_macro">
+<code class="descname">begin_macro</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/command_stack.html#CommandStack.begin_macro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.command_stack.CommandStack.begin_macro" title="Permalink to this definition">¶</a></dt>
+<dd><p>This begins a macro by creating an empty command with the given
+‘name’.  All subsequent calls to ‘push()’ create commands that will be
+children of the empty command until the next call to ‘end_macro()’.
+Macros may be nested.  The stack is disabled (ie. nothing can be undone
+or redone) while a macro is being created (ie. while there is an
+outstanding ‘end_macro()’ call).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.command_stack.CommandStack.clear">
+<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/command_stack.html#CommandStack.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.command_stack.CommandStack.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>This clears the stack, without undoing or redoing any commands, and
+leaves the stack in a clean state.  It is typically used when all
+changes to the data have been abandoned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.command_stack.CommandStack.end_macro">
+<code class="descname">end_macro</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/command_stack.html#CommandStack.end_macro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.command_stack.CommandStack.end_macro" title="Permalink to this definition">¶</a></dt>
+<dd><p>This ends a macro.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.command_stack.CommandStack.push">
+<code class="descname">push</code><span class="sig-paren">(</span><em>command</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/command_stack.html#CommandStack.push"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.command_stack.CommandStack.push" title="Permalink to this definition">¶</a></dt>
+<dd><p>This executes a command and saves it on the command stack so that
+it can be subsequently undone and redone.  ‘command’ is an instance
+that implements the ICommand interface.  Its ‘do()’ method is called
+to execute the command.  If any value is returned by ‘do()’ then it is
+returned by ‘push()’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.command_stack.CommandStack.redo">
+<code class="descname">redo</code><span class="sig-paren">(</span><em>sequence_nr=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/command_stack.html#CommandStack.redo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.command_stack.CommandStack.redo" title="Permalink to this definition">¶</a></dt>
+<dd><p>If ‘sequence_nr’ is 0 then the last command that was undone is
+redone and any result returned.  Otherwise commands are redone up to
+and including the given ‘sequence_nr’ and any result of the last of
+these is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.command_stack.CommandStack.undo">
+<code class="descname">undo</code><span class="sig-paren">(</span><em>sequence_nr=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/command_stack.html#CommandStack.undo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.command_stack.CommandStack.undo" title="Permalink to this definition">¶</a></dt>
+<dd><p>If ‘sequence_nr’ is 0 then the last command is undone.  Otherwise
+commands are undone up to and including the given ‘sequence_nr’.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.undo.i_command">
+<span id="apptools-undo-i-command-module"></span><h2>apptools.undo.i_command module<a class="headerlink" href="#module-apptools.undo.i_command" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.undo.i_command.ICommand">
+<em class="property">class </em><code class="descclassname">apptools.undo.i_command.</code><code class="descname">ICommand</code><a class="reference internal" href="../_modules/apptools/undo/i_command.html#ICommand"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.i_command.ICommand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.Interface</span></code></p>
+<p>The command interface.  The state of the data can be changed by passing
+an instance that implements this interface to the ‘push()’ method of a
+command stack along with any arguments.</p>
+<dl class="method">
+<dt id="apptools.undo.i_command.ICommand.do">
+<code class="descname">do</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/i_command.html#ICommand.do"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.i_command.ICommand.do" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called by the command stack to do the command and to return
+any value.  The command must save any state necessary for the ‘redo()’
+and ‘undo()’ methods to work.  The class’s __init__() must also ensure
+that deep copies of any arguments are made if appropriate.  It is
+guaranteed that this will only ever be called once and that it will be
+called before any call to ‘redo()’ or ‘undo()’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.i_command.ICommand.merge">
+<code class="descname">merge</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/i_command.html#ICommand.merge"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.i_command.ICommand.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called by the command stack to try and merge another
+command with this one.  True is returned if the commands were merged.
+‘other’ is the command that is about to be executed.  If the commands
+are merged then ‘other’ will discarded and not placed on the command
+stack.  A subsequent undo or redo of this modified command must have
+the same effect as the two original commands.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.i_command.ICommand.redo">
+<code class="descname">redo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/i_command.html#ICommand.redo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.i_command.ICommand.redo" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called by the command stack to redo the command.  Any
+returned value will replace the value that the command stack references
+from the original call to ‘do()’ or previous call to ‘redo()’.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.i_command.ICommand.undo">
+<code class="descname">undo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/i_command.html#ICommand.undo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.i_command.ICommand.undo" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is called by the command stack to undo the command.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.undo.i_command_stack">
+<span id="apptools-undo-i-command-stack-module"></span><h2>apptools.undo.i_command_stack module<a class="headerlink" href="#module-apptools.undo.i_command_stack" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.undo.i_command_stack.ICommandStack">
+<em class="property">class </em><code class="descclassname">apptools.undo.i_command_stack.</code><code class="descname">ICommandStack</code><a class="reference internal" href="../_modules/apptools/undo/i_command_stack.html#ICommandStack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.i_command_stack.ICommandStack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.Interface</span></code></p>
+<p>The command stack interface.  A command stack is responsible for
+managing the changes to a data model and recording those changes so that
+they can be undone or redone.</p>
+<dl class="method">
+<dt id="apptools.undo.i_command_stack.ICommandStack.begin_macro">
+<code class="descname">begin_macro</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/i_command_stack.html#ICommandStack.begin_macro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.i_command_stack.ICommandStack.begin_macro" title="Permalink to this definition">¶</a></dt>
+<dd><p>This begins a macro by creating an empty command with the given
+‘name’.  The commands passed to all subsequent calls to ‘push()’ will
+be contained in the macro until the next call to ‘end_macro()’.  Macros
+may be nested.  The stack is disabled (ie. nothing can be undone or
+redone) while a macro is being created (ie. while there is an
+outstanding ‘end_macro()’ call).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.i_command_stack.ICommandStack.clear">
+<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/i_command_stack.html#ICommandStack.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.i_command_stack.ICommandStack.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>This clears the stack, without undoing or redoing any commands, and
+leaves the stack in a clean state.  It is typically used when all
+changes to the data have been abandoned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.i_command_stack.ICommandStack.end_macro">
+<code class="descname">end_macro</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/i_command_stack.html#ICommandStack.end_macro"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.i_command_stack.ICommandStack.end_macro" title="Permalink to this definition">¶</a></dt>
+<dd><p>This ends a macro.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.i_command_stack.ICommandStack.push">
+<code class="descname">push</code><span class="sig-paren">(</span><em>command</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/i_command_stack.html#ICommandStack.push"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.i_command_stack.ICommandStack.push" title="Permalink to this definition">¶</a></dt>
+<dd><p>This executes a command and saves it on the command stack so that
+it can be subsequently undone and redone.  ‘command’ is an instance
+that implements the ICommand interface.  Its ‘do()’ method is called
+to execute the command.  If any value is returned by ‘do()’ then it is
+returned by ‘push()’.  The command stack will keep a reference to the
+result so that it can recognise it as an argument to a subsequent
+command (which allows a script to properly save a result needed later).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.i_command_stack.ICommandStack.redo">
+<code class="descname">redo</code><span class="sig-paren">(</span><em>sequence_nr=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/i_command_stack.html#ICommandStack.redo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.i_command_stack.ICommandStack.redo" title="Permalink to this definition">¶</a></dt>
+<dd><p>If ‘sequence_nr’ is 0 then the last command that was undone is
+redone and any result returned.  Otherwise commands are redone up to
+and including the given ‘sequence_nr’ and any result of the last of
+these is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.i_command_stack.ICommandStack.undo">
+<code class="descname">undo</code><span class="sig-paren">(</span><em>sequence_nr=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/i_command_stack.html#ICommandStack.undo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.i_command_stack.ICommandStack.undo" title="Permalink to this definition">¶</a></dt>
+<dd><p>If ‘sequence_nr’ is 0 then the last command is undone.  Otherwise
+commands are undone up to and including the given ‘sequence_nr’.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.undo.i_undo_manager">
+<span id="apptools-undo-i-undo-manager-module"></span><h2>apptools.undo.i_undo_manager module<a class="headerlink" href="#module-apptools.undo.i_undo_manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.undo.i_undo_manager.IUndoManager">
+<em class="property">class </em><code class="descclassname">apptools.undo.i_undo_manager.</code><code class="descname">IUndoManager</code><a class="reference internal" href="../_modules/apptools/undo/i_undo_manager.html#IUndoManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.i_undo_manager.IUndoManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.Interface</span></code></p>
+<p>The undo manager interface.  An undo manager is responsible for one or
+more command stacks.  Typically an application would have a single undo
+manager.</p>
+<dl class="method">
+<dt id="apptools.undo.i_undo_manager.IUndoManager.redo">
+<code class="descname">redo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/i_undo_manager.html#IUndoManager.redo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.i_undo_manager.IUndoManager.redo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redo the last undone command of the active command stack.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.i_undo_manager.IUndoManager.undo">
+<code class="descname">undo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/i_undo_manager.html#IUndoManager.undo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.i_undo_manager.IUndoManager.undo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Undo the last command of the active command stack.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.undo.undo_manager">
+<span id="apptools-undo-undo-manager-module"></span><h2>apptools.undo.undo_manager module<a class="headerlink" href="#module-apptools.undo.undo_manager" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="apptools.undo.undo_manager.UndoManager">
+<em class="property">class </em><code class="descclassname">apptools.undo.undo_manager.</code><code class="descname">UndoManager</code><a class="reference internal" href="../_modules/apptools/undo/undo_manager.html#UndoManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.undo_manager.UndoManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>The UndoManager class is the default implementation of the
+IUndoManager interface.</p>
+<dl class="method">
+<dt id="apptools.undo.undo_manager.UndoManager.redo">
+<code class="descname">redo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/undo_manager.html#UndoManager.redo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.undo_manager.UndoManager.redo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redo the last undone command of the active command stack.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.undo.undo_manager.UndoManager.undo">
+<code class="descname">undo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/undo/undo_manager.html#UndoManager.undo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.undo.undo_manager.UndoManager.undo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Undo the last command of the active command stack.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-apptools.undo">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-apptools.undo" title="Permalink to this headline">¶</a></h2>
+<p>Supports undoing and scripting application commands.
+Part of the AppTools project of the Enthought Tool Suite.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h3><a href="../index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">apptools.undo package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-apptools.undo.abstract_command">apptools.undo.abstract_command module</a></li>
+<li><a class="reference internal" href="#module-apptools.undo.api">apptools.undo.api module</a></li>
+<li><a class="reference internal" href="#module-apptools.undo.command_stack">apptools.undo.command_stack module</a></li>
+<li><a class="reference internal" href="#module-apptools.undo.i_command">apptools.undo.i_command module</a></li>
+<li><a class="reference internal" href="#module-apptools.undo.i_command_stack">apptools.undo.i_command_stack module</a></li>
+<li><a class="reference internal" href="#module-apptools.undo.i_undo_manager">apptools.undo.i_undo_manager module</a></li>
+<li><a class="reference internal" href="#module-apptools.undo.undo_manager">apptools.undo.undo_manager module</a></li>
+<li><a class="reference internal" href="#module-apptools.undo">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.type_registry.html"
+                        title="previous chapter">apptools.type_registry package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.undo.action.html"
+                        title="next chapter">apptools.undo.action package</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.undo.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2020, Enthought
+      </li>
+      <li>
+      Last updated on Jun 12, 2020.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.8.5.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,70 @@
+apptools.preferences.ui package
+===============================
+
+Submodules
+----------
+
+apptools.preferences.ui.api module
+----------------------------------
+
+.. automodule:: apptools.preferences.ui.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.preferences.ui.i\_preferences\_page module
+---------------------------------------------------
+
+.. automodule:: apptools.preferences.ui.i_preferences_page
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.preferences.ui.preferences\_manager module
+---------------------------------------------------
+
+.. automodule:: apptools.preferences.ui.preferences_manager
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.preferences.ui.preferences\_node module
+------------------------------------------------
+
+.. automodule:: apptools.preferences.ui.preferences_node
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.preferences.ui.preferences\_page module
+------------------------------------------------
+
+.. automodule:: apptools.preferences.ui.preferences_page
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.preferences.ui.tree\_item module
+-----------------------------------------
+
+.. automodule:: apptools.preferences.ui.tree_item
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.preferences.ui.widget\_editor module
+---------------------------------------------
+
+.. automodule:: apptools.preferences.ui.widget_editor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.preferences.ui
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -1,0 +1,30 @@
+apptools.type\_registry package
+===============================
+
+Submodules
+----------
+
+apptools.type\_registry.api module
+----------------------------------
+
+.. automodule:: apptools.type_registry.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.type\_registry.type\_registry module
+---------------------------------------------
+
+.. automodule:: apptools.type_registry.type_registry
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.type_registry
+    :members:
+    :undoc-members:
+    :show-inheritance:

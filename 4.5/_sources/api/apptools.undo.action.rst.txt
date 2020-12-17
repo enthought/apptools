@@ -1,0 +1,54 @@
+apptools.undo.action package
+============================
+
+Submodules
+----------
+
+apptools.undo.action.abstract\_command\_stack\_action module
+------------------------------------------------------------
+
+.. automodule:: apptools.undo.action.abstract_command_stack_action
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.undo.action.api module
+-------------------------------
+
+.. automodule:: apptools.undo.action.api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.undo.action.command\_action module
+-------------------------------------------
+
+.. automodule:: apptools.undo.action.command_action
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.undo.action.redo\_action module
+----------------------------------------
+
+.. automodule:: apptools.undo.action.redo_action
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+apptools.undo.action.undo\_action module
+----------------------------------------
+
+.. automodule:: apptools.undo.action.undo_action
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+Module contents
+---------------
+
+.. automodule:: apptools.undo.action
+    :members:
+    :undoc-members:
+    :show-inheritance:
