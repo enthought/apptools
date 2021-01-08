@@ -1,16 +1,12 @@
-#------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: Enthought, Inc.
-# Description: <Enthought logger package component>
-#------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 """ Logger plugin.
 """
 
@@ -23,26 +19,28 @@ from apptools.logger.log_queue_handler import LogQueueHandler
 from traits.api import Callable, List
 
 # Local imports.
-from logger_preferences import LoggerPreferences
-from logger_service import LoggerService
+from .logger_preferences import LoggerPreferences
+from .logger_service import LoggerService
 
 
-ID = 'apptools.logger'
-ILOGGER = ID + '.plugin.logger_service.LoggerService'
+ID = "apptools.logger"
+ILOGGER = ID + ".plugin.logger_service.LoggerService"
+
 
 class LoggerPlugin(Plugin):
-    """ Logger plugin.
-    """
+    """Logger plugin."""
 
     id = ID
-    name = 'Logger plugin'
+    name = "Logger plugin"
 
-    #### Extension points for this plugin ######################################
+    #### Extension points for this plugin #####################################
 
-    MAIL_FILES = 'apptools.logger.plugin.mail_files'
+    MAIL_FILES = "apptools.logger.plugin.mail_files"
 
     mail_files = ExtensionPoint(
-        List(Callable), id=MAIL_FILES, desc="""
+        List(Callable),
+        id=MAIL_FILES,
+        desc="""
 
         This extension point allows you to contribute functions which will be
         called to add project files to the zip file that the user mails back
@@ -50,41 +48,41 @@ class LoggerPlugin(Plugin):
 
         The function will be passed a zipfile.ZipFile object.
 
-        """
+        """,
     )
 
-    #### Contributions to extension points made by this plugin #################
+    #### Contributions to extension points made by this plugin ################
 
-    PREFERENCES = 'envisage.preferences'
-    PREFERENCES_PAGES = 'envisage.ui.workbench.preferences_pages'
-    VIEWS = 'envisage.ui.workbench.views'
+    PREFERENCES = "envisage.preferences"
+    PREFERENCES_PAGES = "envisage.ui.workbench.preferences_pages"
+    VIEWS = "envisage.ui.workbench.views"
 
     preferences = List(contributes_to=PREFERENCES)
     preferences_pages = List(contributes_to=PREFERENCES_PAGES)
     views = List(contributes_to=VIEWS)
 
-
     def _preferences_default(self):
-        return ['pkgfile://%s/plugin/preferences.ini' % ID]
+        return ["pkgfile://%s/plugin/preferences.ini" % ID]
 
     def _preferences_pages_default(self):
-        from apptools.logger.plugin.view.logger_preferences_page import \
-            LoggerPreferencesPage
+        from apptools.logger.plugin.view.logger_preferences_page import (
+            LoggerPreferencesPage,
+        )
+
         return [LoggerPreferencesPage]
 
     def _views_default(self):
         return [self._logger_view_factory]
 
-
-    #### Plugin interface ######################################################
+    #### Plugin interface #####################################################
 
     def start(self):
-        """ Starts the plugin.
-        """
+        """Starts the plugin."""
         preferences = LoggerPreferences()
-        service = LoggerService(application=self.application,
-            preferences=preferences)
-        formatter = logging.Formatter('%(levelname)s|%(asctime)s|%(message)s')
+        service = LoggerService(
+            application=self.application, preferences=preferences
+        )
+        formatter = logging.Formatter("%(levelname)s|%(asctime)s|%(message)s")
         handler = LogQueueHandler()
         handler.setLevel(preferences.level_)
         handler.setFormatter(formatter)
@@ -95,21 +93,17 @@ class LoggerPlugin(Plugin):
         self.application.register_service(ILOGGER, service)
 
     def stop(self):
-        """ Stops the plugin.
-        """
+        """Stops the plugin."""
         service = self.application.get_service(ILOGGER)
         service.save_preferences()
 
-
-    #### LoggerPlugin private interface ########################################
+    #### LoggerPlugin private interface #######################################
 
     def _logger_view_factory(self, **traits):
         from apptools.logger.plugin.view.logger_view import LoggerView
+
         service = self.application.get_service(ILOGGER)
         view = LoggerView(service=service, **traits)
         # Record the created view on the service.
         service.plugin_view = view
         return view
-
-
-#### EOF ######################################################################

@@ -1,16 +1,12 @@
-#------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: Enthought, Inc.
-# Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 """ A naming context for a Python namespace. """
 
 
@@ -18,21 +14,21 @@
 from traits.api import Any, Dict, Instance, Property
 
 # Local imports.
-from address import Address
-from binding import Binding
-from context import Context
-from naming_manager import naming_manager
-from py_object_factory import PyObjectFactory
-from reference import Reference
-from referenceable import Referenceable
-from referenceable_state_factory import ReferenceableStateFactory
+from .address import Address
+from .binding import Binding
+from .context import Context
+from .naming_manager import naming_manager
+from .py_object_factory import PyObjectFactory
+from .reference import Reference
+from .referenceable import Referenceable
+from .referenceable_state_factory import ReferenceableStateFactory
 
 
 # The default environment.
 ENVIRONMENT = {
     # 'Context' properties.
-    Context.OBJECT_FACTORIES : [PyObjectFactory()],
-    Context.STATE_FACTORIES  : [ReferenceableStateFactory()],
+    Context.OBJECT_FACTORIES: [PyObjectFactory()],
+    Context.STATE_FACTORIES: [ReferenceableStateFactory()],
 }
 
 
@@ -70,14 +66,12 @@ class PyContext(Context, Referenceable):
         super(PyContext, self).__init__(**traits)
 
         if type(self.namespace) is not dict:
-            if hasattr(self.namespace, '__dict__'):
+            if hasattr(self.namespace, "__dict__"):
                 self.obj = self.namespace
                 self.namespace = self.namespace.__dict__
 
             else:
-                raise ValueError('Need a dictionary or a __dict__ attribute')
-
-        return
+                raise ValueError("Need a dictionary or a __dict__ attribute")
 
     ###########################################################################
     # 'Referenceable' interface.
@@ -89,8 +83,8 @@ class PyContext(Context, Referenceable):
         """ Returns a reference to this object suitable for binding. """
 
         reference = Reference(
-            class_name = self.__class__.__name__,
-            addresses  = [Address(type='py_context', content=self.namespace)]
+            class_name=self.__class__.__name__,
+            addresses=[Address(type="py_context", content=self.namespace)],
         )
 
         return reference
@@ -114,24 +108,13 @@ class PyContext(Context, Referenceable):
     def _bind(self, name, obj):
         """ Binds a name to an object in this context. """
 
-        state = naming_manager.get_state_to_bind(obj, name,self)
+        state = naming_manager.get_state_to_bind(obj, name, self)
         self.namespace[name] = state
-
-        # Trait event notification.
-        # An "added" event is fired by the bind method of the base calss (which calls
-        # this one), so we don't need to do the changed here (which would be the wrong
-        # thing anyway) -- LGV
-        #
-        # self.trait_property_changed('context_changed', None, None)
-
-        return
 
     def _rebind(self, name, obj):
         """ Rebinds a name to a object in this context. """
 
         self._bind(name, obj)
-
-        return
 
     def _unbind(self, name):
         """ Unbinds a name from this context. """
@@ -139,9 +122,7 @@ class PyContext(Context, Referenceable):
         del self.namespace[name]
 
         # Trait event notification.
-        self.trait_property_changed('context_changed', None, None)
-
-        return
+        self.trait_property_changed("context_changed", None, None)
 
     def _rename(self, old_name, new_name):
         """ Renames an object in this context. """
@@ -157,8 +138,6 @@ class PyContext(Context, Referenceable):
         # Trait event notification.
         self.context_changed = True
 
-        return
-
     def _create_subcontext(self, name):
         """ Creates a sub-context of this context. """
 
@@ -166,7 +145,7 @@ class PyContext(Context, Referenceable):
         self.namespace[name] = sub
 
         # Trait event notification.
-        self.trait_property_changed('context_changed', None, None)
+        self.trait_property_changed("context_changed", None, None)
 
         return sub
 
@@ -176,23 +155,22 @@ class PyContext(Context, Referenceable):
         del self.namespace[name]
 
         # Trait event notification.
-        self.trait_property_changed('context_changed', None, None)
-
-        return
+        self.trait_property_changed("context_changed", None, None)
 
     def _list_bindings(self):
         """ Lists the bindings in this context. """
 
         bindings = []
         for name, value in self.namespace.items():
-            bindings.append(Binding(name=name, obj=self._lookup(name),
-                                    context=self))
+            bindings.append(
+                Binding(name=name, obj=self._lookup(name), context=self)
+            )
         return bindings
 
     def _list_names(self):
         """ Lists the names bound in this context. """
 
-        return self.namespace.keys()
+        return list(self.namespace.keys())
 
     ###########################################################################
     # Private interface.
@@ -202,5 +180,3 @@ class PyContext(Context, Referenceable):
         """ Create a sub-context. """
 
         return self.__class__(namespace=namespace)
-
-#### EOF ######################################################################

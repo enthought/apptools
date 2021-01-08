@@ -1,3 +1,12 @@
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 """ The interface for pages in a preferences dialog. """
 
 
@@ -21,14 +30,4 @@ class IPreferencesPage(Interface):
 
     def apply(self):
         """ Apply the page's preferences. """
-
-    # fixme: We would like to be able to have the following API so that
-    # developers are not forced into using traits UI for their preferences
-    # pages, but at the moment I can't work out how to do it!
-##     def create_control(self, parent):
-##         """ Create the toolkit-specific control that represents the page. """
-
-##     def destroy_control(self, parent):
-##         """ Destroy the toolkit-specific control that represents the page. """
-
-#### EOF ######################################################################
+        pass

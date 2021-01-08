@@ -1,27 +1,23 @@
-#------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: Enthought, Inc.
-# Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 """ The initial context factory for Python file system contexts. """
 
 
 # Local imports.
-from context import Context
-from initial_context_factory import InitialContextFactory
-from object_serializer import ObjectSerializer
-from pyfs_context import PyFSContext
-from pyfs_context_factory import PyFSContextFactory
-from pyfs_object_factory import PyFSObjectFactory
-from pyfs_state_factory import PyFSStateFactory
+from .context import Context
+from .initial_context_factory import InitialContextFactory
+from .object_serializer import ObjectSerializer
+from .pyfs_context import PyFSContext
+from .pyfs_context_factory import PyFSContextFactory
+from .pyfs_object_factory import PyFSObjectFactory
+from .pyfs_state_factory import PyFSStateFactory
 
 
 class PyFSInitialContextFactory(InitialContextFactory):
@@ -46,6 +42,4 @@ class PyFSInitialContextFactory(InitialContextFactory):
         object_serializers = [ObjectSerializer()]
         environment[PyFSContext.OBJECT_SERIALIZERS] = object_serializers
 
-        return PyFSContext(path=r'', environment=environment)
-
-#### EOF ######################################################################
+        return PyFSContext(path=r"", environment=environment)

@@ -1,9 +1,17 @@
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 """ A binding between a trait on an object and a preference value. """
 
 
 # Enthought library imports.
 from traits.api import Any, HasTraits, Instance, Str, Undefined
-from traits.api import Unicode
 
 # Local imports.
 from .i_preferences import IPreferences
@@ -44,8 +52,6 @@ class PreferenceBinding(HasTraits):
         # Wire-up trait change handlers etc.
         self._initialize()
 
-        return
-
     ###########################################################################
     # 'PreferenceBinding' interface.
     ###########################################################################
@@ -68,25 +74,21 @@ class PreferenceBinding(HasTraits):
 
         self.preferences.set(self.preference_path, new)
 
-        return
-
     #### Other observer pattern listeners #####################################
 
     def _preferences_listener(self, node, key, old, new):
         """ Listener called when a preference value is changed. """
 
-        components = self.preference_path.split('.')
+        components = self.preference_path.split(".")
         if key == components[-1]:
             self._set_trait()
-
-        return
 
     #### Methods ##############################################################
 
     # fixme: This method is mostly duplicated in 'PreferencesHelper' (the only
     # difference is the line that gets the handler).
     def _get_value(self, trait_name, value):
-        """ Get the actual value to set.
+        """Get the actual value to set.
 
         This method makes sure that any required work is done to convert the
         preference value from a string.
@@ -99,9 +101,9 @@ class PreferenceBinding(HasTraits):
         if type(handler) is Str:
             pass
 
-        # If the trait type is 'Unicode' then we convert the raw value.
-        elif type(handler) is Unicode:
-            value = unicode(value)
+        # If the trait type is 'Str' then we convert the raw value.
+        elif type(handler) is Str:
+            value = str(value)
 
         # Otherwise, we eval it!
         else:
@@ -110,7 +112,7 @@ class PreferenceBinding(HasTraits):
 
             # If the eval fails then there is probably a syntax error, but
             # we will let the handler validation throw the exception.
-            except:
+            except Exception:
                 pass
 
         return handler.validate(self, trait_name, value)
@@ -122,14 +124,12 @@ class PreferenceBinding(HasTraits):
         self.obj.on_trait_change(self._on_trait_changed, self.trait_name)
 
         # Listen for the preference value being changed.
-        components = self.preference_path.split('.')
-        node       = '.'.join(components[:-1])
+        components = self.preference_path.split(".")
+        node = ".".join(components[:-1])
 
         self.preferences.add_preferences_listener(
             self._preferences_listener, node
         )
-
-        return
 
     def _set_trait(self, notify=True):
         """ Set the object's trait to the value of the preference. """
@@ -137,11 +137,9 @@ class PreferenceBinding(HasTraits):
         value = self.preferences.get(self.preference_path, Undefined)
         if value is not Undefined:
             trait_value = self._get_value(self.trait_name, value)
-            traits      = {self.trait_name : trait_value}
+            traits = {self.trait_name: trait_value}
 
             self.obj.trait_set(trait_change_notify=notify, **traits)
-
-        return
 
 
 # Factory function for creating bindings.
@@ -161,14 +159,12 @@ def bind_preference(obj, trait_name, preference_path, preferences=None):
     # constructor (we could of course split that out, which may be the 'right'
     # way to do it ;^).
     traits = {
-        'obj'             : obj,
-        'trait_name'      : trait_name,
-        'preference_path' : preference_path
+        "obj": obj,
+        "trait_name": trait_name,
+        "preference_path": preference_path,
     }
 
     if preferences is not None:
-        traits['preferences'] = preferences
+        traits["preferences"] = preferences
 
     return PreferenceBinding(**traits)
-
-#### EOF ######################################################################

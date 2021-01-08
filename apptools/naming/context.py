@@ -1,34 +1,26 @@
-#------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: Enthought, Inc.
-# Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 """ The base class for all naming contexts. """
 
 
 # Enthought library imports.
-from traits.api import Any, Dict, Event, HasTraits, Instance
+from traits.api import Any, Dict, Event, HasTraits
 from traits.api import Property, Str
-from apptools.type_manager.api import TypeManager
 
 # Local imports.
-from binding import Binding
-from exception import InvalidNameError, NameAlreadyBoundError
-from exception import NameNotFoundError, NotContextError
-from exception import OperationNotSupportedError
-from naming_event import NamingEvent
-from naming_manager import naming_manager
-from object_factory import ObjectFactory
-from state_factory import StateFactory
-from unique_name import make_unique_name
+from .binding import Binding
+from .exception import InvalidNameError, NameAlreadyBoundError
+from .exception import NameNotFoundError, NotContextError
+from .naming_event import NamingEvent
+from .naming_manager import naming_manager
+from .unique_name import make_unique_name
 
 
 # Constants for environment property keys.
@@ -36,18 +28,12 @@ INITIAL_CONTEXT_FACTORY = "apptools.naming.factory.initial"
 OBJECT_FACTORIES = "apptools.naming.factory.object"
 STATE_FACTORIES = "apptools.naming.factory.state"
 
-# Non-JNDI.
-TYPE_MANAGER = "apptools.naming.factory.type.manager"
-
 
 # The default environment.
 ENVIRONMENT = {
     # 'Context' properties.
-    OBJECT_FACTORIES          : [],
-    STATE_FACTORIES           : [],
-
-    # Non-JNDI.
-    TYPE_MANAGER              : None,
+    OBJECT_FACTORIES: [],
+    STATE_FACTORIES: [],
 }
 
 
@@ -59,9 +45,6 @@ class Context(HasTraits):
     OBJECT_FACTORIES = OBJECT_FACTORIES
     STATE_FACTORIES = STATE_FACTORIES
 
-    # Non-JNDI.
-    TYPE_MANAGER = TYPE_MANAGER
-
     #### 'Context' interface ##################################################
 
     # The naming environment in effect for this context.
@@ -69,14 +52,6 @@ class Context(HasTraits):
 
     # The name of the context within its own namespace.
     namespace_name = Property(Str)
-
-    # The type manager in the context's environment (used to create context
-    # adapters etc.).
-    #
-    # fixme: This is an experimental 'convenience' trait, since it is common
-    # to get hold of the context's type manager to see if some object has a
-    # context adapter.
-    type_manager = Property(Instance(TypeManager))
 
     #### Events ####
 
@@ -97,7 +72,7 @@ class Context(HasTraits):
     # Fired when the contents of the context have changed dramatically.
     context_changed = Event(NamingEvent)
 
-     #### Protected 'Context' interface #######################################
+    #### Protected 'Context' interface #######################################
 
     # The bindings in the context.
     _bindings = Dict(Str, Any)
@@ -131,23 +106,13 @@ class Context(HasTraits):
         # 'enabled_when' evaluation.  This is because the Traits evaluation
         # code calls the 'get()' method on the Context which attempts to
         # retrieve the current namespace_name value.
-        #raise OperationNotSupportedError()
-        return ''
-
-    def _get_type_manager(self):
-        """ Returns the type manager in the context's environment.
-
-        This will return None if no type manager was used to create the initial
-        context.
-
-        """
-
-        return self.environment.get(self.TYPE_MANAGER)
+        # raise OperationNotSupportedError()
+        return ""
 
     #### Methods ##############################################################
 
     def bind(self, name, obj, make_contexts=False):
-        """ Binds a name to an object.
+        """Binds a name to an object.
 
         If 'make_contexts' is True then any missing intermediate contexts are
         created automatically.
@@ -155,7 +120,7 @@ class Context(HasTraits):
         """
 
         if len(name) == 0:
-            raise InvalidNameError('empty name')
+            raise InvalidNameError("empty name")
 
         # Parse the name.
         components = self._parse_name(name)
@@ -187,12 +152,10 @@ class Context(HasTraits):
                     raise NameNotFoundError(components[0])
 
             next_context = self._get_next_context(components[0])
-            next_context.bind('/'.join(components[1:]), obj, make_contexts)
-
-        return
+            next_context.bind("/".join(components[1:]), obj, make_contexts)
 
     def rebind(self, name, obj, make_contexts=False):
-        """ Binds an object to a name that may already be bound.
+        """Binds an object to a name that may already be bound.
 
         If 'make_contexts' is True then any missing intermediate contexts are
         created automatically.
@@ -205,7 +168,7 @@ class Context(HasTraits):
         """
 
         if len(name) == 0:
-            raise InvalidNameError('empty name')
+            raise InvalidNameError("empty name")
 
         # Parse the name.
         components = self._parse_name(name)
@@ -231,15 +194,13 @@ class Context(HasTraits):
                     raise NameNotFoundError(components[0])
 
             next_context = self._get_next_context(components[0])
-            next_context.rebind('/'.join(components[1:]), obj, make_contexts)
-
-        return
+            next_context.rebind("/".join(components[1:]), obj, make_contexts)
 
     def unbind(self, name):
         """ Unbinds a name. """
 
         if len(name) == 0:
-            raise InvalidNameError('empty name')
+            raise InvalidNameError("empty name")
 
         # Parse the name.
         components = self._parse_name(name)
@@ -270,15 +231,13 @@ class Context(HasTraits):
                 raise NameNotFoundError(components[0])
 
             next_context = self._get_next_context(components[0])
-            next_context.unbind('/'.join(components[1:]))
-
-        return
+            next_context.unbind("/".join(components[1:]))
 
     def rename(self, old_name, new_name):
         """ Binds a new name to an object. """
 
         if len(old_name) == 0 or len(new_name) == 0:
-            raise InvalidNameError('empty name')
+            raise InvalidNameError("empty name")
 
         # Parse the names.
         old_components = self._parse_name(old_name)
@@ -305,7 +264,7 @@ class Context(HasTraits):
             # Trait event notification.
             self.object_renamed = NamingEvent(
                 old_binding=Binding(name=old_name, obj=obj, context=self),
-                new_binding=Binding(name=new_name, obj=obj, context=self)
+                new_binding=Binding(name=new_name, obj=obj, context=self),
             )
 
         else:
@@ -321,8 +280,6 @@ class Context(HasTraits):
 
             # Unbind the old one.
             self.unbind(old_name)
-
-        return
 
     def lookup(self, name):
         """ Resolves a name relative to this context. """
@@ -353,17 +310,16 @@ class Context(HasTraits):
                 raise NameNotFoundError(components[0])
 
             next_context = self._get_next_context(components[0])
-            obj = next_context.lookup('/'.join(components[1:]))
+            obj = next_context.lookup("/".join(components[1:]))
 
         return obj
-
 
     # fixme: Non-JNDI
     def lookup_binding(self, name):
         """ Looks up the binding for a name relative to this context. """
 
         if len(name) == 0:
-            raise InvalidNameError('empty name')
+            raise InvalidNameError("empty name")
 
         # Parse the name.
         components = self._parse_name(name)
@@ -385,16 +341,15 @@ class Context(HasTraits):
                 raise NameNotFoundError(components[0])
 
             next_context = self._get_next_context(components[0])
-            binding = next_context.lookup_binding('/'.join(components[1:]))
+            binding = next_context.lookup_binding("/".join(components[1:]))
 
         return binding
 
     # fixme: Non-JNDI
     def lookup_context(self, name):
-        """ Resolves a name relative to this context.
+        """Resolves a name relative to this context.
 
-        The name MUST resolve to a context. This method is useful to return
-        context adapters.
+        The name MUST resolve to a context.
 
         """
 
@@ -424,7 +379,7 @@ class Context(HasTraits):
                 raise NameNotFoundError(components[0])
 
             next_context = self._get_next_context(components[0])
-            obj = next_context.lookup('/'.join(components[1:]))
+            obj = next_context.lookup("/".join(components[1:]))
 
         return obj
 
@@ -432,7 +387,7 @@ class Context(HasTraits):
         """ Creates a sub-context. """
 
         if len(name) == 0:
-            raise InvalidNameError('empty name')
+            raise InvalidNameError("empty name")
 
         # Parse the name.
         components = self._parse_name(name)
@@ -460,7 +415,7 @@ class Context(HasTraits):
                 raise NameNotFoundError(components[0])
 
             next_context = self._get_next_context(components[0])
-            sub = next_context.create_subcontext('/'.join(components[1:]))
+            sub = next_context.create_subcontext("/".join(components[1:]))
 
         return sub
 
@@ -468,7 +423,7 @@ class Context(HasTraits):
         """ Destroys a sub-context. """
 
         if len(name) == 0:
-            raise InvalidNameError('empty name')
+            raise InvalidNameError("empty name")
 
         # Parse the name.
         components = self._parse_name(name)
@@ -483,7 +438,7 @@ class Context(HasTraits):
 
             obj = self._lookup(atom)
             if not self._is_context(atom):
-               raise NotContextError(name)
+                raise NotContextError(name)
 
             # Do the actual destruction of the sub-context.
             self._destroy_subcontext(atom)
@@ -499,23 +454,21 @@ class Context(HasTraits):
                 raise NameNotFoundError(components[0])
 
             next_context = self._get_next_context(components[0])
-            next_context.destroy_subcontext('/'.join(components[1:]))
-
-        return
+            next_context.destroy_subcontext("/".join(components[1:]))
 
     # fixme: Non-JNDI
     def get_unique_name(self, prefix):
-        """ Returns a name that is unique within the context.
+        """Returns a name that is unique within the context.
 
         The name returned will start with the specified prefix.
 
         """
 
-        return make_unique_name(prefix, existing=self.list_names(''),
-            format='%s (%d)')
+        return make_unique_name(
+            prefix, existing=self.list_names(""), format="%s (%d)"
+        )
 
-
-    def list_names(self, name=''):
+    def list_names(self, name=""):
         """ Lists the names bound in a context. """
 
         # If the name is empty then the operation takes place in this context.
@@ -531,11 +484,11 @@ class Context(HasTraits):
                 raise NameNotFoundError(components[0])
 
             next_context = self._get_next_context(components[0])
-            names = next_context.list_names('/'.join(components[1:]))
+            names = next_context.list_names("/".join(components[1:]))
 
         return names
 
-    def list_bindings(self, name=''):
+    def list_bindings(self, name=""):
         """ Lists the bindings in a context. """
 
         # If the name is empty then the operation takes place in this context.
@@ -551,7 +504,7 @@ class Context(HasTraits):
                 raise NameNotFoundError(components[0])
 
             next_context = self._get_next_context(components[0])
-            bindings = next_context.list_bindings('/'.join(components[1:]))
+            bindings = next_context.list_bindings("/".join(components[1:]))
 
         return bindings
 
@@ -584,7 +537,7 @@ class Context(HasTraits):
                     raise NameNotFoundError(components[0])
 
                 next_context = self._get_next_context(components[0])
-                is_context = next_context.is_context('/'.join(components[1:]))
+                is_context = next_context.is_context("/".join(components[1:]))
 
         return is_context
 
@@ -602,7 +555,7 @@ class Context(HasTraits):
         # path contain the name components down to the current context
         path = []
 
-        self._search( obj, names, path, {} )
+        self._search(obj, names, path, {})
 
         return names
 
@@ -611,13 +564,13 @@ class Context(HasTraits):
     ###########################################################################
 
     def _parse_name(self, name):
-        """ Parse a name into a list of components.
+        """Parse a name into a list of components.
 
         e.g. 'foo/bar/baz' -> ['foo', 'bar', 'baz']
 
         """
 
-        return name.split('/')
+        return name.split("/")
 
     def _is_bound(self, name):
         """ Is a name bound in this context? """
@@ -642,21 +595,15 @@ class Context(HasTraits):
         state = naming_manager.get_state_to_bind(obj, name, self)
         self._bindings[name] = state
 
-        return
-
     def _rebind(self, name, obj):
         """ Rebinds a name to an object in this context. """
 
         self._bind(name, obj)
 
-        return
-
     def _unbind(self, name):
         """ Unbinds a name from this context. """
 
         del self._bindings[name]
-
-        return
 
     def _rename(self, old_name, new_name):
         """ Renames an object in this context. """
@@ -666,8 +613,6 @@ class Context(HasTraits):
 
         # Unbind the old one.
         del self._bindings[old_name]
-
-        return
 
     def _create_subcontext(self, name):
         """ Creates a sub-context of this context. """
@@ -681,8 +626,6 @@ class Context(HasTraits):
         """ Destroys a sub-context of this context. """
 
         del self._bindings[name]
-
-        return
 
     def _list_bindings(self):
         """ Lists the bindings in this context. """
@@ -698,7 +641,7 @@ class Context(HasTraits):
     def _list_names(self):
         """ Lists the names bound in this context. """
 
-        return self._bindings.keys()
+        return list(self._bindings.keys())
 
     def _is_context(self, name):
         """ Returns True if a name is bound to a context. """
@@ -713,60 +656,29 @@ class Context(HasTraits):
         # If the object is a context then everything is just dandy.
         if isinstance(obj, Context):
             next_context = obj
-
-        # Otherwise, instead of just giving up, see if the context has a type
-        # manager that knows how to adapt the object to make it quack like a
-        # context.
         else:
-            next_context = self._get_context_adapter(obj)
-
-            # If no adapter was found then we cannot continue name resolution.
-            if next_context is None:
-                raise NotContextError(name)
+            raise NotContextError(name)
 
         return next_context
 
-    def _search( self, obj, names, path, searched):
-        """ Append to names any name bound to obj.
-            Join path and name with '/' to for a complete name from the
-            top context.
+    def _search(self, obj, names, path, searched):
+        """Append to names any name bound to obj.
+        Join path and name with '/' to for a complete name from the
+        top context.
         """
 
         # Check the bindings recursively.
         for binding in self.list_bindings():
             if binding.obj is obj:
-                path.append( binding.name )
-                names.append( '/'.join(path) )
+                path.append(binding.name)
+                names.append("/".join(path))
                 path.pop()
 
-            if isinstance( binding.obj, Context ) \
-                and not binding.obj in searched:
-                path.append( binding.name )
+            if (
+                isinstance(binding.obj, Context)
+                and binding.obj not in searched
+            ):
+                path.append(binding.name)
                 searched[binding.obj] = True
-                binding.obj._search( obj, names, path, searched )
+                binding.obj._search(obj, names, path, searched)
                 path.pop()
-
-        return
-
-    ###########################################################################
-    # Private interface.
-    ###########################################################################
-
-    def _get_context_adapter(self, obj):
-        """ Returns a context adapter for an object.
-
-        Returns None if no such adapter is available.
-
-        """
-
-        if self.type_manager is not None:
-            adapter = self.type_manager.object_as(
-                obj, Context, environment=self.environment, context=self
-            )
-
-        else:
-            adapter = None
-
-        return adapter
-
-#### EOF ######################################################################

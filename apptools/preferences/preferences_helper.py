@@ -1,3 +1,12 @@
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 """ An object that can be initialized from a preferences node. """
 
 
@@ -5,7 +14,7 @@
 import logging
 
 # Enthought library imports.
-from traits.api import HasTraits, Instance, Str, Unicode
+from traits.api import HasTraits, Instance, Str
 
 # Local imports.
 from .i_preferences import IPreferences
@@ -17,7 +26,14 @@ logger = logging.getLogger(__name__)
 
 
 class PreferencesHelper(HasTraits):
-    """ An object that can be initialized from a preferences node. """
+    """ A base class for objects that can be initialized from a preferences
+    node.
+
+    Additional traits defined on subclasses will be listened to. Changes
+    are then synchronized with the preferences. Note that mutations on nested
+    containers e.g. List(List(Str)) cannot be synchronized and should be
+    avoided.
+    """
 
     #### 'PreferencesHelper' interface ########################################
 
@@ -45,8 +61,6 @@ class PreferencesHelper(HasTraits):
         if self.preferences:
             self._initialize(self.preferences)
 
-        return
-
     ###########################################################################
     # Private interface.
     ###########################################################################
@@ -65,12 +79,24 @@ class PreferencesHelper(HasTraits):
     def _anytrait_changed(self, trait_name, old, new):
         """ Static trait change handler. """
 
-        # If we were the one that set the trait (because the underlying
-        # preferences node changed) then do nothing.
-        if self.preferences and self._is_preference_trait(trait_name):
-            self.preferences.set('%s.%s' % (self._get_path(), trait_name), new)
+        if self.preferences is None:
+            return
 
-        return
+        if self._is_preference_trait(trait_name):
+            self.preferences.set("%s.%s" % (self._get_path(), trait_name), new)
+
+        # If the trait was a list or dict '_items' trait then just treat it as
+        # if the entire list or dict was changed.
+        elif trait_name.endswith('_items'):
+            trait_name = trait_name[:-6]
+            if self._is_preference_trait(trait_name):
+                self.preferences.set(
+                    '%s.%s' % (self._get_path(), trait_name),
+                    getattr(self, trait_name)
+                )
+
+        # If the change refers to a trait defined on this class, then
+        # the trait is not a preference trait and we do nothing.
 
     def _preferences_changed(self, old, new):
         """ Static trait change handler. """
@@ -86,8 +112,6 @@ class PreferencesHelper(HasTraits):
             # listener for preferences being changed in the new node).
             self._initialize(new, notify=True)
 
-        return
-
     #### Other observer pattern listeners #####################################
 
     def _preferences_changed_listener(self, node, key, old, new):
@@ -95,8 +119,6 @@ class PreferencesHelper(HasTraits):
 
         if key in self.trait_names():
             setattr(self, key, self._get_value(key, new))
-
-        return
 
     #### Methods ##############################################################
 
@@ -107,9 +129,9 @@ class PreferencesHelper(HasTraits):
             path = self.preferences_path
 
         else:
-            path = getattr(self, 'PREFERENCES_PATH', None)
+            path = getattr(self, "PREFERENCES_PATH", None)
             if path is None:
-                raise SystemError('no preferences path, %s' % self)
+                raise SystemError("no preferences path, %s" % self)
 
             else:
                 logger.warn('DEPRECATED: use "preferences_path" %s' % self)
@@ -117,7 +139,7 @@ class PreferencesHelper(HasTraits):
         return path
 
     def _get_value(self, trait_name, value):
-        """ Get the actual value to set.
+        """Get the actual value to set.
 
         This method makes sure that any required work is done to convert the
         preference value from a string. Str traits or those with the metadata
@@ -128,8 +150,8 @@ class PreferencesHelper(HasTraits):
         trait = self.trait(trait_name)
         handler = trait.handler
 
-        # If the trait type is 'Str' or Unicode then we just take the raw value.
-        if isinstance(handler, (Str, Unicode)) or trait.is_str:
+        # If the trait type is 'Str' then we just take the raw value.
+        if isinstance(handler, Str) or trait.is_str:
             pass
 
         # Otherwise, we eval it!
@@ -139,7 +161,7 @@ class PreferencesHelper(HasTraits):
 
             # If the eval fails then there is probably a syntax error, but
             # we will let the handler validation throw the exception.
-            except:
+            except Exception:
                 pass
 
         if handler.validate is not None:
@@ -159,7 +181,7 @@ class PreferencesHelper(HasTraits):
         traits_to_set = {}
         for trait_name in self.trait_names():
             if trait_name in keys:
-                key = '%s.%s' % (path, trait_name)
+                key = "%s.%s" % (path, trait_name)
                 value = self._get_value(trait_name, preferences.get(key))
                 traits_to_set[trait_name] = value
 
@@ -170,17 +192,16 @@ class PreferencesHelper(HasTraits):
             self._preferences_changed_listener, path
         )
 
-        return
-
     # fixme: Pretty much duplicated in 'PreferencesPage' (except for the
     # class name of course!).
     def _is_preference_trait(self, trait_name):
         """ Return True if a trait represents a preference value. """
 
-        if trait_name.startswith('_') or trait_name.endswith('_') \
-           or trait_name in PreferencesHelper.class_traits():
+        if (
+            trait_name.startswith("_")
+            or trait_name.endswith("_")
+            or trait_name in PreferencesHelper.class_traits()
+        ):
             return False
 
-        return True
-
-#### EOF ######################################################################
+        return trait_name in self.editable_traits()

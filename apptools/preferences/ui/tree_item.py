@@ -1,16 +1,12 @@
-#------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: Enthought, Inc.
-# Description: <Enthought pyface package component>
-#------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 """ A generic base-class for items in a tree data structure.
 
 An example:-
@@ -45,7 +41,7 @@ class TreeItem(HasTraits):
     allows_children = Bool(True)
 
     # The item's children.
-    children = List(Instance('TreeItem'))
+    children = List(Instance("TreeItem"))
 
     # Arbitrary data associated with the item.
     data = Any
@@ -54,7 +50,7 @@ class TreeItem(HasTraits):
     has_children = Property(Bool)
 
     # The item's parent.
-    parent = Instance('TreeItem')
+    parent = Instance("TreeItem")
 
     ###########################################################################
     # 'object' interface.
@@ -64,7 +60,7 @@ class TreeItem(HasTraits):
         """ Returns the informal string representation of the object. """
 
         if self.data is None:
-            s = ''
+            s = ""
 
         else:
             s = str(self.data)
@@ -86,7 +82,7 @@ class TreeItem(HasTraits):
     #### Methods ##############################################################
 
     def append(self, child):
-        """ Appends a child to this item.
+        """Appends a child to this item.
 
         This removes the child from its current parent (if it has one).
 
@@ -95,7 +91,7 @@ class TreeItem(HasTraits):
         return self.insert(len(self.children), child)
 
     def insert(self, index, child):
-        """ Inserts a child into this item at the specified index.
+        """Inserts a child into this item at the specified index.
 
         This removes the child from its current parent (if it has one).
 
@@ -118,7 +114,7 @@ class TreeItem(HasTraits):
         return child
 
     def insert_before(self, before, child):
-        """ Inserts a child into this item before the specified item.
+        """Inserts a child into this item before the specified item.
 
         This removes the child from its current parent (if it has one).
 
@@ -131,7 +127,7 @@ class TreeItem(HasTraits):
         return (index, child)
 
     def insert_after(self, after, child):
-        """ Inserts a child into this item after the specified item.
+        """Inserts a child into this item after the specified item.
 
         This removes the child from its current parent (if it has one).
 
@@ -142,5 +138,3 @@ class TreeItem(HasTraits):
         self.insert(index + 1, child)
 
         return (index, child)
-
-#### EOF ######################################################################

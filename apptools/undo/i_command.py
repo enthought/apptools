@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2007, Riverbank Computing Limited
 # All rights reserved.
 #
@@ -10,15 +10,15 @@
 #
 # Author: Riverbank Computing Limited
 # Description: <Enthought undo package component>
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 
 # Enthought library imports.
-from traits.api import Any, Interface, Unicode
+from traits.api import Any, Interface, Str
 
 
 class ICommand(Interface):
-    """ The command interface.  The state of the data can be changed by passing
+    """The command interface.  The state of the data can be changed by passing
     an instance that implements this interface to the 'push()' method of a
     command stack along with any arguments.
     """
@@ -31,14 +31,14 @@ class ICommand(Interface):
     # This is the name of the command as it will appear in any GUI element.  It
     # may include '&' which will be automatically removed whenever it is
     # inappropriate.
-    name = Unicode
+    name = Str
 
     ###########################################################################
     # 'ICommand' interface.
     ###########################################################################
 
     def do(self):
-        """ This is called by the command stack to do the command and to return
+        """This is called by the command stack to do the command and to return
         any value.  The command must save any state necessary for the 'redo()'
         and 'undo()' methods to work.  The class's __init__() must also ensure
         that deep copies of any arguments are made if appropriate.  It is
@@ -47,7 +47,7 @@ class ICommand(Interface):
         """
 
     def merge(self, other):
-        """ This is called by the command stack to try and merge another
+        """This is called by the command stack to try and merge another
         command with this one.  True is returned if the commands were merged.
         'other' is the command that is about to be executed.  If the commands
         are merged then 'other' will discarded and not placed on the command
@@ -56,7 +56,7 @@ class ICommand(Interface):
         """
 
     def redo(self):
-        """ This is called by the command stack to redo the command.  Any
+        """This is called by the command stack to redo the command.  Any
         returned value will replace the value that the command stack references
         from the original call to 'do()' or previous call to 'redo()'.
         """

@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2007, Riverbank Computing Limited
 # All rights reserved.
 #
@@ -10,9 +10,7 @@
 #
 # Author: Riverbank Computing Limited
 # Description: <Enthought undo package component>
-#------------------------------------------------------------------------------
-
-from __future__ import absolute_import
+# ------------------------------------------------------------------------------
 
 # Local imports.
 from .abstract_command_stack_action import AbstractCommandStackAction

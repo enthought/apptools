@@ -1,3 +1,12 @@
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 """ Package-scope globals.
 
 The default preferences node is currently used by 'PreferencesHelper' and
@@ -11,10 +20,12 @@ preferences hierarchy.
 # The default preferences node.
 _default_preferences = None
 
+
 def get_default_preferences():
     """ Get the default preferences node. """
 
     return _default_preferences
+
 
 def set_default_preferences(default_preferences):
     """ Set the default preferences node. """
@@ -25,5 +36,3 @@ def set_default_preferences(default_preferences):
 
     # For convenience.
     return _default_preferences
-
-#### EOF ######################################################################

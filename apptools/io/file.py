@@ -1,21 +1,20 @@
-#------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: Enthought, Inc.
-# Description: <Enthought IO package component>
-#------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 """ A representation of files and folders in a file system. """
 
 
 # Standard/built-in imports.
-import mimetypes, os, shutil, stat
+import mimetypes
+import os
+import shutil
+import stat
 
 # Enthought library imports.
 from traits.api import Bool, HasPrivateTraits, Instance, List, Property
@@ -31,7 +30,7 @@ class File(HasPrivateTraits):
     absolute_path = Property(Str)
 
     # The folder's children (for files this is always None).
-    children = Property(List('File'))
+    children = Property(List("File"))
 
     # The file extension (for folders this is always the empty string).
     #
@@ -63,7 +62,7 @@ class File(HasPrivateTraits):
     name = Property(Str)
 
     # The parent of this file/folder (None if it has no parent).
-    parent = Property(Instance('File'))
+    parent = Property(Instance("File"))
 
     # The path name of this file/folder.
     path = Str
@@ -80,19 +79,10 @@ class File(HasPrivateTraits):
 
         super(File, self).__init__(path=path, **traits)
 
-        return
-
-    def __cmp__(self, other):
-        """ Comparison operators. """
-        if isinstance(other, File):
-            return cmp(self.path, other.path)
-
-        return 1
-
     def __str__(self):
         """ Returns an 'informal' string representation of the object. """
 
-        return 'File(%s)' % self.path
+        return "File(%s)" % self.path
 
     ###########################################################################
     # 'File' interface.
@@ -106,7 +96,7 @@ class File(HasPrivateTraits):
         return os.path.abspath(self.path)
 
     def _get_children(self):
-        """ Returns the folder's children.
+        """Returns the folder's children.
 
         Returns None if the path does not exist or is not a folder.
 
@@ -147,7 +137,7 @@ class File(HasPrivateTraits):
     def _get_is_package(self):
         """ Returns True if the path exists and is a Python package. """
 
-        return self.is_folder and '__init__.py' in os.listdir(self.path)
+        return self.is_folder and "__init__.py" in os.listdir(self.path)
 
     def _get_is_readonly(self):
         """ Returns True if the file/folder is readonly, otherwise False. """
@@ -202,7 +192,7 @@ class File(HasPrivateTraits):
         """ Returns the path as a URL. """
 
         # Strip out the leading slash on POSIX systems.
-        return 'file:///%s' % self.absolute_path.lstrip('/')
+        return "file:///%s" % self.absolute_path.lstrip("/")
 
     #### Methods ##############################################################
 
@@ -219,22 +209,18 @@ class File(HasPrivateTraits):
         elif self.is_file:
             shutil.copyfile(self.path, destination.path)
 
-        return
-
-    def create_file(self, contents=''):
+    def create_file(self, contents=""):
         """ Creates a file at this path. """
 
         if self.exists:
             raise ValueError("file %s already exists" % self.path)
 
-        f = open(self.path, 'w')
+        f = open(self.path, "w")
         f.write(contents)
         f.close()
 
-        return
-
     def create_folder(self):
-        """ Creates a folder at this path.
+        """Creates a folder at this path.
 
         All intermediate folders MUST already exist.
 
@@ -245,10 +231,8 @@ class File(HasPrivateTraits):
 
         os.mkdir(self.path)
 
-        return
-
     def create_folders(self):
-        """ Creates a folder at this path.
+        """Creates a folder at this path.
 
         This will attempt to create any missing intermediate folders.
 
@@ -259,10 +243,8 @@ class File(HasPrivateTraits):
 
         os.makedirs(self.path)
 
-        return
-
     def create_package(self):
-        """ Creates a package at this path.
+        """Creates a package at this path.
 
         All intermediate folders/packages MUST already exist.
 
@@ -275,13 +257,11 @@ class File(HasPrivateTraits):
 
         # Create the '__init__.py' file that actually turns the folder into a
         # package!
-        init = File(os.path.join(self.path, '__init__.py'))
+        init = File(os.path.join(self.path, "__init__.py"))
         init.create_file()
 
-        return
-
     def delete(self):
-        """ Deletes this file/folder.
+        """Deletes this file/folder.
 
         Does nothing if the file/folder does not exist.
 
@@ -300,8 +280,6 @@ class File(HasPrivateTraits):
 
             # Delete it!
             os.remove(self.path)
-
-        return
 
     def make_writeable(self):
         """ Attempt to make the file/folder writeable. """
@@ -322,8 +300,6 @@ class File(HasPrivateTraits):
             if not os.access(self.path, os.W_OK):
                 os.chmod(self.path, stat.S_IWUSR)
 
-        return
-
     def move(self, destination):
         """ Moves this file/folder. """
 
@@ -336,7 +312,3 @@ class File(HasPrivateTraits):
 
         # Move it!
         shutil.move(self.path, destination.path)
-
-        return
-
-#### EOF ######################################################################

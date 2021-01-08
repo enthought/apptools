@@ -1,12 +1,21 @@
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 """ An example of using the preferences manager. """
 
 
 # Enthought library imports.
-from traits.api import Color, Int, Float, Str
+from traits.api import Color, Int
 from traitsui.api import View
 
 # Local imports.
-from apptools.preferences.api import Preferences, PreferencesHelper
+from apptools.preferences.api import Preferences
 from apptools.preferences.api import get_default_preferences
 from apptools.preferences.api import set_default_preferences
 from apptools.preferences.ui.api import PreferencesManager, PreferencesPage
@@ -38,7 +47,7 @@ class AcmePreferencesPage(PreferencesPage):
 
     #### Preferences ##########################################################
 
-    width  = Int(800)
+    width = Int(800)
     height = Int(600)
 
     #### Traits UI views ######################################################
@@ -80,9 +89,7 @@ if __name__ == '__main__':
 
     # Create a manager with some pages.
     preferences_manager = PreferencesManager(
-        pages = [
-            AcmePreferencesPage(), AcmeWorkbenchPreferencesPage()
-        ]
+        pages=[AcmePreferencesPage(), AcmeWorkbenchPreferencesPage()]
     )
 
     # Show the UI...
@@ -90,5 +97,3 @@ if __name__ == '__main__':
 
     # Save the preferences...
     get_default_preferences().flush()
-
-#### EOF ######################################################################

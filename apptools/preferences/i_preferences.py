@@ -1,3 +1,12 @@
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 """ The interface for a node in a preferences hierarchy. """
 
 
@@ -13,7 +22,7 @@ class IPreferences(Interface):
     path = Str
 
     # The parent node (None if this node *is* the root node).
-    parent = Instance('IPreferences')
+    parent = Instance("IPreferences")
 
     # The name of the node relative to its parent (the empty string if this
     # node *is* the root node).
@@ -22,7 +31,7 @@ class IPreferences(Interface):
     #### Methods where 'path' refers to a preference ####
 
     def get(self, path, default=None, inherit=False):
-        """ Get the value of the preference at the specified path.
+        """Get the value of the preference at the specified path.
 
         If no value exists for the path (or any part of the path does not
         exist) then return the default value.
@@ -57,7 +66,7 @@ class IPreferences(Interface):
         """
 
     def remove(self, path):
-        """ Remove the preference at the specified path.
+        """Remove the preference at the specified path.
 
         Does nothing if no value exists for the path (or any part of the path
         does not exist.
@@ -71,7 +80,7 @@ class IPreferences(Interface):
         """
 
     def set(self, path, value):
-        """ Set the value of the preference at the specified path.
+        """Set the value of the preference at the specified path.
 
         Any missing nodes are created automatically.
 
@@ -95,8 +104,8 @@ class IPreferences(Interface):
 
     #### Methods where 'path' refers to a node ####
 
-    def clear(self, path=''):
-        """ Remove all preference from the node at the specified path.
+    def clear(self, path=""):
+        """Remove all preference from the node at the specified path.
 
         If the path is the empty string (the default) then remove the
         preferences in *this* node.
@@ -113,8 +122,8 @@ class IPreferences(Interface):
 
         """
 
-    def keys(self, path=''):
-        """ Return the preference keys of the node at the specified path.
+    def keys(self, path=""):
+        """Return the preference keys of the node at the specified path.
 
         If the path is the empty string (the default) then return the
         preference keys of *this* node.
@@ -125,8 +134,8 @@ class IPreferences(Interface):
 
         """
 
-    def node(self, path=''):
-        """ Return the node at the specified path.
+    def node(self, path=""):
+        """Return the node at the specified path.
 
         If the path is the empty string (the default) then return *this* node.
 
@@ -139,8 +148,8 @@ class IPreferences(Interface):
 
         """
 
-    def node_exists(self, path=''):
-        """ Return True if the node at the specified path exists
+    def node_exists(self, path=""):
+        """Return True if the node at the specified path exists
 
         If the path is the empty string (the default) then return True.
 
@@ -150,8 +159,8 @@ class IPreferences(Interface):
 
         """
 
-    def node_names(self, path=''):
-        """ Return the names of the children of the node at the specified path.
+    def node_names(self, path=""):
+        """Return the names of the children of the node at the specified path.
 
         If the path is the empty string (the default) then return the names of
         the children of *this* node.
@@ -165,10 +174,8 @@ class IPreferences(Interface):
     #### Persistence methods ####
 
     def flush(self):
-        """ Force any changes in the node to the backing store.
+        """Force any changes in the node to the backing store.
 
         This includes any changes to the node's descendants.
 
         """
-
-#### EOF ######################################################################

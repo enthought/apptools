@@ -1,16 +1,12 @@
-#------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: Enthought, Inc.
-# Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 """ The representation of a name-to-object binding in a context. """
 
 
@@ -58,8 +54,10 @@ class Binding(HasTraits):
     def __str__(self):
         """ Returns an informal string representation of the object. """
 
-        return super(Binding, self).__str__() + '(name=%s, obj=%s)' % (
-               self.name, self.obj)
+        return super(Binding, self).__str__() + "(name=%s, obj=%s)" % (
+            self.name,
+            self.obj,
+        )
 
     ###########################################################################
     # 'Binding' interface.
@@ -78,7 +76,7 @@ class Binding(HasTraits):
             else:
                 klass = self.obj.__class__
 
-                class_name = '%s.%s' % (klass.__module__, klass.__name__)
+                class_name = "%s.%s" % (klass.__module__, klass.__name__)
 
         return class_name
 
@@ -86,8 +84,6 @@ class Binding(HasTraits):
         """ Sets the class name of the object. """
 
         self._class_name = class_name
-
-        return
 
     # namespace_name
     def _get_namespace_name(self):
@@ -97,14 +93,12 @@ class Binding(HasTraits):
             base = self.context.namespace_name
 
         else:
-            base = ''
+            base = ""
 
         if len(base) > 0:
-            namespace_name = base + '/' + self.name
+            namespace_name = base + "/" + self.name
 
         else:
             namespace_name = self.name
 
         return namespace_name
-
-#### EOF ######################################################################

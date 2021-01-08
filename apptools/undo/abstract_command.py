@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2007, Riverbank Computing Limited
 # All rights reserved.
 #
@@ -10,12 +10,10 @@
 #
 # Author: Riverbank Computing Limited
 # Description: <Enthought undo package component>
-#------------------------------------------------------------------------------
-
-from __future__ import absolute_import
+# ------------------------------------------------------------------------------
 
 # Enthought library imports.
-from traits.api import Any, HasTraits, Unicode, provides
+from traits.api import Any, HasTraits, Str, provides
 
 # Local imports.
 from .i_command import ICommand
@@ -23,7 +21,7 @@ from .i_command import ICommand
 
 @provides(ICommand)
 class AbstractCommand(HasTraits):
-    """ The AbstractCommand class is an abstract base class that implements the
+    """The AbstractCommand class is an abstract base class that implements the
     ICommand interface.
     """
 
@@ -35,14 +33,14 @@ class AbstractCommand(HasTraits):
     # This is the name of the command as it will appear in any GUI element.  It
     # may include '&' which will be automatically removed whenever it is
     # inappropriate.
-    name = Unicode
+    name = Str
 
     ###########################################################################
     # 'ICommand' interface.
     ###########################################################################
 
     def do(self):
-        """ This is called by the command stack to do the command and to return
+        """This is called by the command stack to do the command and to return
         any value.  The command must save any state necessary for the 'redo()'
         and 'undo()' methods to work.  The class's __init__() must also ensure
         that deep copies of any arguments are made if appropriate.  It is
@@ -53,7 +51,7 @@ class AbstractCommand(HasTraits):
         raise NotImplementedError
 
     def merge(self, other):
-        """ This is called by the command stack to try and merge another
+        """This is called by the command stack to try and merge another
         command with this one.  True is returned if the commands were merged.
         'other' is the command that is about to be executed.  If the commands
         are merged then 'other' will discarded and not placed on the command
@@ -65,7 +63,7 @@ class AbstractCommand(HasTraits):
         return False
 
     def redo(self):
-        """ This is called by the command stack to redo the command.  Any
+        """This is called by the command stack to redo the command.  Any
         returned value will replace the value that the command stack references
         from the original call to 'do()' or previous call to 'redo()'.
         """

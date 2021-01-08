@@ -16,8 +16,8 @@ This package is not just a toy framework and is powerful enough to
 provide full script recording to the Mayavi_ application.  Mayavi is a
 powerful 3D visualization tool that is part of ETS_.
 
-.. _Mayavi: http://code.enthought.com/projects/mayavi
-.. _ETS: http://code.enthought.com/projects/tool-suite.php
+.. _Mayavi: https://docs.enthought.com/mayavi/mayavi/
+.. _ETS: https://docs.enthought.com/ets/
 
 .. _scripting-api:
 
@@ -30,7 +30,7 @@ that have Traits.  Technically the framework listens to all trait
 changes so will work outside a UI.  We do not document the full API
 here, the best place to look for that is the
 ``apptools.scripting.recorder`` module which is reasonably well
-documented.  We provide a high level overview of the library. 
+documented.  We provide a high level overview of the library.
 
 The quickest way to get started is to look at a small example.
 
@@ -43,8 +43,8 @@ A tour by example
 The following example is taken from the test suite.  Consider a set of
 simple objects organized in a hierarchy::
 
-    from traits.api import (HasTraits, Float, Instance, 
-            Str, List, Bool, HasStrictTraits, Tuple, Range, TraitPrefixMap,
+    from traits.api import (HasTraits, Float, Instance,
+            Str, List, Bool, HasStrictTraits, Tuple, PrefixMap, Range,
             Trait)
     from apptools.scripting.api import (Recorder, recordable,
         set_recorder)
@@ -52,10 +52,11 @@ simple objects organized in a hierarchy::
     class Property(HasStrictTraits):
         color = Tuple(Range(0.0, 1.0), Range(0.0, 1.0), Range(0.0, 1.0))
         opacity = Range(0.0, 1.0, 1.0)
-        representation = Trait('surface', 
-                               TraitPrefixMap({'surface':2,
-                                               'wireframe': 1,
-                                               'points': 0}))
+        representation = PrefixMap(
+            {"surface": 2, "wireframe": 1, "points": 0},
+            default_value="surface"
+        )
+
     class Toy(HasTraits):
         color = Str
         type = Str
@@ -87,7 +88,7 @@ follows::
     p = Parent()
     c = Child()
     t = Toy()
-    c.toy = t 
+    c.toy = t
     p.children.append(c)
 
 Given this hierarchy, we'd like to be able to record a script.  To do
@@ -97,7 +98,7 @@ this we setup the recording infrastructure::
     # Create a recorder.
     r = Recorder()
     # Set the global recorder so the decorator works.
-    set_recorder(r)     
+    set_recorder(r)
     r.register(p)
     r.recording = True
 
@@ -121,7 +122,7 @@ Now lets test this out like so::
 
 To see what's been recorded do this::
 
-    print r.script
+    print(r.script)
 
 This prints::
 
@@ -137,7 +138,7 @@ location of a particular object in the object hierarchy.  For example,
 the path to the ``Toy`` instance in the hierarchy above is
 ``parent.children[0].toy``.  Since scripting with lists this way can be
 tedious, the recorder first instantiates the ``child``::
-    
+
     child = parent.children[0]
 
 Subsequent lines use the ``child`` attribute.  The recorder always tries
@@ -147,14 +148,14 @@ manner.
 To record a function or method call one must simply decorate the
 function/method with the ``recordable`` decorator.  Nested recordable
 functions are not recorded and trait changes are also not recorded if
-done inside a recordable function.  
+done inside a recordable function.
 
 .. note::
 
     1. It is very important to note that the global recorder must be set
        via the ``set_recorder`` method.  The ``recordable`` decorator
-       relies on this being set to work.  
-    
+       relies on this being set to work.
+
     2. The ``recordable`` decorator will work with plain Python classes
        and with functions too.
 
@@ -179,7 +180,7 @@ Here are a few advanced use cases.
    user to save the script.
 
  - Sometimes it is not enough to just record trait changes, one may want
-   to pass an arbitrary string or command when recording is occuring.
+   to pass an arbitrary string or command when recording is occurring.
    To allow for this, if one defines a ``recorder`` trait on the object,
    it is set to the current recorder.  One can then use this recorder to
    do whatever one wants.  This is very convenient.
@@ -195,4 +196,3 @@ Here are a few advanced use cases.
 For more details on the recorder itself we suggest reading the module
 source code.  It is fairly well documented and with the above background
 should be enough to get you going.
-

@@ -1,6 +1,13 @@
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 """ A preferences node that adds the notion of preferences scopes. """
-
-from __future__ import print_function
 
 # Standard library imports.
 from os.path import join
@@ -15,7 +22,7 @@ from .preferences import Preferences
 
 
 class ScopedPreferences(Preferences):
-    """ A preferences node that adds the notion of preferences scopes.
+    """A preferences node that adds the notion of preferences scopes.
 
     Scopes provide a way to access preferences in a precedence order, usually
     depending on where they came from, for example from the command-line,
@@ -27,21 +34,21 @@ class ScopedPreferences(Preferences):
 
     Path names passed to 'ScopedPreferences' nodes can be either::
 
-    a) a preference path as used in a standard 'Preferences' node, e.g::
+        a) a preference path as used in a standard 'Preferences' node, e.g::
 
-       'acme.widget.bgcolor'.
+        'acme.widget.bgcolor'.
 
-       In this case the operation either takes place in the primary scope
-       (for operations such as 'set' etc), or on all scopes in precedence order
-       (for operations such as 'get' etc).
+        In this case the operation either takes place in the primary scope
+        (for operations such as 'set' etc), or on all scopes in precedence
+        order (for operations such as 'get' etc).
 
-    or
+        or
 
-    b) a preference path that refers to a specific scope e.g::
+        b) a preference path that refers to a specific scope e.g::
 
-       'default/acme.widget.bgcolor'
+        'default/acme.widget.bgcolor'
 
-       In this case the operation takes place *only* in the specified scope.
+        In this case the operation takes place *only* in the specified scope.
 
     There is one drawback to this scheme. If you want to access a scope node
     itself via the 'clear', 'keys', 'node', 'node_exists' or 'node_names'
@@ -50,23 +57,23 @@ class ScopedPreferences(Preferences):
 
     e.g. To get the names of the children of the 'application' scope, use::
 
-      scoped.node_names('application/')
+        scoped.node_names('application/')
 
     If you did this::
 
-      scoped.node_names('application')
+        scoped.node_names('application')
 
     Then the node would get the primary scope and try to find its child node
     called 'application'.
 
     Of course you can just get the scope via::
 
-      application_scope = scoped.get_scope('application')
+        application_scope = scoped.get_scope('application')
 
     and then call whatever methods you like on it - which is definitely more
     intentional and is highly recommended::
 
-      application_scope.node_names()
+        application_scope.node_names()
 
     """
 
@@ -105,7 +112,7 @@ class ScopedPreferences(Preferences):
         """ Get the value of the preference at the specified path. """
 
         if len(path) == 0:
-            raise ValueError('empty path')
+            raise ValueError("empty path")
 
         # If the path contains a specific scope then lookup the preference in
         # just that scope.
@@ -132,7 +139,7 @@ class ScopedPreferences(Preferences):
         """ Remove the preference at the specified path. """
 
         if len(path) == 0:
-            raise ValueError('empty path')
+            raise ValueError("empty path")
 
         # If the path contains a specific scope then remove the preference from
         # just that scope.
@@ -146,13 +153,11 @@ class ScopedPreferences(Preferences):
 
         node.remove(path)
 
-        return
-
     def set(self, path, value):
         """ Set the value of the preference at the specified path. """
 
         if len(path) == 0:
-            raise ValueError('empty path')
+            raise ValueError("empty path")
 
         # If the path contains a specific scope then set the value in that
         # scope.
@@ -166,11 +171,9 @@ class ScopedPreferences(Preferences):
 
         node.set(path, value)
 
-        return
-
     #### Methods where 'path' refers to a node ####
 
-    def clear(self, path=''):
+    def clear(self, path=""):
         """ Remove all preference from the node at the specified path. """
 
         # If the path contains a specific scope then remove the preferences
@@ -185,7 +188,7 @@ class ScopedPreferences(Preferences):
 
         return node.clear(path)
 
-    def keys(self, path=''):
+    def keys(self, path=""):
         """ Return the preference keys of the node at the specified path. """
 
         # If the path contains a specific scope then get the keys of the node
@@ -204,7 +207,7 @@ class ScopedPreferences(Preferences):
 
         return list(keys)
 
-    def node(self, path=''):
+    def node(self, path=""):
         """ Return the node at the specified path. """
 
         if len(path) == 0:
@@ -225,7 +228,7 @@ class ScopedPreferences(Preferences):
 
         return node
 
-    def node_exists(self, path=''):
+    def node_exists(self, path=""):
         """ Return True if the node at the specified path exists. """
 
         # If the path contains a specific scope then look for the node in that
@@ -240,9 +243,8 @@ class ScopedPreferences(Preferences):
 
         return node.node_exists(path)
 
-    def node_names(self, path=''):
-        """ Return the names of the children of the node at the specified path.
-
+    def node_names(self, path=""):
+        """Return the names of the children of the node at the specified path.
         """
 
         # If the path contains a specific scope then get the names of the
@@ -267,7 +269,7 @@ class ScopedPreferences(Preferences):
 
     #### Listener methods ####
 
-    def add_preferences_listener(self, listener, path=''):
+    def add_preferences_listener(self, listener, path=""):
         """ Add a listener for changes to a node's preferences. """
 
         # If the path contains a specific scope then add a preferences listener
@@ -283,9 +285,7 @@ class ScopedPreferences(Preferences):
         for node in nodes:
             node.add_preferences_listener(listener, path)
 
-        return
-
-    def remove_preferences_listener(self, listener, path=''):
+    def remove_preferences_listener(self, listener, path=""):
         """ Remove a listener for changes to a node's preferences. """
 
         # If the path contains a specific scope then remove a preferences
@@ -301,12 +301,10 @@ class ScopedPreferences(Preferences):
         for node in nodes:
             node.remove_preferences_listener(listener, path)
 
-        return
-
     #### Persistence methods ####
 
     def load(self, file_or_filename=None):
-        """ Load preferences from a file.
+        """Load preferences from a file.
 
         This loads the preferences into the primary scope.
 
@@ -322,10 +320,8 @@ class ScopedPreferences(Preferences):
         node = self._get_primary_scope()
         node.load(file_or_filename)
 
-        return
-
     def save(self, file_or_filename=None):
-        """ Save the node's preferences to a file.
+        """Save the node's preferences to a file.
 
         This asks each scope in turn to save its preferences.
 
@@ -342,8 +338,6 @@ class ScopedPreferences(Preferences):
             if scope is not self._get_primary_scope():
                 scope.save()
 
-        return
-
     ###########################################################################
     # 'ScopedPreferences' protocol.
     ###########################################################################
@@ -351,7 +345,7 @@ class ScopedPreferences(Preferences):
     def _application_preferences_filename_default(self):
         """ Trait initializer. """
 
-        return join(ETSConfig.application_home, 'preferences.ini')
+        return join(ETSConfig.application_home, "preferences.ini")
 
     # fixme: In hindsight, I don't think this class should have provided
     # default scopes. This should have been an 'abstract' class that could
@@ -361,17 +355,16 @@ class ScopedPreferences(Preferences):
 
         scopes = [
             Preferences(
-                name     = 'application',
-                filename = self.application_preferences_filename
+                name="application",
+                filename=self.application_preferences_filename,
             ),
-
-            Preferences(name='default')
+            Preferences(name="default"),
         ]
 
         return scopes
 
     def get_scope(self, scope_name):
-        """ Return the scope with the specified name.
+        """Return the scope with the specified name.
 
         Return None if no such scope exists.
 
@@ -404,7 +397,7 @@ class ScopedPreferences(Preferences):
         return value
 
     def _get_scope(self, scope_name):
-        """ Return the scope with the specified name.
+        """Return the scope with the specified name.
 
         Raise a 'ValueError' is no such scope exists.
 
@@ -412,12 +405,12 @@ class ScopedPreferences(Preferences):
 
         scope = self.get_scope(scope_name)
         if scope is None:
-            raise ValueError('no such scope %s' % scope_name)
+            raise ValueError("no such scope %s" % scope_name)
 
         return scope
 
     def _get_primary_scope(self):
-        """ Return the primary scope.
+        """Return the primary scope.
 
         By default, this is the first scope.
 
@@ -434,31 +427,27 @@ class ScopedPreferences(Preferences):
     def _path_contains_scope(self, path):
         """ Return True if the path contains a scope component. """
 
-        return '/' in path
+        return "/" in path
 
     def _parse_path(self, path):
         """ 'Parse' the path into two parts, the scope name and the rest! """
 
-        components = path.split('/')
+        components = path.split("/")
 
-        return components[0], '/'.join(components[1:])
+        return components[0], "/".join(components[1:])
 
     ###########################################################################
     # Debugging interface.
     ###########################################################################
 
-    def dump(self, indent=''):
+    def dump(self, indent=""):
         """ Dump the preferences hierarchy to stdout. """
 
-        if indent == '':
+        if indent == "":
             print()
 
-        print(indent, 'Node(%s)' % self.name, self._preferences)
-        indent += '  '
+        print(indent, "Node(%s)" % self.name, self._preferences)
+        indent += "  "
 
         for child in self.scopes:
             child.dump(indent)
-
-        return
-
-#### EOF ######################################################################

@@ -1,3 +1,5 @@
+.. _preferences-in-envisage:
+
 Preferences in Envisage
 =======================
 
@@ -5,7 +7,7 @@ This section discusses how an Envisage application uses the preferences
 mechanism. Envisage tries not to dictate too much, and so this describes the
 default behaviour, but you are free to override it as desired.
 
-Envisage uses the default implementation of the ScopedPreferences_ class which
+Envisage uses the default implementation of the |ScopedPreferences| class which
 is made available via the application's 'preferences' trait::
 
   >>> application = Application(id='myapplication')
@@ -17,7 +19,7 @@ Hence, you use the Envisage preferences just like you would any other scoped
 preferences.
 
 It also registers itself as the default preferences node used by the
-PreferencesHelper_ class. Hence you don't need to provide a preferences node
+|PreferencesHelper| class. Hence you don't need to provide a preferences node
 explicitly to your helper::
 
   >>> helper = SplashScreenPreferences()
@@ -43,5 +45,8 @@ e.g. To contribute a preference file for my plugin I might use::
       def get_preferences(self, application):
           return ['pkgfile://mypackage:preferences.ini']
 
-.. _PreferencesHelper: ../../enthought/preferences/preferences_helper.py
-.. _ScopedPreferences: ../../enthought/preferences/scoped_preferences.py
+..
+   # substitutions
+
+.. |PreferencesHelper| replace:: :class:`~apptools.preferences.preferences_helper.PreferencesHelper`
+.. |ScopedPreferences| replace:: :class:`~apptools.preferences.scoped_preferences.ScopedPreferences`

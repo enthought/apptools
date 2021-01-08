@@ -1,16 +1,12 @@
-#------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: Enthought, Inc.
-# Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 """ State factory for Python File System contexts. """
 
 
@@ -18,9 +14,9 @@
 from apptools.io.api import File
 
 # Local imports.
-from address import Address
-from reference import Reference
-from state_factory import StateFactory
+from .address import Address
+from .reference import Reference
+from .state_factory import StateFactory
 
 
 class PyFSStateFactory(StateFactory):
@@ -40,10 +36,8 @@ class PyFSStateFactory(StateFactory):
             # context then we create and bind a reference to it.
             if obj.parent.path != context.path:
                 state = Reference(
-                    class_name = obj.__class__.__name__,
-                    addresses  = [Address(type='file', content=obj.path)]
+                    class_name=obj.__class__.__name__,
+                    addresses=[Address(type="file", content=obj.path)],
                 )
 
         return state
-
-### EOF #######################################################################

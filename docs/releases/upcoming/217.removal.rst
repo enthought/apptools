@@ -1,0 +1,1 @@
+Remove ``apptools.logger.filtering_handler`` and ``apptools.logger.util`` submodules (#217)

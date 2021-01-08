@@ -1,16 +1,12 @@
-#------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: Enthought, Inc.
-# Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 """ The base class for all directory contexts. """
 
 
@@ -18,8 +14,8 @@
 from traits.api import Dict
 
 # Local imports.
-from context import Context
-from exception import NameNotFoundError, NotContextError
+from .context import Context
+from .exception import NameNotFoundError
 
 
 class DirContext(Context):
@@ -64,7 +60,8 @@ class DirContext(Context):
 
                 next_context = self._get_next_context(components[0])
                 attributes = next_context.get_attributes(
-                    '/'.join(components[1:]))
+                    "/".join(components[1:])
+                )
 
         return attributes
 
@@ -97,14 +94,12 @@ class DirContext(Context):
 
                 next_context = self._get_next_context(components[0])
                 next_context.set_attributes(
-                    '/'.join(components[1:]), attributes
+                    "/".join(components[1:]), attributes
                 )
-
-        return
 
     # fixme: Non-JNDI
     def find_bindings(self, visitor):
-        """ Find bindings with attributes matching criteria in visitor.
+        """Find bindings with attributes matching criteria in visitor.
 
         Visitor is a function that is passed the bindings for each level of the
         heirarchy and the attribute dictionary for those bindings.  The visitor
@@ -139,8 +134,6 @@ class DirContext(Context):
 
         self._attributes[name] = attributes
 
-        return
-
     ###########################################################################
     # Protected 'Context' interface.
     ###########################################################################
@@ -153,8 +146,6 @@ class DirContext(Context):
         if name in self._attributes:
             del self._attributes[name]
 
-        return
-
     def _rename(self, old_name, new_name):
         """ Renames an object in this context. """
 
@@ -164,8 +155,6 @@ class DirContext(Context):
             self._attributes[new_name] = self._attributes[old_name]
             del self._attributes[old_name]
 
-        return
-
     def _destroy_subcontext(self, name):
         """ Destroys a sub-context of this context. """
 
@@ -173,7 +162,3 @@ class DirContext(Context):
 
         if name in self._attributes:
             del self._attributes[name]
-
-        return
-
-#### EOF ######################################################################

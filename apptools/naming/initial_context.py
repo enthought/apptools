@@ -1,21 +1,17 @@
-#------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: Enthought, Inc.
-# Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 """ The starting point for performing naming operations. """
 
 
 # Local imports.
-from context import Context
+from .context import Context
 
 
 def InitialContext(environment):
@@ -40,7 +36,7 @@ def InitialContext(environment):
 # want naming to be dependent on Envisage, so we need some other package
 # for useful 'Python' tools etc.
 def _import_symbol(symbol_path):
-    """ Imports the symbol defined by 'symbol_path'.
+    """Imports the symbol defined by 'symbol_path'.
 
     'symbol_path' is a string in the form 'foo.bar.baz' which is turned
     into an import statement 'from foo.bar import baz' (ie. the last
@@ -49,14 +45,12 @@ def _import_symbol(symbol_path):
 
     """
 
-    components = symbol_path.split('.')
+    components = symbol_path.split(".")
 
-    module_name = '.'.join(components[:-1])
+    module_name = ".".join(components[:-1])
     symbol_name = components[-1]
 
     module = __import__(module_name, globals(), locals(), [symbol_name])
     symbol = getattr(module, symbol_name)
 
     return symbol
-
-#### EOF ######################################################################

@@ -1,27 +1,38 @@
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 """
 Code to support recording to a readable and executable Python script.
 
-TODO:
+FIXME:
     - Support for dictionaries?
-
 """
-# Author: Prabhu Ramachandran <prabhu@aero.iitb.ac.in>
-# Copyright (c) 2008-2015, Enthought, Inc.
-# License: BSD Style.
 
+import builtins
 import warnings
-import sys
-PY_VER = sys.version_info[0]
-import __builtin__
 
-from traits.api import (HasTraits, List, Str, Dict, Bool,
-        Unicode, Property, Int, Instance)
+from traits.api import (
+    HasTraits,
+    List,
+    Str,
+    Dict,
+    Bool,
+    Property,
+    Int,
+    Instance,
+)
 from traits.util.camel_case import camel_case_to_python
 
 
-################################################################################
+###############################################################################
 # `_RegistryData` class.
-################################################################################
+###############################################################################
 class _RegistryData(HasTraits):
     # Object's script ID
     script_id = Property(Str)
@@ -30,10 +41,10 @@ class _RegistryData(HasTraits):
     path = Property(Str)
 
     # Parent data for this object if any.
-    parent_data = Instance('_RegistryData', allow_none=True)
+    parent_data = Instance("_RegistryData", allow_none=True)
 
     # The name of the trait on the parent which is this object.
-    trait_name_on_parent = Str('')
+    trait_name_on_parent = Str("")
 
     # List of traits we are listening for on this object.
     names = List(Str)
@@ -44,28 +55,28 @@ class _RegistryData(HasTraits):
     # List of traits that are lists.
     list_names = List(Str)
 
-    _script_id = Str('')
+    _script_id = Str("")
 
-    ######################################################################
+    ###########################################################################
     # Non-public interface.
-    ######################################################################
+    ###########################################################################
     def _get_path(self):
         pdata = self.parent_data
-        path = ''
+        path = ""
         if pdata is not None:
             pid = pdata.script_id
             ppath = pdata.path
             tnop = self.trait_name_on_parent
-            if '[' in tnop:
+            if "[" in tnop:
                 # If the object is a nested object through an iterator,
                 # we instantiate it and don't refer to it through the
                 # path, this makes scripting convenient.
                 if len(ppath) == 0:
-                    path = pid + '.' + tnop
+                    path = pid + "." + tnop
                 else:
-                    path = ppath + '.' + tnop
+                    path = ppath + "." + tnop
             else:
-                path = ppath + '.' + tnop
+                path = ppath + "." + tnop
 
         return path
 
@@ -73,35 +84,34 @@ class _RegistryData(HasTraits):
         sid = self._script_id
         if len(sid) == 0:
             pdata = self.parent_data
-            sid = pdata.script_id + '.' + self.trait_name_on_parent
+            sid = pdata.script_id + "." + self.trait_name_on_parent
         return sid
 
     def _set_script_id(self, id):
         self._script_id = id
 
 
-
-################################################################################
+###############################################################################
 # `RecorderError` class.
-################################################################################
+###############################################################################
 class RecorderError(Exception):
     pass
 
 
-################################################################################
+###############################################################################
 # `Recorder` class.
-################################################################################
+###############################################################################
 class Recorder(HasTraits):
 
     # The lines of code recorded.
     lines = List(Str)
 
     # Are we recording or not?
-    recording = Bool(False, desc='if script recording is enabled or not')
+    recording = Bool(False, desc="if script recording is enabled or not")
 
     # The Python script we have recorded so far.  This is just a
     # convenience trait for the `get_code()` method.
-    script = Property(Unicode)
+    script = Property(Str)
 
     ########################################
     # Private traits.
@@ -137,16 +147,17 @@ class Recorder(HasTraits):
     # in which case we don't want to do any recording.
     _in_function = Bool(False)
 
-    ######################################################################
+    ###########################################################################
     # `Recorder` interface.
-    ######################################################################
+    ###########################################################################
     def record(self, code):
         """Record a string to be stored to the output file.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
 
-        code - A string of text.
+        code : str
+            A string of text.
         """
         if self.recording and not self._in_function:
             lines = self.lines
@@ -155,8 +166,15 @@ class Recorder(HasTraits):
             # Add the code.
             lines.append(code)
 
-    def register(self, object, parent=None, trait_name_on_parent='',
-                 ignore=None, known=False, script_id=None):
+    def register(
+        self,
+        object,
+        parent=None,
+        trait_name_on_parent="",
+        ignore=None,
+        known=False,
+        script_id=None,
+    ):
         """Register an object with the recorder.  This sets up the
         object for recording.
 
@@ -178,8 +196,8 @@ class Recorder(HasTraits):
         If the `object` has a trait named `recorder` then this recorder
         instance will be set to it if possible.
 
-        Parameters:
-        -----------
+        Parameters
+        ----------
 
         object : Instance(HasTraits)
             The object to register in the registry.
@@ -219,22 +237,28 @@ class Recorder(HasTraits):
 
         if isinstance(object, HasTraits):
             # Always ignore these.
-            ignore.extend(['trait_added', 'trait_modified'])
+            ignore.extend(["trait_added", "trait_modified"])
 
-            sub_recordables = object.traits(record=True).keys()
+            sub_recordables = list(object.traits(record=True).keys())
             # Find all the trait names we must ignore.
             ignore.extend(object.traits(record=False).keys())
             # The traits to listen for.
-            tnames = [t for t in object.trait_names()
-                      if not t.startswith('_') and not t.endswith('_') \
-                         and t not in ignore]
+            tnames = [
+                t
+                for t in object.trait_names()
+                if not t.startswith("_")
+                and not t.endswith("_")
+                and t not in ignore
+            ]
             # Find all list traits.
             trts = object.traits()
             list_names = []
             for t in tnames:
                 tt = trts[t].trait_type
-                if hasattr(tt, 'default_value_type') and \
-                        tt.default_value_type == 5:
+                if (
+                    hasattr(tt, "default_value_type")
+                    and tt.default_value_type == 5
+                ):
                     list_names.append(t)
         else:
             # No traits, so we can't do much.
@@ -245,11 +269,11 @@ class Recorder(HasTraits):
         # Setup the registry data.
 
         # If a script id is supplied try and use it.
-        sid = ''
+        sid = ""
         if script_id is not None:
             r_registry = self._reverse_registry
             while script_id in r_registry:
-                script_id = '%s1'%script_id
+                script_id = "%s1" % script_id
             sid = script_id
             # Add the chosen id to special_id list.
             self._special_ids.append(sid)
@@ -261,19 +285,21 @@ class Recorder(HasTraits):
         else:
             pdata = self._get_registry_data(parent)
             tnop = trait_name_on_parent
-            if '[' in tnop:
+            if "[" in tnop:
                 # If the object is a nested object through an iterator,
                 # we instantiate it and don't refer to it through the
                 # path, this makes scripting convenient.
                 sid = self._get_unique_name(object)
 
         # Register the object with the data.
-        data = _RegistryData(script_id=sid,
-                             parent_data=pdata,
-                             trait_name_on_parent=trait_name_on_parent,
-                             names=tnames,
-                             sub_recordables=sub_recordables,
-                             list_names=list_names)
+        data = _RegistryData(
+            script_id=sid,
+            parent_data=pdata,
+            trait_name_on_parent=trait_name_on_parent,
+            names=tnames,
+            sub_recordables=sub_recordables,
+            list_names=list_names,
+        )
         registry[object] = data
 
         # Now get the script id of the object -- note that if sid is ''
@@ -289,19 +315,22 @@ class Recorder(HasTraits):
             self._known_ids.append(sid)
 
         # Try and set the recorder attribute if necessary.
-        if hasattr(object, 'recorder'):
+        if hasattr(object, "recorder"):
             try:
                 object.recorder = self
             except Exception as e:
-                msg = "Cannot set 'recorder' trait of object %r: "\
-                      "%s"%(object, e)
+                msg = "Cannot set 'recorder' trait of object %r: " "%s" % (
+                    object,
+                    e,
+                )
                 warnings.warn(msg, warnings.RuntimeWarning)
 
         if isinstance(object, HasTraits):
             # Add handler for lists.
             for name in list_names:
-                object.on_trait_change(self._list_items_listner,
-                                       '%s_items'%name)
+                object.on_trait_change(
+                    self._list_items_listner, "%s_items" % name
+                )
 
             # Register all sub-recordables.
             for name in sub_recordables:
@@ -310,12 +339,14 @@ class Recorder(HasTraits):
                     # Don't register the object itself but register its
                     # children.
                     for i, child in enumerate(obj):
-                        attr = '%s[%d]'%(name, i)
-                        self.register(child, parent=object,
-                                      trait_name_on_parent=attr)
+                        attr = "%s[%d]" % (name, i)
+                        self.register(
+                            child, parent=object, trait_name_on_parent=attr
+                        )
                 elif obj is not None:
-                    self.register(obj, parent=object,
-                                  trait_name_on_parent=name)
+                    self.register(
+                        obj, parent=object, trait_name_on_parent=name
+                    )
                 # Listen for changes to the trait itself so the newly
                 # assigned object can also be listened to.
                 object.on_trait_change(self._object_changed_handler, name)
@@ -334,19 +365,22 @@ class Recorder(HasTraits):
         data = registry[object]
 
         # Try and unset the recorder attribute if necessary.
-        if hasattr(object, 'recorder'):
+        if hasattr(object, "recorder"):
             try:
                 object.recorder = None
             except Exception as e:
-                msg = "Cannot unset 'recorder' trait of object %r:"\
-                      "%s"%(object, e)
+                msg = "Cannot unset 'recorder' trait of object %r:" "%s" % (
+                    object,
+                    e,
+                )
                 warnings.warn(msg, warnings.RuntimeWarning)
 
         if isinstance(object, HasTraits):
             # Remove all list_items handlers.
             for name in data.list_names:
-                object.on_trait_change(self._list_items_listner,
-                                       '%s_items'%name, remove=True)
+                object.on_trait_change(
+                    self._list_items_listner, "%s_items" % name, remove=True
+                )
 
             # Unregister all sub-recordables.
             for name in data.sub_recordables:
@@ -358,8 +392,9 @@ class Recorder(HasTraits):
                 elif obj is not None:
                     self.unregister(obj)
                 # Remove the trait handler for trait assignments.
-                object.on_trait_change(self._object_changed_handler,
-                                       name, remove=True)
+                object.on_trait_change(
+                    self._object_changed_handler, name, remove=True
+                )
             # Now remove listner for the object itself.
             object.on_trait_change(self._listner, data.names, remove=True)
 
@@ -373,10 +408,7 @@ class Recorder(HasTraits):
         """Save the recorded lines to the given file.  It does not close
         the file.
         """
-        if PY_VER == 3:
-            file.write(self.get_code())
-        else:
-            file.write(unicode(self.get_code(), encoding='utf-8'))
+        file.write(self.get_code())
         file.flush()
 
     def record_function(self, func, args, kw):
@@ -393,7 +425,7 @@ class Recorder(HasTraits):
                 self._in_function = False
 
             # Register the result if it is not None.
-            if func.__name__ == '__init__':
+            if func.__name__ == "__init__":
                 f_self = args[0]
                 code = self._import_class_string(f_self.__class__)
                 self.lines.append(code)
@@ -401,9 +433,9 @@ class Recorder(HasTraits):
             else:
                 return_str = self._return_as_string(result)
             if len(return_str) > 0:
-                self.lines.append('%s = %s'%(return_str, call_str))
+                self.lines.append("%s = %s" % (return_str, call_str))
             else:
-                self.lines.append('%s'%(call_str))
+                self.lines.append("%s" % (call_str))
         else:
             result = func(*args, **kw)
         return result
@@ -413,13 +445,14 @@ class Recorder(HasTraits):
         and close the file when done.
         """
         from pyface.api import FileDialog, OK
-        wildcard = 'Python files (*.py)|*.py|' + FileDialog.WILDCARD_ALL
-        dialog = FileDialog(title='Save Script',
-                            action='save as', wildcard=wildcard
-                            )
+
+        wildcard = "Python files (*.py)|*.py|" + FileDialog.WILDCARD_ALL
+        dialog = FileDialog(
+            title="Save Script", action="save as", wildcard=wildcard
+        )
         if dialog.open() == OK:
             fname = dialog.path
-            f = open(fname, 'w')
+            f = open(fname, "w")
             self.save(f)
             f.close()
 
@@ -429,7 +462,7 @@ class Recorder(HasTraits):
         # First unregister any registered objects.
         registry = self._registry
         while len(registry) > 0:
-            self.unregister(registry.keys()[0])
+            self.unregister(list(registry.keys())[0])
         # Clear the various lists.
         self.lines[:] = []
         self._registry.clear()
@@ -441,7 +474,7 @@ class Recorder(HasTraits):
 
     def get_code(self):
         """Returns the recorded lines as a string of printable code."""
-        return '\n'.join(self.lines) + '\n'
+        return "\n".join(self.lines) + "\n"
 
     def is_registered(self, object):
         """Returns True if the given object is registered with the
@@ -476,24 +509,23 @@ class Recorder(HasTraits):
             known_ids.append(script_id)
             if obj is not None:
                 data = self._registry.get(obj)
-                result = ''
+                result = ""
                 if len(data.path) > 0:
                     # Record code for instantiation of object.
-                    result = '%s = %s'%(script_id, data.path)
+                    result = "%s = %s" % (script_id, data.path)
                 else:
                     # This is not the best thing to do but better than
                     # nothing.
                     result = self._import_class_string(obj.__class__)
                     cls = obj.__class__.__name__
-                    mod = obj.__module__
-                    result += '\n%s = %s()'%(script_id, cls)
+                    result += "\n%s = %s()" % (script_id, cls)
 
                 if len(result) > 0:
-                    self.lines.extend(result.split('\n'))
+                    self.lines.extend(result.split("\n"))
 
-    ######################################################################
+    ###########################################################################
     # Non-public interface.
-    ######################################################################
+    ###########################################################################
     def _get_unique_name(self, obj):
         """Return a unique object name (a string).  Note that this does
         not cache the object, so if called with the same object 3 times
@@ -501,11 +533,11 @@ class Recorder(HasTraits):
         """
         cname = obj.__class__.__name__
         nm = self._name_map
-        result = ''
+        result = ""
         builtin = False
-        if cname in __builtin__.__dict__:
+        if cname in builtins.__dict__:
             builtin = True
-            if hasattr(obj, '__name__'):
+            if hasattr(obj, "__name__"):
                 cname = obj.__name__
         else:
             cname = camel_case_to_python(cname)
@@ -515,12 +547,12 @@ class Recorder(HasTraits):
             if cname in nm:
                 id = nm[cname] + 1
                 nm[cname] = id
-                result = '%s%d'%(cname, id)
+                result = "%s%d" % (cname, id)
             else:
                 nm[cname] = 0
                 # The first id doesn't need a number if it isn't builtin.
                 if builtin:
-                    result = '%s0'%(cname)
+                    result = "%s0" % (cname)
                 else:
                     result = cname
         return result
@@ -529,8 +561,10 @@ class Recorder(HasTraits):
         """Get the data for an object from registry."""
         data = self._registry.get(object)
         if data is None:
-            msg = "Recorder: Can't get script_id since object %s not registered"
-            raise RecorderError(msg%(object))
+            msg = (
+                "Recorder: Can't get script_id since object %s not registered"
+            )
+            raise RecorderError(msg % (object))
         return data
 
     def _listner(self, object, name, old, new):
@@ -555,17 +589,16 @@ class Recorder(HasTraits):
             new_repr = repr(new)
             sid = self._get_registry_data(object).script_id
             if len(sid) == 0:
-                msg = '%s = %r'%(name, new)
+                msg = "%s = %r" % (name, new)
             else:
-                msg = '%s.%s = %r'%(sid, name, new)
-            if new_repr.startswith('<') and new_repr.endswith('>'):
-                self.record('# ' + msg)
+                msg = "%s.%s = %r" % (sid, name, new)
+            if new_repr.startswith("<") and new_repr.endswith(">"):
+                self.record("# " + msg)
             else:
                 self.record(msg)
 
     def _list_items_listner(self, object, name, old, event):
-        """The listner for *_items on list traits of the object.
-        """
+        """The listner for *_items on list traits of the object."""
         # Set the path of registered objects in the modified list and
         # all their children.  This is done by unregistering the object
         # and re-registering them.  This is slow but.
@@ -578,7 +611,7 @@ class Recorder(HasTraits):
                 data = registry.get(item)
                 tnop = data.trait_name_on_parent
                 if len(tnop) > 0:
-                    data.trait_name_on_parent = '%s[%d]'%(trait_name, i)
+                    data.trait_name_on_parent = "%s[%d]" % (trait_name, i)
 
         # Record the change.
         if self.recording and not self._in_function:
@@ -586,12 +619,11 @@ class Recorder(HasTraits):
             removed = event.removed
             added = event.added
             nr = len(removed)
-            slice = '[%d:%d]'%(index, index + nr)
-            na = len(added)
+            slice = "[%d:%d]" % (index, index + nr)
             rhs = [self._object_as_string(item) for item in added]
-            rhs = ', '.join(rhs)
-            obj = '%s.%s'%(sid, name[:-6])
-            msg = '%s%s = [%s]'%(obj, slice, rhs)
+            rhs = ", ".join(rhs)
+            obj = "%s.%s" % (sid, name[:-6])
+            msg = "%s%s = [%s]" % (obj, slice, rhs)
             self.record(msg)
 
     def _object_changed_handler(self, object, name, old, new):
@@ -602,80 +634,77 @@ class Recorder(HasTraits):
                 self.unregister(old)
         if new is not None:
             if new not in registry:
-                self.register(new, parent=object,
-                              trait_name_on_parent=name)
+                self.register(new, parent=object, trait_name_on_parent=name)
 
     def _get_script(self):
         return self.get_code()
 
     def _analyze_code(self, code):
-        """Analyze the code and return extra code if needed.
-        """
-        known_ids = self._known_ids
-        lhs = ''
+        """Analyze the code and return extra code if needed."""
+        lhs = ""
         try:
             lhs = code.split()[0]
         except IndexError:
             pass
 
-        if '.' in lhs:
-            ob_name = lhs.split('.')[0]
+        if "." in lhs:
+            ob_name = lhs.split(".")[0]
             self.write_script_id_in_namespace(ob_name)
 
     def _function_as_string(self, func, args, kw):
         """Return a string representing the function call."""
         func_name = func.__name__
-        func_code = func.func_code
+        func_code = func.__code__
         # Even if func is really a decorated method it never shows up as
         # a bound or unbound method here, so we have to inspect the
         # argument names to figure out if this is a method or function.
-        if func_code.co_argcount > 0 and \
-           func_code.co_varnames[0] == 'self':
+        if func_code.co_argcount > 0 and func_code.co_varnames[0] == "self":
             # This is a method, the first argument is bound to self.
             f_self = args[0]
             # Convert the remaining arguments to strings.
             argl = [self._object_as_string(arg) for arg in args[1:]]
 
             # If this is __init__ we special case it.
-            if func_name == '__init__':
+            if func_name == "__init__":
                 # Register the object.
                 self.register(f_self, known=True)
                 func_name = f_self.__class__.__name__
             else:
                 sid = self._object_as_string(f_self)
-                func_name = '%s.%s'%(sid, func_name)
+                func_name = "%s.%s" % (sid, func_name)
         else:
             argl = [self._object_as_string(arg) for arg in args]
 
         # Convert the keyword args.
-        kwl = ['%s=%s'%(key, self._object_as_string(value))
-               for key, value in kw.iteritems()]
+        kwl = [
+            "%s=%s" % (key, self._object_as_string(value))
+            for key, value in kw.items()
+        ]
         argl.extend(kwl)
 
         # Make a string representation of the args, kw.
-        argstr = ', '.join(argl)
-        return '%s(%s)'%(func_name, argstr)
+        argstr = ", ".join(argl)
+        return "%s(%s)" % (func_name, argstr)
 
     def _is_arbitrary_object(self, object):
         """Return True if the object is an arbitrary non-primitive object.
 
-        As done in appscripting, we assume that if the hex id of the object is
-        in its string representation then it is an arbitrary object.
+        We assume that if the hex id of the object is in its string
+        representation then it is an arbitrary object.
         """
         ob_id = id(object)
         orepr = repr(object)
-        hex_id = "%x"%ob_id
+        hex_id = "%x" % ob_id
         return hex_id.upper() in orepr.upper()
 
     def _object_as_string(self, object):
-        """Return a string representing the object.
-        """
+        """Return a string representing the object."""
         registry = self._registry
         if object in registry:
             # Return script id if the object is known; create the script
             # id on the namespace if needed before that.
             sid = registry.get(object).script_id
-            base_id = sid.split('.')[0]
+            base_id = sid.split(".")[0]
             self.write_script_id_in_namespace(base_id)
             return sid
         else:
@@ -688,11 +717,9 @@ class Recorder(HasTraits):
         return self._object_as_string(object)
 
     def _return_as_string(self, object):
-        """Return a string given a returned object from a function.
-        """
-        result = ''
-        long_type = long if PY_VER == 2 else int
-        ignore = (float, complex, bool, int, long_type, str)
+        """Return a string given a returned object from a function."""
+        result = ""
+        ignore = (float, complex, bool, int, str)
         if object is not None and type(object) not in ignore:
             # If object is not know, register it.
             registry = self._registry
@@ -706,14 +733,13 @@ class Recorder(HasTraits):
         return result
 
     def _import_class_string(self, cls):
-        """Import a class if needed.
-        """
+        """Import a class if needed."""
         cname = cls.__name__
-        result = ''
-        if cname not in __builtin__.__dict__:
+        result = ""
+        if cname not in builtins.__dict__:
             mod = cls.__module__
-            typename = '%s.%s'%(mod, cname)
+            typename = "%s.%s" % (mod, cname)
             if typename not in self._known_types:
-                result = 'from %s import %s'%(mod, cname)
+                result = "from %s import %s" % (mod, cname)
                 self._known_types.append(typename)
         return result

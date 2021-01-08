@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Copyright (c) 2007, Riverbank Computing Limited
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Riverbank Computing Limited
 # Description: <Enthought undo package component>
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 # Enthought library imports.
@@ -24,7 +24,7 @@ class _wxLabelEditor(Editor):
     def create_control(self, parent):
         import wx
 
-        w = wx.TextCtrl(parent,style=wx.TE_RICH2)
+        w = wx.TextCtrl(parent, style=wx.TE_RICH2)
         style = w.GetDefaultStyle()
         style.SetAlignment(wx.TEXT_ALIGNMENT_CENTER)
         w.SetDefaultStyle(style)
@@ -46,7 +46,13 @@ class _wxLabelEditor(Editor):
 
     def _set_text(self, w):
         w.SetValue("")
-        w.WriteText("%s(%d points, %s)" % (self.obj.text, self.obj.size, self.obj.style))
+        w.WriteText(
+            "%s(%d points, %s)" % (
+                self.obj.text,
+                self.obj.size,
+                self.obj.style
+            )
+        )
 
     def _update_size(self):
         self._set_size_and_style(self.control)
@@ -63,10 +69,12 @@ class _wxLabelEditor(Editor):
         elif self.obj.style == 'bold':
             style, weight = wx.NORMAL, wx.BOLD
         else:
-            raise NotImplementedError, 'style "%s" not supported' % self.obj.style
+            raise NotImplementedError(
+                "style '%s' not supported" % self.obj.style
+            )
 
         f = wx.Font(self.obj.size, wx.ROMAN, style, weight, False)
-        style = wx.TextAttr("BLACK",wx.NullColour,f)
+        style = wx.TextAttr("BLACK", wx.NullColour, f)
         w.SetDefaultStyle(style)
         self._set_text(w)
 
@@ -98,7 +106,13 @@ class _PyQt4LabelEditor(Editor):
         self._set_text(self.control)
 
     def _set_text(self, w):
-        w.setText("%s\n(%d points, %s)" % (self.obj.text, self.obj.size, self.obj.style))
+        w.setText(
+            "%s\n(%d points, %s)" % (
+                self.obj.text,
+                self.obj.size,
+                self.obj.style
+            )
+        )
 
     def _update_size(self):
         self._set_size(self.control)
@@ -132,11 +146,11 @@ class ExampleEditorManager(EditorManager):
 
         if tk_name == 'wx':
             ed = _wxLabelEditor(window=window, obj=obj)
-        elif tk_name == 'qt4':
+        elif tk_name == 'qt4' or tk_name == 'qt':
             ed = _PyQt4LabelEditor(window=window, obj=obj)
         else:
-            raise NotImplementedError, "unsupported toolkit: %s" % tk_name
+            raise NotImplementedError(
+                "unsupported toolkit: %s" % tk_name
+            )
 
         return ed
-
-#### EOF ######################################################################

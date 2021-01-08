@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Riverbank Computing Limited
 # Description: <Enthought undo package component>
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 # Enthought library imports.
@@ -23,7 +23,7 @@ from apptools.undo.action.api import CommandAction, RedoAction, UndoAction
 # Local imports.
 from example_editor_manager import ExampleEditorManager
 from commands import LabelIncrementSizeCommand, LabelDecrementSizeCommand, \
-        LabelNormalFontCommand, LabelBoldFontCommand, LabelItalicFontCommand
+    LabelNormalFontCommand, LabelBoldFontCommand, LabelItalicFontCommand
 
 
 class ExampleUndoWindow(WorkbenchWindow):
@@ -96,8 +96,12 @@ class ExampleUndoWindow(WorkbenchWindow):
     def _menu_bar_manager_default(self):
         """ Trait initialiser. """
 
-        return MenuBarManager(self._file_menu, self._label_menu,
-                self._undo_menu, window=self)
+        return MenuBarManager(
+            self._file_menu,
+            self._label_menu,
+            self._undo_menu,
+            window=self
+        )
 
     def _tool_bar_manager_default(self):
         """ Trait initialiser. """
@@ -113,7 +117,6 @@ class ExampleUndoWindow(WorkbenchWindow):
 
         if new is not None:
             new.command_stack.undo_manager.active_stack = new.command_stack
-
 
         # Walk the label editor menu.
         for grp in self._label_menu.groups:
@@ -136,5 +139,3 @@ class ExampleUndoWindow(WorkbenchWindow):
                         action.checked = (action.data.style == action.id)
                 else:
                     action.enabled = False
-
-#### EOF ######################################################################

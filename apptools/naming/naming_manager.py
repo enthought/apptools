@@ -1,16 +1,12 @@
-#------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: Enthought, Inc.
-# Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 """ The naming manager. """
 
 
@@ -26,7 +22,7 @@ class NamingManager(HasTraits):
     ###########################################################################
 
     def get_state_to_bind(self, obj, name, context):
-        """ Returns the state of an object for binding.
+        """Returns the state of an object for binding.
 
         The naming manager asks the context for its list of STATE factories
         and then calls them one by one until it gets a non-None result
@@ -39,7 +35,7 @@ class NamingManager(HasTraits):
         """
 
         # Local imports.
-        from context import Context
+        from .context import Context
 
         # We get the state factories from the context's environment.
         state_factories = context.environment[Context.STATE_FACTORIES]
@@ -55,7 +51,7 @@ class NamingManager(HasTraits):
         return state
 
     def get_object_instance(self, info, name, context):
-        """ Creates an object using the specified state information.
+        """Creates an object using the specified state information.
 
         The naming manager asks the context for its list of OBJECT factories
         and calls them one by one until it gets a non-None result, indicating
@@ -68,7 +64,7 @@ class NamingManager(HasTraits):
         """
 
         # Local imports.
-        from context import Context
+        from .context import Context
 
         # We get the object factories from the context's environment.
         object_factories = context.environment[Context.OBJECT_FACTORIES]
@@ -86,5 +82,3 @@ class NamingManager(HasTraits):
 
 # Singleton instance.
 naming_manager = NamingManager()
-
-### EOF #######################################################################

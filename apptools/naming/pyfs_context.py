@@ -1,41 +1,39 @@
-#------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: Enthought, Inc.
-# Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 """ A Python File System context. """
 
 
 # Standard library imports.
-import cPickle, glob, logging, os
+import glob
+import logging
+import os
 from os.path import join, splitext
+import pickle
 
 # Enthought library imports.
 from apptools.io.api import File
 from traits.api import Any, Dict, Instance, Property, Str
 
 # Local imports.
-from address import Address
-from binding import Binding
-from context import Context
-from dir_context import DirContext
-from exception import NameNotFoundError, NotContextError
-from naming_event import NamingEvent
-from naming_manager import naming_manager
-from object_serializer import ObjectSerializer
-from pyfs_context_factory import PyFSContextFactory
-from pyfs_object_factory import PyFSObjectFactory
-from pyfs_state_factory import PyFSStateFactory
-from reference import Reference
-from referenceable import Referenceable
+from .address import Address
+from .binding import Binding
+from .context import Context
+from .dir_context import DirContext
+from .naming_event import NamingEvent
+from .naming_manager import naming_manager
+from .object_serializer import ObjectSerializer
+from .pyfs_context_factory import PyFSContextFactory
+from .pyfs_object_factory import PyFSObjectFactory
+from .pyfs_state_factory import PyFSStateFactory
+from .reference import Reference
+from .referenceable import Referenceable
 
 
 # Setup a logger for this module.
@@ -43,7 +41,7 @@ logger = logging.getLogger(__name__)
 
 
 # The name of the 'special' file in which we store object attributes.
-ATTRIBUTES_FILE = '__attributes__'
+ATTRIBUTES_FILE = "__attributes__"
 
 # Constants for environment property keys.
 FILTERS = "apptools.naming.pyfs.filters"
@@ -53,29 +51,24 @@ OBJECT_SERIALIZERS = "apptools.naming.pyfs.object.serializers"
 # The default environment.
 ENVIRONMENT = {
     #### 'Context' properties #################################################
-
     # Object factories.
-    Context.OBJECT_FACTORIES : [PyFSObjectFactory(), PyFSContextFactory()],
-
+    Context.OBJECT_FACTORIES: [PyFSObjectFactory(), PyFSContextFactory()],
     # State factories.
-    Context.STATE_FACTORIES  : [PyFSStateFactory()],
-
+    Context.STATE_FACTORIES: [PyFSStateFactory()],
     #### 'PyFSContext' properties #############################################
-
     # Object serializers.
-    OBJECT_SERIALIZERS : [ObjectSerializer()],
-
+    OBJECT_SERIALIZERS: [ObjectSerializer()],
     # List of filename patterns to ignore.  These patterns are passed to
     # 'glob.glob', so things like '*.pyc' will do what you expect.
     #
     # fixme: We should have a generalized filter mechanism here, and '.svn'
     # should be moved elsewhere!
-    FILTERS : [ATTRIBUTES_FILE, '.svn']
+    FILTERS: [ATTRIBUTES_FILE, ".svn"],
 }
 
 
 class PyFSContext(DirContext, Referenceable):
-    """ A Python File System context.
+    """A Python File System context.
 
     This context represents a directory on a local file system.
 
@@ -113,7 +106,7 @@ class PyFSContext(DirContext, Referenceable):
 
     # A mapping from bound name to the name of the corresponding file or
     # directory on the file system.
-    _name_to_filename_map = Dict#(Str, Str)
+    _name_to_filename_map = Dict  # (Str, Str)
 
     # The attributes of every object in the context.  The attributes for the
     # context itself have the empty string as the key.
@@ -139,8 +132,6 @@ class PyFSContext(DirContext, Referenceable):
         # serialized Python object return a reference to exactly the same one.
         self._cache = {}
 
-        return
-
     ###########################################################################
     # 'PyFSContext' interface.
     ###########################################################################
@@ -151,8 +142,8 @@ class PyFSContext(DirContext, Referenceable):
         """ Returns the name of the context within its own namespace. """
 
         # fixme: clean this up with an initial context API!
-        if 'root' in self.environment:
-            root = self.environment['root']
+        if "root" in self.environment:
+            root = self.environment["root"]
 
             namespace_name = self.path[len(root) + 1:]
 
@@ -161,7 +152,7 @@ class PyFSContext(DirContext, Referenceable):
 
         # fixme: This is a bit dodgy 'cos we actually return a name that can
         # be looked up, and not the file system name...
-        namespace_name = '/'.join(namespace_name.split(os.path.sep))
+        namespace_name = "/".join(namespace_name.split(os.path.sep))
 
         return namespace_name
 
@@ -175,7 +166,7 @@ class PyFSContext(DirContext, Referenceable):
 
         # This causes the initializer to run again the next time the trait is
         # accessed.
-        self.reset_traits(['_name_to_filename_map'])
+        self.reset_traits(["_name_to_filename_map"])
 
         # Clear out the cache.
         self._cache = {}
@@ -185,8 +176,6 @@ class PyFSContext(DirContext, Referenceable):
         self.context_changed = NamingEvent(
             new_binding=Binding(name=self.name, obj=self, context=None)
         )
-
-        return
 
     ###########################################################################
     # 'Referenceable' interface.
@@ -200,8 +189,8 @@ class PyFSContext(DirContext, Referenceable):
         abspath = os.path.abspath(self.path)
 
         reference = Reference(
-            class_name = self.__class__.__name__,
-            addresses  = [Address(type='pyfs_context', content=abspath)]
+            class_name=self.__class__.__name__,
+            addresses=[Address(type="pyfs_context", content=abspath)],
         )
 
         return reference
@@ -234,9 +223,9 @@ class PyFSContext(DirContext, Referenceable):
                     # If the load fails then we create a generic file resource
                     # (the idea being that it might be useful to have access to
                     # the file to see what went wrong).
-                    except:
+                    except:  # noqa: E722
                         state = File(path)
-                        logger.exception('Error loading resource at %s' % path)
+                        logger.exception("Error loading resource at %s" % path)
 
                     break
 
@@ -251,7 +240,7 @@ class PyFSContext(DirContext, Referenceable):
                     state = File(path)
 
                 else:
-                    raise ValueError('unrecognized file for %s' % name)
+                    raise ValueError("unrecognized file for %s" % name)
 
             # Get the actual object from the naming manager.
             obj = naming_manager.get_object_instance(state, name, self)
@@ -285,7 +274,7 @@ class PyFSContext(DirContext, Referenceable):
                     break
 
             else:
-                raise ValueError('cannot serialize object %s' % name)
+                raise ValueError("cannot serialize object %s" % name)
 
         # Update the name to filename map.
         self._name_to_filename_map[name] = filename
@@ -298,14 +287,7 @@ class PyFSContext(DirContext, Referenceable):
     def _rebind(self, name, obj):
         """ Rebinds a name to an object in this context. """
 
-        # We unbind first to make sure that the old file gets removed (this
-        # is handy if the object that we are rebinding has a different
-        # serializer than the current one).
-        #self._unbind(name)
-
         self._bind(name, obj)
-
-        return
 
     def _unbind(self, name):
         """ Unbinds a name from this context. """
@@ -328,8 +310,6 @@ class PyFSContext(DirContext, Referenceable):
         if name in self._attributes:
             del self._attributes[name]
             self._save_attributes()
-
-        return
 
     def _rename(self, old_name, new_name):
         """ Renames an object in this context. """
@@ -414,8 +394,6 @@ class PyFSContext(DirContext, Referenceable):
             del self._attributes[old_name]
             self._save_attributes()
 
-        return
-
     def _create_subcontext(self, name):
         """ Creates a sub-context of this context. """
 
@@ -443,7 +421,7 @@ class PyFSContext(DirContext, Referenceable):
     def _list_names(self):
         """ Lists the names bound in this context. """
 
-        return self._name_to_filename_map.keys()
+        return list(self._name_to_filename_map.keys())
 
     # fixme: YFI this is not part of the protected 'Context' interface so
     # what is it doing here?
@@ -452,7 +430,7 @@ class PyFSContext(DirContext, Referenceable):
         ext = splitext(name)[1]
 
         # specially handle '.py' files
-        if ext != '.py':
+        if ext != ".py":
             return super(PyFSContext, self).get_unique_name(name)
 
         body = splitext(name)[0]
@@ -460,7 +438,7 @@ class PyFSContext(DirContext, Referenceable):
         i = 2
         unique = name
         while unique in names:
-            unique = body + '_' + str(i) + '.py'
+            unique = body + "_" + str(i) + ".py"
             i += 1
 
         return unique
@@ -481,8 +459,6 @@ class PyFSContext(DirContext, Referenceable):
 
         self._attributes[name] = attributes
         self._save_attributes()
-
-        return
 
     ###########################################################################
     # Private interface.
@@ -508,11 +484,9 @@ class PyFSContext(DirContext, Referenceable):
 
         path = join(self.path, self.ATTRIBUTES_FILE)
 
-        f = open(path, 'wb')
-        cPickle.dump(self._attributes, f, 1)
+        f = open(path, "wb")
+        pickle.dump(self._attributes, f, 1)
         f.close()
-
-        return
 
     #### Trait initializers ###################################################
 
@@ -552,8 +526,8 @@ class PyFSContext(DirContext, Referenceable):
 
         attributes_file = File(join(self.path, self.ATTRIBUTES_FILE))
         if attributes_file.is_file:
-            f = open(attributes_file.path, 'rb')
-            attributes = cPickle.load(f)
+            f = open(attributes_file.path, "rb")
+            attributes = pickle.load(f)
             f.close()
 
         else:
@@ -569,7 +543,3 @@ class PyFSContext(DirContext, Referenceable):
         basename = os.path.basename(self.path)
 
         self.name, ext = os.path.splitext(basename)
-
-        return
-
-#### EOF ######################################################################

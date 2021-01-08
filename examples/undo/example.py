@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
@@ -10,7 +10,7 @@
 #
 # Author: Riverbank Computing Limited
 # Description: <Enthought undo package component>
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 # Standard library imports.
@@ -51,8 +51,6 @@ class ExampleUndo(Workbench):
         if self.active_window.confirm('Ok to exit?') != YES:
             event.veto = True
 
-        return
-
 
 def main(argv):
     """ A simple example of using the the undo framework in a workbench. """
@@ -77,10 +75,7 @@ def main(argv):
     # Start the GUI event loop.
     gui.start_event_loop()
 
-    return
-
 
 if __name__ == '__main__':
-    import sys; main(sys.argv)
-
-#### EOF ######################################################################
+    import sys
+    main(sys.argv)

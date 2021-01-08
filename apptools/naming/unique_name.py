@@ -1,9 +1,12 @@
-#-----------------------------------------------------------------------------
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# All rights reserved.
 #
-#  Copyright (c) 2007 by Enthought, Inc.
-#  All rights reserved.
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
 #
-#-----------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 
 
 """
@@ -11,6 +14,7 @@ A re-usable method for calculating a unique name given a list of existing
 names.
 
 """
+
 
 def make_unique_name(base, existing=[], format="%s_%s"):
     """
@@ -29,7 +33,3 @@ def make_unique_name(base, existing=[], format="%s_%s"):
         count += 1
 
     return name
-
-
-#### EOF ####################################################################
-

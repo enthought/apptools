@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
@@ -10,16 +10,14 @@
 #
 # Author: Riverbank Computing Limited
 # Description: <Enthought undo package component>
-#------------------------------------------------------------------------------
-
-from __future__ import absolute_import
+# ------------------------------------------------------------------------------
 
 # Enthought library imports.
-from traits.api import Bool, Event, Instance, Int, Interface, Unicode
+from traits.api import Bool, Event, Instance, Int, Interface, Str
 
 
 class IUndoManager(Interface):
-    """ The undo manager interface.  An undo manager is responsible for one or
+    """The undo manager interface.  An undo manager is responsible for one or
     more command stacks.  Typically an application would have a single undo
     manager.
     """
@@ -28,7 +26,7 @@ class IUndoManager(Interface):
 
     # This is the currently active command stack and may be None.  Typically it
     # is set when some sort of editor becomes active.
-    active_stack = Instance('apptools.undo.api.ICommandStack')
+    active_stack = Instance("apptools.undo.api.ICommandStack")
 
     # This reflects the clean state of the currently active command stack.  It
     # is intended to support a "document modified" indicator in the GUI.  It is
@@ -38,7 +36,7 @@ class IUndoManager(Interface):
     # This is the name of the command that can be redone.  It will be empty if
     # there is no command that can be redone.  It is maintained by the undo
     # manager.
-    redo_name = Unicode
+    redo_name = Str
 
     # This is the sequence number of the next command to be performed.  It is
     # incremented immediately before a command is invoked (by its 'do()'
@@ -47,12 +45,12 @@ class IUndoManager(Interface):
 
     # This event is fired when the index of a command stack changes.  Note that
     # it may not be the active stack.
-    stack_updated = Event(Instance('apptools.undo.api.ICommandStack'))
+    stack_updated = Event(Instance("apptools.undo.api.ICommandStack"))
 
     # This is the name of the command that can be undone.  It will be empty if
     # there is no command that can be undone.  It is maintained by the undo
     # manager.
-    undo_name = Unicode
+    undo_name = Str
 
     ###########################################################################
     # 'IUndoManager' interface.

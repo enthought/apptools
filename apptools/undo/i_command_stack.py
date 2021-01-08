@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Copyright (c) 2007, Riverbank Computing Limited
 # All rights reserved.
 #
@@ -10,19 +10,17 @@
 #
 # Author: Riverbank Computing Limited
 # Description: <Enthought undo package component>
-#------------------------------------------------------------------------------
-
-from __future__ import absolute_import
+# ------------------------------------------------------------------------------
 
 # Enthought library imports.
-from traits.api import Bool, Instance, Interface, Unicode
+from traits.api import Bool, Instance, Interface, Str
 
 # Local imports.
 from .i_undo_manager import IUndoManager
 
 
 class ICommandStack(Interface):
-    """ The command stack interface.  A command stack is responsible for
+    """The command stack interface.  A command stack is responsible for
     managing the changes to a data model and recording those changes so that
     they can be undone or redone.
     """
@@ -38,7 +36,7 @@ class ICommandStack(Interface):
     # This is the name of the command that can be redone.  It will be empty if
     # there is no command that can be redone.  It is maintained by the undo
     # stack.
-    redo_name = Unicode
+    redo_name = Str
 
     # This is the undo manager that manages this stack.
     undo_manager = Instance(IUndoManager)
@@ -46,14 +44,14 @@ class ICommandStack(Interface):
     # This is the name of the command that can be undone.  It will be empty if
     # there is no command that can be undone.  It is maintained by the undo
     # stack.
-    undo_name = Unicode
+    undo_name = Str
 
     ###########################################################################
     # 'ICommandStack' interface.
     ###########################################################################
 
     def begin_macro(self, name):
-        """ This begins a macro by creating an empty command with the given
+        """This begins a macro by creating an empty command with the given
         'name'.  The commands passed to all subsequent calls to 'push()' will
         be contained in the macro until the next call to 'end_macro()'.  Macros
         may be nested.  The stack is disabled (ie. nothing can be undone or
@@ -62,7 +60,7 @@ class ICommandStack(Interface):
         """
 
     def clear(self):
-        """ This clears the stack, without undoing or redoing any commands, and
+        """This clears the stack, without undoing or redoing any commands, and
         leaves the stack in a clean state.  It is typically used when all
         changes to the data have been abandoned.
         """
@@ -71,7 +69,7 @@ class ICommandStack(Interface):
         """ This ends a macro. """
 
     def push(self, command):
-        """ This executes a command and saves it on the command stack so that
+        """This executes a command and saves it on the command stack so that
         it can be subsequently undone and redone.  'command' is an instance
         that implements the ICommand interface.  Its 'do()' method is called
         to execute the command.  If any value is returned by 'do()' then it is
@@ -81,13 +79,13 @@ class ICommandStack(Interface):
         """
 
     def redo(self, sequence_nr=0):
-        """ If 'sequence_nr' is 0 then the last command that was undone is
+        """If 'sequence_nr' is 0 then the last command that was undone is
         redone and any result returned.  Otherwise commands are redone up to
         and including the given 'sequence_nr' and any result of the last of
         these is returned.
         """
 
     def undo(self, sequence_nr=0):
-        """ If 'sequence_nr' is 0 then the last command is undone.  Otherwise
+        """If 'sequence_nr' is 0 then the last command is undone.  Otherwise
         commands are undone up to and including the given 'sequence_nr'.
         """

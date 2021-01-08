@@ -1,28 +1,24 @@
-#------------------------------------------------------------------------------
-# Copyright (c) 2005, Enthought, Inc.
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
-# license included in enthought/LICENSE.txt and may be redistributed only
-# under the conditions described in the aforementioned license.  The license
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
 # is also available online at http://www.enthought.com/licenses/BSD.txt
-# Thanks for using Enthought open source!
 #
-# Author: Enthought, Inc.
-# Description: <Enthought naming package component>
-#------------------------------------------------------------------------------
+# Thanks for using Enthought open source!
 """ A reference to an object that lives outside of the naming system. """
 
 
 # Enthought library imports.
-from traits.api import Any, HasPrivateTraits, List, Str
+from traits.api import HasPrivateTraits, List, Str
 
 # Local imports.
-from address import Address
+from .address import Address
 
 
 class Reference(HasPrivateTraits):
-    """ A reference to an object that lives outside of the naming system.
+    """A reference to an object that lives outside of the naming system.
 
     References provide a way to store the address(s) of objects that live
     outside of the naming system.  A reference consists of a list of
@@ -46,5 +42,3 @@ class Reference(HasPrivateTraits):
 
     # The class name of the object factory.
     factory_class_name = Str
-
-#### EOF ######################################################################

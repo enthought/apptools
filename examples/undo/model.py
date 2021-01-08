@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Copyright (c) 2008, Riverbank Computing Limited
 # All rights reserved.
 #
@@ -10,11 +10,11 @@
 #
 # Author: Riverbank Computing Limited
 # Description: <Enthought undo package component>
-#------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 # Enthought library imports.
-from traits.api import Enum, HasTraits, Int, Unicode
+from traits.api import Enum, HasTraits, Int, Str
 
 
 class Label(HasTraits):
@@ -23,7 +23,7 @@ class Label(HasTraits):
     #### 'Label' interface ####################################################
 
     # The name.
-    name = Unicode
+    name = Str
 
     # The size in points.
     size = Int(18)

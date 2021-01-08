@@ -1,3 +1,12 @@
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 from traits.api import Event, Interface, Str
 
 
@@ -12,7 +21,7 @@ class ISelectionProvider(Interface):
     selection = Event
 
     def get_selection(self):
-        """ Return the current selection.
+        """Return the current selection.
 
         Returns:
             selection -- ISelection
@@ -20,7 +29,7 @@ class ISelectionProvider(Interface):
         """
 
     def set_selection(self, items, ignore_missing=False):
-        """ Set the current selection to the given items.
+        """Set the current selection to the given items.
 
         If ``ignore_missing`` is ``True``, items that are not available in the
         selection provider are silently ignored. If it is ``False`` (default),

@@ -1,13 +1,20 @@
+# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# All rights reserved.
+#
+# This software is provided without warranty under the terms of the BSD
+# license included in LICENSE.txt and may be redistributed only under
+# the conditions described in the aforementioned license. The license
+# is also available online at http://www.enthought.com/licenses/BSD.txt
+#
+# Thanks for using Enthought open source!
 """ An instance editor that allows total control over widget creation. """
 
 
 # Enthought library imports.
-from traits.etsconfig.api import ETSConfig
 from traits.api import Any
 from traitsui.api import EditorFactory
-
-# fixme: We need to import the 'Editor' class from the appropriate toolkit.
-exec('from traitsui.%s.editor import Editor' % ETSConfig.toolkit)
+from traitsui.toolkit import toolkit_object
+Editor = toolkit_object('editor:Editor')
 
 
 class _WidgetEditor(Editor):
@@ -34,17 +41,13 @@ class _WidgetEditor(Editor):
         self.control = page.create_control(parent)
 
         # Listen for the page being changed.
-        self.object.on_trait_change(self._on_page_changed, 'selected_page')
-
-        return
+        self.object.on_trait_change(self._on_page_changed, "selected_page")
 
     def dispose(self):
         """ Dispose of the editor. """
 
         page = self.object.selected_page
         page.destroy_control()
-
-        return
 
     def update_editor(self):
         """ Update the editor. """
@@ -64,8 +67,6 @@ class _WidgetEditor(Editor):
         if new is not None:
             self.control = new.create_control(self.parent)
 
-        return
-
 
 class WidgetEditor(EditorFactory):
     """ A factory widget editors. """
@@ -74,7 +75,7 @@ class WidgetEditor(EditorFactory):
     # 'object' interface.
     ###########################################################################
 
-    def __call__ (self, *args, **traits):
+    def __call__(self, *args, **traits):
         """ Call the object. """
 
         return self.trait_set(**traits)
@@ -88,17 +89,15 @@ class WidgetEditor(EditorFactory):
 
         editor = _WidgetEditor(
             parent,
-            factory     = self,
-            ui          = ui,
-            object      = object,
-            name        = name,
-            description = description
+            factory=self,
+            ui=ui,
+            object=object,
+            name=name,
+            description=description,
         )
 
         return editor
 
-    custom_editor   = simple_editor
-    text_editor     = simple_editor
+    custom_editor = simple_editor
+    text_editor = simple_editor
     readonly_editor = simple_editor
-
-#### EOF ######################################################################
