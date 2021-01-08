@@ -181,5 +181,5 @@ latex_documents = [
 # Grouping the document tree into Man pages. List of tuples
 # (startdocname, name, description, authors, section)
 man_pages = [
-  ( master_doc, project, project + ' ' + version, 'Enthought', 3 )
+    (master_doc, project, project + ' ' + version, 'Enthought', 3)
 ]
