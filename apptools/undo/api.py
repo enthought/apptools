@@ -12,6 +12,20 @@
 # Description: <Enthought undo package component>
 # ------------------------------------------------------------------------------
 
+""" API for apptools.undo subpackage.
+
+- :class:`~.AbstractCommand`
+- :class:`~.CommandStack`
+- :class:`~.UndoManager`
+
+Interfaces
+----------
+
+- :class:`~.ICommand`
+- :class:`~.ICommandStack`
+- :class:`~.IUndoManager`
+"""
+
 from pyface.undo.api import (
     AbstractCommand,
     CommandStack,

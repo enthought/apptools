@@ -7,4 +7,11 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
+
+""" API for the apptools.type_registry subpackage.
+
+- :class:`~.LazyRegistry`
+- :class:`~.TypeRegistry`
+"""
+
 from .type_registry import LazyRegistry, TypeRegistry
