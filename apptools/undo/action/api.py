@@ -12,7 +12,7 @@
 # Description: <Enthought undo package component>
 # ------------------------------------------------------------------------------
 
-from pyface.undo.action.command_action import (
+from pyface.undo.action.api import (
     CommandAction,
     RedoAction,
     UndoAction,
