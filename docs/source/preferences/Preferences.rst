@@ -308,8 +308,9 @@ And then perform any of the usual operations on it.
 Further Reading
 ---------------
 
-So that's a quick tour around the basic useage of the preferences API. For more
-information about what is provided take a look at the :ref:`api-documentation`.
+So that's a quick tour around the basic usage of the preferences API. For more
+information about what is provided take a look at the API documentation -
+:mod:`apptools.preferences`.
 
 If you are using Envisage to build your applications then you might also be
 interested in the |Preferences in Envisage| section.
