@@ -1,5 +1,5 @@
 AppTools Documentation
-==============================================
+=======================
 
 .. toctree::
     :maxdepth: 2
@@ -11,6 +11,13 @@ AppTools Documentation
     selection/*
     naming/*
     io/*
-    api
+
+API Documentation
+-----------------
+
+.. toctree::
+    :maxdepth: 1
+
+    api/apptools
 
 * :ref:`search`
