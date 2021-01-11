@@ -7,7 +7,23 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
-"""Public API for the scripting package.
+
+""" API for the apptools.scripting subpackage.
+
+- :class:`~.Recorder`
+- :func:`~.recordable`
+- :class:`~.RecorderWithUI`
+
+Custom Exceptions
+-----------------
+- :class:`~.RecorderError`
+
+Utilities
+---------
+- :func:`~.get_recorder`
+- :func:`~.set_recorder`
+- :func:`~.start_recording`
+- :func:`~.stop_recording`
 """
 
 from .recorder import Recorder, RecorderError

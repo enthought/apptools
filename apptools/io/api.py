@@ -7,4 +7,10 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
+
+""" API for the apptools.io subpackage.
+
+- :class:`~.File`
+"""
+
 from .file import File

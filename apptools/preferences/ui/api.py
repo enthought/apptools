@@ -7,6 +7,14 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
+
+""" API for the apptools.preferences.ui subpackage.
+
+- :class:`~.IPreferencesPage`
+- :class:`~.PreferencesManager`
+- :class:`~.PreferencesPage`
+"""
+
 from .i_preferences_page import IPreferencesPage
 
 from .preferences_manager import PreferencesManager
