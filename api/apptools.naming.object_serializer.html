@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.naming.object_serializer module &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools.naming package" href="apptools.naming.html" >
+    <link rel="next" title="apptools.naming.py_context module" href="apptools.naming.py_context.html" >
+    <link rel="prev" title="apptools.naming.object_factory module" href="apptools.naming.object_factory.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="apptools.html" >apptools package</a></li>
+          <li class="active"><a href="apptools.naming.html" accesskey="U">apptools.naming package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.naming.py_context.html" title="apptools.naming.py_context module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.naming.object_factory.html" title="apptools.naming.object_factory module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <div class="section" id="module-apptools.naming.object_serializer">
+<span id="apptools-naming-object-serializer-module"></span><h1>apptools.naming.object_serializer module<a class="headerlink" href="#module-apptools.naming.object_serializer" title="Permalink to this headline">¶</a></h1>
+<p>The base class for all object serializers.</p>
+<dl class="class">
+<dt id="apptools.naming.object_serializer.ObjectSerializer">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.naming.object_serializer.</code><code class="sig-name descname">ObjectSerializer</code><a class="reference internal" href="../_modules/apptools/naming/object_serializer.html#ObjectSerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.naming.object_serializer.ObjectSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>The base class for all object serializers.</p>
+<dl class="method">
+<dt id="apptools.naming.object_serializer.ObjectSerializer.can_load">
+<code class="sig-name descname">can_load</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/naming/object_serializer.html#ObjectSerializer.can_load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.naming.object_serializer.ObjectSerializer.can_load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the serializer can load a file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.naming.object_serializer.ObjectSerializer.can_save">
+<code class="sig-name descname">can_save</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/naming/object_serializer.html#ObjectSerializer.can_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.naming.object_serializer.ObjectSerializer.can_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the serializer can save an object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.naming.object_serializer.ObjectSerializer.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/naming/object_serializer.html#ObjectSerializer.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.naming.object_serializer.ObjectSerializer.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads an object from a file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.naming.object_serializer.ObjectSerializer.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/naming/object_serializer.html#ObjectSerializer.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.naming.object_serializer.ObjectSerializer.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves an object to a file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.naming.object_factory.html"
+                        title="previous chapter">apptools.naming.object_factory module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.naming.py_context.html"
+                        title="next chapter">apptools.naming.py_context module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.naming.object_serializer.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2021, Enthought
+      </li>
+      <li>
+      Last updated on Jan 13, 2021.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.preferences.preferences module &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools.preferences package" href="apptools.preferences.html" >
+    <link rel="next" title="apptools.preferences.preferences_helper module" href="apptools.preferences.preferences_helper.html" >
+    <link rel="prev" title="apptools.preferences.preference_binding module" href="apptools.preferences.preference_binding.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="apptools.html" >apptools package</a></li>
+          <li class="active"><a href="apptools.preferences.html" accesskey="U">apptools.preferences package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.preferences.preferences_helper.html" title="apptools.preferences.preferences_helper module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.preferences.preference_binding.html" title="apptools.preferences.preference_binding module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <div class="section" id="module-apptools.preferences.preferences">
+<span id="apptools-preferences-preferences-module"></span><h1>apptools.preferences.preferences module<a class="headerlink" href="#module-apptools.preferences.preferences" title="Permalink to this headline">¶</a></h1>
+<p>The default implementation of a node in a preferences hierarchy.</p>
+<dl class="class">
+<dt id="apptools.preferences.preferences.Preferences">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.preferences.preferences.</code><code class="sig-name descname">Preferences</code><span class="sig-paren">(</span><em class="sig-param">**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/preferences.html#Preferences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.preferences.Preferences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<p>The default implementation of a node in a preferences hierarchy.</p>
+<dl class="method">
+<dt id="apptools.preferences.preferences.Preferences.add_preferences_listener">
+<code class="sig-name descname">add_preferences_listener</code><span class="sig-paren">(</span><em class="sig-param">listener</em>, <em class="sig-param">path=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/preferences.html#Preferences.add_preferences_listener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.preferences.Preferences.add_preferences_listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a listener for changes to a node’s preferences.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.preferences.Preferences.clear">
+<code class="sig-name descname">clear</code><span class="sig-paren">(</span><em class="sig-param">path=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/preferences.html#Preferences.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.preferences.Preferences.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all preferences from the node at the specified path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.preferences.Preferences.dump">
+<code class="sig-name descname">dump</code><span class="sig-paren">(</span><em class="sig-param">indent=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/preferences.html#Preferences.dump"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.preferences.Preferences.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump the preferences hierarchy to stdout.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.preferences.Preferences.flush">
+<code class="sig-name descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/preferences.html#Preferences.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.preferences.Preferences.flush" title="Permalink to this definition">¶</a></dt>
+<dd><p>Force any changes in the node to the backing store.</p>
+<p>This includes any changes to the node’s descendants.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.preferences.Preferences.get">
+<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">default=None</em>, <em class="sig-param">inherit=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/preferences.html#Preferences.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.preferences.Preferences.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the value of the preference at the specified path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.preferences.Preferences.keys">
+<code class="sig-name descname">keys</code><span class="sig-paren">(</span><em class="sig-param">path=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/preferences.html#Preferences.keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.preferences.Preferences.keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the preference keys of the node at the specified path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.preferences.Preferences.load">
+<code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param">file_or_filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/preferences.html#Preferences.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.preferences.Preferences.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load preferences from a file.</p>
+<p>This is a <em>merge</em> operation i.e. the contents of the file are added to
+the node.</p>
+<p>This implementation uses ‘ConfigObj’ files.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.preferences.Preferences.node">
+<code class="sig-name descname">node</code><span class="sig-paren">(</span><em class="sig-param">path=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/preferences.html#Preferences.node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.preferences.Preferences.node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the node at the specified path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.preferences.Preferences.node_exists">
+<code class="sig-name descname">node_exists</code><span class="sig-paren">(</span><em class="sig-param">path=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/preferences.html#Preferences.node_exists"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.preferences.Preferences.node_exists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if the node at the specified path exists.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.preferences.Preferences.node_names">
+<code class="sig-name descname">node_names</code><span class="sig-paren">(</span><em class="sig-param">path=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/preferences.html#Preferences.node_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.preferences.Preferences.node_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the names of the children of the node at the specified path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.preferences.Preferences.remove">
+<code class="sig-name descname">remove</code><span class="sig-paren">(</span><em class="sig-param">path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/preferences.html#Preferences.remove"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.preferences.Preferences.remove" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove the preference at the specified path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.preferences.Preferences.remove_preferences_listener">
+<code class="sig-name descname">remove_preferences_listener</code><span class="sig-paren">(</span><em class="sig-param">listener</em>, <em class="sig-param">path=''</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/preferences.html#Preferences.remove_preferences_listener"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.preferences.Preferences.remove_preferences_listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a listener for changes to a node’s preferences.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.preferences.Preferences.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">file_or_filename=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/preferences.html#Preferences.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.preferences.Preferences.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the node’s preferences to a file.</p>
+<p>This implementation uses ‘ConfigObj’ files.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.preferences.preferences.Preferences.set">
+<code class="sig-name descname">set</code><span class="sig-paren">(</span><em class="sig-param">path</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/preferences/preferences.html#Preferences.set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.preferences.preferences.Preferences.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the value of the preference at the specified path.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.preferences.preference_binding.html"
+                        title="previous chapter">apptools.preferences.preference_binding module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.preferences.preferences_helper.html"
+                        title="next chapter">apptools.preferences.preferences_helper module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.preferences.preferences.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2021, Enthought
+      </li>
+      <li>
+      Last updated on Jan 13, 2021.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>
