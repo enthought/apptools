@@ -2,7 +2,7 @@ Undo Framework
 ==============
 
 .. warning:: 
-    apptools.undo has been deprecated and moved to sit in
+    apptools.undo has been deprecated and moved to
     `Pyface <https://github.com/enthought/pyface>`_. It will be removed in a
     future release. Please use `pyface.undo <https://docs.enthought.com/pyface/undo.html>`_
     instead.
