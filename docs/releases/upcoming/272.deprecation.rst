@@ -1,1 +1,0 @@
-Import from pyface.undo.* instead of redefining classes in apptools.undo.* (#272)
