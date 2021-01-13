@@ -1,1 +1,0 @@
-Fix container items change event being saved in preferences (#196)

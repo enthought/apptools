@@ -1,1 +1,0 @@
-Remove ``apptools.naming.ui`` sub package (#233)
