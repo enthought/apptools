@@ -1,6 +1,12 @@
 Undo Framework
 ==============
 
+.. warning:: 
+    apptools.undo has been deprecated and moved to sit in
+    `Pyface <https://github.com/enthought/pyface>`_. It will be removed in a
+    future release. Please use `pyface.undo <https://docs.enthought.com/pyface/undo.html>`_
+    instead.
+
 The Undo Framework is a component of the Enthought Tool Suite that provides
 developers with an API that implements the standard pattern for do/undo/redo
 commands.
