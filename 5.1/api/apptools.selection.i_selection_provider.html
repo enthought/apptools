@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.selection.i_selection_provider module &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools.selection package" href="apptools.selection.html" >
+    <link rel="next" title="apptools.selection.list_selection module" href="apptools.selection.list_selection.html" >
+    <link rel="prev" title="apptools.selection.i_selection module" href="apptools.selection.i_selection.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="apptools.html" >apptools package</a></li>
+          <li class="active"><a href="apptools.selection.html" accesskey="U">apptools.selection package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.selection.list_selection.html" title="apptools.selection.list_selection module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.selection.i_selection.html" title="apptools.selection.i_selection module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <div class="section" id="module-apptools.selection.i_selection_provider">
+<span id="apptools-selection-i-selection-provider-module"></span><h1>apptools.selection.i_selection_provider module<a class="headerlink" href="#module-apptools.selection.i_selection_provider" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="apptools.selection.i_selection_provider.ISelectionProvider">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.selection.i_selection_provider.</code><code class="sig-name descname">ISelectionProvider</code><a class="reference internal" href="../_modules/apptools/selection/i_selection_provider.html#ISelectionProvider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.selection.i_selection_provider.ISelectionProvider" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.Interface</span></code></p>
+<p>Source of selections.</p>
+<dl class="method">
+<dt id="apptools.selection.i_selection_provider.ISelectionProvider.get_selection">
+<code class="sig-name descname">get_selection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/selection/i_selection_provider.html#ISelectionProvider.get_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.selection.i_selection_provider.ISelectionProvider.get_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current selection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>selection – ISelection</dt><dd><p>Object representing the current selection.</p>
+</dd>
+</dl>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.selection.i_selection_provider.ISelectionProvider.provider_id">
+<code class="sig-name descname">provider_id</code><em class="property"> = Str()</em><a class="headerlink" href="#apptools.selection.i_selection_provider.ISelectionProvider.provider_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unique ID identifying the provider.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.selection.i_selection_provider.ISelectionProvider.selection">
+<code class="sig-name descname">selection</code><em class="property"> = Event</em><a class="headerlink" href="#apptools.selection.i_selection_provider.ISelectionProvider.selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Event triggered when the selection changes.
+The content of the event is an <a class="reference internal" href="apptools.selection.i_selection.html#apptools.selection.i_selection.ISelection" title="apptools.selection.i_selection.ISelection"><code class="xref py py-class docutils literal notranslate"><span class="pre">ISelection</span></code></a> instance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.selection.i_selection_provider.ISelectionProvider.set_selection">
+<code class="sig-name descname">set_selection</code><span class="sig-paren">(</span><em class="sig-param">items</em>, <em class="sig-param">ignore_missing=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/selection/i_selection_provider.html#ISelectionProvider.set_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.selection.i_selection_provider.ISelectionProvider.set_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the current selection to the given items.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">ignore_missing</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>, items that are not available in the
+selection provider are silently ignored. If it is <code class="docutils literal notranslate"><span class="pre">False</span></code> (default),
+an <code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code> should be raised.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>-- list</strong> (<em>items</em>) – List of items to be selected.</p></li>
+<li><p><strong>-- bool</strong> (<em>ignore_missing</em>) – If <code class="docutils literal notranslate"><span class="pre">False</span></code> (default), the provider raises an exception if any
+of the items in <code class="docutils literal notranslate"><span class="pre">items</span></code> is not available to be selected.
+Otherwise, missing elements are silently ignored, and the rest
+is selected.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.selection.i_selection.html"
+                        title="previous chapter">apptools.selection.i_selection module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.selection.list_selection.html"
+                        title="next chapter">apptools.selection.list_selection module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.selection.i_selection_provider.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2021, Enthought
+      </li>
+      <li>
+      Last updated on Jan 13, 2021.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

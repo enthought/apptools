@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.naming.pyfs_context module &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools.naming package" href="apptools.naming.html" >
+    <link rel="next" title="apptools.naming.pyfs_context_factory module" href="apptools.naming.pyfs_context_factory.html" >
+    <link rel="prev" title="apptools.naming.py_object_factory module" href="apptools.naming.py_object_factory.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="apptools.html" >apptools package</a></li>
+          <li class="active"><a href="apptools.naming.html" accesskey="U">apptools.naming package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.naming.pyfs_context_factory.html" title="apptools.naming.pyfs_context_factory module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.naming.py_object_factory.html" title="apptools.naming.py_object_factory module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <div class="section" id="module-apptools.naming.pyfs_context">
+<span id="apptools-naming-pyfs-context-module"></span><h1>apptools.naming.pyfs_context module<a class="headerlink" href="#module-apptools.naming.pyfs_context" title="Permalink to this headline">¶</a></h1>
+<p>A Python File System context.</p>
+<dl class="class">
+<dt id="apptools.naming.pyfs_context.PyFSContext">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.naming.pyfs_context.</code><code class="sig-name descname">PyFSContext</code><span class="sig-paren">(</span><em class="sig-param">**traits</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/naming/pyfs_context.html#PyFSContext"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.naming.pyfs_context.PyFSContext" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="apptools.naming.dir_context.html#apptools.naming.dir_context.DirContext" title="apptools.naming.dir_context.DirContext"><code class="xref py py-class docutils literal notranslate"><span class="pre">apptools.naming.dir_context.DirContext</span></code></a>, <a class="reference internal" href="apptools.naming.referenceable.html#apptools.naming.referenceable.Referenceable" title="apptools.naming.referenceable.Referenceable"><code class="xref py py-class docutils literal notranslate"><span class="pre">apptools.naming.referenceable.Referenceable</span></code></a></p>
+<p>A Python File System context.</p>
+<p>This context represents a directory on a local file system.</p>
+<dl class="attribute">
+<dt id="apptools.naming.pyfs_context.PyFSContext.ATTRIBUTES_FILE">
+<code class="sig-name descname">ATTRIBUTES_FILE</code><em class="property"> = '__attributes__'</em><a class="headerlink" href="#apptools.naming.pyfs_context.PyFSContext.ATTRIBUTES_FILE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.naming.pyfs_context.PyFSContext.FILTERS">
+<code class="sig-name descname">FILTERS</code><em class="property"> = 'apptools.naming.pyfs.filters'</em><a class="headerlink" href="#apptools.naming.pyfs_context.PyFSContext.FILTERS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.naming.pyfs_context.PyFSContext.OBJECT_SERIALIZERS">
+<code class="sig-name descname">OBJECT_SERIALIZERS</code><em class="property"> = 'apptools.naming.pyfs.object.serializers'</em><a class="headerlink" href="#apptools.naming.pyfs_context.PyFSContext.OBJECT_SERIALIZERS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="apptools.naming.pyfs_context.PyFSContext.get_unique_name">
+<code class="sig-name descname">get_unique_name</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/naming/pyfs_context.html#PyFSContext.get_unique_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.naming.pyfs_context.PyFSContext.get_unique_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a name that is unique within the context.</p>
+<p>The name returned will start with the specified prefix.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.naming.pyfs_context.PyFSContext.refresh">
+<code class="sig-name descname">refresh</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/naming/pyfs_context.html#PyFSContext.refresh"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.naming.pyfs_context.PyFSContext.refresh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refresh the context to reflect changes in the file system.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.naming.py_object_factory.html"
+                        title="previous chapter">apptools.naming.py_object_factory module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.naming.pyfs_context_factory.html"
+                        title="next chapter">apptools.naming.pyfs_context_factory module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.naming.pyfs_context.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2021, Enthought
+      </li>
+      <li>
+      Last updated on Jan 13, 2021.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

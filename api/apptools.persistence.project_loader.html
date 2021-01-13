@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.persistence.project_loader module &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools.persistence package" href="apptools.persistence.html" >
+    <link rel="next" title="apptools.persistence.state_pickler module" href="apptools.persistence.state_pickler.html" >
+    <link rel="prev" title="apptools.persistence.file_path module" href="apptools.persistence.file_path.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="apptools.html" >apptools package</a></li>
+          <li class="active"><a href="apptools.persistence.html" accesskey="U">apptools.persistence package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.persistence.state_pickler.html" title="apptools.persistence.state_pickler module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.persistence.file_path.html" title="apptools.persistence.file_path module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <div class="section" id="module-apptools.persistence.project_loader">
+<span id="apptools-persistence-project-loader-module"></span><h1>apptools.persistence.project_loader module<a class="headerlink" href="#module-apptools.persistence.project_loader" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="apptools.persistence.project_loader.load_project">
+<code class="sig-prename descclassname">apptools.persistence.project_loader.</code><code class="sig-name descname">load_project</code><span class="sig-paren">(</span><em class="sig-param">pickle_filename</em>, <em class="sig-param">updater_path</em>, <em class="sig-param">application_version</em>, <em class="sig-param">protocol</em>, <em class="sig-param">max_pass=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/project_loader.html#load_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.project_loader.load_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a project from a pickle file and if necessary will update it to
+the latest version of the application.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="apptools.persistence.project_loader.upgrade_project">
+<code class="sig-prename descclassname">apptools.persistence.project_loader.</code><code class="sig-name descname">upgrade_project</code><span class="sig-paren">(</span><em class="sig-param">pickle_filename</em>, <em class="sig-param">updater_path</em>, <em class="sig-param">project_version</em>, <em class="sig-param">application_version</em>, <em class="sig-param">protocol</em>, <em class="sig-param">max_pass=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/persistence/project_loader.html#upgrade_project"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.persistence.project_loader.upgrade_project" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repeatedly read and write the project to disk updating it one version
+at a time.</p>
+<p>Example the p5.project is at version 0
+The application is at version 3</p>
+<p>p5.project    — Update1 —&gt; p5.project.v1
+p5.project.v1 — Update2 —&gt; p5.project.v2
+p5.project.v2 — Update3 —&gt; p5.project.v3
+p5.project.v3 —&gt; loaded into app</p>
+<p>The user then has the option to save the updated project as p5.project</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.persistence.file_path.html"
+                        title="previous chapter">apptools.persistence.file_path module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.persistence.state_pickler.html"
+                        title="next chapter">apptools.persistence.state_pickler module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.persistence.project_loader.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2021, Enthought
+      </li>
+      <li>
+      Last updated on Jan 13, 2021.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

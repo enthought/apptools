@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.logger.plugin.logger_plugin module &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools.logger.plugin package" href="apptools.logger.plugin.html" >
+    <link rel="next" title="apptools.logger.plugin.logger_preferences module" href="apptools.logger.plugin.logger_preferences.html" >
+    <link rel="prev" title="apptools.logger.plugin package" href="apptools.logger.plugin.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="apptools.html" >apptools package</a></li>
+          <li class="active"><a href="apptools.logger.html" >apptools.logger package</a></li>
+          <li class="active"><a href="apptools.logger.plugin.html" accesskey="U">apptools.logger.plugin package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.logger.plugin.logger_preferences.html" title="apptools.logger.plugin.logger_preferences module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.logger.plugin.html" title="apptools.logger.plugin package"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <div class="section" id="module-apptools.logger.plugin.logger_plugin">
+<span id="apptools-logger-plugin-logger-plugin-module"></span><h1>apptools.logger.plugin.logger_plugin module<a class="headerlink" href="#module-apptools.logger.plugin.logger_plugin" title="Permalink to this headline">¶</a></h1>
+<p>Logger plugin.</p>
+<dl class="class">
+<dt id="apptools.logger.plugin.logger_plugin.LoggerPlugin">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.logger.plugin.logger_plugin.</code><code class="sig-name descname">LoggerPlugin</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/logger/plugin/logger_plugin.html#LoggerPlugin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.logger.plugin.logger_plugin.LoggerPlugin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">envisage.api.Plugin</span></code></p>
+<p>Logger plugin.</p>
+<dl class="attribute">
+<dt id="apptools.logger.plugin.logger_plugin.LoggerPlugin.MAIL_FILES">
+<code class="sig-name descname">MAIL_FILES</code><em class="property"> = 'apptools.logger.plugin.mail_files'</em><a class="headerlink" href="#apptools.logger.plugin.logger_plugin.LoggerPlugin.MAIL_FILES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.plugin.logger_plugin.LoggerPlugin.PREFERENCES">
+<code class="sig-name descname">PREFERENCES</code><em class="property"> = 'envisage.preferences'</em><a class="headerlink" href="#apptools.logger.plugin.logger_plugin.LoggerPlugin.PREFERENCES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.plugin.logger_plugin.LoggerPlugin.PREFERENCES_PAGES">
+<code class="sig-name descname">PREFERENCES_PAGES</code><em class="property"> = 'envisage.ui.workbench.preferences_pages'</em><a class="headerlink" href="#apptools.logger.plugin.logger_plugin.LoggerPlugin.PREFERENCES_PAGES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.plugin.logger_plugin.LoggerPlugin.VIEWS">
+<code class="sig-name descname">VIEWS</code><em class="property"> = 'envisage.ui.workbench.views'</em><a class="headerlink" href="#apptools.logger.plugin.logger_plugin.LoggerPlugin.VIEWS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.plugin.logger_plugin.LoggerPlugin.id">
+<code class="sig-name descname">id</code><em class="property"> = 'apptools.logger'</em><a class="headerlink" href="#apptools.logger.plugin.logger_plugin.LoggerPlugin.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.plugin.logger_plugin.LoggerPlugin.mail_files">
+<code class="sig-name descname">mail_files</code><a class="headerlink" href="#apptools.logger.plugin.logger_plugin.LoggerPlugin.mail_files" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.plugin.logger_plugin.LoggerPlugin.name">
+<code class="sig-name descname">name</code><em class="property"> = 'Logger plugin'</em><a class="headerlink" href="#apptools.logger.plugin.logger_plugin.LoggerPlugin.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.plugin.logger_plugin.LoggerPlugin.preferences">
+<code class="sig-name descname">preferences</code><em class="property"> = &lt;traits.trait_types.List object&gt;</em><a class="headerlink" href="#apptools.logger.plugin.logger_plugin.LoggerPlugin.preferences" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.plugin.logger_plugin.LoggerPlugin.preferences_pages">
+<code class="sig-name descname">preferences_pages</code><em class="property"> = &lt;traits.trait_types.List object&gt;</em><a class="headerlink" href="#apptools.logger.plugin.logger_plugin.LoggerPlugin.preferences_pages" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="apptools.logger.plugin.logger_plugin.LoggerPlugin.start">
+<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/logger/plugin/logger_plugin.html#LoggerPlugin.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.logger.plugin.logger_plugin.LoggerPlugin.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the plugin.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.logger.plugin.logger_plugin.LoggerPlugin.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/logger/plugin/logger_plugin.html#LoggerPlugin.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.logger.plugin.logger_plugin.LoggerPlugin.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops the plugin.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="apptools.logger.plugin.logger_plugin.LoggerPlugin.views">
+<code class="sig-name descname">views</code><em class="property"> = &lt;traits.trait_types.List object&gt;</em><a class="headerlink" href="#apptools.logger.plugin.logger_plugin.LoggerPlugin.views" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.logger.plugin.html"
+                        title="previous chapter">apptools.logger.plugin package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.logger.plugin.logger_preferences.html"
+                        title="next chapter">apptools.logger.plugin.logger_preferences module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.logger.plugin.logger_plugin.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2021, Enthought
+      </li>
+      <li>
+      Last updated on Jan 13, 2021.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

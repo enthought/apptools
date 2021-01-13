@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.io.h5.dict_node module &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools.io.h5 package" href="apptools.io.h5.html" >
+    <link rel="next" title="apptools.io.h5.file module" href="apptools.io.h5.file.html" >
+    <link rel="prev" title="apptools.io.h5 package" href="apptools.io.h5.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="apptools.html" >apptools package</a></li>
+          <li class="active"><a href="apptools.io.html" >apptools.io package</a></li>
+          <li class="active"><a href="apptools.io.h5.html" accesskey="U">apptools.io.h5 package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.io.h5.file.html" title="apptools.io.h5.file module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.io.h5.html" title="apptools.io.h5 package"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <div class="section" id="module-apptools.io.h5.dict_node">
+<span id="apptools-io-h5-dict-node-module"></span><h1>apptools.io.h5.dict_node module<a class="headerlink" href="#module-apptools.io.h5.dict_node" title="Permalink to this headline">¶</a></h1>
+<dl class="data">
+<dt id="apptools.io.h5.dict_node.ARRAY_PROXY_KEY">
+<code class="sig-prename descclassname">apptools.io.h5.dict_node.</code><code class="sig-name descname">ARRAY_PROXY_KEY</code><em class="property"> = '__array__'</em><a class="headerlink" href="#apptools.io.h5.dict_node.ARRAY_PROXY_KEY" title="Permalink to this definition">¶</a></dt>
+<dd><p>The key name which identifies array objects in the JSON dict.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="apptools.io.h5.dict_node.H5DictNode">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.io.h5.dict_node.</code><code class="sig-name descname">H5DictNode</code><span class="sig-paren">(</span><em class="sig-param">h5_group</em>, <em class="sig-param">auto_flush=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/dict_node.html#H5DictNode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.io.h5.dict_node.H5DictNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Dictionary-like node interface.</p>
+<p>Data for the dict is stored as a JSON file in a PyTables FileNode. This
+allows easy storage of Python objects, such as dictionaries and lists of
+different data types.</p>
+<p>Note that this is implemented using a group-node assuming that arrays are
+valid inputs and will be stored as H5 array nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h5_group</strong> (<em>H5Group instance</em>) – Group node which will be used as a dictionary store.</p></li>
+<li><p><strong>auto_flush</strong> (<em>bool</em>) – If True, write data to disk whenever the dict data is altered.
+Otherwise, call <cite>flush()</cite> explicitly to write data to disk.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="apptools.io.h5.dict_node.H5DictNode.add_to_h5file">
+<em class="property">classmethod </em><code class="sig-name descname">add_to_h5file</code><span class="sig-paren">(</span><em class="sig-param">h5</em>, <em class="sig-param">node_path</em>, <em class="sig-param">data=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/dict_node.html#H5DictNode.add_to_h5file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.io.h5.dict_node.H5DictNode.add_to_h5file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add dict node to an H5 file at the specified path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h5</strong> (<a class="reference internal" href="apptools.io.h5.file.html#apptools.io.h5.file.H5File" title="apptools.io.h5.file.H5File"><em>H5File</em></a>) – The H5 file where the dictionary data will be stored.</p></li>
+<li><p><strong>node_path</strong> (<em>str</em>) – Path to node where data is stored (e.g. ‘/path/to/my_dict’)</p></li>
+<li><p><strong>data</strong> (<em>dict</em>) – Data for initialization, if desired.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.io.h5.dict_node.H5DictNode.data">
+<em class="property">property </em><code class="sig-name descname">data</code><a class="headerlink" href="#apptools.io.h5.dict_node.H5DictNode.data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="apptools.io.h5.dict_node.H5DictNode.flush">
+<code class="sig-name descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/dict_node.html#H5DictNode.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.io.h5.dict_node.H5DictNode.flush" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write buffered data to disk.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.io.h5.dict_node.H5DictNode.is_dict_node">
+<em class="property">classmethod </em><code class="sig-name descname">is_dict_node</code><span class="sig-paren">(</span><em class="sig-param">pytables_node</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/dict_node.html#H5DictNode.is_dict_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.io.h5.dict_node.H5DictNode.is_dict_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return True if PyTables node looks like an H5DictNode.</p>
+<p>NOTE: That this returns False if the node is an <cite>H5DictNode</cite> instance,
+since the input node should be a normal PyTables Group node.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.io.h5.dict_node.H5DictNode.keys">
+<code class="sig-name descname">keys</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/dict_node.html#H5DictNode.keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.io.h5.dict_node.H5DictNode.keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.io.h5.html"
+                        title="previous chapter">apptools.io.h5 package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.io.h5.file.html"
+                        title="next chapter">apptools.io.h5.file module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.io.h5.dict_node.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2021, Enthought
+      </li>
+      <li>
+      Last updated on Jan 13, 2021.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

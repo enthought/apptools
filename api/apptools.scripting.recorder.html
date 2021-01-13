@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.scripting.recorder module &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools.scripting package" href="apptools.scripting.html" >
+    <link rel="next" title="apptools.scripting.recorder_with_ui module" href="apptools.scripting.recorder_with_ui.html" >
+    <link rel="prev" title="apptools.scripting.recordable module" href="apptools.scripting.recordable.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="apptools.html" >apptools package</a></li>
+          <li class="active"><a href="apptools.scripting.html" accesskey="U">apptools.scripting package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.scripting.recorder_with_ui.html" title="apptools.scripting.recorder_with_ui module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.scripting.recordable.html" title="apptools.scripting.recordable module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <div class="section" id="module-apptools.scripting.recorder">
+<span id="apptools-scripting-recorder-module"></span><h1>apptools.scripting.recorder module<a class="headerlink" href="#module-apptools.scripting.recorder" title="Permalink to this headline">¶</a></h1>
+<p>Code to support recording to a readable and executable Python script.</p>
+<dl class="simple">
+<dt>FIXME:</dt><dd><ul class="simple">
+<li><p>Support for dictionaries?</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="apptools.scripting.recorder.Recorder">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.scripting.recorder.</code><code class="sig-name descname">Recorder</code><a class="reference internal" href="../_modules/apptools/scripting/recorder.html#Recorder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.scripting.recorder.Recorder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasTraits</span></code></p>
+<dl class="method">
+<dt id="apptools.scripting.recorder.Recorder.clear">
+<code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/scripting/recorder.html#Recorder.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.scripting.recorder.Recorder.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears all previous recorded state and unregisters all
+registered objects.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.scripting.recorder.Recorder.get_code">
+<code class="sig-name descname">get_code</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/scripting/recorder.html#Recorder.get_code"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.scripting.recorder.Recorder.get_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the recorded lines as a string of printable code.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.scripting.recorder.Recorder.get_object_path">
+<code class="sig-name descname">get_object_path</code><span class="sig-paren">(</span><em class="sig-param">object</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/scripting/recorder.html#Recorder.get_object_path"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.scripting.recorder.Recorder.get_object_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the path in the object hierarchy of a registered
+object.  Useful for debugging.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.scripting.recorder.Recorder.get_script_id">
+<code class="sig-name descname">get_script_id</code><span class="sig-paren">(</span><em class="sig-param">object</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/scripting/recorder.html#Recorder.get_script_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.scripting.recorder.Recorder.get_script_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the script_id of a registered object.  Useful when
+you want to manually add a record statement.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.scripting.recorder.Recorder.is_registered">
+<code class="sig-name descname">is_registered</code><span class="sig-paren">(</span><em class="sig-param">object</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/scripting/recorder.html#Recorder.is_registered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.scripting.recorder.Recorder.is_registered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the given object is registered with the
+recorder.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.scripting.recorder.Recorder.record">
+<code class="sig-name descname">record</code><span class="sig-paren">(</span><em class="sig-param">code</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/scripting/recorder.html#Recorder.record"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.scripting.recorder.Recorder.record" title="Permalink to this definition">¶</a></dt>
+<dd><p>Record a string to be stored to the output file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>code</strong> (<em>str</em>) – A string of text.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.scripting.recorder.Recorder.record_function">
+<code class="sig-name descname">record_function</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">args</em>, <em class="sig-param">kw</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/scripting/recorder.html#Recorder.record_function"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.scripting.recorder.Recorder.record_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Record a function call given the function and its
+arguments.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.scripting.recorder.Recorder.register">
+<code class="sig-name descname">register</code><span class="sig-paren">(</span><em class="sig-param">object</em>, <em class="sig-param">parent=None</em>, <em class="sig-param">trait_name_on_parent=''</em>, <em class="sig-param">ignore=None</em>, <em class="sig-param">known=False</em>, <em class="sig-param">script_id=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/scripting/recorder.html#Recorder.register"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.scripting.recorder.Recorder.register" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register an object with the recorder.  This sets up the
+object for recording.</p>
+<p>By default all traits (except those starting and ending with
+‘_’) are recorded.  For attributes that are themselves
+recordable, one may mark traits with a ‘record’ metadata as
+follows:</p>
+<ul class="simple">
+<li><p>If metadata <cite>record=False</cite> is set, the nested object will not be
+recorded.</p></li>
+<li><p>If <cite>record=True</cite>, then that object is also recorded if it is
+not <cite>None</cite>.</p></li>
+</ul>
+<p>If the object is a list or dict that is marked with
+<cite>record=True</cite>, the list is itself not listened to for changes
+but all its contents are registered.</p>
+<p>If the <cite>object</cite> has a trait named <cite>recorder</cite> then this recorder
+instance will be set to it if possible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<em>Instance</em><em>(</em><em>HasTraits</em><em>)</em>) – The object to register in the registry.</p></li>
+<li><p><strong>parent</strong> (<em>Instance</em><em>(</em><em>HasTraits</em><em>)</em>) – An optional parent object in which <cite>object</cite> is contained</p></li>
+<li><p><strong>trait_name_on_parent</strong> (<em>str</em>) – An optional trait name of the <cite>object</cite> in the <cite>parent</cite>.</p></li>
+<li><p><strong>ignore</strong> (<em>list</em><em>(</em><em>str</em><em>)</em>) – An optional list of trait names on the <cite>object</cite> to be
+ignored.</p></li>
+<li><p><strong>known</strong> (<em>bool</em>) – Optional specification if the <cite>object</cite> id is known on the
+interpreter.  This is needed if you are manually injecting
+code to define/create an object.</p></li>
+<li><p><strong>script_id</strong> (<em>str</em>) – Optionally specify a script_id to use for this object.  It
+is not guaranteed that this ID will be used since it may
+already be in use.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.scripting.recorder.Recorder.save">
+<code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param">file</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/scripting/recorder.html#Recorder.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.scripting.recorder.Recorder.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the recorded lines to the given file.  It does not close
+the file.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.scripting.recorder.Recorder.ui_save">
+<code class="sig-name descname">ui_save</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/scripting/recorder.html#Recorder.ui_save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.scripting.recorder.Recorder.ui_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save recording to file, pop up a UI dialog to find out where
+and close the file when done.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.scripting.recorder.Recorder.unregister">
+<code class="sig-name descname">unregister</code><span class="sig-paren">(</span><em class="sig-param">object</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/scripting/recorder.html#Recorder.unregister"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.scripting.recorder.Recorder.unregister" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unregister the given object from the recorder.  This inverts
+the logic of the <cite>register(…)</cite> method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="apptools.scripting.recorder.Recorder.write_script_id_in_namespace">
+<code class="sig-name descname">write_script_id_in_namespace</code><span class="sig-paren">(</span><em class="sig-param">script_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/scripting/recorder.html#Recorder.write_script_id_in_namespace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.scripting.recorder.Recorder.write_script_id_in_namespace" title="Permalink to this definition">¶</a></dt>
+<dd><p>If a script_id is not known in the current script’s namespace,
+this sets it using the path of the object or actually
+instantiating it.  If this is not possible (since the script_id
+matches no existing object), nothing is recorded but the
+framework is notified that the particular script_id is available
+in the namespace.  This is useful when you want to inject code
+in the namespace to create a particular object.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="apptools.scripting.recorder.RecorderError">
+<em class="property">exception </em><code class="sig-prename descclassname">apptools.scripting.recorder.</code><code class="sig-name descname">RecorderError</code><a class="reference internal" href="../_modules/apptools/scripting/recorder.html#RecorderError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.scripting.recorder.RecorderError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.scripting.recordable.html"
+                        title="previous chapter">apptools.scripting.recordable module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.scripting.recorder_with_ui.html"
+                        title="next chapter">apptools.scripting.recorder_with_ui module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.scripting.recorder.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2021, Enthought
+      </li>
+      <li>
+      Last updated on Jan 13, 2021.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

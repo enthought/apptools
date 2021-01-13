@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.naming.state_factory module &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'unknown',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.ico">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools.naming package" href="apptools.naming.html" >
+    <link rel="next" title="apptools.naming.unique_name module" href="apptools.naming.unique_name.html" >
+    <link rel="prev" title="apptools.naming.referenceable_state_factory module" href="apptools.naming.referenceable_state_factory.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="apptools.html" >apptools package</a></li>
+          <li class="active"><a href="apptools.naming.html" accesskey="U">apptools.naming package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.naming.unique_name.html" title="apptools.naming.unique_name module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.naming.referenceable_state_factory.html" title="apptools.naming.referenceable_state_factory module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <div class="section" id="module-apptools.naming.state_factory">
+<span id="apptools-naming-state-factory-module"></span><h1>apptools.naming.state_factory module<a class="headerlink" href="#module-apptools.naming.state_factory" title="Permalink to this headline">¶</a></h1>
+<p>The base class for all state factories.</p>
+<dl class="class">
+<dt id="apptools.naming.state_factory.StateFactory">
+<em class="property">class </em><code class="sig-prename descclassname">apptools.naming.state_factory.</code><code class="sig-name descname">StateFactory</code><a class="reference internal" href="../_modules/apptools/naming/state_factory.html#StateFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.naming.state_factory.StateFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">traits.has_traits.HasPrivateTraits</span></code></p>
+<p>The base class for all state factories.</p>
+<p>A state factory accepts an object and returns some data representing the
+object that is suitable for storing in a particular context.</p>
+<dl class="method">
+<dt id="apptools.naming.state_factory.StateFactory.get_state_to_bind">
+<code class="sig-name descname">get_state_to_bind</code><span class="sig-paren">(</span><em class="sig-param">obj</em>, <em class="sig-param">name</em>, <em class="sig-param">context</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/naming/state_factory.html#StateFactory.get_state_to_bind"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apptools.naming.state_factory.StateFactory.get_state_to_bind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the state of an object for binding.</p>
+<p>Returns None if the factory cannot create the state (ie. it does not
+recognise the object passed to it).</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.naming.referenceable_state_factory.html"
+                        title="previous chapter">apptools.naming.referenceable_state_factory module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.naming.unique_name.html"
+                        title="next chapter">apptools.naming.unique_name module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.naming.state_factory.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2021, Enthought
+      </li>
+      <li>
+      Last updated on Jan 13, 2021.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 2.3.1.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>
