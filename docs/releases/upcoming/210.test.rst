@@ -1,1 +1,0 @@
-Fix AttributeError on Python 3.9 due to usage of ``base64.decodestring`` in tests (#210)

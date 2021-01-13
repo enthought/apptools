@@ -1,6 +1,19 @@
 Apptools CHANGELOG
 ==================
 
+Version 5.1.0
+~~~~~~~~~~~~~
+
+Released : 2021-01-13
+
+Deprecations
+------------
+* Import from pyface.undo.* instead of redefining classes in apptools.undo.* (#272)
+
+Documentation changes
+---------------------
+* Add module docstrings to the various api modules in apptools subpackages (#274)
+
 Version 5.0.0
 ~~~~~~~~~~~~~
 
