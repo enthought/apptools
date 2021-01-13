@@ -6,6 +6,11 @@ Version 5.1.0
 
 Released : 2021-01-13
 
+This is a minor release in which the modules in the apptools.undo subpackage are
+modified to import from pyface.undo rather than redefining the classes.  This
+should help ease the transition to using pyface.undo in place of the now
+deprecated apptool.undo.
+
 Deprecations
 ------------
 * Import from pyface.undo.* instead of redefining classes in apptools.undo.* (#272)
