@@ -1,1 +1,0 @@
-Remove use of ``apptools.type_manage`r`` from ``apptools.naming``.  Then, remove ``apptools.type_manager`` entirely.  Finally, remove ``apptools.naming.adapter``. (#219)

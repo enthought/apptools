@@ -1,1 +1,0 @@
-Deprecate apptools.undo subpackage (undo was moved to pyface) (#250)
