@@ -17,7 +17,10 @@ import unittest
 from os.path import join
 
 # Major package imports.
-from importlib_resources import files
+try:
+    from importlib.resources import files
+except ImportError:
+    from importlib_resources import files
 
 # Enthought library imports.
 from apptools.preferences.api import Preferences
