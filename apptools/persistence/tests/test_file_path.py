@@ -19,7 +19,10 @@ from os.path import abspath, dirname, basename, join
 from io import BytesIO
 
 # 3rd party imports.
-from importlib_resources import files
+try:
+    from importlib.resources import files
+except ImportError:
+    from importlib_resources import files
 
 from apptools._testing.optional_dependencies import (
     numpy as np,

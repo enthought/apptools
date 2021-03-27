@@ -308,7 +308,7 @@ if __name__ == "__main__":
         ],
         extras_require={
             "test": [
-                "importlib-resources>=1.1.0",
+                "importlib-resources>=1.1.0; python_version<'3.9'",
             ],
             "h5": [
                 "numpy",
