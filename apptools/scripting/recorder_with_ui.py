@@ -11,7 +11,7 @@
 A Recorder subclass that presents a simple user interface.
 """
 
-from traits.api import Code, Button, Int, on_trait_change, Any
+from traits.api import Code, Button, Int, observe, Any
 from traitsui.api import View, Item, Group, HGroup, CodeEditor, spring, Handler
 
 from .recorder import Recorder
@@ -88,8 +88,8 @@ class RecorderWithUI(Recorder):
     ######################################################################
     # Non-public interface.
     ######################################################################
-    @on_trait_change("lines[]")
-    def _update_code(self):
+    @observe("lines.items")
+    def _update_code(self, event):
         self.code = self.get_code()
         self.current_line = len(self.lines) + 1
 
