@@ -24,19 +24,20 @@ from apptools.preferences.api import Preferences
 from apptools.preferences.api import bind_preference
 from apptools.preferences.api import set_default_preferences
 from traits.api import Bool, HasTraits, Int, Float, Str
+from traits.observation.api import match
 
 
 # This module's package.
 PKG = "apptools.preferences.tests"
 
 
-def listener(obj, trait_name, old, new):
+def listener(event):
     """ A useful trait change handler for testing! """
 
-    listener.obj = obj
-    listener.trait_name = trait_name
-    listener.old = old
-    listener.new = new
+    listener.obj = event.object
+    listener.trait_name = event.name
+    listener.old = event.old
+    listener.new = event.new
 
 
 class PreferenceBindingTestCase(unittest.TestCase):
@@ -77,7 +78,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
             visible = Bool
 
         acme_ui = AcmeUI()
-        acme_ui.on_trait_change(listener)
+        acme_ui.observe(listener, match(lambda n, t: True))
 
         # Make some bindings.
         bind_preference(acme_ui, "bgcolor", "acme.ui.bgcolor")
@@ -228,7 +229,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
             visible = Bool
 
         acme_ui = AcmeUI()
-        acme_ui.on_trait_change(listener)
+        acme_ui.observe(listener, match(lambda n, t: True))
 
         # Create an empty preferences node and use that in some of the
         # bindings!
@@ -267,7 +268,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
                 self.ratio = 3.0
 
         acme_ui = AcmeUI()
-        acme_ui.on_trait_change(listener)
+        acme_ui.observe(listener, match(lambda n, t: True))
 
         # Make some bindings.
         bind_preference(acme_ui, "bgcolor", "acme.ui.bgcolor")
@@ -304,7 +305,7 @@ class PreferenceBindingTestCase(unittest.TestCase):
             color = Str
 
         acme_ui = AcmeUI()
-        acme_ui.on_trait_change(listener)
+        acme_ui.observe(listener, match(lambda n, t: True))
 
         # Make some bindings.
         bind_preference(acme_ui, "color", "acme.ui.bgcolor")
