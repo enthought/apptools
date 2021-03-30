@@ -23,7 +23,7 @@ from traits.api import (
     List,
     Property,
     Undefined,
-    on_trait_change,
+    observe,
 )
 
 root_logger = logging.getLogger()
@@ -170,8 +170,9 @@ class LoggerService(HasTraits):
             "apptools.logger.plugin.mail_files"
         )
 
-    @on_trait_change("preferences.level_")
-    def _level_changed(self, new):
+    @observe("preferences.level_")
+    def _level_changed(self, event):
+        new = event.new
         if (
             new is not None
             and new is not Undefined
