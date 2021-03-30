@@ -22,7 +22,7 @@ from traits.api import (
     Property,
     Str,
     cached_property,
-    on_trait_change,
+    observe,
 )
 from traitsui.api import View, Group, Item, CodeEditor, TabularEditor, spring
 from traitsui.tabular_adapter import TabularAdapter
@@ -144,8 +144,8 @@ class LoggerView(TraitsUIView):
     # Private interface
     ###########################################################################
 
-    @on_trait_change("service.preferences.level_")
-    def _update_log_records(self):
+    @observe("service.preferences.level_")
+    def _update_log_records(self, event):
         self.service.handler._view = self
         self.update(force=True)
 
