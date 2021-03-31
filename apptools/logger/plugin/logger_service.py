@@ -171,7 +171,7 @@ class LoggerService(HasTraits):
         )
 
     @observe("preferences.level_")
-    def _level_changed(self, event):
+    def _use_updated_preferences_level(self, event):
         new = event.new
         if (
             new is not None

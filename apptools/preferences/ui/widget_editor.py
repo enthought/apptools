@@ -41,7 +41,7 @@ class _WidgetEditor(Editor):
         self.control = page.create_control(parent)
 
         # Listen for the page being changed.
-        self.object.observe(self._on_page_changed, "selected_page")
+        self.object.observe(self._handle_change_to_selected_page, "selected_page")
 
     def dispose(self):
         """ Dispose of the editor. """
@@ -58,7 +58,7 @@ class _WidgetEditor(Editor):
     # Private interface.
     ###########################################################################
 
-    def _on_page_changed(self, event):
+    def _handle_change_to_selected_page(self, event):
         """ Dynamic trait change handler. """
 
         if event.old is not None:
