@@ -11,7 +11,7 @@
 
 
 # Enthought library imports.
-from traits.api import Any
+from traits.api import Any, observe
 from traitsui.api import EditorFactory
 from traitsui.toolkit import toolkit_object
 Editor = toolkit_object('editor:Editor')
@@ -40,9 +40,6 @@ class _WidgetEditor(Editor):
         # Create the editor's control.
         self.control = page.create_control(parent)
 
-        # Listen for the page being changed.
-        self.object.observe(self._handle_change_to_selected_page, "selected_page")
-
     def dispose(self):
         """ Dispose of the editor. """
 
@@ -58,6 +55,7 @@ class _WidgetEditor(Editor):
     # Private interface.
     ###########################################################################
 
+    @observe("object:selected_page")
     def _handle_change_to_selected_page(self, event):
         """ Dynamic trait change handler. """
 
