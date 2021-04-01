@@ -1,0 +1,1 @@
+start replacing on_trait_change with observe (#285)
