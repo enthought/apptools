@@ -69,10 +69,10 @@ class PreferenceBinding(HasTraits):
 
     #### Trait change handlers ################################################
 
-    def _on_trait_changed(self, obj, trait_name, old, new):
+    def _on_trait_changed(self, event):
         """ Dynamic trait change handler. """
 
-        self.preferences.set(self.preference_path, new)
+        self.preferences.set(self.preference_path, event.new)
 
     #### Other observer pattern listeners #####################################
 
@@ -121,7 +121,7 @@ class PreferenceBinding(HasTraits):
         """ Wire-up trait change handlers etc. """
 
         # Listen for the object's trait being changed.
-        self.obj.on_trait_change(self._on_trait_changed, self.trait_name)
+        self.obj.observe(self._on_trait_changed, self.trait_name)
 
         # Listen for the preference value being changed.
         components = self.preference_path.split(".")
