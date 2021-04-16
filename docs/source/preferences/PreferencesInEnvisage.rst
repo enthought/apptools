@@ -38,11 +38,16 @@ loaded into the default scope when the application is started.
 
 e.g. To contribute a preference file for my plugin I might use::
 
+  from envisage.ids import PREFERENCES
+  ...
+
+
   class MyPlugin(Plugin):
       ...
+      
+      contributed_preferences = List(contributes_to=PREFERENCES)
 
-      @contributes_to('envisage.preferences')
-      def get_preferences(self, application):
+      def _contributed_preferences_default(self):
           return ['pkgfile://mypackage:preferences.ini']
 
 ..
