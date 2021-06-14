@@ -95,10 +95,10 @@ class LoggerView(TraitsUIView):
     service = Instance(LoggerService)
 
     log_records = List(Instance(logging.LogRecord))
-    formatted_records = Property(Str, depends_on="log_records")
+    formatted_records = Property(Str, observe="log_records")
 
     activated = Instance(logging.LogRecord)
-    activated_text = Property(Str, depends_on="activated")
+    activated_text = Property(Str, observe="activated")
     reset_button = Button("Reset Logs")
     show_button = Button("Complete Text Log")
     copy_button = Button("Copy Log to Clipboard")
