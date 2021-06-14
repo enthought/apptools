@@ -1,7 +1,3 @@
-# This workflow targets stable released dependencies from EDM.
-# Note that some packages may not actually be installed from EDM but from
-# PyPI, see etstool.py implementations.
-
 name: Test with EDM using ETS packages from source
 
 on:
@@ -14,7 +10,7 @@ env:
 
 jobs:
 
-  # Test against EDM packages on Windows and OSX
+  # Test against EDM packages
   test-with-edm:
     strategy:
       matrix:
