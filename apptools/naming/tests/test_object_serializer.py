@@ -22,7 +22,7 @@ class FooWithTraits(HasTraits):
 
     full_name = Str()
 
-    last_name = Property(depends_on="full_name")
+    last_name = Property(observe="full_name")
 
     event = Event()
 

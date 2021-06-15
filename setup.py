@@ -304,6 +304,7 @@ if __name__ == "__main__":
         },
         install_requires=[
             'configobj',
+            'traits>=6.2.0',
             'traitsui',
         ],
         extras_require={
