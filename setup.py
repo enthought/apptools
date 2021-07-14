@@ -308,6 +308,7 @@ if __name__ == "__main__":
             'traitsui',
         ],
         extras_require={
+            "docs": ["enthought-sphinx-theme", "sphinx"],
             "test": [
                 "importlib-resources>=1.1.0; python_version<'3.9'",
             ],
