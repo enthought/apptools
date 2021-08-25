@@ -101,10 +101,6 @@ class PreferenceBinding(HasTraits):
         if type(handler) is Str:
             pass
 
-        # If the trait type is 'Str' then we convert the raw value.
-        elif type(handler) is Str:
-            value = str(value)
-
         # Otherwise, we eval it!
         else:
             try:
