@@ -601,4 +601,4 @@ class PreferencesHelperTestCase(unittest.TestCase):
 
         # attempt to create instance from invalid value
         with self.assertRaises(TraitError):
-            helper = AcmeUIPreferencesHelper(preferences_path="acme.ui")
+            AcmeUIPreferencesHelper(preferences_path="acme.ui")
