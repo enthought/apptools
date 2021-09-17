@@ -27,7 +27,7 @@ from apptools.preferences.api import Preferences, PreferencesHelper
 from apptools.preferences.api import ScopedPreferences
 from apptools.preferences.api import set_default_preferences
 from traits.api import (
-    Any, Bool, HasTraits, Int, Float, List, Str,
+    Any, Bool, HasTraits, Int, Float, List, Str, TraitError,
     push_exception_handler, pop_exception_handler,
 )
 from traits.observation.api import match
@@ -587,3 +587,18 @@ class PreferencesHelperTestCase(unittest.TestCase):
         helper = AcmeUIPreferencesHelper(preferences_path="acme.ui")
 
         self.assertEqual("50", helper.width)
+
+    def test_invalid_preference(self):
+
+        p = self.preferences
+        p.load(self.example)
+
+        class AcmeUIPreferencesHelper(PreferencesHelper):
+            """ The Acme UI class! """
+
+            # The traits that we want to initialize from preferences.
+            invalid = Int
+
+        # attempt to create instance from invalid value
+        with self.assertRaises(TraitError):
+            helper = AcmeUIPreferencesHelper(preferences_path="acme.ui")

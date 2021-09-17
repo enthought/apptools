@@ -26,7 +26,7 @@ except ImportError:
 from apptools.preferences.api import Preferences
 from apptools.preferences.api import bind_preference
 from apptools.preferences.api import set_default_preferences
-from traits.api import Bool, HasTraits, Int, Float, Str
+from traits.api import Bool, HasTraits, Int, Float, Str, TraitError
 from traits.observation.api import match
 
 
@@ -321,3 +321,20 @@ class PreferenceBindingTestCase(unittest.TestCase):
         self.assertEqual("color", listener.trait_name)
         self.assertEqual("blue", listener.old)
         self.assertEqual("red", listener.new)
+
+    def test_invalid_preference(self):
+
+        p = self.preferences
+        p.load(self.example)
+
+        class AcmeUI(HasTraits):
+            """ The Acme UI class! """
+
+            # The traits that we want to initialize from preferences.
+            invalid = Int
+
+        acme_ui = AcmeUI()
+
+        # Make a binding with an invalid value.
+        with self.assertRaises(TraitError):
+            bind_preference(acme_ui, "invalid", "acme.ui.invalid")
