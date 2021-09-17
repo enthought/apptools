@@ -11,6 +11,7 @@
 
 
 # Standard library imports.
+from ast import literal_eval
 import logging
 
 # Enthought library imports.
@@ -154,10 +155,11 @@ class PreferencesHelper(HasTraits):
         if isinstance(handler, Str) or trait.is_str:
             pass
 
-        # Otherwise, we eval it!
+        # Otherwise, we literal_eval it!  This is safe against arbitrary code
+        # execution, but it does limit values to core Python data types.
         else:
             try:
-                value = eval(value)
+                value = literal_eval(value)
 
             # If the eval fails then there is probably a syntax error, but
             # we will let the handler validation throw the exception.

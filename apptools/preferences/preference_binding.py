@@ -9,6 +9,7 @@
 # Thanks for using Enthought open source!
 """ A binding between a trait on an object and a preference value. """
 
+from ast import literal_eval
 
 # Enthought library imports.
 from traits.api import Any, HasTraits, Instance, Str, Undefined
@@ -101,10 +102,11 @@ class PreferenceBinding(HasTraits):
         if type(handler) is Str:
             pass
 
-        # Otherwise, we eval it!
+        # Otherwise, we literal_eval it!  This is safe against arbitrary code
+        # execution, but it does limit values to core Python data types.
         else:
             try:
-                value = eval(value)
+                value = literal_eval(value)
 
             # If the eval fails then there is probably a syntax error, but
             # we will let the handler validation throw the exception.
