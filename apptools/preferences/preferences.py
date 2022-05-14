@@ -84,7 +84,7 @@ class Preferences(HasTraits):
         self._lk = threading.Lock()
 
         # Base class constructor.
-        super(Preferences, self).__init__(**traits)
+        super().__init__(**traits)
 
         # If a filename has been specified then load the preferences from it.
         if len(self.filename) > 0:
@@ -408,9 +408,8 @@ class Preferences(HasTraits):
     def _add_dictionary_to_node(self, node, dictionary):
         """ Add the contents of a dictionary to a node's preferences. """
 
-        self._lk.acquire()
-        node._preferences.update(dictionary)
-        self._lk.release()
+        with self._lk:
+            node._preferences.update(dictionary)
 
     def _add_node_to_dictionary(self, node, dictionary):
         """ Add a node's preferences to a dictionary. """
@@ -429,32 +428,28 @@ class Preferences(HasTraits):
     def _add_preferences_listener(self, listener):
         """ Add a listener for changes to thisnode's preferences. """
 
-        self._lk.acquire()
-        self._preferences_listeners.append(listener)
-        self._lk.release()
+        with self._lk:
+            self._preferences_listeners.append(listener)
 
     def _clear(self):
         """ Remove all preferences from this node. """
 
-        self._lk.acquire()
-        self._preferences.clear()
-        self._lk.release()
+        with self._lk:
+            self._preferences.clear()
 
     def _create_child(self, name):
         """ Create a child of this node with the specified name. """
 
-        self._lk.acquire()
-        child = self._children[name] = Preferences(name=name, parent=self)
-        self._lk.release()
+        with self._lk:
+            child = self._children[name] = Preferences(name=name, parent=self)
 
         return child
 
     def _get(self, key, default=None):
         """ Get the value of a preference in this node. """
 
-        self._lk.acquire()
-        value = self._preferences.get(key, default)
-        self._lk.release()
+        with self._lk:
+            value = self._preferences.get(key, default)
 
         return value
 
@@ -465,18 +460,16 @@ class Preferences(HasTraits):
 
         """
 
-        self._lk.acquire()
-        child = self._children.get(name)
-        self._lk.release()
+        with self._lk:
+            child = self._children.get(name)
 
         return child
 
     def _keys(self):
         """ Return the preference keys of this node. """
 
-        self._lk.acquire()
-        keys = list(self._preferences.keys())
-        self._lk.release()
+        with self._lk:
+            keys = list(self._preferences.keys())
 
         return keys
 
@@ -496,27 +489,24 @@ class Preferences(HasTraits):
     def _node_names(self):
         """ Return the names of the children of this node. """
 
-        self._lk.acquire()
-        node_names = list(self._children.keys())
-        self._lk.release()
+        with self._lk:
+            node_names = list(self._children.keys())
 
         return node_names
 
     def _remove(self, name):
         """ Remove a preference value from this node. """
 
-        self._lk.acquire()
-        if name in self._preferences:
-            del self._preferences[name]
-        self._lk.release()
+        with self._lk:
+            if name in self._preferences:
+                del self._preferences[name]
 
     def _remove_preferences_listener(self, listener):
         """ Remove a listener for changes to the node's preferences. """
 
-        self._lk.acquire()
-        if listener in self._preferences_listeners:
-            self._preferences_listeners.remove(listener)
-        self._lk.release()
+        with self._lk:
+            if listener in self._preferences_listeners:
+                self._preferences_listeners.remove(listener)
 
     def _set(self, key, value):
         """ Set the value of a preference in this node. """
@@ -526,17 +516,16 @@ class Preferences(HasTraits):
         # encoded.
         value = str(value)
 
-        self._lk.acquire()
-        old = self._preferences.get(key)
-        self._preferences[key] = value
+        with self._lk:
+            old = self._preferences.get(key)
+            self._preferences[key] = value
 
-        # If the value is unchanged then don't call the listeners!
-        if old == value:
-            listeners = []
+            # If the value is unchanged then don't call the listeners!
+            if old == value:
+                listeners = []
 
-        else:
-            listeners = self._preferences_listeners[:]
-        self._lk.release()
+            else:
+                listeners = self._preferences_listeners[:]
 
         for listener in listeners:
             listener(self, key, old, value)
