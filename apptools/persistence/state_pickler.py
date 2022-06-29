@@ -775,7 +775,7 @@ class StateSetter:
                 for name in ignore:
                     try:
                         state_keys.remove(name)
-                    except KeyError:
+                    except ValueError:
                         pass
 
         # Do the `first` attributes.
