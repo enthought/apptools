@@ -939,20 +939,29 @@ class StateSetter:
                 if not self._has_instance(state[i]):
                     obj[i] = self._get_pure(state[i])
                 elif isinstance(state[i], tuple):
-                    obj[i] = self._do_tuple(state[i])
+                    obj[i] = self._do_tuple(obj[i], state[i])
                 else:
                     self._do_object(obj[i], state[i])
         else:
-            raise StateSetterError(
-                "Cannot set state of list of incorrect size."
-            )
+            # dynamically increase list so restoring works
+            obj.clear()
+            for i in range(len(state)):
+                if not self._has_instance(state[i]):
+                    new_item = self._get_pure(state[i])
+                elif isinstance(state[i], tuple):
+                    new_item = self._do_tuple(obj, state[i])
+                else:
+                    new_item = create_instance(state[i])
+                    self._do_object(new_item, state[i])
+                obj.append(new_item)
 
     def _do_dict(self, obj, state):
+        obj.clear()
         for key, value in state.items():
             if not self._has_instance(value):
                 obj[key] = self._get_pure(value)
             elif isinstance(value, tuple):
-                obj[key] = self._do_tuple(value)
+                obj[key] = self._do_tuple(obj, value)
             else:
                 self._do_object(obj[key], value)
 
