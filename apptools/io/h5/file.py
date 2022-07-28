@@ -7,7 +7,7 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
-from collections import Mapping, MutableMapping
+from collections.abc import Mapping, MutableMapping
 from functools import partial
 import inspect
 
