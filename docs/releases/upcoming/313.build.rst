@@ -1,0 +1,1 @@
+Add GitHub Actions workflow for automatically publishing releases to PyPI.
