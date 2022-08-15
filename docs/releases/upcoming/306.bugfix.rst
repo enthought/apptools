@@ -1,0 +1,1 @@
+Use context managers to handle locks in apptools.preferences (#306)
