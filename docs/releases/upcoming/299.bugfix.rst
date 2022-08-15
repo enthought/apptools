@@ -1,1 +1,0 @@
-Replace eval with ast.literal_eval in apptools.preferences (#299)
