@@ -7,19 +7,24 @@ Version 5.2.0
 
 Released: 2022-08-16
 
-This is a minor release focusing on Python 3.8 support and updating of
-development workflows.
+This is a minor release, focusing primarily on Python 3.8 support and updating
+of development workflows.
 
-Thanks to:
+Thanks to the following contributors:
 
-XXX
+* Aaron Ayres
+* Mark Dickinson
+* Jonas Heinrich
+* Robert T. McGibbon
+* Sai Rahul Poruri
+* Corran Webster
 
 Features
 --------
 * Replace some uses of ``on_trait_change`` and ``depends_on`` with ``observe``.
   (#285, #289)
-* We use ``importlib.resources`` in preference to ``importlib_resources``
-  where possible. (#284)
+* Use ``importlib.resources`` in preference to ``importlib_resources``
+  on new enough Python versions. (#284)
 
 Fixes
 -----
@@ -50,6 +55,7 @@ Build
 * Cron job failures are now reported to the main ETS Slack channel, not the
   bots channel. (#295, #308)
 * The cron job can now also be triggered manually. (#294)
+
 
 Version 5.1.0
 ~~~~~~~~~~~~~
