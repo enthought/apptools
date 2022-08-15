@@ -51,9 +51,7 @@ you can run tests in all supported runtimes::
 
     python etstool.py test_all
 
-Currently supported runtime value is``3.6``.  Not all
-runtimes will work, but the tasks will fail with a clear error if that is the
-case.
+For currently-supported runtime values, see the 'SUPPORTED_RUNTIMES' value.
 
 Tests can still be run via the usual means in other environments if that suits
 a developer's purpose.
@@ -90,25 +88,32 @@ from contextlib import contextmanager
 
 import click
 
-DEFAULT_RUNTIME = "3.6"
+#: Supported Python versions.
+SUPPORTED_RUNTIMES = ["3.6", "3.8"]
 
-supported_runtimes = [
-    '3.6',
-]
+#: Default Python version to use.
+DEFAULT_RUNTIME = "3.8"
 
-dependencies = {
-    "flake8",
-    "flake8_ets",
-    "traitsui",
-    "configobj",
-    "coverage",
-    "importlib_resources>=1.1.0",
-    "pytables",
-    "pandas",
-    "pyface",
-    "enthought_sphinx_theme",
-    "sphinx",
-}
+
+def edm_dependencies(runtime):
+    """
+    EDM package dependencies for a given runtime version.
+
+    Returns a set of requirement strings.
+    """
+    return {
+        "flake8",
+        "flake8_ets",
+        "traitsui",
+        "configobj",
+        "coverage",
+        "importlib_resources>=1.1.0",
+        "pytables" if runtime == "3.6" else "tables",
+        "pandas",
+        "pyface",
+        "enthought_sphinx_theme",
+        "sphinx",
+    }
 
 
 # Dependencies we install from source for cron tests
@@ -120,6 +125,15 @@ source_dependencies = {
 
 
 github_url_fmt = "git+http://github.com/enthought/{0}.git#egg={0}"
+
+# Options shared between different click commands.
+runtime_option = click.option(
+    "--runtime",
+    default=DEFAULT_RUNTIME,
+    type=click.Choice(SUPPORTED_RUNTIMES),
+    show_default=True,
+    help="Python runtime version",
+)
 
 
 # Location of documentation files
@@ -139,7 +153,7 @@ def cli():
 
 
 @cli.command()
-@click.option('--runtime', default=DEFAULT_RUNTIME)
+@runtime_option
 @click.option('--environment', default=None)
 @click.option(
     "--source/--no-source",
@@ -151,11 +165,11 @@ def install(runtime, environment, source):
 
     """
     parameters = get_parameters(runtime, environment)
-    packages = ' '.join(dependencies)
+    edm_packages = ' '.join(edm_dependencies(runtime))
     # edm commands to setup the development environment
     commands = [
         "edm environments create {environment} --force --version={runtime}",
-        "edm install -y -e {environment} " + packages,
+        "edm install -y -e {environment} " + edm_packages,
         "edm run -e {environment} -- pip install -r ci-src-requirements.txt"
         " --no-dependencies",
         "edm run -e {environment} -- python setup.py clean --all",
@@ -189,7 +203,7 @@ def install(runtime, environment, source):
 
 
 @cli.command()
-@click.option('--runtime', default=DEFAULT_RUNTIME)
+@runtime_option
 @click.option('--environment', default=None)
 def test(runtime, environment):
     """ Run the test suite in a given environment.
@@ -215,7 +229,7 @@ def test(runtime, environment):
 
 
 @cli.command()
-@click.option('--runtime', default=DEFAULT_RUNTIME)
+@runtime_option
 @click.option('--environment', default=None)
 def docs(runtime, environment):
     """ Build HTML documentation. """
@@ -241,7 +255,7 @@ def docs(runtime, environment):
 
 
 @cli.command()
-@click.option('--runtime', default=DEFAULT_RUNTIME)
+@runtime_option
 @click.option('--environment', default=None)
 def cleanup(runtime, environment):
     """ Remove a development environment.
@@ -257,7 +271,7 @@ def cleanup(runtime, environment):
 
 
 @cli.command()
-@click.option('--runtime', default=DEFAULT_RUNTIME)
+@runtime_option
 @click.option('--environment', default=None)
 def flake8(runtime, environment):
     """ Run a flake8 check in a given environment.
@@ -279,7 +293,7 @@ def flake8(runtime, environment):
 
 
 @cli.command(name='test-clean')
-@click.option('--runtime', default=DEFAULT_RUNTIME)
+@runtime_option
 def test_clean(runtime):
     """ Run tests in a clean environment, cleaning up afterwards
 
@@ -293,7 +307,7 @@ def test_clean(runtime):
 
 
 @cli.command()
-@click.option('--runtime', default=DEFAULT_RUNTIME)
+@runtime_option
 @click.option('--environment', default=None)
 def update(runtime, environment):
     """ Update/Reinstall package into environment.
@@ -313,7 +327,7 @@ def test_all():
 
     """
     failed_command = False
-    for runtime in supported_runtimes:
+    for runtime in SUPPORTED_RUNTIMES:
         args = [
             '--runtime={}'.format(runtime)
         ]
