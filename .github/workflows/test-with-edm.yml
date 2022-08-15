@@ -4,10 +4,10 @@
 
 name: Test with EDM
 
-on: pull_request
+on: [pull_request, workflow_dispatch]
 
 env:
-  INSTALL_EDM_VERSION: 3.2.3
+  INSTALL_EDM_VERSION: 3.3.1
 
 jobs:
 
@@ -15,33 +15,36 @@ jobs:
   test-with-edm:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        runtime: ['3.6', '3.8']
+
     runs-on: ${{ matrix.os }}
-    env:
-      # Set root directory, mainly for Windows, so that the EDM Python
-      # environment lives in the same drive as the cloned source. Otherwise
-      # 'pip install' raises an error while trying to compute
-      # relative path between the site-packages and the source directory.
-      EDM_ROOT_DIRECTORY: ${{ github.workspace }}/.edm
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout the target commit
+        uses: actions/checkout@v3
+      - name: Set up bootstrap Python (3.10)
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+          cache-dependency-path: '.github/workflows/bootstrap-requirements.txt'
+      - name: Install necessary packages to the bootstrap environment
+        run: python -m pip install -r .github/workflows/bootstrap-requirements.txt
       - name: Cache EDM packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache
-          key: ${{ runner.os }}-${{ matrix.toolkit }}-${{ hashFiles('etstool.py') }}
+          key: ${{ runner.os }}-${{ matrix.runtime }}-${{ hashFiles('etstool.py') }}
       - name: Setup EDM
         uses: enthought/setup-edm-action@v1
         with:
           edm-version: ${{ env.INSTALL_EDM_VERSION }}
-      - name: Install click to the default EDM environment
-        run: edm install -y wheel click coverage
       - name: Install test environment
-        run: edm run -- python etstool.py install
-      - name: Flake8
-        run: edm run -- python etstool.py flake8
+        run: python etstool.py install --runtime=${{ matrix.runtime }}
+      - name: Run style checks (only on Linux)
+        run: python etstool.py flake8 --runtime=${{ matrix.runtime }}
         if: startsWith(matrix.os, 'ubuntu')
       - name: Run tests
         uses: GabrielBB/xvfb-action@v1
         with:
-          run: edm run -- python etstool.py test
+          run: python etstool.py test --runtime=${{ matrix.runtime }}
