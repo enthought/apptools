@@ -18,13 +18,6 @@ jobs:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
         runtime: ['3.6', '3.8']
 
-    env:
-      # Set root directory, mainly for Windows, so that the EDM Python
-      # environment lives in the same drive as the cloned source. Otherwise
-      # 'pip install' raises an error while trying to compute
-      # relative path between the site-packages and the source directory.
-      EDM_ROOT_DIRECTORY: ${{ github.workspace }}/.edm
-
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout the target commit
