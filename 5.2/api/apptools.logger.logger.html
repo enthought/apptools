@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>apptools.logger.logger module &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '.html',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.png">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools.logger package" href="apptools.logger.html" >
+    <link rel="next" title="apptools.logger.ring_buffer module" href="apptools.logger.ring_buffer.html" >
+    <link rel="prev" title="apptools.logger.log_queue_handler module" href="apptools.logger.log_queue_handler.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="apptools.html" >apptools package</a></li>
+          <li class="active"><a href="apptools.logger.html" accesskey="U">apptools.logger package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.logger.ring_buffer.html" title="apptools.logger.ring_buffer module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.logger.log_queue_handler.html" title="apptools.logger.log_queue_handler module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <section id="module-apptools.logger.logger">
+<span id="apptools-logger-logger-module"></span><h1>apptools.logger.logger module<a class="headerlink" href="#module-apptools.logger.logger" title="Permalink to this headline">¶</a></h1>
+<p>Convenience functions for creating logging handlers etc.</p>
+<dl class="py class">
+<dt id="apptools.logger.logger.LogFileHandler">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">apptools.logger.logger.</span></code><code class="sig-name descname"><span class="pre">LogFileHandler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxBytes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backupCount</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formatter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/logger/logger.html#LogFileHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.logger.logger.LogFileHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">logging.handlers.RotatingFileHandler</span></code></p>
+<p>The default log file handler.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="apptools.logger.logger.add_log_queue_handler">
+<code class="sig-prename descclassname"><span class="pre">apptools.logger.logger.</span></code><code class="sig-name descname"><span class="pre">add_log_queue_handler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formatter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/logger/logger.html#add_log_queue_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.logger.logger.add_log_queue_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a queueing log handler to a logger.</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.logger.log_queue_handler.html"
+                        title="previous chapter">apptools.logger.log_queue_handler module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.logger.ring_buffer.html"
+                        title="next chapter">apptools.logger.ring_buffer module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.logger.logger.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2022, Enthought
+      </li>
+      <li>
+      Last updated on Aug 16, 2022.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

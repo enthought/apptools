@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>apptools.scripting.util module &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '.html',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.png">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools.scripting package" href="apptools.scripting.html" >
+    <link rel="next" title="apptools.selection package" href="apptools.selection.html" >
+    <link rel="prev" title="apptools.scripting.recorder_with_ui module" href="apptools.scripting.recorder_with_ui.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="apptools.html" >apptools package</a></li>
+          <li class="active"><a href="apptools.scripting.html" accesskey="U">apptools.scripting package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.selection.html" title="apptools.selection package"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.scripting.recorder_with_ui.html" title="apptools.scripting.recorder_with_ui module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <section id="module-apptools.scripting.util">
+<span id="apptools-scripting-util-module"></span><h1>apptools.scripting.util module<a class="headerlink" href="#module-apptools.scripting.util" title="Permalink to this headline">¶</a></h1>
+<p>Simple utility functions provided by the scripting API.</p>
+<dl class="py function">
+<dt id="apptools.scripting.util.start_recording">
+<code class="sig-prename descclassname"><span class="pre">apptools.scripting.util.</span></code><code class="sig-name descname"><span class="pre">start_recording</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ui</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/scripting/util.html#start_recording"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.scripting.util.start_recording" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function to start recording.  Returns the recorder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>object</strong> (<em>object to record.</em>) – </p></li>
+<li><p><strong>ui</strong> (<em>bool specifying if a UI is to be shown</em><em> or </em><em>not</em>) – </p></li>
+<li><p><strong>kw</strong> (<em>Keyword arguments to pass to the register function of the</em>) – </p></li>
+<li><p><strong>recorder.</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="apptools.scripting.util.stop_recording">
+<code class="sig-prename descclassname"><span class="pre">apptools.scripting.util.</span></code><code class="sig-name descname"><span class="pre">stop_recording</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/scripting/util.html#stop_recording"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.scripting.util.stop_recording" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop recording the object.  If <cite>save</cite> is <cite>True</cite>, this will pop up
+a UI to ask where to save the script.</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.scripting.recorder_with_ui.html"
+                        title="previous chapter">apptools.scripting.recorder_with_ui module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.selection.html"
+                        title="next chapter">apptools.selection package</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.scripting.util.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2022, Enthought
+      </li>
+      <li>
+      Last updated on Aug 16, 2022.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

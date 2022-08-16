@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.io.h5.dict_node &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '5.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '.html',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../../_static/img/favicon.png">
+    <link rel="index" title="Index" href="../../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../../index.html" >
+    <link rel="up" title="Module code" href="../../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <h1>Source code for apptools.io.h5.dict_node</h1><div class="highlight"><pre>
+<span></span><span class="c1"># (C) Copyright 2005-2022 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">closing</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">ndarray</span>
+
+<span class="kn">from</span> <span class="nn">tables</span> <span class="kn">import</span> <span class="n">Group</span> <span class="k">as</span> <span class="n">PyTablesGroup</span>
+<span class="kn">from</span> <span class="nn">tables.nodes</span> <span class="kn">import</span> <span class="n">filenode</span>
+
+
+<span class="c1">#: The key name which identifies array objects in the JSON dict.</span>
+<span class="n">ARRAY_PROXY_KEY</span> <span class="o">=</span> <span class="s2">&quot;__array__&quot;</span>
+<span class="n">NODE_KEY</span> <span class="o">=</span> <span class="s2">&quot;node_name&quot;</span>
+
+
+<div class="viewcode-block" id="H5DictNode"><a class="viewcode-back" href="../../../../api/apptools.io.h5.dict_node.html#apptools.io.h5.dict_node.H5DictNode">[docs]</a><span class="k">class</span> <span class="nc">H5DictNode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dictionary-like node interface.</span>
+
+<span class="sd">    Data for the dict is stored as a JSON file in a PyTables FileNode. This</span>
+<span class="sd">    allows easy storage of Python objects, such as dictionaries and lists of</span>
+<span class="sd">    different data types.</span>
+
+<span class="sd">    Note that this is implemented using a group-node assuming that arrays are</span>
+<span class="sd">    valid inputs and will be stored as H5 array nodes.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    h5_group : H5Group instance</span>
+<span class="sd">        Group node which will be used as a dictionary store.</span>
+<span class="sd">    auto_flush : bool</span>
+<span class="sd">        If True, write data to disk whenever the dict data is altered.</span>
+<span class="sd">        Otherwise, call `flush()` explicitly to write data to disk.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">#: Name of filenode where dict data is stored.</span>
+    <span class="n">_pyobject_data_node</span> <span class="o">=</span> <span class="s2">&quot;_pyobject_data&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h5_group</span><span class="p">,</span> <span class="n">auto_flush</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_dict_node</span><span class="p">(</span><span class="n">h5_group</span><span class="p">)</span>
+
+        <span class="n">h5_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_pyt_group</span><span class="p">(</span><span class="n">h5_group</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_h5_group</span> <span class="o">=</span> <span class="n">h5_group</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_flush</span> <span class="o">=</span> <span class="n">auto_flush</span>
+
+        <span class="c1"># Load dict data from the file node.</span>
+        <span class="n">dict_node</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">h5_group</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pyobject_data_node</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="n">filenode</span><span class="o">.</span><span class="n">open_node</span><span class="p">(</span><span class="n">dict_node</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pyobject_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">),</span> <span class="n">object_hook</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_object_hook</span>
+            <span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1">#  Dictionary interface</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_flush</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__delitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_flush</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
+
+<div class="viewcode-block" id="H5DictNode.keys"><a class="viewcode-back" href="../../../../api/apptools.io.h5.dict_node.html#apptools.io.h5.dict_node.H5DictNode.keys">[docs]</a>    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1">#  Public interface</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pyobject_data</span>
+
+    <span class="nd">@data</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_data_dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pyobject_data</span> <span class="o">=</span> <span class="n">new_data_dict</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">auto_flush</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+<div class="viewcode-block" id="H5DictNode.flush"><a class="viewcode-back" href="../../../../api/apptools.io.h5.dict_node.html#apptools.io.h5.dict_node.H5DictNode.flush">[docs]</a>    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Write buffered data to disk. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_remove_pyobject_node</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_pyobject_node</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="H5DictNode.add_to_h5file"><a class="viewcode-back" href="../../../../api/apptools.io.h5.dict_node.html#apptools.io.h5.dict_node.H5DictNode.add_to_h5file">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_to_h5file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">h5</span><span class="p">,</span> <span class="n">node_path</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add dict node to an H5 file at the specified path.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        h5 : H5File</span>
+<span class="sd">            The H5 file where the dictionary data will be stored.</span>
+<span class="sd">        node_path : str</span>
+<span class="sd">            Path to node where data is stored (e.g. &#39;/path/to/my_dict&#39;)</span>
+<span class="sd">        data : dict</span>
+<span class="sd">            Data for initialization, if desired.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">h5</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">node_path</span><span class="p">)</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">h5</span><span class="p">[</span><span class="n">node_path</span><span class="p">]</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">_create_pyobject_node</span><span class="p">(</span><span class="n">h5</span><span class="o">.</span><span class="n">_h5</span><span class="p">,</span> <span class="n">node_path</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="H5DictNode.is_dict_node"><a class="viewcode-back" href="../../../../api/apptools.io.h5.dict_node.html#apptools.io.h5.dict_node.H5DictNode.is_dict_node">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">is_dict_node</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pytables_node</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return True if PyTables node looks like an H5DictNode.</span>
+
+<span class="sd">        NOTE: That this returns False if the node is an `H5DictNode` instance,</span>
+<span class="sd">        since the input node should be a normal PyTables Group node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Import here to prevent circular imports</span>
+        <span class="kn">from</span> <span class="nn">.file</span> <span class="kn">import</span> <span class="n">H5Group</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pytables_node</span><span class="p">,</span> <span class="n">H5Group</span><span class="p">):</span>
+            <span class="n">pytables_node</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_pyt_group</span><span class="p">(</span><span class="n">pytables_node</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pytables_node</span><span class="p">,</span> <span class="n">PyTablesGroup</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_pyobject_data_node</span> <span class="ow">in</span> <span class="n">pytables_node</span><span class="o">.</span><span class="n">_v_children</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1">#  Private interface</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">_f_remove</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This is called by H5File whenever a node is removed.</span>
+
+<span class="sd">        All nodes in `_h5_group` will be removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5_group</span><span class="o">.</span><span class="n">_v_children</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pyobject_data_node</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_h5_group</span><span class="o">.</span><span class="fm">__getattr__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">_f_remove</span><span class="p">()</span>
+        <span class="c1"># Remove the dict node</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_remove_pyobject_node</span><span class="p">()</span>
+        <span class="c1"># Remove the group node</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_h5_group</span><span class="o">.</span><span class="n">_f_remove</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_object_hook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This gets passed object dictionaries by `json.load(s)` and if it</span>
+<span class="sd">        finds `ARRAY_PROXY_KEY` in the object description it returns the</span>
+<span class="sd">        proxied array object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ARRAY_PROXY_KEY</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">:</span>
+            <span class="n">node_name</span> <span class="o">=</span> <span class="n">dct</span><span class="p">[</span><span class="n">NODE_KEY</span><span class="p">]</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_h5_group</span><span class="p">,</span> <span class="n">node_name</span><span class="p">)[:]</span>
+        <span class="k">return</span> <span class="n">dct</span>
+
+    <span class="k">def</span> <span class="nf">_remove_pyobject_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_h5_group</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pyobject_data_node</span><span class="p">)</span>
+        <span class="n">node</span><span class="o">.</span><span class="n">_f_remove</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_write_pyobject_node</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">pyt_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5_group</span><span class="o">.</span><span class="n">_v_file</span>
+        <span class="n">node_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h5_group</span><span class="o">.</span><span class="n">_v_pathname</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_create_pyobject_node</span><span class="p">(</span><span class="n">pyt_file</span><span class="p">,</span> <span class="n">node_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_create_pyobject_node</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pyt_file</span><span class="p">,</span> <span class="n">node_path</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># Stash the array values in their own h5 nodes and return a dictionary</span>
+        <span class="c1"># which is appropriate for JSON serialization.</span>
+        <span class="n">out_data</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_handle_array_values</span><span class="p">(</span><span class="n">pyt_file</span><span class="p">,</span> <span class="n">node_path</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">where</span><span class="o">=</span><span class="n">node_path</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">_pyobject_data_node</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="n">filenode</span><span class="o">.</span><span class="n">new_node</span><span class="p">(</span><span class="n">pyt_file</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">out_data</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_pyt_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="s2">&quot;_h5_group&quot;</span><span class="p">):</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">_h5_group</span>
+        <span class="k">return</span> <span class="n">group</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_array_proxy</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pyt_file</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">array</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Stores an array as a normal H5 node and returns the proxy object</span>
+<span class="sd">        which will be serialized to JSON.</span>
+
+<span class="sd">        `ARRAY_PROXY_KEY` marks the object dictionary as an array proxy so that</span>
+<span class="sd">        `_object_hook` can recognize it. `NODE_KEY` stores the node name of the</span>
+<span class="sd">        array so that `_object_hook` can load the array data when the dict node</span>
+<span class="sd">        is deserialized.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">group</span><span class="p">:</span>
+            <span class="n">pyt_file</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="n">pyt_file</span><span class="o">.</span><span class="n">create_array</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">array</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">ARRAY_PROXY_KEY</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="n">NODE_KEY</span><span class="p">:</span> <span class="n">key</span><span class="p">}</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_handle_array_values</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pyt_file</span><span class="p">,</span> <span class="n">group_path</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">pyt_file</span><span class="o">.</span><span class="n">get_node</span><span class="p">(</span><span class="n">group_path</span><span class="p">)</span>
+
+        <span class="c1"># Convert numpy array values to H5 array nodes.</span>
+        <span class="n">out_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">):</span>
+                <span class="n">out_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_array_proxy</span><span class="p">(</span><span class="n">pyt_file</span><span class="p">,</span> <span class="n">group</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">out_data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="c1"># Remove stored arrays which are no longer in the data dictionary.</span>
+        <span class="n">pyt_children</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">_v_children</span>
+        <span class="n">nodes_to_remove</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pyt_children</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">nodes_to_remove</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">nodes_to_remove</span><span class="p">:</span>
+            <span class="n">pyt_file</span><span class="o">.</span><span class="n">remove_node</span><span class="p">(</span><span class="n">group</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out_data</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../../index.html">
+              <img class="logo" src="../../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2022, Enthought
+      </li>
+      <li>
+      Last updated on Aug 16, 2022.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

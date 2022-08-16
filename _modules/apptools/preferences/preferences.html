@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.preferences.preferences &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '5.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '.html',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.png">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <h1>Source code for apptools.preferences.preferences</h1><div class="highlight"><pre>
+<span></span><span class="c1"># (C) Copyright 2005-2022 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="sd">&quot;&quot;&quot; The default implementation of a node in a preferences hierarchy. &quot;&quot;&quot;</span>
+
+<span class="c1"># Standard library imports.</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">HasTraits</span><span class="p">,</span> <span class="n">Instance</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Property</span><span class="p">,</span> <span class="n">Str</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">,</span> <span class="n">provides</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">.i_preferences</span> <span class="kn">import</span> <span class="n">IPreferences</span>
+
+
+<span class="c1"># Logging.</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Preferences"><a class="viewcode-back" href="../../../api/apptools.preferences.preferences.html#apptools.preferences.preferences.Preferences">[docs]</a><span class="nd">@provides</span><span class="p">(</span><span class="n">IPreferences</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Preferences</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The default implementation of a node in a preferences hierarchy. &quot;&quot;&quot;</span>
+
+    <span class="c1">#### &#39;IPreferences&#39; interface #############################################</span>
+
+    <span class="c1"># The absolute path to this node from the root node (the empty string if</span>
+    <span class="c1"># this node *is* the root node).</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Str</span><span class="p">)</span>
+
+    <span class="c1"># The parent node (None if this node *is* the root node).</span>
+    <span class="n">parent</span> <span class="o">=</span> <span class="n">Instance</span><span class="p">(</span><span class="n">IPreferences</span><span class="p">)</span>
+
+    <span class="c1"># The name of the node relative to its parent (the empty string if this</span>
+    <span class="c1"># node *is* the root node).</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c1">#### &#39;Preferences&#39; interface ##############################################</span>
+
+    <span class="c1"># The default name of the file used to persist the preferences (if no</span>
+    <span class="c1"># filename is passed in to the &#39;load&#39; and &#39;save&#39; methods, then this is</span>
+    <span class="c1"># used instead).</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">Str</span>
+
+    <span class="c1">#### Protected &#39;Preferences&#39; interface ####################################</span>
+
+    <span class="c1"># A lock to make access to the node thread-safe.</span>
+    <span class="c1">#</span>
+    <span class="c1"># fixme: There *should* be no need to declare this as a trait, but if we</span>
+    <span class="c1"># don&#39;t then we have problems using nodes in the preferences manager UI.</span>
+    <span class="c1"># It is something to do with &#39;cloning&#39; the node for use in a &#39;modal&#39; traits</span>
+    <span class="c1"># UI... Hmmm...</span>
+    <span class="n">_lk</span> <span class="o">=</span> <span class="n">Any</span>
+
+    <span class="c1"># The node&#39;s children.</span>
+    <span class="n">_children</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">(</span><span class="n">Str</span><span class="p">,</span> <span class="n">IPreferences</span><span class="p">)</span>
+
+    <span class="c1"># The node&#39;s preferences.</span>
+    <span class="n">_preferences</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">(</span><span class="n">Str</span><span class="p">,</span> <span class="n">Any</span><span class="p">)</span>
+
+    <span class="c1"># Listeners for changes to the node&#39;s preferences.</span>
+    <span class="c1">#</span>
+    <span class="c1"># The callable must take 4 arguments, e.g::</span>
+    <span class="c1">#</span>
+    <span class="c1"># listener(node, key, old, new)</span>
+    <span class="n">_preferences_listeners</span> <span class="o">=</span> <span class="n">List</span><span class="p">(</span><span class="n">Callable</span><span class="p">)</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;object&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">traits</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Constructor. &quot;&quot;&quot;</span>
+
+        <span class="c1"># A lock to make access to the &#39;_children&#39;, &#39;_preferences&#39; and</span>
+        <span class="c1"># &#39;_preferences_listeners&#39; traits thread-safe.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_lk</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+
+        <span class="c1"># Base class constructor.</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">traits</span><span class="p">)</span>
+
+        <span class="c1"># If a filename has been specified then load the preferences from it.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;IPreferences&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="c1">#### Trait properties #####################################################</span>
+
+    <span class="k">def</span> <span class="nf">_get_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Property getter. &quot;&quot;&quot;</span>
+
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="k">while</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">parent</span>
+
+        <span class="n">names</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+
+    <span class="c1">#### Methods ##############################################################</span>
+
+    <span class="c1">#### Methods where &#39;path&#39; refers to a preference ####</span>
+
+<div class="viewcode-block" id="Preferences.get"><a class="viewcode-back" href="../../../api/apptools.preferences.preferences.html#apptools.preferences.preferences.Preferences.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">inherit</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get the value of the preference at the specified path. &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;empty path&quot;</span><span class="p">)</span>
+
+        <span class="n">components</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># If there is only one component in the path then the operation takes</span>
+        <span class="c1"># place in this node.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">Undefined</span><span class="p">)</span>
+
+        <span class="c1"># Otherwise, find the next node and pass the rest of the path to that.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_child</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span> <span class="n">Undefined</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">Undefined</span>
+
+        <span class="c1"># If inherited values are allowed then try those as well.</span>
+        <span class="c1">#</span>
+        <span class="c1"># e.g. &#39;acme.ui.widget.bgcolor&#39;</span>
+        <span class="c1">#      &#39;acme.ui.bgcolor&#39;</span>
+        <span class="c1">#      &#39;acme.bgcolor&#39;</span>
+        <span class="c1">#      &#39;bgcolor&#39;</span>
+        <span class="k">while</span> <span class="n">inherit</span> <span class="ow">and</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">Undefined</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Remove the penultimate component...</span>
+            <span class="c1">#</span>
+            <span class="c1"># e.g. &#39;acme.ui.widget.bgcolor&#39; -&gt; &#39;acme.ui.bgcolor&#39;</span>
+            <span class="k">del</span> <span class="n">components</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+
+            <span class="c1"># ... and try that.</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">),</span> <span class="n">default</span><span class="o">=</span><span class="n">Undefined</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">Undefined</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">default</span>
+
+        <span class="k">return</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="Preferences.remove"><a class="viewcode-back" href="../../../api/apptools.preferences.preferences.html#apptools.preferences.preferences.Preferences.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remove the preference at the specified path. &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;empty path&quot;</span><span class="p">)</span>
+
+        <span class="n">components</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># If there is only one component in the path then the operation takes</span>
+        <span class="c1"># place in this node.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_remove</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="c1"># Otherwise, find the next node and pass the rest of the path to that.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_child</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span></div>
+
+<div class="viewcode-block" id="Preferences.set"><a class="viewcode-back" href="../../../api/apptools.preferences.preferences.html#apptools.preferences.preferences.Preferences.set">[docs]</a>    <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set the value of the preference at the specified path. &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;empty path&quot;</span><span class="p">)</span>
+
+        <span class="n">components</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># If there is only one component in the path then the operation takes</span>
+        <span class="c1"># place in this node.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_set</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># Otherwise, find the next node (creating it if it doesn&#39;t exist)</span>
+        <span class="c1"># and pass the rest of the path to that.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span> <span class="n">value</span><span class="p">)</span></div>
+
+    <span class="c1">#### Methods where &#39;path&#39; refers to a node ####</span>
+
+<div class="viewcode-block" id="Preferences.clear"><a class="viewcode-back" href="../../../api/apptools.preferences.preferences.html#apptools.preferences.preferences.Preferences.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remove all preferences from the node at the specified path. &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the path is empty then the operation takes place in this node.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_clear</span><span class="p">()</span>
+
+        <span class="c1"># Otherwise, find the next node and pass the rest of the path to that.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_child</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">clear</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span></div>
+
+<div class="viewcode-block" id="Preferences.keys"><a class="viewcode-back" href="../../../api/apptools.preferences.preferences.html#apptools.preferences.preferences.Preferences.keys">[docs]</a>    <span class="k">def</span> <span class="nf">keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the preference keys of the node at the specified path. &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the path is empty then the operation takes place in this node.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_keys</span><span class="p">()</span>
+
+        <span class="c1"># Otherwise, find the next node and pass the rest of the path to that.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_child</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">keys</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">keys</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">keys</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">return</span> <span class="n">keys</span></div>
+
+<div class="viewcode-block" id="Preferences.node"><a class="viewcode-back" href="../../../api/apptools.preferences.preferences.html#apptools.preferences.preferences.Preferences.node">[docs]</a>    <span class="k">def</span> <span class="nf">node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the node at the specified path. &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the path is empty then the operation takes place in this node.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span>
+
+        <span class="c1"># Otherwise, find the next node and pass the rest of the path to that.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">node</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+
+        <span class="k">return</span> <span class="n">node</span></div>
+
+<div class="viewcode-block" id="Preferences.node_exists"><a class="viewcode-back" href="../../../api/apptools.preferences.preferences.html#apptools.preferences.preferences.Preferences.node_exists">[docs]</a>    <span class="k">def</span> <span class="nf">node_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return True if the node at the specified path exists. &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the path is empty then the operation takes place in this node.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">exists</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="c1"># Otherwise, find the next node and pass the rest of the path to that.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_child</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">exists</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">node_exists</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">exists</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="n">exists</span></div>
+
+<div class="viewcode-block" id="Preferences.node_names"><a class="viewcode-back" href="../../../api/apptools.preferences.preferences.html#apptools.preferences.preferences.Preferences.node_names">[docs]</a>    <span class="k">def</span> <span class="nf">node_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the names of the children of the node at the specified path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the path is empty then the operation takes place in this node.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node_names</span><span class="p">()</span>
+
+        <span class="c1"># Otherwise, find the next node and pass the rest of the path to that.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_child</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">names</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">node_names</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">return</span> <span class="n">names</span></div>
+
+    <span class="c1">#### Persistence methods ####</span>
+
+<div class="viewcode-block" id="Preferences.flush"><a class="viewcode-back" href="../../../api/apptools.preferences.preferences.html#apptools.preferences.preferences.Preferences.flush">[docs]</a>    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Force any changes in the node to the backing store.</span>
+
+<span class="sd">        This includes any changes to the node&#39;s descendants.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;Preferences&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="c1">#### Listener methods ####</span>
+
+<div class="viewcode-block" id="Preferences.add_preferences_listener"><a class="viewcode-back" href="../../../api/apptools.preferences.preferences.html#apptools.preferences.preferences.Preferences.add_preferences_listener">[docs]</a>    <span class="k">def</span> <span class="nf">add_preferences_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listener</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Add a listener for changes to a node&#39;s preferences. &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the path is empty then the operation takes place in this node.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_preferences_listener</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span>
+
+        <span class="c1"># Otherwise, find the next node and pass the rest of the path to that.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">add_preferences_listener</span><span class="p">(</span><span class="n">listener</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span></div>
+
+<div class="viewcode-block" id="Preferences.remove_preferences_listener"><a class="viewcode-back" href="../../../api/apptools.preferences.preferences.html#apptools.preferences.preferences.Preferences.remove_preferences_listener">[docs]</a>    <span class="k">def</span> <span class="nf">remove_preferences_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listener</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remove a listener for changes to a node&#39;s preferences. &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the path is empty then the operation takes place in this node.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_remove_preferences_listener</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span>
+
+        <span class="c1"># Otherwise, find the next node and pass the rest of the path to that.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">remove_preferences_listener</span><span class="p">(</span>
+                <span class="n">listener</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="p">)</span></div>
+
+    <span class="c1">#### Persistence methods ####</span>
+
+<div class="viewcode-block" id="Preferences.load"><a class="viewcode-back" href="../../../api/apptools.preferences.preferences.html#apptools.preferences.preferences.Preferences.load">[docs]</a>    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_or_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load preferences from a file.</span>
+
+<span class="sd">        This is a *merge* operation i.e. the contents of the file are added to</span>
+<span class="sd">        the node.</span>
+
+<span class="sd">        This implementation uses &#39;ConfigObj&#39; files.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">file_or_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">file_or_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;loading preferences from &lt;</span><span class="si">%s</span><span class="s2">&gt;&quot;</span><span class="p">,</span> <span class="n">file_or_filename</span><span class="p">)</span>
+
+        <span class="c1"># Do the import here so that we don&#39;t make &#39;ConfigObj&#39; a requirement</span>
+        <span class="c1"># if preferences aren&#39;t ever persisted (or a derived class chooses to</span>
+        <span class="c1"># use a different persistence mechanism).</span>
+        <span class="kn">from</span> <span class="nn">configobj</span> <span class="kn">import</span> <span class="n">ConfigObj</span>
+
+        <span class="n">config_obj</span> <span class="o">=</span> <span class="n">ConfigObj</span><span class="p">(</span><span class="n">file_or_filename</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+        <span class="c1"># &#39;name&#39; is the section name, &#39;value&#39; is a dictionary containing the</span>
+        <span class="c1"># name/value pairs in the section (the actual preferences ;^).</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">config_obj</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Create/get the node from the section name.</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span>
+            <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">components</span><span class="p">:</span>
+                <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">_node</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+
+            <span class="c1"># Add the contents of the section to the node.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_dictionary_to_node</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Preferences.save"><a class="viewcode-back" href="../../../api/apptools.preferences.preferences.html#apptools.preferences.preferences.Preferences.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_or_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save the node&#39;s preferences to a file.</span>
+
+<span class="sd">        This implementation uses &#39;ConfigObj&#39; files.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">file_or_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">file_or_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>
+
+        <span class="c1"># If no file or filename is specified then don&#39;t save the preferences!</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_or_filename</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Do the import here so that we don&#39;t make &#39;ConfigObj&#39; a</span>
+            <span class="c1"># requirement if preferences aren&#39;t ever persisted (or a derived</span>
+            <span class="c1"># class chooses to use a different persistence mechanism).</span>
+            <span class="kn">from</span> <span class="nn">configobj</span> <span class="kn">import</span> <span class="n">ConfigObj</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;saving preferences to &lt;</span><span class="si">%s</span><span class="s2">&gt;&quot;</span><span class="p">,</span> <span class="n">file_or_filename</span><span class="p">)</span>
+
+            <span class="n">config_obj</span> <span class="o">=</span> <span class="n">ConfigObj</span><span class="p">(</span><span class="n">file_or_filename</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_node_to_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_obj</span><span class="p">)</span>
+            <span class="n">config_obj</span><span class="o">.</span><span class="n">write</span><span class="p">()</span></div>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Protected &#39;Preferences&#39; interface.</span>
+    <span class="c1">#</span>
+    <span class="c1"># These are the only methods that should access the protected &#39;_children&#39;</span>
+    <span class="c1"># and &#39;_preferences&#39; traits. This helps make it easy to subclass this class</span>
+    <span class="c1"># to create other implementations (all the subclass has to do is to</span>
+    <span class="c1"># implement these protected methods).</span>
+    <span class="c1">#</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_add_dictionary_to_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Add the contents of a dictionary to a node&#39;s preferences. &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lk</span><span class="p">:</span>
+            <span class="n">node</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_add_node_to_dictionary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Add a node&#39;s preferences to a dictionary. &quot;&quot;&quot;</span>
+
+        <span class="c1"># This method never manipulates the &#39;_preferences&#39; trait directly.</span>
+        <span class="c1"># Instead it does eveything via the other protected methods and hence</span>
+        <span class="c1"># doesn&#39;t need to grab the lock.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">_keys</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">dictionary</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">_keys</span><span class="p">():</span>
+                <span class="n">dictionary</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">path</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">_get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">_node_names</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_node_to_dictionary</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">_get_child</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">dictionary</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_add_preferences_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listener</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Add a listener for changes to thisnode&#39;s preferences. &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lk</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_preferences_listeners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remove all preferences from this node. &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lk</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_create_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Create a child of this node with the specified name. &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lk</span><span class="p">:</span>
+            <span class="n">child</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">Preferences</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">child</span>
+
+    <span class="k">def</span> <span class="nf">_get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get the value of a preference in this node. &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lk</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">_get_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the child of this node with the specified name.</span>
+
+<span class="sd">        Return None if no such child exists.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lk</span><span class="p">:</span>
+            <span class="n">child</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">child</span>
+
+    <span class="k">def</span> <span class="nf">_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the preference keys of this node. &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lk</span><span class="p">:</span>
+            <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">keys</span>
+
+    <span class="k">def</span> <span class="nf">_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the child of this node with the specified name.</span>
+
+<span class="sd">        Create the child node if it does not exist.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_child</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_child</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">node</span>
+
+    <span class="k">def</span> <span class="nf">_node_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the names of the children of this node. &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lk</span><span class="p">:</span>
+            <span class="n">node_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">node_names</span>
+
+    <span class="k">def</span> <span class="nf">_remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remove a preference value from this node. &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lk</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="p">:</span>
+                <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_remove_preferences_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">listener</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Remove a listener for changes to the node&#39;s preferences. &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lk</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">listener</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preferences_listeners</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_preferences_listeners</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">listener</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set the value of a preference in this node. &quot;&quot;&quot;</span>
+
+        <span class="c1"># everything must be unicode encoded so that ConfigObj configuration</span>
+        <span class="c1"># can properly serialize the data. Python str are supposed to be ASCII</span>
+        <span class="c1"># encoded.</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lk</span><span class="p">:</span>
+            <span class="n">old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+            <span class="c1"># If the value is unchanged then don&#39;t call the listeners!</span>
+            <span class="k">if</span> <span class="n">old</span> <span class="o">==</span> <span class="n">value</span><span class="p">:</span>
+                <span class="n">listeners</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">listeners</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preferences_listeners</span><span class="p">[:]</span>
+
+        <span class="k">for</span> <span class="n">listener</span> <span class="ow">in</span> <span class="n">listeners</span><span class="p">:</span>
+            <span class="n">listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">old</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Debugging interface.</span>
+    <span class="c1">###########################################################################</span>
+
+<div class="viewcode-block" id="Preferences.dump"><a class="viewcode-back" href="../../../api/apptools.preferences.preferences.html#apptools.preferences.preferences.Preferences.dump">[docs]</a>    <span class="k">def</span> <span class="nf">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Dump the preferences hierarchy to stdout. &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">indent</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">()</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">indent</span><span class="p">,</span> <span class="s2">&quot;Node(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preferences</span><span class="p">)</span>
+        <span class="n">indent</span> <span class="o">+=</span> <span class="s2">&quot;  &quot;</span>
+
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">child</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">indent</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2022, Enthought
+      </li>
+      <li>
+      Last updated on Aug 16, 2022.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

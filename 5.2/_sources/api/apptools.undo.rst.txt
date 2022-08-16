@@ -1,0 +1,34 @@
+..
+   (C) Copyright 2006-2022 Enthought, Inc., Austin, TX
+   All rights reserved.
+
+   This software is provided without warranty under the terms of the BSD
+   license included in LICENSE.txt and may be redistributed only under
+   the conditions described in the aforementioned license. The license
+   is also available online at http://www.enthought.com/licenses/BSD.txt
+
+   Thanks for using Enthought open source!
+
+apptools.undo package
+=====================
+
+.. automodule:: apptools.undo
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+.. toctree::
+
+   apptools.undo.abstract_command
+   apptools.undo.api
+   apptools.undo.command_stack
+   apptools.undo.i_command
+   apptools.undo.i_command_stack
+   apptools.undo.i_undo_manager
+   apptools.undo.undo_manager
+
+
+.. toctree::
+
+   apptools.undo.action

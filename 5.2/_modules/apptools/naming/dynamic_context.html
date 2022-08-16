@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.naming.dynamic_context &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '5.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '.html',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.png">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <h1>Source code for apptools.naming.dynamic_context</h1><div class="highlight"><pre>
+<span></span><span class="c1"># (C) Copyright 2005-2022 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+
+<span class="sd">&quot;&quot;&quot; Provider of a framework that dynamically determines the contents of a</span>
+<span class="sd">    context at the time of interaction with the contents rather than at the</span>
+<span class="sd">    time a class is written.</span>
+
+<span class="sd">    This capability is particularly useful when the object acting as a context</span>
+<span class="sd">    is part of a plug-in application -- such as Envisage.  In general, this</span>
+<span class="sd">    capability allows the context to be:</span>
+
+<span class="sd">    - Extendable by contributions from somewhere other than the original</span>
+<span class="sd">      code writer</span>
+<span class="sd">    - Dynamic in that the elements it is composed of can change each time</span>
+<span class="sd">      someone interacts with the contents of the context.</span>
+
+<span class="sd">    It should be noted that this capability is explicitly different from</span>
+<span class="sd">    contexts that look at another container to determine their contents, such</span>
+<span class="sd">    as a file system context!</span>
+
+<span class="sd">    Users of this framework contribute items to a dynamic context by adding</span>
+<span class="sd">    traits to the dynamic context instance.  (This addition can happen</span>
+<span class="sd">    statically through the use of a Traits Category.)  The trait value is the</span>
+<span class="sd">    context item&#39;s value and the trait definition&#39;s metadata determines how the</span>
+<span class="sd">    item is treated within the context.  The support metadata is:</span>
+
+<span class="sd">    context_name: A non-empty string</span>
+<span class="sd">        Represents the name of the item within this context.  This must be</span>
+<span class="sd">        present for the trait to show up as a context item though the value</span>
+<span class="sd">        may change over time as the item gets bound to different names.</span>
+<span class="sd">    context_order: A float value</span>
+<span class="sd">        Indicates the position for the item within this context.  All</span>
+<span class="sd">        dynamically contributed context items are sorted by ascending order</span>
+<span class="sd">        of this value using the standard list sort function.</span>
+<span class="sd">    is_context: A boolean value</span>
+<span class="sd">        True if the item is itself a context.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Standardlibrary imports</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="c1"># Local imports</span>
+<span class="kn">from</span> <span class="nn">.binding</span> <span class="kn">import</span> <span class="n">Binding</span>
+<span class="kn">from</span> <span class="nn">.context</span> <span class="kn">import</span> <span class="n">Context</span>
+<span class="kn">from</span> <span class="nn">.exception</span> <span class="kn">import</span> <span class="n">OperationNotSupportedError</span>
+
+
+<span class="c1"># Setup a logger for this module.</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="DynamicContext"><a class="viewcode-back" href="../../../api/apptools.naming.dynamic_context.html#apptools.naming.dynamic_context.DynamicContext">[docs]</a><span class="k">class</span> <span class="nc">DynamicContext</span><span class="p">(</span><span class="n">Context</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A framework that dynamically determines the contents of a context at</span>
+<span class="sd">    the time of interaction with the contents rather than at the time a</span>
+<span class="sd">    context class is written.</span>
+
+<span class="sd">    It should be noted that this capability is explicitly different from</span>
+<span class="sd">    contexts that look at another container to determine their contents,</span>
+<span class="sd">    such as a file system context!</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1">##########################################################################</span>
+    <span class="c1"># &#39;Context&#39; interface.</span>
+    <span class="c1">##########################################################################</span>
+
+    <span class="c1">### protected interface ##################################################</span>
+
+    <span class="k">def</span> <span class="nf">_is_bound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Is a name bound in this context?&quot;&quot;&quot;</span>
+
+        <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_contributed_context_item</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">item</span> <span class="o">!=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_is_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns True if a name is bound to a context.&quot;&quot;&quot;</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_contributed_context_item</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="o">!=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">obj</span><span class="p">,</span> <span class="n">trait</span> <span class="o">=</span> <span class="n">item</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">is_context</span> <span class="ow">is</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_list_bindings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Lists the bindings in this context.&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">Binding</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">o</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_contributed_context_items</span><span class="p">()</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_list_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Lists the names bound in this context.&quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_contributed_context_items</span><span class="p">()]</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Looks up a name in this context.&quot;&quot;&quot;</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_contributed_context_item</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="o">!=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">obj</span><span class="p">,</span> <span class="n">trait</span> <span class="o">=</span> <span class="n">item</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">obj</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Renames an object in this context.&quot;&quot;&quot;</span>
+
+        <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_contributed_context_item</span><span class="p">(</span><span class="n">old_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="o">!=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">obj</span><span class="p">,</span> <span class="n">trait</span> <span class="o">=</span> <span class="n">item</span>
+            <span class="n">trait</span><span class="o">.</span><span class="n">context_name</span> <span class="o">=</span> <span class="n">new_name</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Name &quot;</span><span class="si">%s</span><span class="s1">&quot; not in context&#39;</span><span class="p">,</span> <span class="n">old_name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_unbind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Unbinds a name from this context.&quot;&quot;&quot;</span>
+        <span class="c1"># It is an error to try to unbind any contributed context items</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_contributed_context_item</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">item</span> <span class="o">!=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">OperationNotSupportedError</span><span class="p">(</span>
+                <span class="s2">&quot;Unable to unbind &quot;</span> <span class="o">+</span> <span class="s2">&quot;built-in with name [</span><span class="si">%s</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="n">name</span>
+            <span class="p">)</span>
+
+    <span class="c1">##########################################################################</span>
+    <span class="c1"># &#39;DynamicContext&#39; interface.</span>
+    <span class="c1">##########################################################################</span>
+
+    <span class="c1">### protected interface ##################################################</span>
+
+    <span class="k">def</span> <span class="nf">_get_contributed_context_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;If the specified name matches a contributed context item then</span>
+<span class="sd">        returns a tuple of the item&#39;s current value and trait definition</span>
+<span class="sd">        (in that order.)  Otherwise, returns a tuple of (None, None).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_contributed_context_items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="nf">_get_contributed_context_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns an ordered list of items to be treated as part of our</span>
+<span class="sd">        context.</span>
+
+<span class="sd">        Each item in the list is a tuple of its name, object, and trait</span>
+<span class="sd">        definition (in that order.)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Our traits that get treated as context items are those that declare</span>
+        <span class="c1"># themselves via metadata on the trait definition.</span>
+        <span class="nb">filter</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;context_name&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="n">traits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">traits</span><span class="p">(</span><span class="o">**</span><span class="nb">filter</span><span class="p">)</span>
+
+        <span class="c1"># Sort the list of context items according to the name of the item.</span>
+        <span class="n">traits</span> <span class="o">=</span> <span class="p">[(</span><span class="n">t</span><span class="o">.</span><span class="n">context_order</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">traits</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="n">traits</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+
+        <span class="c1"># Convert these trait definitions into a list of name and object tuples</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">context_name</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">order</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">traits</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2022, Enthought
+      </li>
+      <li>
+      Last updated on Aug 16, 2022.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

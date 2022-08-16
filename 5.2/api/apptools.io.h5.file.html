@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>apptools.io.h5.file module &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '5.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '.html',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../_static/img/favicon.png">
+    <link rel="index" title="Index" href="../genindex.html" >
+    <link rel="search" title="Search" href="../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../index.html" >
+    <link rel="up" title="apptools.io.h5 package" href="apptools.io.h5.html" >
+    <link rel="next" title="apptools.io.h5.table_node module" href="apptools.io.h5.table_node.html" >
+    <link rel="prev" title="apptools.io.h5.dict_node module" href="apptools.io.h5.dict_node.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="apptools.html" >apptools package</a></li>
+          <li class="active"><a href="apptools.io.html" >apptools.io package</a></li>
+          <li class="active"><a href="apptools.io.h5.html" accesskey="U">apptools.io.h5 package</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+      <li class="active">
+        <a href="apptools.io.h5.table_node.html" title="apptools.io.h5.table_node module"
+           accesskey="N">next</a>
+      </li>
+      <li class="active">
+        <a href="apptools.io.h5.dict_node.html" title="apptools.io.h5.dict_node module"
+           accesskey="P">previous</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <section id="module-apptools.io.h5.file">
+<span id="apptools-io-h5-file-module"></span><h1>apptools.io.h5.file module<a class="headerlink" href="#module-apptools.io.h5.file" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="apptools.io.h5.file.H5Attrs">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">apptools.io.h5.file.</span></code><code class="sig-name descname"><span class="pre">H5Attrs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_attrs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5Attrs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5Attrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.MutableMapping</span></code></p>
+<p>An attributes dictionary for an h5 node.</p>
+<p>This intercepts <cite>__setitem__</cite> so that python sequences can be converted to
+numpy arrays. This helps preserve the readability of our HDF5 files by
+other (non-python) programs.</p>
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Attrs.get">
+<code class="sig-name descname"><span class="pre">get</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">k</span></em><span class="optional">[</span>, <em class="sig-param"><span class="pre">d</span></em><span class="optional">]</span><span class="sig-paren">)</span> &#x2192; <span class="pre">D[k]</span> <span class="pre">if</span> <span class="pre">k</span> <span class="pre">in</span> <span class="pre">D,</span> <span class="pre">else</span> <span class="pre">d.</span>&#160; <span class="pre">d</span> <span class="pre">defaults</span> <span class="pre">to</span> <span class="pre">None.</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5Attrs.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5Attrs.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Attrs.items">
+<code class="sig-name descname"><span class="pre">items</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">a</span> <span class="pre">set-like</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D’s</span> <span class="pre">items</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5Attrs.items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5Attrs.items" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Attrs.keys">
+<code class="sig-name descname"><span class="pre">keys</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">a</span> <span class="pre">set-like</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D’s</span> <span class="pre">keys</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5Attrs.keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5Attrs.keys" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Attrs.values">
+<code class="sig-name descname"><span class="pre">values</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">an</span> <span class="pre">object</span> <span class="pre">providing</span> <span class="pre">a</span> <span class="pre">view</span> <span class="pre">on</span> <span class="pre">D’s</span> <span class="pre">values</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5Attrs.values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5Attrs.values" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="apptools.io.h5.file.H5File">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">apptools.io.h5.file.</span></code><code class="sig-name descname"><span class="pre">H5File</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'r+'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_existing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_open</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h5filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5File"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5File" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Mapping</span></code></p>
+<p>File object for HDF5 files.</p>
+<p>This class wraps PyTables to provide a cleaner, but only implements an
+interface for accessing arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (str or a <cite>tables.File</cite> instance) – Filename for an HDF5 file, or a PyTables <cite>File</cite> object.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) – <p>Mode to open the file:</p>
+<blockquote>
+<div><p>’r’ : Read-only
+‘w’ : Write; create new file (an existing file would be deleted).
+‘a’ : Read and write to file; create if not existing
+‘r+’: Read and write to file; must already exist</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>delete_existing</strong> (<em>bool</em>) – If True, an existing node will be deleted when a <cite>create_*</cite> method is
+called. Otherwise, a ValueError will be raise.</p></li>
+<li><p><strong>auto_groups</strong> (<em>bool</em>) – If True, <cite>create_array</cite> will automatically create parent groups.</p></li>
+<li><p><strong>auto_open</strong> (<em>bool</em>) – If True, open the file automatically on initialization. Otherwise,
+you can call <cite>H5File.open()</cite> explicitly after initialization.</p></li>
+<li><p><strong>chunked</strong> (<em>bool</em>) – If True, the default behavior of <cite>create_array</cite> will be a chunked
+array (see PyTables <cite>create_carray</cite>).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5File.close">
+<code class="sig-name descname"><span class="pre">close</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5File.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5File.close" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5File.create_array">
+<code class="sig-name descname"><span class="pre">create_array</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_or_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunked</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extendable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5File.create_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5File.create_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create node to store an array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_path</strong> (<em>str</em>) – PyTable node path; e.g. ‘/path/to/node’.</p></li>
+<li><p><strong>array_or_shape</strong> (<em>array</em><em> or </em><em>shape tuple</em>) – Array or shape tuple for an array. If given a shape tuple, the
+<cite>dtype</cite> parameter must also specified.</p></li>
+<li><p><strong>dtype</strong> (<em>str</em><em> or </em><em>numpy.dtype</em>) – Data type of array. Only necessary if <cite>array_or_shape</cite> is a shape.</p></li>
+<li><p><strong>chunked</strong> (<em>bool</em>) – Controls whether the array is chunked.</p></li>
+<li><p><strong>extendable</strong> (<em>{None | bool}</em>) – Controls whether the array is extendable.</p></li>
+<li><p><strong>kwargs</strong> (<em>key/value pairs</em>) – Keyword args passed to PyTables <cite>File.create_(c|e)array</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5File.create_dict">
+<code class="sig-name descname"><span class="pre">create_dict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5File.create_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5File.create_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create dict node at the specified path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_path</strong> (<em>str</em>) – Path to node where data is stored (e.g. ‘/path/to/my_dict’)</p></li>
+<li><p><strong>data</strong> (<em>dict</em>) – Data for initialization, if desired.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5File.create_group">
+<code class="sig-name descname"><span class="pre">create_group</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group_path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5File.create_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5File.create_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group_path</strong> (<em>str</em>) – PyTable group path; e.g. ‘/path/to/group’.</p></li>
+<li><p><strong>kwargs</strong> (<em>key/value pairs</em>) – Keyword args passed to PyTables <cite>File.create_group</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5File.create_table">
+<code class="sig-name descname"><span class="pre">create_table</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5File.create_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5File.create_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create table node at the specified path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_path</strong> (<em>str</em>) – Path to node where data is stored (e.g. ‘/path/to/my_dict’)</p></li>
+<li><p><strong>description</strong> (<em>dict</em><em> or </em><em>numpy dtype object</em>) – The description of the columns in the table. This is either a dict
+of column name -&gt; dtype items or a numpy record array dtype. For
+more information, see the documentation for Table in pytables.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="apptools.io.h5.file.H5File.exists_error">
+<code class="sig-name descname"><span class="pre">exists_error</span></code><em class="property"> <span class="pre">=</span> <span class="pre">&quot;'{}'</span> <span class="pre">exists</span> <span class="pre">in</span> <span class="pre">'{}';</span> <span class="pre">set</span> <span class="pre">`delete_existing`</span> <span class="pre">attribute</span> <span class="pre">to</span> <span class="pre">True</span> <span class="pre">to</span> <span class="pre">overwrite</span> <span class="pre">existing</span> <span class="pre">calculations.&quot;</span></em><a class="headerlink" href="#apptools.io.h5.file.H5File.exists_error" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5File.is_open">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">is_open</span></code><a class="headerlink" href="#apptools.io.h5.file.H5File.is_open" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5File.iteritems">
+<code class="sig-name descname"><span class="pre">iteritems</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5File.iteritems"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5File.iteritems" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over node paths and nodes of the h5 file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5File.join_path">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">join_path</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5File.join_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5File.join_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Join parts of an h5 path.</p>
+<p>For example, the 3 argmuments ‘path’, ‘to’, ‘node’ will return
+‘/path/to/node’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>str</em>) – Parts of path to be joined.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5File.open">
+<code class="sig-name descname"><span class="pre">open</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5File.open"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5File.open" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5File.remove_group">
+<code class="sig-name descname"><span class="pre">remove_group</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group_path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5File.remove_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5File.remove_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>group_path</strong> (<em>str</em>) – PyTable group path; e.g. ‘/path/to/group’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5File.remove_node">
+<code class="sig-name descname"><span class="pre">remove_node</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5File.remove_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5File.remove_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node_path</strong> (<em>str</em>) – PyTable node path; e.g. ‘/path/to/node’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5File.root">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">root</span></code><a class="headerlink" href="#apptools.io.h5.file.H5File.root" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5File.split_path">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">split_path</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5File.split_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5File.split_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split node path returning the base path and node name.</p>
+<p>For example: ‘/path/to/node’ will return ‘/path/to’ and ‘node’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node_path</strong> (<em>str</em>) – PyTable node path; e.g. ‘/path/to/node’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="apptools.io.h5.file.H5Group">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">apptools.io.h5.file.</span></code><code class="sig-name descname"><span class="pre">H5Group</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pytables_group</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5Group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5Group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">collections.abc.Mapping</span></code></p>
+<p>A group node in an H5File.</p>
+<p>This is a thin wrapper around PyTables’ Group object to expose attributes
+and maintain the dict interface of H5File.</p>
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Group.children_names">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">children_names</span></code><a class="headerlink" href="#apptools.io.h5.file.H5Group.children_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Group.create_array">
+<code class="sig-name descname"><span class="pre">create_array</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_subpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">array_or_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunked</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extendable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5Group.create_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5Group.create_array" title="Permalink to this definition">¶</a></dt>
+<dd><p>** H5Group wrapper for H5File.create_array: **
+Note that the first argument is a nodepath relative to the group, rather than
+an absolute path. Below is the original docstring:</p>
+<p>Create node to store an array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_path</strong> (<em>str</em>) – PyTable node path; e.g. ‘/path/to/node’.</p></li>
+<li><p><strong>array_or_shape</strong> (<em>array</em><em> or </em><em>shape tuple</em>) – Array or shape tuple for an array. If given a shape tuple, the
+<cite>dtype</cite> parameter must also specified.</p></li>
+<li><p><strong>dtype</strong> (<em>str</em><em> or </em><em>numpy.dtype</em>) – Data type of array. Only necessary if <cite>array_or_shape</cite> is a shape.</p></li>
+<li><p><strong>chunked</strong> (<em>bool</em>) – Controls whether the array is chunked.</p></li>
+<li><p><strong>extendable</strong> (<em>{None | bool}</em>) – Controls whether the array is extendable.</p></li>
+<li><p><strong>kwargs</strong> (<em>key/value pairs</em>) – Keyword args passed to PyTables <cite>File.create_(c|e)array</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Group.create_dict">
+<code class="sig-name descname"><span class="pre">create_dict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_subpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5Group.create_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5Group.create_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>** H5Group wrapper for H5File.create_dict: **
+Note that the first argument is a nodepath relative to the group, rather than
+an absolute path. Below is the original docstring:</p>
+<p>Create dict node at the specified path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_path</strong> (<em>str</em>) – Path to node where data is stored (e.g. ‘/path/to/my_dict’)</p></li>
+<li><p><strong>data</strong> (<em>dict</em>) – Data for initialization, if desired.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Group.create_group">
+<code class="sig-name descname"><span class="pre">create_group</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group_subpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delete_existing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5Group.create_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5Group.create_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>** H5Group wrapper for H5File.create_group: **
+Note that the first argument is a nodepath relative to the group, rather than
+an absolute path. Below is the original docstring:</p>
+<p>Create group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group_path</strong> (<em>str</em>) – PyTable group path; e.g. ‘/path/to/group’.</p></li>
+<li><p><strong>kwargs</strong> (<em>key/value pairs</em>) – Keyword args passed to PyTables <cite>File.create_group</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Group.create_table">
+<code class="sig-name descname"><span class="pre">create_table</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_subpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5Group.create_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5Group.create_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>** H5Group wrapper for H5File.create_table: **
+Note that the first argument is a nodepath relative to the group, rather than
+an absolute path. Below is the original docstring:</p>
+<p>Create table node at the specified path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node_path</strong> (<em>str</em>) – Path to node where data is stored (e.g. ‘/path/to/my_dict’)</p></li>
+<li><p><strong>description</strong> (<em>dict</em><em> or </em><em>numpy dtype object</em>) – The description of the columns in the table. This is either a dict
+of column name -&gt; dtype items or a numpy record array dtype. For
+more information, see the documentation for Table in pytables.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Group.filename">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">filename</span></code><a class="headerlink" href="#apptools.io.h5.file.H5Group.filename" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Group.iter_groups">
+<code class="sig-name descname"><span class="pre">iter_groups</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5Group.iter_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5Group.iter_groups" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate over <cite>H5Group</cite> nodes that are children of this group.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Group.name">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">name</span></code><a class="headerlink" href="#apptools.io.h5.file.H5Group.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Group.pathname">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">pathname</span></code><a class="headerlink" href="#apptools.io.h5.file.H5Group.pathname" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Group.remove_group">
+<code class="sig-name descname"><span class="pre">remove_group</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group_subpath</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5Group.remove_group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5Group.remove_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>** H5Group wrapper for H5File.remove_group: **
+Note that the first argument is a nodepath relative to the group, rather than
+an absolute path. Below is the original docstring:</p>
+<p>Remove group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>group_path</strong> (<em>str</em>) – PyTable group path; e.g. ‘/path/to/group’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Group.remove_node">
+<code class="sig-name descname"><span class="pre">remove_node</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_subpath</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#H5Group.remove_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.H5Group.remove_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>** H5Group wrapper for H5File.remove_node: **
+Note that the first argument is a nodepath relative to the group, rather than
+an absolute path. Below is the original docstring:</p>
+<p>Remove node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node_path</strong> (<em>str</em>) – PyTable node path; e.g. ‘/path/to/node’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Group.root">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">root</span></code><a class="headerlink" href="#apptools.io.h5.file.H5Group.root" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="apptools.io.h5.file.H5Group.subgroup_names">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">subgroup_names</span></code><a class="headerlink" href="#apptools.io.h5.file.H5Group.subgroup_names" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="apptools.io.h5.file.get_atom">
+<code class="sig-prename descclassname"><span class="pre">apptools.io.h5.file.</span></code><code class="sig-name descname"><span class="pre">get_atom</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#get_atom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.get_atom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PyTables Atom for the given dtype or dtype string.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="apptools.io.h5.file.h5_group_wrapper">
+<code class="sig-prename descclassname"><span class="pre">apptools.io.h5.file.</span></code><code class="sig-name descname"><span class="pre">h5_group_wrapper</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#h5_group_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.h5_group_wrapper" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="apptools.io.h5.file.iterator_length">
+<code class="sig-prename descclassname"><span class="pre">apptools.io.h5.file.</span></code><code class="sig-name descname"><span class="pre">iterator_length</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/apptools/io/h5/file.html#iterator_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#apptools.io.h5.file.iterator_length" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="apptools.io.h5.dict_node.html"
+                        title="previous chapter">apptools.io.h5.dict_node module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="apptools.io.h5.table_node.html"
+                        title="next chapter">apptools.io.h5.table_node module</a></p>
+  <h3>This Page</h3>
+  <div>
+    <a href="../_sources/api/apptools.io.h5.file.rst.txt"
+       rel="nofollow">Show Source</a>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2022, Enthought
+      </li>
+      <li>
+      Last updated on Aug 16, 2022.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>

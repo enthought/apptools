@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>apptools.naming.context &mdash; Apptools Documentation</title>
+    
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../../../_static/css/spc-extend.css">
+    <link rel="stylesheet" href="../../../_static/enthought.css" type="text/css" >
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" >
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '5.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        LINK_SUFFIX: '.html',
+        SOURCELINK_SUFFIX: '.txt',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/js/copybutton.js"></script>
+    <script type="text/javascript" src="../../../_static/js/wrap_on_dot.js"></script>
+    <link rel="shortcut icon" href="../../../_static/img/favicon.png">
+    <link rel="index" title="Index" href="../../../genindex.html" >
+    <link rel="search" title="Search" href="../../../search.html" >
+    <link rel="top" title="Apptools Documentation" href="../../../index.html" >
+    <link rel="up" title="Module code" href="../../index.html" > 
+  </head>
+  <body>
+  <div class="container">
+    <div class="header">
+    </div>
+  </div>
+
+    <div class="container">
+      <div class="main">
+        
+	<div class="row-fluid">
+	  <div class="span12">
+	    <div class="spc-navbar">
+              
+    <ul class="nav nav-pills pull-left">
+	
+        <li class="active"><a href="../../../index.html">Apptools Documentation</a></li>
+	
+          <li class="active"><a href="../../index.html" accesskey="U">Module code</a></li> 
+    </ul>
+              
+              
+    <ul class="nav nav-pills pull-right">
+      <li class="active">
+        <a href="../../../genindex.html" title="General Index"
+           accesskey="I">index</a>
+      </li>
+      <li class="active">
+        <a href="../../../py-modindex.html" title="Python Module Index"
+           >modules</a>
+      </li>
+    </ul>
+              
+	    </div>
+	  </div>
+	</div>
+        
+
+	<div class="row-fluid">
+          <div class="span9">
+            
+        <div class="bodywrapper">
+          <div class="body" id="spc-section-body" role="main">
+            
+  <h1>Source code for apptools.naming.context</h1><div class="highlight"><pre>
+<span></span><span class="c1"># (C) Copyright 2005-2022 Enthought, Inc., Austin, TX</span>
+<span class="c1"># All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># This software is provided without warranty under the terms of the BSD</span>
+<span class="c1"># license included in LICENSE.txt and may be redistributed only under</span>
+<span class="c1"># the conditions described in the aforementioned license. The license</span>
+<span class="c1"># is also available online at http://www.enthought.com/licenses/BSD.txt</span>
+<span class="c1">#</span>
+<span class="c1"># Thanks for using Enthought open source!</span>
+<span class="sd">&quot;&quot;&quot; The base class for all naming contexts. &quot;&quot;&quot;</span>
+
+
+<span class="c1"># Enthought library imports.</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Event</span><span class="p">,</span> <span class="n">HasTraits</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Property</span><span class="p">,</span> <span class="n">Str</span>
+
+<span class="c1"># Local imports.</span>
+<span class="kn">from</span> <span class="nn">.binding</span> <span class="kn">import</span> <span class="n">Binding</span>
+<span class="kn">from</span> <span class="nn">.exception</span> <span class="kn">import</span> <span class="n">InvalidNameError</span><span class="p">,</span> <span class="n">NameAlreadyBoundError</span>
+<span class="kn">from</span> <span class="nn">.exception</span> <span class="kn">import</span> <span class="n">NameNotFoundError</span><span class="p">,</span> <span class="n">NotContextError</span>
+<span class="kn">from</span> <span class="nn">.naming_event</span> <span class="kn">import</span> <span class="n">NamingEvent</span>
+<span class="kn">from</span> <span class="nn">.naming_manager</span> <span class="kn">import</span> <span class="n">naming_manager</span>
+<span class="kn">from</span> <span class="nn">.unique_name</span> <span class="kn">import</span> <span class="n">make_unique_name</span>
+
+
+<span class="c1"># Constants for environment property keys.</span>
+<span class="n">INITIAL_CONTEXT_FACTORY</span> <span class="o">=</span> <span class="s2">&quot;apptools.naming.factory.initial&quot;</span>
+<span class="n">OBJECT_FACTORIES</span> <span class="o">=</span> <span class="s2">&quot;apptools.naming.factory.object&quot;</span>
+<span class="n">STATE_FACTORIES</span> <span class="o">=</span> <span class="s2">&quot;apptools.naming.factory.state&quot;</span>
+
+
+<span class="c1"># The default environment.</span>
+<span class="n">ENVIRONMENT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># &#39;Context&#39; properties.</span>
+    <span class="n">OBJECT_FACTORIES</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="n">STATE_FACTORIES</span><span class="p">:</span> <span class="p">[],</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="Context"><a class="viewcode-back" href="../../../api/apptools.naming.context.html#apptools.naming.context.Context">[docs]</a><span class="k">class</span> <span class="nc">Context</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The base class for all naming contexts. &quot;&quot;&quot;</span>
+
+    <span class="c1"># Keys for environment properties.</span>
+    <span class="n">INITIAL_CONTEXT_FACTORY</span> <span class="o">=</span> <span class="n">INITIAL_CONTEXT_FACTORY</span>
+    <span class="n">OBJECT_FACTORIES</span> <span class="o">=</span> <span class="n">OBJECT_FACTORIES</span>
+    <span class="n">STATE_FACTORIES</span> <span class="o">=</span> <span class="n">STATE_FACTORIES</span>
+
+    <span class="c1">#### &#39;Context&#39; interface ##################################################</span>
+
+    <span class="c1"># The naming environment in effect for this context.</span>
+    <span class="n">environment</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">(</span><span class="n">ENVIRONMENT</span><span class="p">)</span>
+
+    <span class="c1"># The name of the context within its own namespace.</span>
+    <span class="n">namespace_name</span> <span class="o">=</span> <span class="n">Property</span><span class="p">(</span><span class="n">Str</span><span class="p">)</span>
+
+    <span class="c1">#### Events ####</span>
+
+    <span class="c1"># Fired when an object has been added to the context (either via &#39;bind&#39; or</span>
+    <span class="c1"># &#39;create_subcontext&#39;).</span>
+    <span class="n">object_added</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span><span class="n">NamingEvent</span><span class="p">)</span>
+
+    <span class="c1"># Fired when an object has been changed (via &#39;rebind&#39;).</span>
+    <span class="n">object_changed</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span><span class="n">NamingEvent</span><span class="p">)</span>
+
+    <span class="c1"># Fired when an object has been removed from the context (either via</span>
+    <span class="c1"># &#39;unbind&#39; or &#39;destroy_subcontext&#39;).</span>
+    <span class="n">object_removed</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span><span class="n">NamingEvent</span><span class="p">)</span>
+
+    <span class="c1"># Fired when an object in the context has been renamed (via &#39;rename&#39;).</span>
+    <span class="n">object_renamed</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span><span class="n">NamingEvent</span><span class="p">)</span>
+
+    <span class="c1"># Fired when the contents of the context have changed dramatically.</span>
+    <span class="n">context_changed</span> <span class="o">=</span> <span class="n">Event</span><span class="p">(</span><span class="n">NamingEvent</span><span class="p">)</span>
+
+    <span class="c1">#### Protected &#39;Context&#39; interface #######################################</span>
+
+    <span class="c1"># The bindings in the context.</span>
+    <span class="n">_bindings</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">(</span><span class="n">Str</span><span class="p">,</span> <span class="n">Any</span><span class="p">)</span>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># &#39;Context&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="c1">#### Properties ###########################################################</span>
+
+    <span class="k">def</span> <span class="nf">_get_namespace_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the name of the context within its own namespace.</span>
+
+<span class="sd">        That is the full-path, through the namespace this context participates</span>
+<span class="sd">        in, to get to this context.  For example, if the root context of the</span>
+<span class="sd">        namespace was called &#39;Foo&#39;, and there was a subcontext of that called</span>
+<span class="sd">        &#39;Bar&#39;, and we were within that and called &#39;Baz&#39;, then this should</span>
+<span class="sd">        return &#39;Foo/Bar/Baz&#39;.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># FIXME: We&#39;d like to raise an exception and force implementors to</span>
+        <span class="c1"># decide what to do.  However, it appears to be pretty common that</span>
+        <span class="c1"># most Context implementations do not override this method -- possibly</span>
+        <span class="c1"># because the comments aren&#39;t clear on what this is supposed to be?</span>
+        <span class="c1">#</span>
+        <span class="c1"># Anyway, if we raise an exception then it is impossible to use any</span>
+        <span class="c1"># evaluations when building a Traits UI for a Context.  That is, the</span>
+        <span class="c1"># Traits UI can&#39;t include items that have a &#39;visible_when&#39; or</span>
+        <span class="c1"># &#39;enabled_when&#39; evaluation.  This is because the Traits evaluation</span>
+        <span class="c1"># code calls the &#39;get()&#39; method on the Context which attempts to</span>
+        <span class="c1"># retrieve the current namespace_name value.</span>
+        <span class="c1"># raise OperationNotSupportedError()</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="c1">#### Methods ##############################################################</span>
+
+<div class="viewcode-block" id="Context.bind"><a class="viewcode-back" href="../../../api/apptools.naming.context.html#apptools.naming.context.Context.bind">[docs]</a>    <span class="k">def</span> <span class="nf">bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">make_contexts</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Binds a name to an object.</span>
+
+<span class="sd">        If &#39;make_contexts&#39; is True then any missing intermediate contexts are</span>
+<span class="sd">        created automatically.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidNameError</span><span class="p">(</span><span class="s2">&quot;empty name&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Parse the name.</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># If there is exactly one component in the name then the operation</span>
+        <span class="c1"># takes place in this context.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">atom</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># Is the name already bound?</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">atom</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">NameAlreadyBoundError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="c1"># Do the actual bind.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_bind</span><span class="p">(</span><span class="n">atom</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+
+            <span class="c1"># Trait event notification.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">object_added</span> <span class="o">=</span> <span class="n">NamingEvent</span><span class="p">(</span>
+                <span class="n">new_binding</span><span class="o">=</span><span class="n">Binding</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Otherwise, attempt to continue resolution into the next context.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="n">make_contexts</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_create_subcontext</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">next_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_context</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">next_context</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span> <span class="n">obj</span><span class="p">,</span> <span class="n">make_contexts</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Context.rebind"><a class="viewcode-back" href="../../../api/apptools.naming.context.html#apptools.naming.context.Context.rebind">[docs]</a>    <span class="k">def</span> <span class="nf">rebind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">make_contexts</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Binds an object to a name that may already be bound.</span>
+
+<span class="sd">        If &#39;make_contexts&#39; is True then any missing intermediate contexts are</span>
+<span class="sd">        created automatically.</span>
+
+<span class="sd">        The object may be a different object but may also be the same object</span>
+<span class="sd">        that is already bound to the specified name. The name may or may not be</span>
+<span class="sd">        already used. Think of this as a safer version of &#39;bind&#39; since this</span>
+<span class="sd">        one will never raise an exception regarding a name being used.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidNameError</span><span class="p">(</span><span class="s2">&quot;empty name&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Parse the name.</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># If there is exactly one component in the name then the operation</span>
+        <span class="c1"># takes place in this context.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Do the actual rebind.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rebind</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">obj</span><span class="p">)</span>
+
+            <span class="c1"># Trait event notification.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">object_changed</span> <span class="o">=</span> <span class="n">NamingEvent</span><span class="p">(</span>
+                <span class="n">new_binding</span><span class="o">=</span><span class="n">Binding</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Otherwise, attempt to continue resolution into the next context.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="n">make_contexts</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_create_subcontext</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">next_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_context</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">next_context</span><span class="o">.</span><span class="n">rebind</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]),</span> <span class="n">obj</span><span class="p">,</span> <span class="n">make_contexts</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Context.unbind"><a class="viewcode-back" href="../../../api/apptools.naming.context.html#apptools.naming.context.Context.unbind">[docs]</a>    <span class="k">def</span> <span class="nf">unbind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Unbinds a name. &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidNameError</span><span class="p">(</span><span class="s2">&quot;empty name&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Parse the name.</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># If there is exactly one component in the name then the operation</span>
+        <span class="c1"># takes place in this context.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">atom</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">atom</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="c1"># Lookup the object that we are unbinding to use in the event</span>
+            <span class="c1"># notification.</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lookup</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+            <span class="c1"># Do the actual unbind.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_unbind</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+            <span class="c1"># Trait event notification.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">object_removed</span> <span class="o">=</span> <span class="n">NamingEvent</span><span class="p">(</span>
+                <span class="n">old_binding</span><span class="o">=</span><span class="n">Binding</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Otherwise, attempt to continue resolution into the next context.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">next_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_context</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">next_context</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span></div>
+
+<div class="viewcode-block" id="Context.rename"><a class="viewcode-back" href="../../../api/apptools.naming.context.html#apptools.naming.context.Context.rename">[docs]</a>    <span class="k">def</span> <span class="nf">rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Binds a new name to an object. &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidNameError</span><span class="p">(</span><span class="s2">&quot;empty name&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Parse the names.</span>
+        <span class="n">old_components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_name</span><span class="p">(</span><span class="n">old_name</span><span class="p">)</span>
+        <span class="n">new_components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_name</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span>
+
+        <span class="c1"># If there is axactly one component in BOTH names then the operation</span>
+        <span class="c1"># takes place ENTIRELY in this context.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Is the old name actually bound?</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">old_name</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">old_name</span><span class="p">)</span>
+
+            <span class="c1"># Is the new name already bound?</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">new_name</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">NameAlreadyBoundError</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span>
+
+            <span class="c1"># Do the actual rename.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rename</span><span class="p">(</span><span class="n">old_name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">)</span>
+
+            <span class="c1"># Lookup the object that we are renaming to use in the event</span>
+            <span class="c1"># notification.</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lookup</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span>
+
+            <span class="c1"># Trait event notification.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">object_renamed</span> <span class="o">=</span> <span class="n">NamingEvent</span><span class="p">(</span>
+                <span class="n">old_binding</span><span class="o">=</span><span class="n">Binding</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">old_name</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="p">),</span>
+                <span class="n">new_binding</span><span class="o">=</span><span class="n">Binding</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">new_name</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># fixme: This really needs to be transactional in case the bind</span>
+            <span class="c1"># succeeds but the unbind fails.  To be safe should we just not</span>
+            <span class="c1"># support cross-context renaming for now?!?!</span>
+            <span class="c1">#</span>
+            <span class="c1"># Lookup the object.</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">old_name</span><span class="p">)</span>
+
+            <span class="c1"># Bind the new name.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">new_name</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+
+            <span class="c1"># Unbind the old one.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="n">old_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Context.lookup"><a class="viewcode-back" href="../../../api/apptools.naming.context.html#apptools.naming.context.Context.lookup">[docs]</a>    <span class="k">def</span> <span class="nf">lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Resolves a name relative to this context. &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the name is empty we return the context itself.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># fixme: The JNDI spec. says that this should return a COPY of</span>
+            <span class="c1"># the context.</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+        <span class="c1"># Parse the name.</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># If there is exactly one component in the name then the operation</span>
+        <span class="c1"># takes place in this context.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">atom</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">atom</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="c1"># Do the actual lookup.</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lookup</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+        <span class="c1"># Otherwise, attempt to continue resolution into the next context.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">next_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_context</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">next_context</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+    <span class="c1"># fixme: Non-JNDI</span>
+<div class="viewcode-block" id="Context.lookup_binding"><a class="viewcode-back" href="../../../api/apptools.naming.context.html#apptools.naming.context.Context.lookup_binding">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_binding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Looks up the binding for a name relative to this context. &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidNameError</span><span class="p">(</span><span class="s2">&quot;empty name&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Parse the name.</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># If there is exactly one component in the name then the operation</span>
+        <span class="c1"># takes place in this context.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">atom</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">atom</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="c1"># Do the actual lookup.</span>
+            <span class="n">binding</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lookup_binding</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+        <span class="c1"># Otherwise, attempt to continue resolution into the next context.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">next_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_context</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">binding</span> <span class="o">=</span> <span class="n">next_context</span><span class="o">.</span><span class="n">lookup_binding</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+
+        <span class="k">return</span> <span class="n">binding</span></div>
+
+    <span class="c1"># fixme: Non-JNDI</span>
+<div class="viewcode-block" id="Context.lookup_context"><a class="viewcode-back" href="../../../api/apptools.naming.context.html#apptools.naming.context.Context.lookup_context">[docs]</a>    <span class="k">def</span> <span class="nf">lookup_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Resolves a name relative to this context.</span>
+
+<span class="sd">        The name MUST resolve to a context.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the name is empty we return the context itself.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># fixme: The JNDI spec. says that this should return a COPY of</span>
+            <span class="c1"># the context.</span>
+            <span class="k">return</span> <span class="bp">self</span>
+
+        <span class="c1"># Parse the name.</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># If there is exactly one component in the name then the operation</span>
+        <span class="c1"># takes place in this context.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">atom</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">atom</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="c1"># Do the actual lookup.</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_context</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+        <span class="c1"># Otherwise, attempt to continue resolution into the next context.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">next_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_context</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">obj</span> <span class="o">=</span> <span class="n">next_context</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+
+        <span class="k">return</span> <span class="n">obj</span></div>
+
+<div class="viewcode-block" id="Context.create_subcontext"><a class="viewcode-back" href="../../../api/apptools.naming.context.html#apptools.naming.context.Context.create_subcontext">[docs]</a>    <span class="k">def</span> <span class="nf">create_subcontext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates a sub-context. &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidNameError</span><span class="p">(</span><span class="s2">&quot;empty name&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Parse the name.</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># If there is exactly one component in the name then the operation</span>
+        <span class="c1"># takes place in this context.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">atom</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># Is the name already bound?</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">atom</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">NameAlreadyBoundError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="c1"># Do the actual creation of the sub-context.</span>
+            <span class="n">sub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_subcontext</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+            <span class="c1"># Trait event notification.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">object_added</span> <span class="o">=</span> <span class="n">NamingEvent</span><span class="p">(</span>
+                <span class="n">new_binding</span><span class="o">=</span><span class="n">Binding</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">sub</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Otherwise, attempt to continue resolution into the next context.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">next_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_context</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">sub</span> <span class="o">=</span> <span class="n">next_context</span><span class="o">.</span><span class="n">create_subcontext</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+
+        <span class="k">return</span> <span class="n">sub</span></div>
+
+<div class="viewcode-block" id="Context.destroy_subcontext"><a class="viewcode-back" href="../../../api/apptools.naming.context.html#apptools.naming.context.Context.destroy_subcontext">[docs]</a>    <span class="k">def</span> <span class="nf">destroy_subcontext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Destroys a sub-context. &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidNameError</span><span class="p">(</span><span class="s2">&quot;empty name&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Parse the name.</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># If there is exactly one component in the name then the operation</span>
+        <span class="c1"># takes place in this context.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">atom</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">atom</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lookup</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_context</span><span class="p">(</span><span class="n">atom</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">NotContextError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="c1"># Do the actual destruction of the sub-context.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_destroy_subcontext</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+            <span class="c1"># Trait event notification.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">object_removed</span> <span class="o">=</span> <span class="n">NamingEvent</span><span class="p">(</span>
+                <span class="n">old_binding</span><span class="o">=</span><span class="n">Binding</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Otherwise, attempt to continue resolution into the next context.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">next_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_context</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">next_context</span><span class="o">.</span><span class="n">destroy_subcontext</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span></div>
+
+    <span class="c1"># fixme: Non-JNDI</span>
+<div class="viewcode-block" id="Context.get_unique_name"><a class="viewcode-back" href="../../../api/apptools.naming.context.html#apptools.naming.context.Context.get_unique_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_unique_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns a name that is unique within the context.</span>
+
+<span class="sd">        The name returned will start with the specified prefix.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">make_unique_name</span><span class="p">(</span>
+            <span class="n">prefix</span><span class="p">,</span> <span class="n">existing</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">list_names</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> (</span><span class="si">%d</span><span class="s2">)&quot;</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="Context.list_names"><a class="viewcode-back" href="../../../api/apptools.naming.context.html#apptools.naming.context.Context.list_names">[docs]</a>    <span class="k">def</span> <span class="nf">list_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Lists the names bound in a context. &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the name is empty then the operation takes place in this context.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_names</span><span class="p">()</span>
+
+        <span class="c1"># Otherwise, attempt to continue resolution into the next context.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Parse the name.</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">next_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_context</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="n">next_context</span><span class="o">.</span><span class="n">list_names</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+
+        <span class="k">return</span> <span class="n">names</span></div>
+
+<div class="viewcode-block" id="Context.list_bindings"><a class="viewcode-back" href="../../../api/apptools.naming.context.html#apptools.naming.context.Context.list_bindings">[docs]</a>    <span class="k">def</span> <span class="nf">list_bindings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Lists the bindings in a context. &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the name is empty then the operation takes place in this context.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">bindings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_bindings</span><span class="p">()</span>
+
+        <span class="c1"># Otherwise, attempt to continue resolution into the next context.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Parse the name.</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">next_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_context</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">bindings</span> <span class="o">=</span> <span class="n">next_context</span><span class="o">.</span><span class="n">list_bindings</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+
+        <span class="k">return</span> <span class="n">bindings</span></div>
+
+    <span class="c1"># fixme: Non-JNDI</span>
+<div class="viewcode-block" id="Context.is_context"><a class="viewcode-back" href="../../../api/apptools.naming.context.html#apptools.naming.context.Context.is_context">[docs]</a>    <span class="k">def</span> <span class="nf">is_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns True if the name is bound to a context. &quot;&quot;&quot;</span>
+
+        <span class="c1"># If the name is empty then it refers to this context.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">is_context</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Parse the name.</span>
+            <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="c1"># If there is exactly one component in the name then the operation</span>
+            <span class="c1"># takes place in this context.</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">atom</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">atom</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+                <span class="c1"># Do the actual check.</span>
+                <span class="n">is_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_context</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span>
+
+            <span class="c1"># Otherwise, attempt to continue resolution into the next context.</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_bound</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                    <span class="k">raise</span> <span class="n">NameNotFoundError</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                <span class="n">next_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_context</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">is_context</span> <span class="o">=</span> <span class="n">next_context</span><span class="o">.</span><span class="n">is_context</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+
+        <span class="k">return</span> <span class="n">is_context</span></div>
+
+    <span class="c1"># fixme: Non-JNDI</span>
+<div class="viewcode-block" id="Context.search"><a class="viewcode-back" href="../../../api/apptools.naming.context.html#apptools.naming.context.Context.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a list of namespace names that are bound to obj. &quot;&quot;&quot;</span>
+
+        <span class="c1"># don&#39;t look for None</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="c1"># Obj is bound to these names relative to this context</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># path contain the name components down to the current context</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_search</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="k">return</span> <span class="n">names</span></div>
+
+    <span class="c1">###########################################################################</span>
+    <span class="c1"># Protected &#39;Context&#39; interface.</span>
+    <span class="c1">###########################################################################</span>
+
+    <span class="k">def</span> <span class="nf">_parse_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parse a name into a list of components.</span>
+
+<span class="sd">        e.g. &#39;foo/bar/baz&#39; -&gt; [&#39;foo&#39;, &#39;bar&#39;, &#39;baz&#39;]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_is_bound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Is a name bound in this context? &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bindings</span>
+
+    <span class="k">def</span> <span class="nf">_lookup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Looks up a name in this context. &quot;&quot;&quot;</span>
+
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bindings</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">naming_manager</span><span class="o">.</span><span class="n">get_object_instance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_lookup_binding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Looks up the binding for a name in this context. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">Binding</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_lookup</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Binds a name to an object in this context. &quot;&quot;&quot;</span>
+
+        <span class="n">state</span> <span class="o">=</span> <span class="n">naming_manager</span><span class="o">.</span><span class="n">get_state_to_bind</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bindings</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span>
+
+    <span class="k">def</span> <span class="nf">_rebind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Rebinds a name to an object in this context. &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bind</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_unbind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Unbinds a name from this context. &quot;&quot;&quot;</span>
+
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bindings</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_name</span><span class="p">,</span> <span class="n">new_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Renames an object in this context. &quot;&quot;&quot;</span>
+
+        <span class="c1"># Bind the new name.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bindings</span><span class="p">[</span><span class="n">new_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bindings</span><span class="p">[</span><span class="n">old_name</span><span class="p">]</span>
+
+        <span class="c1"># Unbind the old one.</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bindings</span><span class="p">[</span><span class="n">old_name</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_create_subcontext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates a sub-context of this context. &quot;&quot;&quot;</span>
+
+        <span class="n">sub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">environment</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">environment</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bindings</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">sub</span>
+
+        <span class="k">return</span> <span class="n">sub</span>
+
+    <span class="k">def</span> <span class="nf">_destroy_subcontext</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Destroys a sub-context of this context. &quot;&quot;&quot;</span>
+
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bindings</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_list_bindings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Lists the bindings in this context. &quot;&quot;&quot;</span>
+
+        <span class="n">bindings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_names</span><span class="p">():</span>
+            <span class="n">bindings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Binding</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_lookup</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">context</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">bindings</span>
+
+    <span class="k">def</span> <span class="nf">_list_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Lists the names bound in this context. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bindings</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">_is_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns True if a name is bound to a context. &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_next_context</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_get_next_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the next context. &quot;&quot;&quot;</span>
+
+        <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lookup</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># If the object is a context then everything is just dandy.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Context</span><span class="p">):</span>
+            <span class="n">next_context</span> <span class="o">=</span> <span class="n">obj</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotContextError</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">next_context</span>
+
+    <span class="k">def</span> <span class="nf">_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">searched</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Append to names any name bound to obj.</span>
+<span class="sd">        Join path and name with &#39;/&#39; to for a complete name from the</span>
+<span class="sd">        top context.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Check the bindings recursively.</span>
+        <span class="k">for</span> <span class="n">binding</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_bindings</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">binding</span><span class="o">.</span><span class="n">obj</span> <span class="ow">is</span> <span class="n">obj</span><span class="p">:</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">binding</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="nb">isinstance</span><span class="p">(</span><span class="n">binding</span><span class="o">.</span><span class="n">obj</span><span class="p">,</span> <span class="n">Context</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="n">binding</span><span class="o">.</span><span class="n">obj</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">searched</span>
+            <span class="p">):</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">binding</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">searched</span><span class="p">[</span><span class="n">binding</span><span class="o">.</span><span class="n">obj</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">binding</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">_search</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">searched</span><span class="p">)</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+        </div>
+          </div>
+      <div class="spc-rightsidebar span3">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../../index.html">
+              <img class="logo" src="../../../_static/img/e-logo.png" alt="Logo">
+            </a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container container-navbar-bottom">
+      <div class="spc-navbar">
+        
+      </div>
+    </div>
+    <div class="container">
+    <div class="footer">
+    <div class="row-fluid">
+    <ul class="inline pull-left">
+      <li>
+        &copy; Copyright 2008-2022, Enthought
+      </li>
+      <li>
+      Last updated on Aug 16, 2022.
+      </li>
+      <li>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4.
+      </li>
+    </ul>
+    </div>
+    </div>
+    </div>
+  </body>
+</html>
