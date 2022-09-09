@@ -204,8 +204,20 @@ def install(edm, runtime, environment, source):
         source_pkgs = [
             github_url_fmt.format(pkg) for pkg in source_dependencies
         ]
+
+        # Install build prerequisites from EDM (needed because we're avoiding
+        # build isolation below).
+        commands = ["{edm} install -y -e {environment} setuptools wheel"]
+        execute(commands, parameters)
+
+        # --no-build-isolation is necessary to temporarily work around
+        # an incompatibility between setuptools >= 65.2.0 and the EDM runtimes.
+        # See enthought/traits#1721.
         commands = [
-            "python -m pip install {pkg} --no-deps".format(pkg=pkg)
+            (
+                "python -m pip install --no-build-isolation "
+                "{pkg} --no-deps"
+            ).format(pkg=pkg)
             for pkg in source_pkgs
         ]
         commands = [
