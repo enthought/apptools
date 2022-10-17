@@ -41,7 +41,7 @@ class LogFileHandler(RotatingFileHandler):
     ):
         RotatingFileHandler.__init__(
             self,
-            path=path,
+            filename=path,
             mode=mode,
             maxBytes=maxBytes,
             backupCount=backupCount,
