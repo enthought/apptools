@@ -31,14 +31,22 @@ class LogFileHandler(RotatingFileHandler):
     def __init__(
         self,
         path,
+        mode="a",
         maxBytes=1000000,
         backupCount=3,
         level=None,
         formatter=None,
         encoding=None,
+        delay=False,
     ):
         RotatingFileHandler.__init__(
-            self, path, maxBytes=maxBytes, backupCount=3, encoding=encoding
+            self,
+            path=path,
+            mode=mode,
+            maxBytes=maxBytes,
+            backupCount=backupCount,
+            encoding=encoding,
+            delay=delay,
         )
 
         if level is None:
