@@ -41,10 +41,12 @@ jobs:
           edm-version: ${{ env.INSTALL_EDM_VERSION }}
       - name: Install test environment
         run: python etstool.py install --runtime=${{ matrix.runtime }} --source
+      - name: Run tests under xvfb
+        run: xvfb-run -a python etstool.py test --runtime=${{ matrix.runtime }}
+        if: startsWith(matrix.os, 'ubuntu')
       - name: Run tests
-        uses: GabrielBB/xvfb-action@v1
-        with:
-          run: python etstool.py test --runtime=${{ matrix.runtime }}
+        run: python etstool.py test --runtime=${{ matrix.runtime }}
+        if: '!startsWith(matrix.os, ''ubuntu''')'
 
   notify-on-failure:
     needs: test-with-edm

@@ -44,7 +44,9 @@ jobs:
       - name: Run style checks (only on Linux)
         run: python etstool.py flake8 --runtime=${{ matrix.runtime }}
         if: startsWith(matrix.os, 'ubuntu')
+      - name: Run tests under xvfb
+        run: xvfb-run -a python etstool.py test --runtime=${{ matrix.runtime }}
+        if: startsWith(matrix.os, 'ubuntu')
       - name: Run tests
-        uses: GabrielBB/xvfb-action@v1
-        with:
-          run: python etstool.py test --runtime=${{ matrix.runtime }}
+        run: python etstool.py test --runtime=${{ matrix.runtime }}
+        if: '!startsWith(matrix.os, ''ubuntu''')'
