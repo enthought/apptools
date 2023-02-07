@@ -46,7 +46,7 @@ jobs:
         if: startsWith(matrix.os, 'ubuntu')
       - name: Run tests
         run: python etstool.py test --runtime=${{ matrix.runtime }}
-        if: '!startsWith(matrix.os, ''ubuntu''')'
+        if: '!startsWith(matrix.os, ''ubuntu'')'
 
   notify-on-failure:
     needs: test-with-edm
