@@ -393,14 +393,11 @@ class StatePickler:
             args = value.__getinitargs__()
 
         # Get the object state.
-        state = None
         if hasattr(value, "__get_pure_state__"):
             state = value.__get_pure_state__()
         elif hasattr(value, "__getstate__"):
-            # Note that __getstate__() may return None in Python >= 3.11.
             state = value.__getstate__()
-
-        if state is None:
+        else:
             state = value.__dict__
 
         state.pop("__traits_version__", None)
