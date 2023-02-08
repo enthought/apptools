@@ -303,7 +303,9 @@ def flake8(edm, runtime, environment):
         "integrationtests",
     ]
     commands = [
-        "{edm} run -e {environment} -- python -m flake8 " + " ".join(targets)
+        "{edm} run -e {environment} -- python -m flake8 "
+        + "--copyright-end-year 2022 "
+        + " ".join(targets)
     ]
     execute(commands, parameters)
 
