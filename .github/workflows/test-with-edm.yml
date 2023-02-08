@@ -7,7 +7,7 @@ name: Test with EDM
 on: [pull_request, workflow_dispatch]
 
 env:
-  INSTALL_EDM_VERSION: 3.3.1
+  INSTALL_EDM_VERSION: 3.5.0
 
 jobs:
 
@@ -36,7 +36,7 @@ jobs:
           path: ~/.cache
           key: ${{ runner.os }}-${{ matrix.runtime }}-${{ hashFiles('etstool.py') }}
       - name: Setup EDM
-        uses: enthought/setup-edm-action@v1
+        uses: enthought/setup-edm-action@v2
         with:
           edm-version: ${{ env.INSTALL_EDM_VERSION }}
       - name: Install test environment
@@ -45,6 +45,4 @@ jobs:
         run: python etstool.py flake8 --runtime=${{ matrix.runtime }}
         if: startsWith(matrix.os, 'ubuntu')
       - name: Run tests
-        uses: GabrielBB/xvfb-action@v1
-        with:
-          run: python etstool.py test --runtime=${{ matrix.runtime }}
+        run: python etstool.py test --runtime=${{ matrix.runtime }}
