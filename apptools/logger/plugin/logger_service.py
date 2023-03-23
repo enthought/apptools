@@ -14,7 +14,7 @@ import os
 import zipfile
 
 # Enthought library imports
-from pyface.workbench.api import View as WorkbenchView
+from apptools.workbench.api import View as WorkbenchView
 from traits.api import (
     Any,
     Callable,

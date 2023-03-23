@@ -14,7 +14,7 @@ import logging
 
 # Enthought library imports.
 from pyface.api import ImageResource, clipboard
-from pyface.workbench.api import TraitsUIView
+from apptools.workbench.api import TraitsUIView
 from traits.api import (
     Button,
     Instance,
