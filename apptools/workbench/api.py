@@ -18,9 +18,9 @@ from .i_view import IView
 from .i_workbench import IWorkbench
 from .perspective import Perspective
 from .perspective_item import PerspectiveItem
+from .toolkit import toolkit, toolkit_object
 from .traits_ui_editor import TraitsUIEditor
 from .traits_ui_view import TraitsUIView
-from .toolkit import toolkit, toolkit_object
 from .view import View
 from .workbench import Workbench
 from .workbench_window import WorkbenchWindow
