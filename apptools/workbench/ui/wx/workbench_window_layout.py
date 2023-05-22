@@ -17,6 +17,7 @@ import logging
 import pickle
 
 import wx
+
 from pyface.dock.api import (
     DOCK_BOTTOM,
     DOCK_LEFT,

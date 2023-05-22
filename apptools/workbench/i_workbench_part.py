@@ -18,8 +18,8 @@ from traits.api import (
     Instance,
     Interface,
     List,
-    Str,
     provides,
+    Str,
 )
 
 

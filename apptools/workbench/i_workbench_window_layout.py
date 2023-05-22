@@ -11,7 +11,7 @@
 """ The workbench window layout interface. """
 
 
-from traits.api import Event, HasTraits, Instance, Interface, Str, provides
+from traits.api import Event, HasTraits, Instance, Interface, provides, Str
 
 from .i_editor import IEditor
 from .i_view import IView

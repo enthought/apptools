@@ -18,6 +18,7 @@ if toolkit_name == "qt4":
     toolkit_name = "qt"
 
 toolkit = toolkit_object = Toolkit(
-    package=f"apptools.workbench.ui.{toolkit_name}",
-    toolkit=toolkit_name,
+    "workbench",
+    toolkit_name,
+    f"apptools.workbench.ui.{toolkit_name}",
 )

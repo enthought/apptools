@@ -22,10 +22,10 @@ from traits.api import (
     HasTraits,
     Instance,
     List,
+    provides,
     Str,
     Vetoable,
     VetoableEvent,
-    provides,
 )
 from traits.etsconfig.api import ETSConfig
 

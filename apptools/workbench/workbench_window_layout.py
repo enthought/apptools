@@ -12,8 +12,8 @@
 
 
 # Import the toolkit specific version.
-from pyface.toolkit import toolkit_object
+from .toolkit import toolkit_object
 
 WorkbenchWindowLayout = toolkit_object(
-    "workbench.workbench_window_layout:WorkbenchWindowLayout"
+    "workbench_window_layout:WorkbenchWindowLayout"
 )

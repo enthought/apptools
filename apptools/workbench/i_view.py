@@ -14,7 +14,7 @@
 import logging
 
 from pyface.api import Image
-from traits.api import Bool, Str, provides
+from traits.api import Bool, provides, Str
 from traits.util.camel_case import camel_case_to_words
 
 from .i_perspective_item import IPerspectiveItem

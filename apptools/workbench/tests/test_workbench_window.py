@@ -18,11 +18,9 @@ from traits.testing.api import UnittestTools
 from apptools.workbench.perspective import Perspective
 from apptools.workbench.toolkit import toolkit
 from apptools.workbench.workbench import Workbench
-from apptools.workbench.workbench_window import (
-    WorkbenchWindow,
-    WorkbenchWindowLayout,
-    WorkbenchWindowMemento,
-)
+from apptools.workbench.workbench_window import WorkbenchWindow
+from apptools.workbench.workbench_window_layout import WorkbenchWindowLayout
+from apptools.workbench.workbench_window_memento import WorkbenchWindowMemento
 
 
 @unittest.skipIf(

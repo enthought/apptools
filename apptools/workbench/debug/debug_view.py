@@ -10,7 +10,7 @@
 """ A view containing a main walter canvas. """
 
 
-from traits.api import HasTraits, Instance, Str, observe
+from traits.api import HasTraits, Instance, observe, Str
 from traitsui.api import View as TraitsView
 
 from apptools.workbench.view import View

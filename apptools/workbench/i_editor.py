@@ -17,9 +17,9 @@ from traits.api import (
     Bool,
     Event,
     Instance,
+    provides,
     Vetoable,
     VetoableEvent,
-    provides,
 )
 
 from .i_workbench_part import IWorkbenchPart, MWorkbenchPart

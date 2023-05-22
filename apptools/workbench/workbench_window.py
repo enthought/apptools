@@ -12,17 +12,17 @@
 
 import logging
 
-from pyface.api import GUI, ApplicationWindow
+from pyface.api import ApplicationWindow, GUI
 from traits.api import (
     Constant,
     Delegate,
     Instance,
     List,
+    observe,
     Str,
     Tuple,
     Undefined,
     Vetoable,
-    observe,
 )
 
 from .i_editor import IEditor
@@ -30,8 +30,8 @@ from .i_editor_manager import IEditorManager
 from .i_perspective import IPerspective
 from .i_view import IView
 from .i_workbench_part import IWorkbenchPart
+from .i_workbench_window_layout import IWorkbenchWindowLayout
 from .perspective import Perspective
-from .workbench_window_layout import WorkbenchWindowLayout
 from .workbench_window_memento import WorkbenchWindowMemento
 
 # Logging.
@@ -127,7 +127,7 @@ class WorkbenchWindow(ApplicationWindow):
     # The window layout is responsible for creating and managing the internal
     # structure of the window (i.e., it knows how to add and remove views and
     # editors etc).
-    layout = Instance(WorkbenchWindowLayout)
+    layout = Instance(IWorkbenchWindowLayout)
 
     # 'Private' interface -------------------------------------------------#
 
@@ -261,6 +261,9 @@ class WorkbenchWindow(ApplicationWindow):
 
     def _layout_default(self):
         """Trait initializer."""
+        from apptools.workbench.workbench_window_layout import (
+            WorkbenchWindowLayout,
+        )
 
         return WorkbenchWindowLayout(window=self)
 

@@ -20,7 +20,7 @@ import sys
 import warnings
 
 from pyface.image_resource import ImageResource
-from pyface.qt import QtCore, QtGui, qt_api
+from pyface.qt import qt_api, QtCore, QtGui
 
 
 class SplitTabWidget(QtGui.QSplitter):

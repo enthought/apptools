@@ -13,7 +13,7 @@
 import logging
 
 from pyface.action.api import Group, MenuManager
-from traits.api import Any, Bool, Instance, List, Str, observe
+from traits.api import Any, Bool, Instance, List, observe, Str
 
 from .perspective_menu_manager import PerspectiveMenuManager
 from .show_view_action import ShowViewAction

@@ -12,7 +12,7 @@
 
 import logging
 
-from traits.api import Bool, HasTraits, List, Str, Tuple, provides
+from traits.api import Bool, HasTraits, List, provides, Str, Tuple
 
 from .i_perspective import IPerspective
 from .perspective_item import PerspectiveItem

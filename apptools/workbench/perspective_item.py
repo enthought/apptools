@@ -10,7 +10,7 @@
 """ An item in a Perspective contents list. """
 
 
-from traits.api import Enum, Float, HasTraits, Str, provides
+from traits.api import Enum, Float, HasTraits, provides, Str
 
 from .i_perspective_item import IPerspectiveItem
 
