@@ -1,6 +1,61 @@
 Apptools CHANGELOG
 ==================
 
+Version 5.2.0
+~~~~~~~~~~~~~
+
+Released: 2022-08-16
+
+This is a minor release, focusing primarily on Python 3.8 support and updating
+of development workflows.
+
+Thanks to the following contributors:
+
+* Aaron Ayres
+* Mark Dickinson
+* Jonas Heinrich
+* Robert T. McGibbon
+* Sai Rahul Poruri
+* Corran Webster
+
+Features
+--------
+* Replace some uses of ``on_trait_change`` and ``depends_on`` with ``observe``.
+  (#285, #289)
+* Use ``importlib.resources`` in preference to ``importlib_resources``
+  on new enough Python versions. (#284)
+
+Fixes
+-----
+* Replace ``eval`` with ``ast.literal_eval`` in ``apptools.preferences``.
+  (#299)
+* Use context managers to handle locks in ``apptools.preferences``. (#306)
+* Fix test failures due to ``collections.abc`` changes in Python 3.10. (#313)
+* Remove a redundant ``elif`` branch in ``preference_binding``. (#298)
+
+Documentation
+-------------
+* Copyrights have been updated for 2022. (#307)
+* A Read the Docs configuration file has been added. (#296)
+* A use of the deprecated ``contributes_to`` decorator in the documentation
+  has been fixed. (#286)
+
+Build
+-----
+* The default branch has been renamed from ``master`` to ``main``. (#297)
+* ``etstool.py`` now supports Python 3.8 as well as Python 3.6, and test
+  workflows will run on both Python 3.6 and Python 3.8. (#316)
+* Continuous integration now uses GitHub Actions instead of Travis CI
+  and Appveyor. (#288, #291, #292)
+* Added a GitHub Actions test workflow that tests against PyPI packages instead
+  of EDM packages. (#314)
+* Added a GitHub Actions workflow to automatically publish releases to PyPI.
+  (#315)
+* Cron job failures are now reported to the main ETS Slack channel, not the
+  bots channel. (#295, #308)
+* The cron job can now also be triggered manually. (#294)
+
+
 Version 5.1.0
 ~~~~~~~~~~~~~
 
