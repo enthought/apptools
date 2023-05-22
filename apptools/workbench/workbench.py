@@ -15,8 +15,18 @@ import os
 import pickle
 
 from pyface.api import NO
-from traits.api import (Bool, Callable, Event, HasTraits, Instance, List, Str,
-                        Vetoable, VetoableEvent, provides)
+from traits.api import (
+    Bool,
+    Callable,
+    Event,
+    HasTraits,
+    Instance,
+    List,
+    Str,
+    Vetoable,
+    VetoableEvent,
+    provides,
+)
 from traits.etsconfig.api import ETSConfig
 
 from .i_editor_manager import IEditorManager
@@ -330,7 +340,7 @@ class Workbench(HasTraits):
 
             # If *anything* goes wrong then simply log the error and carry on
             # with no memento!
-            except:
+            except Exception:
                 logger.exception("restoring window layout from %s", filename)
 
     def _save_window_layout(self, window):

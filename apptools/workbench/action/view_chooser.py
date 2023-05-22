@@ -10,8 +10,15 @@
 """ A UI that allows the user to choose a view. """
 
 
-from traits.api import (Any, HasTraits, Instance, List, Str, TraitError,
-                        Undefined)
+from traits.api import (
+    Any,
+    HasTraits,
+    Instance,
+    List,
+    Str,
+    TraitError,
+    Undefined,
+)
 from traitsui.api import Item, TreeEditor, TreeNode, View
 from traitsui.menu import Action  # fixme: Non-api import!
 

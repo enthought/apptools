@@ -13,8 +13,9 @@ import unittest
 from unittest import mock
 
 from pyface.ui.qt.workbench.split_tab_widget import SplitTabWidget
-from pyface.ui.qt.workbench.workbench_window_layout import \
-    WorkbenchWindowLayout
+from pyface.ui.qt.workbench.workbench_window_layout import (
+    WorkbenchWindowLayout,
+)
 
 
 class TestWorkbenchWindowLayout(unittest.TestCase):

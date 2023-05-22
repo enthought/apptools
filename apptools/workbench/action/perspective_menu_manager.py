@@ -106,7 +106,9 @@ class PerspectiveMenuManager(MenuManager):
         group = Group()
         for perspective in perspectives:
             group.append(
-                SetActivePerspectiveAction(perspective=perspective, window=window)
+                SetActivePerspectiveAction(
+                    perspective=perspective, window=window
+                )
             )
 
         return group

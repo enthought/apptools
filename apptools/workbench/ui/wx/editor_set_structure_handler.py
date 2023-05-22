@@ -67,7 +67,7 @@ class EditorSetStructureHandler(SetStructureHandler):
             # fixme: This is ugly manipulating the editors list from in here!
             window.editors.append(editor)
 
-        except:
+        except Exception:
             logger.warning("could not restore editor [%s]", id)
             control = None
 

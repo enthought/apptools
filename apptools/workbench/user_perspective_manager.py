@@ -80,9 +80,11 @@ class UserPerspectiveManager(HasTraits):
                     data = line.split(":", 1)
                     if len(data) == 2:
                         id, name = data[0].strip(), data[1].strip()
-                        dic[id] = Perspective(id=id, name=name, show_editor_area=False)
+                        dic[id] = Perspective(
+                            id=id, name=name, show_editor_area=False
+                        )
                 fh.close()
-            except:
+            except Exception:
                 pass
 
         return self._id_to_perspective
@@ -192,7 +194,7 @@ class UserPerspectiveManager(HasTraits):
             # Try to delete the associated perspective layout file:
             try:
                 os.remove(os.path.join(self.state_location, id))
-            except:
+            except Exception:
                 pass
 
         return
@@ -206,10 +208,14 @@ class UserPerspectiveManager(HasTraits):
 
         try:
             fh = open(self.file_name, "w")
-            fh.write("\n".join(["%s: %s" % (p.id, p.name) for p in self.perspectives]))
+            fh.write(
+                "\n".join(
+                    ["%s: %s" % (p.id, p.name) for p in self.perspectives]
+                )
+            )
             fh.close()
 
-        except:
+        except Exception:
             logger.error(
                 "Could not write the user defined perspective "
                 "definition file: " + self.file_name

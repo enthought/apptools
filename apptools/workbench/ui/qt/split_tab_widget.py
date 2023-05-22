@@ -443,12 +443,17 @@ class SplitTabWidget(QtGui.QSplitter):
                 if stab == dhs:
                     return
 
-                if dhs == self._HS_AFTER_LAST_TAB and stab == stab_w.count() - 1:
+                if (
+                    dhs == self._HS_AFTER_LAST_TAB
+                    and stab == stab_w.count() - 1
+                ):
                     return
 
             QtGui.QApplication.instance().blockSignals(True)
 
-            ticon, ttext, ttextcolor, tbuttn, twidg = self._remove_tab(stab_w, stab)
+            ticon, ttext, ttextcolor, tbuttn, twidg = self._remove_tab(
+                stab_w, stab
+            )
 
             if dhs == self._HS_AFTER_LAST_TAB:
                 idx = dtab_w.addTab(twidg, ticon, ttext)
@@ -480,7 +485,9 @@ class SplitTabWidget(QtGui.QSplitter):
 
             # Remove the tab from its current tab widget and create a new one
             # for it.
-            ticon, ttext, ttextcolor, tbuttn, twidg = self._remove_tab(stab_w, stab)
+            ticon, ttext, ttextcolor, tbuttn, twidg = self._remove_tab(
+                stab_w, stab
+            )
             new_tw = _TabWidget(dsplit_w)
             idx = new_tw.addTab(twidg, ticon, ttext)
             new_tw.tabBar().setTabTextColor(0, ttextcolor)
@@ -492,7 +499,9 @@ class SplitTabWidget(QtGui.QSplitter):
             dspl_idx = dspl.indexOf(dtab_w)
 
             if dhs in (self._HS_NORTH, self._HS_SOUTH):
-                dspl, dspl_idx = dsplit_w._horizontal_split(dspl, dspl_idx, dhs)
+                dspl, dspl_idx = dsplit_w._horizontal_split(
+                    dspl, dspl_idx, dhs
+                )
             else:
                 dspl, dspl_idx = dsplit_w._vertical_split(dspl, dspl_idx, dhs)
 
@@ -575,7 +584,9 @@ class SplitTabWidget(QtGui.QSplitter):
         icon = tab_w.tabIcon(tab)
         text = tab_w.tabText(tab)
         text_color = tab_w.tabBar().tabTextColor(tab)
-        button = tab_w.tabBar().tabButton(tab, QtGui.QTabBar.ButtonPosition.LeftSide)
+        button = tab_w.tabBar().tabButton(
+            tab, QtGui.QTabBar.ButtonPosition.LeftSide
+        )
         w = tab_w.widget(tab)
         tab_w.removeTab(tab)
 
@@ -602,7 +613,9 @@ class SplitTabWidget(QtGui.QSplitter):
             for split_widget in top_widget.findChildren(SplitTabWidget, None):
                 visible_region = split_widget.visibleRegion()
                 widget_pos = split_widget.mapFromGlobal(global_pos)
-                if cloned_rect and split_widget.geometry().contains(widget_pos):
+                if cloned_rect and split_widget.geometry().contains(
+                    widget_pos
+                ):
                     visible_rect = visible_region.boundingRect()
                     widget_rect = QtCore.QRect(
                         split_widget.mapFromGlobal(cloned_rect.topLeft()),
@@ -635,7 +648,6 @@ class SplitTabWidget(QtGui.QSplitter):
         # See if the hotspot is in the widget area.
         widg = tw.currentWidget()
         if widg is not None:
-
             # Get the widget's position relative to its parent.
             wpos = widg.parent().mapFrom(split_widget, pos)
 
@@ -729,13 +741,15 @@ class SplitTabWidget(QtGui.QSplitter):
                 h = rect.height()
                 if top_bottom:
                     tab_widths = sum(
-                        tab_bar.tabRect(i).width() for i in range(tab_bar.count())
+                        tab_bar.tabRect(i).width()
+                        for i in range(tab_bar.count())
                     )
                     w -= tab_widths
                     gx += tab_widths
                 else:
                     tab_heights = sum(
-                        tab_bar.tabRect(i).height() for i in range(tab_bar.count())
+                        tab_bar.tabRect(i).height()
+                        for i in range(tab_bar.count())
                     )
                     h -= tab_heights
                     gy -= tab_heights
@@ -787,15 +801,21 @@ class _TabWidget(QtGui.QTabWidget):
 
     def show_button(self, index):
         lbl = QtGui.QLabel(self)
-        movie = QtGui.QMovie(_TabWidget._spinner_data.absolute_path, parent=lbl)
+        movie = QtGui.QMovie(
+            _TabWidget._spinner_data.absolute_path, parent=lbl
+        )
         movie.setCacheMode(QtGui.QMovie.CacheMode.CacheAll)
         movie.setScaledSize(QtCore.QSize(16, 16))
         lbl.setMovie(movie)
         movie.start()
-        self.tabBar().setTabButton(index, QtGui.QTabBar.ButtonPosition.LeftSide, lbl)
+        self.tabBar().setTabButton(
+            index, QtGui.QTabBar.ButtonPosition.LeftSide, lbl
+        )
 
     def hide_button(self, index):
-        curr = self.tabBar().tabButton(index, QtGui.QTabBar.ButtonPosition.LeftSide)
+        curr = self.tabBar().tabButton(
+            index, QtGui.QTabBar.ButtonPosition.LeftSide
+        )
         if curr:
             curr.close()
             self.tabBar().setTabButton(
@@ -865,7 +885,10 @@ class _TabWidget(QtGui.QTabWidget):
 
         self._still_needed()
 
-        if self._root._current_tab_w is self and self._root._current_tab_idx == idx:
+        if (
+            self._root._current_tab_w is self
+            and self._root._current_tab_idx == idx
+        ):
             self._root._current_tab_w = None
 
     def _close_tab(self, index):
@@ -1049,7 +1072,9 @@ class _DragState(object):
         if sys.platform == "darwin" and QtCore.QT_VERSION >= 0x40500:
             ctb.setDocumentMode(True)
 
-        ctb.setAttribute(QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+        ctb.setAttribute(
+            QtCore.Qt.WidgetAttribute.WA_TransparentForMouseEvents
+        )
         ctb.setWindowFlags(
             QtCore.Qt.WindowType.FramelessWindowHint
             | QtCore.Qt.WindowType.Tool
@@ -1079,7 +1104,9 @@ class _DragState(object):
         """Handle the movement of the cloned tab during dragging."""
 
         self._clone.move(self._tab_bar.mapToGlobal(pos) + self._clone_offset)
-        self._root._select(self._tab_bar.mapTo(self._root, pos + self._centre_offset))
+        self._root._select(
+            self._tab_bar.mapTo(self._root, pos + self._centre_offset)
+        )
 
     def drop(self, pos):
         """Handle the drop of the cloned tab."""

@@ -18,9 +18,11 @@ from traits.testing.api import UnittestTools
 from apptools.workbench.perspective import Perspective
 from apptools.workbench.toolkit import toolkit
 from apptools.workbench.workbench import Workbench
-from apptools.workbench.workbench_window import (WorkbenchWindow,
-                                                 WorkbenchWindowLayout,
-                                                 WorkbenchWindowMemento)
+from apptools.workbench.workbench_window import (
+    WorkbenchWindow,
+    WorkbenchWindowLayout,
+    WorkbenchWindowMemento,
+)
 
 
 @unittest.skipIf(
@@ -148,7 +150,9 @@ class TestWorkbenchWindowUserPerspective(unittest.TestCase, UnittestTools):
         workbench, workbench_window = self.get_workbench_with_window()
 
         # Mock window factory since we already created a workbench window
-        workbench.window_factory = mock.MagicMock(return_value=workbench_window)
+        workbench.window_factory = mock.MagicMock(
+            return_value=workbench_window
+        )
 
         # There are the methods we want to test if they are called
         workbench_window.show_editor_area = mock.MagicMock()

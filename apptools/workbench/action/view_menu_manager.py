@@ -135,6 +135,8 @@ class ViewMenuManager(MenuManager):
             # layout here. Should the 'contains_view' method be part of the
             # window interface?
             if window.layout.contains_view(view):
-                group.append(ToggleViewVisibilityAction(view=view, window=window))
+                group.append(
+                    ToggleViewVisibilityAction(view=view, window=window)
+                )
 
         return

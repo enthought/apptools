@@ -11,8 +11,16 @@
 """ The interface for workbench parts. """
 
 
-from traits.api import (Any, Bool, HasTraits, Instance, Interface, List, Str,
-                        provides)
+from traits.api import (
+    Any,
+    Bool,
+    HasTraits,
+    Instance,
+    Interface,
+    List,
+    Str,
+    provides,
+)
 
 
 class IWorkbenchPart(Interface):

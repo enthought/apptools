@@ -13,8 +13,17 @@
 import logging
 
 from pyface.api import GUI, ApplicationWindow
-from traits.api import (Constant, Delegate, Instance, List, Str, Tuple,
-                        Undefined, Vetoable, observe)
+from traits.api import (
+    Constant,
+    Delegate,
+    Instance,
+    List,
+    Str,
+    Tuple,
+    Undefined,
+    Vetoable,
+    observe,
+)
 
 from .i_editor import IEditor
 from .i_editor_manager import IEditorManager
@@ -489,7 +498,9 @@ class WorkbenchWindow(ApplicationWindow):
                 del self._memento.perspective_mementos[id]
 
         # Re-display the active perspective.
-        self._show_perspective(self.active_perspective, self.active_perspective)
+        self._show_perspective(
+            self.active_perspective, self.active_perspective
+        )
 
     def reset_editors(self):
         """Activate the first editor in every tab."""
@@ -626,7 +637,9 @@ class WorkbenchWindow(ApplicationWindow):
         if len(id) > 0:
             perspective = self.get_perspective_by_id(id)
             if perspective is None:
-                logger.warning("default perspective %s no longer available", id)
+                logger.warning(
+                    "default perspective %s no longer available", id
+                )
 
         else:
             perspective = None
@@ -646,7 +659,9 @@ class WorkbenchWindow(ApplicationWindow):
         if len(id) > 0:
             perspective = self.get_perspective_by_id(id)
             if perspective is None:
-                logger.warning("previous perspective %s no longer available", id)
+                logger.warning(
+                    "previous perspective %s no longer available", id
+                )
 
         else:
             perspective = None

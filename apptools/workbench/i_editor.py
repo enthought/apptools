@@ -12,8 +12,15 @@
 
 import uuid
 
-from traits.api import (Any, Bool, Event, Instance, Vetoable, VetoableEvent,
-                        provides)
+from traits.api import (
+    Any,
+    Bool,
+    Event,
+    Instance,
+    Vetoable,
+    VetoableEvent,
+    provides,
+)
 
 from .i_workbench_part import IWorkbenchPart, MWorkbenchPart
 

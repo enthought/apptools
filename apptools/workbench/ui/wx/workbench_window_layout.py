@@ -17,8 +17,16 @@ import logging
 import pickle
 
 import wx
-from pyface.dock.api import (DOCK_BOTTOM, DOCK_LEFT, DOCK_RIGHT, DOCK_TOP,
-                             DockControl, DockRegion, DockSection, DockSizer)
+from pyface.dock.api import (
+    DOCK_BOTTOM,
+    DOCK_LEFT,
+    DOCK_RIGHT,
+    DOCK_TOP,
+    DockControl,
+    DockRegion,
+    DockSection,
+    DockSizer,
+)
 from traits.api import Delegate
 
 from apptools.workbench.i_workbench_window_layout import MWorkbenchWindowLayout
@@ -151,7 +159,9 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
             height=self.window.editor_area_size[1],
         )
 
-        view_dock_window_sizer = DockSizer(contents=[editor_dock_window_control])
+        view_dock_window_sizer = DockSizer(
+            contents=[editor_dock_window_control]
+        )
 
         self._wx_view_dock_window.control.SetSizer(view_dock_window_sizer)
 
@@ -342,7 +352,9 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
                 self._wx_add_view_relative(dock_control, None, "left", size)
 
         else:
-            self._wx_add_view_relative(dock_control, relative_to, position, size)
+            self._wx_add_view_relative(
+                dock_control, relative_to, position, size
+            )
 
         return
 
@@ -365,7 +377,9 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
 
         # Find the item that we are adding the view relative to.
         else:
-            relative_to_item = self._wx_view_dock_window.get_control(relative_to.id)
+            relative_to_item = self._wx_view_dock_window.get_control(
+                relative_to.id
+            )
 
         # Set the size of the dock control.
         self._wx_set_item_size(dock_control, size)
@@ -503,7 +517,9 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
 
             return
 
-        self._wx_add_focus_listeners(editor.control, on_set_focus, on_kill_focus)
+        self._wx_add_focus_listeners(
+            editor.control, on_set_focus, on_kill_focus
+        )
 
     def _wx_get_view_control(self, view):
         """Returns a view's toolkit-specific control.
@@ -705,7 +721,9 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
             )
 
         if new is not None:
-            new.observe(self._wx_on_editor_area_size_changed, "editor_area_size")
+            new.observe(
+                self._wx_on_editor_area_size_changed, "editor_area_size"
+            )
 
     # Dynamic ----
 
@@ -739,7 +757,7 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
                 view.destroy_control()
                 self.view_closed = view
 
-            except:
+            except Exception:
                 logger.exception("error destroying view control <%s>", view)
 
         return True
@@ -762,8 +780,10 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
                 editor.destroy_control()
                 self.editor_closed = editor
 
-            except:
-                logger.exception("error destroying editor control <%s>", editor)
+            except Exception:
+                logger.exception(
+                    "error destroying editor control <%s>", editor
+                )
 
         ##         import gc
         ##         gc.collect()

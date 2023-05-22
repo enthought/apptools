@@ -103,6 +103,8 @@ class TraitsUIView(View):
 
         """
 
-        ui = self.obj.edit_traits(parent=parent, view=self.view, kind="subpanel")
+        ui = self.obj.edit_traits(
+            parent=parent, view=self.view, kind="subpanel"
+        )
 
         return ui

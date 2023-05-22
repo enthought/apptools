@@ -35,6 +35,8 @@ class ToolBarManager(pyface.ToolBarManager):
         if controller is None:
             controller = ActionController(window=self.window)
 
-        tool_bar = super().create_tool_bar(parent, controller=controller, **kwargs)
+        tool_bar = super().create_tool_bar(
+            parent, controller=controller, **kwargs
+        )
 
         return tool_bar

@@ -41,7 +41,9 @@ class Editor(MEditor):
         control = QtGui.QWidget(parent)
 
         pal = control.palette()
-        pal.setColour(QtGui.QPalette.ColorRole.Window, QtCore.Qt.GlobalColor.yellow)
+        pal.setColour(
+            QtGui.QPalette.ColorRole.Window, QtCore.Qt.GlobalColor.yellow
+        )
         control.setPalette(pal)
 
         control.setAutoFillBackground(True)

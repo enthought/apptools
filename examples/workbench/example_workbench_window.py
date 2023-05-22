@@ -10,10 +10,17 @@ from red_view import RedView
 from traits.api import Callable, Instance, List
 from yellow_view import YellowView
 
-from apptools.workbench.action.api import (MenuBarManager, ToolBarManager,
-                                           ViewMenuManager)
-from apptools.workbench.api import (EditorManager, Perspective,
-                                    PerspectiveItem, WorkbenchWindow)
+from apptools.workbench.action.api import (
+    MenuBarManager,
+    ToolBarManager,
+    ViewMenuManager,
+)
+from apptools.workbench.api import (
+    EditorManager,
+    Perspective,
+    PerspectiveItem,
+    WorkbenchWindow,
+)
 
 
 class ExampleEditorManager(EditorManager):
@@ -114,7 +121,11 @@ class ExampleWorkbenchWindow(WorkbenchWindow):
         # Add multiple (albeit identical!) tool bars just to show that it is
         # allowed!
         tool_bar_managers = [
-            ToolBarManager(self._exit_action, show_tool_names=False, name=str(i))
+            ToolBarManager(
+                self._exit_action,
+                show_tool_names=False,
+                name=str(i),
+            )
             for i in range(5)
         ]
 

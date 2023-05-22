@@ -41,7 +41,8 @@ class DeleteUserPerspectiveAction(UserPerspectiveAction):
 
         # Make sure that the user isn't having second thoughts!
         message = (
-            'Are you sure you want to delete the "%s" perspective?' % perspective.name
+            'Are you sure you want to delete the "%s" perspective?'
+            % perspective.name
         )
 
         answer = window.confirm(message, title="Confirm Delete")

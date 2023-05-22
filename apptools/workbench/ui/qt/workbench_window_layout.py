@@ -83,7 +83,9 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
             return None
 
         try:
-            self._qt4_editor_area.addTab(self._qt4_get_editor_control(editor), title)
+            self._qt4_editor_area.addTab(
+                self._qt4_get_editor_control(editor), title
+            )
 
             if editor._loading_on_open:
                 self._qt4_editor_tab_spinner(editor, "", True)
@@ -130,7 +132,9 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
 
     def close(self):
         # Don't fire signals for editors that have destroyed their controls.
-        self._qt4_editor_area.editor_has_focus.disconnect(self._qt4_editor_focus)
+        self._qt4_editor_area.editor_has_focus.disconnect(
+            self._qt4_editor_focus
+        )
 
         self._qt4_editor_area.clear()
 
@@ -270,7 +274,9 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
                 return None
 
             # Create the restored editor.
-            editor = self.window.editor_manager.set_editor_memento(editor_memento)
+            editor = self.window.editor_manager.set_editor_memento(
+                editor_memento
+            )
             if editor is None:
                 return None
 
@@ -509,7 +515,9 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
             dw = QtGui.QDockWidget(view.name, self.window.control)
             dw.setWidget(_ViewContainer(size, self.window.control))
             dw.setObjectName(view.id)
-            dw.toggleViewAction().toggled.connect(self._qt4_handle_dock_visibility)
+            dw.toggleViewAction().toggled.connect(
+                self._qt4_handle_dock_visibility
+            )
             dw.visibilityChanged.connect(self._qt4_handle_dock_visibility)
 
             # Save the dock window.
@@ -527,7 +535,7 @@ class WorkbenchWindowLayout(MWorkbenchWindowLayout):
 
             try:
                 view.control = view.create_control(dw.widget())
-            except:
+            except Exception:
                 # Tidy up if the view couldn't be created.
                 delattr(view, "_qt4_dock")
                 self.window.control.removeDockWidget(dw)
