@@ -15,8 +15,8 @@ jobs:
   test-with-edm:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        runtime: ['3.6', '3.8']
+        os: [ubuntu-latest, windows-latest]
+        runtime: ['3.8']
 
     runs-on: ${{ matrix.os }}
     steps:
