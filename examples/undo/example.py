@@ -18,7 +18,7 @@ import logging
 
 # Enthought library imports.
 from pyface.api import GUI, YES
-from pyface.workbench.api import Workbench
+from apptools.workbench.api import Workbench
 
 # Local imports.
 from example_undo_window import ExampleUndoWindow

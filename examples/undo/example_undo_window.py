@@ -15,8 +15,8 @@
 
 # Enthought library imports.
 from pyface.action.api import Action, Group, MenuManager
-from pyface.workbench.api import WorkbenchWindow
-from pyface.workbench.action.api import MenuBarManager, ToolBarManager
+from apptools.workbench.api import WorkbenchWindow
+from apptools.workbench.action.api import MenuBarManager, ToolBarManager
 from traits.api import Instance
 from apptools.undo.action.api import CommandAction, RedoAction, UndoAction
 
