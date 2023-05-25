@@ -18,6 +18,7 @@ Version 5.2.0
 Fixes
 -----
 * Fix StatePickler for Python 3.11. (#328)
+* Add encoding as an attribute for LogFileHandler initialization (#324)
 
 Build
 -----
