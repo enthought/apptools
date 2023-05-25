@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2023 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -303,7 +303,8 @@ def flake8(edm, runtime, environment):
         "integrationtests",
     ]
     commands = [
-        "{edm} run -e {environment} -- python -m flake8 " + " ".join(targets)
+        "{edm} run -e {environment} -- python -m flake8 "
+        + " ".join(targets)
     ]
     execute(commands, parameters)
 

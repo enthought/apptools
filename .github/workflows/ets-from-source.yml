@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  INSTALL_EDM_VERSION: 3.3.1
+  INSTALL_EDM_VERSION: 3.5.0
 
 jobs:
 
@@ -15,8 +15,8 @@ jobs:
   test-with-edm:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        runtime: ['3.6', '3.8']
+        os: [ubuntu-latest, windows-latest]
+        runtime: ['3.8']
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -36,15 +36,13 @@ jobs:
           path: ~/.cache
           key: ${{ runner.os }}-${{ matrix.runtime }}-${{ hashFiles('etstool.py') }}
       - name: Setup EDM
-        uses: enthought/setup-edm-action@v1
+        uses: enthought/setup-edm-action@v2
         with:
           edm-version: ${{ env.INSTALL_EDM_VERSION }}
       - name: Install test environment
         run: python etstool.py install --runtime=${{ matrix.runtime }} --source
       - name: Run tests
-        uses: GabrielBB/xvfb-action@v1
-        with:
-          run: python etstool.py test --runtime=${{ matrix.runtime }}
+        run: python etstool.py test --runtime=${{ matrix.runtime }}
 
   notify-on-failure:
     needs: test-with-edm

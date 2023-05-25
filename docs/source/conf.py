@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2022 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2023 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -49,7 +49,7 @@ master_doc = 'index'
 
 # General substitutions.
 project = 'apptools'
-copyright = '2008-2022, Enthought'
+copyright = '2008-2023, Enthought'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
