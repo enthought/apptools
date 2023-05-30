@@ -1,6 +1,30 @@
 Apptools CHANGELOG
 ==================
 
+Released: 2023-05-25
+
+This is a bugfix release fixing a Python 3.11 compatibility issue in
+StatePickler.
+
+Thanks to the following contributors:
+
+* Mark Dickinson
+* Tony Ni
+* Rahul Poruri
+
+Version 5.2.0
+~~~~~~~~~~~~~
+
+Fixes
+-----
+* Fix StatePickler for Python 3.11. (#328)
+* Add encoding as an attribute for LogFileHandler initialization (#324)
+
+Build
+-----
+* Drop Python 3.6 and MacOS from EDM test matrix. (#332, #333)
+* Update Github workflows (#326)
+
 Version 5.2.0
 ~~~~~~~~~~~~~
 
