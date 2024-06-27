@@ -318,7 +318,7 @@ if __name__ == "__main__":
                 "tables",
             ],
             "persistence": [
-                "numpy",
+                "numpy < 2.0",
             ],
             "preferences": [
                 "configobj",
