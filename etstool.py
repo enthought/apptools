@@ -103,7 +103,6 @@ def edm_dependencies(runtime):
     """
     dependencies = {
         "flake8",
-        "flake8_ets",
         "traitsui",
         "configobj",
         "coverage",
@@ -114,7 +113,7 @@ def edm_dependencies(runtime):
     }
     # The Enthought Sphinx Theme is not yet available for Python 3.11
     if runtime == "3.8":
-        dependencies.update({"enthought_sphinx_theme", "sphinx"})
+        dependencies.update({"enthought_sphinx_theme", "sphinx", "flake8_ets"})
     return dependencies
 
 
