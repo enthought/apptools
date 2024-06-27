@@ -101,20 +101,25 @@ def edm_dependencies(runtime):
 
     Returns a set of requirement strings.
     """
-    dependencies = {
-        "flake8",
-        "traitsui",
+    common_dependencies = {
         "configobj",
         "coverage",
-        "importlib_resources>=1.1.0",
-        "tables",
+        "flake8",
         "pandas",
         "pyface",
+        "tables",
+        "traitsui",
     }
-    # The Enthought Sphinx Theme is not yet available for Python 3.11
-    if runtime == "3.8":
-        dependencies.update({"enthought_sphinx_theme", "sphinx", "flake8_ets"})
-    return dependencies
+    runtime_specific_dependencies = {
+        "3.8": {
+            "enthought_sphinx_theme",
+            "flake8_ets",
+            "importlib_resources",
+            "sphinx",
+        },
+        "3.11": set(),
+    }
+    return common_dependencies | runtime_specific_dependencies[runtime]
 
 
 # Dependencies we install from source for cron tests
