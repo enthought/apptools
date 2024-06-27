@@ -89,7 +89,7 @@ from tempfile import mkdtemp
 import click
 
 #: Supported Python versions.
-SUPPORTED_RUNTIMES = ["3.6", "3.8"]
+SUPPORTED_RUNTIMES = ["3.8"]
 
 #: Default Python version to use.
 DEFAULT_RUNTIME = "3.8"
@@ -108,7 +108,7 @@ def edm_dependencies(runtime):
         "configobj",
         "coverage",
         "importlib_resources>=1.1.0",
-        "pytables" if runtime == "3.6" else "tables",
+        "tables",
         "pandas",
         "pyface",
         "enthought_sphinx_theme",
