@@ -104,7 +104,6 @@ def edm_dependencies(runtime):
     common_dependencies = {
         "configobj",
         "coverage",
-        "flake8",
         "pandas",
         "pyface",
         "tables",
@@ -112,7 +111,9 @@ def edm_dependencies(runtime):
     }
     runtime_specific_dependencies = {
         "3.8": {
+            # Most of these are unavailable on Python 3.11
             "enthought_sphinx_theme",
+            "flake8",
             "flake8_ets",
             "importlib_resources",
             "sphinx",
