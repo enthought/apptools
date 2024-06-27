@@ -178,7 +178,8 @@ def install(edm, runtime, environment, source):
     edm_packages = ' '.join(edm_dependencies(runtime))
     # edm commands to setup the development environment
     commands = [
-        "{edm} environments create {environment} --force --version={runtime}",
+        "{edm} environments create {environment} --force --version={runtime} "
+        "--platform={platform}",
         "{edm} install -y -e {environment} " + edm_packages,
         (
             "{edm} run -e {environment} -- "
@@ -477,10 +478,20 @@ def get_parameters(edm, runtime, environment):
     if edm is None:
         edm = locate_edm()
 
+    if sys.platform.startswith("win32"):
+        platform = "win-x86_64"
+    elif sys.platform.startswith("linux"):
+        platform = "rh7-x86_64" if runtime == "3.8" else "rh8-x86_64"
+    elif sys.platform.startswith("darwin"):
+        platform = "osx-x86_64"
+    else:
+        raise click.ClickException(f"platform {sys.platform} not supported")
+
     parameters = {
         'edm': edm,
         'runtime': runtime,
         'environment': environment,
+        'platform': platform,
     }
     if environment is None:
         parameters['environment'] = 'apptools-test-{runtime}'.format(
