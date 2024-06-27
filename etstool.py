@@ -115,6 +115,7 @@ def edm_dependencies(runtime):
     # The Enthought Sphinx Theme is not yet available for Python 3.11
     if runtime == "3.8":
         dependencies.update({"enthought_sphinx_theme", "sphinx"})
+    return dependencies
 
 
 # Dependencies we install from source for cron tests
