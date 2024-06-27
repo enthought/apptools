@@ -89,7 +89,7 @@ from tempfile import mkdtemp
 import click
 
 #: Supported Python versions.
-SUPPORTED_RUNTIMES = ["3.8"]
+SUPPORTED_RUNTIMES = ["3.8", "3.11"]
 
 #: Default Python version to use.
 DEFAULT_RUNTIME = "3.8"
