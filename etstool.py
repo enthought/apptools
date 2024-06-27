@@ -111,12 +111,13 @@ def edm_dependencies(runtime):
     }
     runtime_specific_dependencies = {
         "3.8": {
-            # Most of these are unavailable on Python 3.11
+            # Most of these are currently unavailable on Python 3.11;
             "enthought_sphinx_theme",
             "flake8",
             "flake8_ets",
-            "importlib_resources",
             "sphinx",
+            # importlib_resources is not needed on Python 3.11
+            "importlib_resources",
         },
         "3.11": set(),
     }
