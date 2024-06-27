@@ -41,8 +41,8 @@ jobs:
           edm-version: ${{ env.INSTALL_EDM_VERSION }}
       - name: Install test environment
         run: python etstool.py install --runtime=${{ matrix.runtime }}
-      - name: Run style checks (only on Linux)
+      - name: Run style checks (only on Linux, 3.8)
         run: python etstool.py flake8 --runtime=${{ matrix.runtime }}
-        if: startsWith(matrix.os, 'ubuntu')
+        if: startsWith(matrix.os, 'ubuntu') && matrix.runtime == '3.8'
       - name: Run tests
         run: python etstool.py test --runtime=${{ matrix.runtime }}
