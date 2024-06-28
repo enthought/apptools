@@ -25,7 +25,8 @@ jobs:
       if: matrix.os != 'macos-latest'
     - name: Install dependencies and local packages (macOS)
       run: python -m pip install .[preferences]
-      # tables currently won't build on Apple Silicon
+      # PyTables currently won't build on Apple Silicon, so exclude the h5 deps
+      # xref: enthought/apptools/issues/344
       if: matrix.os == 'macos-latest'
     - name: Run tests
       run: |
