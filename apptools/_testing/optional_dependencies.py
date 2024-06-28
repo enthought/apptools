@@ -45,3 +45,12 @@ requires_pandas = unittest.skipIf(pandas is None, "Pandas not available")
 
 tables = optional_import("tables")
 requires_tables = unittest.skipIf(tables is None, "PyTables not available")
+
+configobj = optional_import("configobj")
+requires_configobj = unittest.skipIf(configobj is None, "configobj not available")
+
+pyface = optional_import("pyface")
+requires_pyface = unittest.skipIf(pyface is None, "Pyface not available")
+
+traitsui = optional_import("traitsui")
+requires_traitsui = unittest.skipIf(traitsui is None, "TraitsUI not available")

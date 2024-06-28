@@ -11,9 +11,13 @@ from email.mime.multipart import MIMEMultipart
 import unittest
 from unittest import mock
 
-from apptools.logger.plugin.logger_service import LoggerService
+from apptools._testing.optional_dependencies import pyface, requires_pyface
+
+if pyface is not None:
+    from apptools.logger.plugin.logger_service import LoggerService
 
 
+@requires_pyface
 class LoggerServiceTestCase(unittest.TestCase):
     def test_create_email_message(self):
         logger_service = LoggerService()

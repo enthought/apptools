@@ -26,6 +26,8 @@ except ImportError:
 from apptools.preferences.api import Preferences
 from apptools.preferences.api import bind_preference
 from apptools.preferences.api import set_default_preferences
+from apptools._testing.optional_dependencies import configobj, requires_configobj
+
 from traits.api import Bool, HasTraits, Int, Float, Str, TraitError
 from traits.observation.api import match
 
@@ -43,6 +45,7 @@ def listener(event):
     listener.new = event.new
 
 
+@requires_configobj
 class PreferenceBindingTestCase(unittest.TestCase):
     """ Tests for preference bindings. """
 

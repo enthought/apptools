@@ -302,15 +302,15 @@ if __name__ == "__main__":
                 'preferences/tests/*.ini'
             ]
         },
-        install_requires=[
-            'configobj',
-            'traits>=6.2.0',
-            'traitsui',
-        ],
+        install_requires=['traits>=6.2.0'],
         extras_require={
             "docs": ["enthought-sphinx-theme", "sphinx"],
             "test": [
                 "importlib-resources>=1.1.0; python_version<'3.9'",
+            ],
+            "gui": [
+                "pyface",
+                "traitsui",
             ],
             "h5": [
                 # PyTables is currently incompatible with NumPy 2.0
