@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2023 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2024 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -89,7 +89,7 @@ from tempfile import mkdtemp
 import click
 
 #: Supported Python versions.
-SUPPORTED_RUNTIMES = ["3.6", "3.8"]
+SUPPORTED_RUNTIMES = ["3.8", "3.11"]
 
 #: Default Python version to use.
 DEFAULT_RUNTIME = "3.8"
@@ -101,19 +101,27 @@ def edm_dependencies(runtime):
 
     Returns a set of requirement strings.
     """
-    return {
-        "flake8",
-        "flake8_ets",
-        "traitsui",
+    common_dependencies = {
         "configobj",
         "coverage",
-        "importlib_resources>=1.1.0",
-        "pytables" if runtime == "3.6" else "tables",
         "pandas",
         "pyface",
-        "enthought_sphinx_theme",
-        "sphinx",
+        "tables",
+        "traitsui",
     }
+    runtime_specific_dependencies = {
+        "3.8": {
+            # Most of these are currently unavailable on Python 3.11;
+            "enthought_sphinx_theme",
+            "flake8",
+            "flake8_ets",
+            "sphinx",
+            # importlib_resources is not needed on Python 3.11
+            "importlib_resources",
+        },
+        "3.11": set(),
+    }
+    return common_dependencies | runtime_specific_dependencies[runtime]
 
 
 # Dependencies we install from source for cron tests
@@ -178,7 +186,8 @@ def install(edm, runtime, environment, source):
     edm_packages = ' '.join(edm_dependencies(runtime))
     # edm commands to setup the development environment
     commands = [
-        "{edm} environments create {environment} --force --version={runtime}",
+        "{edm} environments create {environment} --force --version={runtime} "
+        "--platform={platform}",
         "{edm} install -y -e {environment} " + edm_packages,
         (
             "{edm} run -e {environment} -- "
@@ -477,10 +486,20 @@ def get_parameters(edm, runtime, environment):
     if edm is None:
         edm = locate_edm()
 
+    if sys.platform.startswith("win32"):
+        platform = "win-x86_64"
+    elif sys.platform.startswith("linux"):
+        platform = "rh7-x86_64" if runtime == "3.8" else "rh8-x86_64"
+    elif sys.platform.startswith("darwin"):
+        platform = "osx-x86_64"
+    else:
+        raise click.ClickException(f"platform {sys.platform} not supported")
+
     parameters = {
         'edm': edm,
         'runtime': runtime,
         'environment': environment,
+        'platform': platform,
     }
     if environment is None:
         parameters['environment'] = 'apptools-test-{runtime}'.format(
