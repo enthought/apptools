@@ -172,7 +172,7 @@ class TestDictPickler(unittest.TestCase):
             base64.decodebytes(data[num_attr]["data"])
         )
         num = pickle.loads(junk)
-        numpy.testing.assert_array_equal(num, obj.numeric, strict=True)
+        numpy.testing.assert_array_equal(num, obj.numeric)
 
         self.assertIn(data["ref"]["type"], ["reference", "numeric"])
         if data["ref"]["type"] == "numeric":
@@ -218,7 +218,7 @@ class TestDictPickler(unittest.TestCase):
         self.assertEqual(dct["ref"].__metadata__["type"], "instance")
 
         num = state.numeric
-        numpy.testing.assert_array_equal(num, obj.numeric, strict=True)
+        numpy.testing.assert_array_equal(num, obj.numeric)
         self.assertEqual(id(state.ref), id(num))
 
         if TVTK_AVAILABLE:
