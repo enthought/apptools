@@ -26,7 +26,7 @@ except ImportError:
 from apptools.preferences.api import Preferences, PreferencesHelper
 from apptools.preferences.api import ScopedPreferences
 from apptools.preferences.api import set_default_preferences
-from apptools._testing.optional_dependencies import configobj, requires_configobj
+from apptools._testing.optional_dependencies import requires_configobj
 
 from traits.api import (
     Any, Bool, HasTraits, Int, Float, List, Str, TraitError,

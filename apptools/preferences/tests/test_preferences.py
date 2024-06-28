@@ -23,7 +23,7 @@ except ImportError:
     from importlib_resources import files
 
 # Enthought library imports.
-from apptools._testing.optional_dependencies import configobj, requires_configobj
+from apptools._testing.optional_dependencies import requires_configobj
 from apptools.preferences.api import Preferences
 
 
