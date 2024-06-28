@@ -313,12 +313,14 @@ if __name__ == "__main__":
                 "importlib-resources>=1.1.0; python_version<'3.9'",
             ],
             "h5": [
-                "numpy",
+                # PyTables is currently incompatible with NumPy 2.0
+                # xref: enthought/apptools#345
+                "numpy < 2.0",
                 "pandas",
                 "tables",
             ],
             "persistence": [
-                "numpy",
+                "numpy < 2.0",
             ],
             "preferences": [
                 "configobj",
@@ -328,5 +330,5 @@ if __name__ == "__main__":
         packages=find_packages(),
         platforms=["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
         zip_safe=False,
-        python_requires=">=3.6",
+        python_requires=">=3.8",
     )
