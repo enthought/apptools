@@ -7,7 +7,7 @@ name: Test with EDM
 on: [pull_request, workflow_dispatch]
 
 env:
-  INSTALL_EDM_VERSION: 3.5.0
+  INSTALL_EDM_VERSION: 3.7.0
 
 jobs:
 
@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os: ['ubuntu-latest', 'windows-latest']
-        runtime: ['3.6', '3.8']
+        runtime: ['3.8', '3.11']
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -25,7 +25,7 @@ jobs:
       - name: Set up bootstrap Python (3.10)
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.12'
           cache: 'pip'
           cache-dependency-path: '.github/workflows/bootstrap-requirements.txt'
       - name: Install necessary packages to the bootstrap environment
@@ -36,13 +36,13 @@ jobs:
           path: ~/.cache
           key: ${{ runner.os }}-${{ matrix.runtime }}-${{ hashFiles('etstool.py') }}
       - name: Setup EDM
-        uses: enthought/setup-edm-action@v2
+        uses: enthought/setup-edm-action@v3
         with:
           edm-version: ${{ env.INSTALL_EDM_VERSION }}
       - name: Install test environment
         run: python etstool.py install --runtime=${{ matrix.runtime }}
-      - name: Run style checks (only on Linux)
+      - name: Run style checks (only on Linux, 3.8)
         run: python etstool.py flake8 --runtime=${{ matrix.runtime }}
-        if: startsWith(matrix.os, 'ubuntu')
+        if: startsWith(matrix.os, 'ubuntu') && matrix.runtime == '3.8'
       - name: Run tests
         run: python etstool.py test --runtime=${{ matrix.runtime }}
