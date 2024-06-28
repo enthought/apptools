@@ -12,8 +12,8 @@ Release by YYYY-MM-DD
 
 Release candidate
 -------------------
-- [ ] Verify that all relevant PRs have been merged to master.
-- [ ] Create a PR against master to bump version number, merge that PR
+- [ ] Verify that all relevant PRs have been merged to ``main``.
+- [ ] Create a PR against ``main`` to bump version number, merge that PR
 - [ ] From the commit just before bumping the version, create a new branch `maint/<release version number>`
 - [ ] Update changelog and open PR targeting a new `maint/<release version number>` branch. 
       To do so, use the `python etstool.py changelog build` command to update the changelog
@@ -39,7 +39,7 @@ Release blockers
 
 Pre-release
 ---
-- [ ] Backport PRs that have been merged to master to the maintenance branch. Use the "need backport ..." tag if there is one (but don't rely 100% on it)
+- [ ] Backport PRs that have been merged to ``main`` to the maintenance branch. Use the "need backport ..." tag if there is one (but don't rely 100% on it)
 - [ ] Verify that no other open issue needs to be addressed before the release.
 - [ ] Test against other ETS packages and other ETS-using projects
 - [ ] Check MANIFEST, requirements, changelog are still up to date.
@@ -63,6 +63,6 @@ Release
 Post-release
 -------------
 - [ ] Package update for `enthought/free` repository (for EDM)
-- [ ] Backport change log (and any deletion of news fragments) to master
+- [ ] Backport change log (and any deletion of news fragments) to ``main``
 - [ ] Update GitHub Release pages https://github.com/enthought/apptools/releases
 - [ ] Announcement (e.g. Google Group)

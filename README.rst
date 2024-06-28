@@ -2,10 +2,6 @@
 apptools: application tools
 ===========================
 
-.. image:: https://travis-ci.org/enthought/apptools.svg?branch=master
-    :target: https://travis-ci.org/enthought/apptools
-    :alt: Build status
-
 Documentation: http://docs.enthought.com/apptools
 
 Source Code: http://www.github.com/enthought/apptools

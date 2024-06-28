@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2024 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -7,6 +7,43 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
+
+""" API for the apptools.naming subpackage.
+
+- :class:`~.Address`
+- :class:`~.Binding`
+- :class:`~.Context`
+- :class:`~.DynamicContext`
+- :class:`~.DirContext`
+- :func:`~.InitialContext`
+- :class:`~.InitialContextFactory`
+- :class:`~.NamingEvent`
+- :attr:`~.naming_manager`
+- :class:`~.ObjectFactory`
+- :class:`~.ObjectSerializer`
+- :class:`~.PyContext`
+- :class:`~.PyObjectFactory`
+- :class:`~.PyFSContext`
+- :class:`~.PyFSContextFactory`
+- :class:`~.PyFSInitialContextFactory`
+- :class:`~.PyFSObjectFactory`
+- :class:`~.PyFSStateFactory`
+- :class:`~.Reference`
+- :class:`~.Referenceable`
+- :class:`~.ReferenceableStateFactory`
+- :class:`~.StateFactory`
+
+Custom Exceptions
+-----------------
+
+- :class:`~.NamingError`
+- :class:`~.InvalidNameError`
+- :class:`~.NameAlreadyBoundError`
+- :class:`~.NameNotFoundError`
+- :class:`~.NotContextError`
+- :class:`~.OperationNotSupportedError`
+"""
+
 from .exception import NamingError, InvalidNameError, NameAlreadyBoundError
 from .exception import NameNotFoundError, NotContextError
 from .exception import OperationNotSupportedError

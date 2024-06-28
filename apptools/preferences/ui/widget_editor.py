@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2024 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -11,7 +11,7 @@
 
 
 # Enthought library imports.
-from traits.api import Any
+from traits.api import Any, observe
 from traitsui.api import EditorFactory
 from traitsui.toolkit import toolkit_object
 Editor = toolkit_object('editor:Editor')
@@ -40,9 +40,6 @@ class _WidgetEditor(Editor):
         # Create the editor's control.
         self.control = page.create_control(parent)
 
-        # Listen for the page being changed.
-        self.object.on_trait_change(self._on_page_changed, "selected_page")
-
     def dispose(self):
         """ Dispose of the editor. """
 
@@ -58,14 +55,15 @@ class _WidgetEditor(Editor):
     # Private interface.
     ###########################################################################
 
-    def _on_page_changed(self, obj, trait_name, old, new):
+    @observe("object:selected_page")
+    def _handle_change_to_selected_page(self, event):
         """ Dynamic trait change handler. """
 
-        if old is not None:
-            old.destroy_control()
+        if event.old is not None:
+            event.old.destroy_control()
 
-        if new is not None:
-            self.control = new.create_control(self.parent)
+        if event.new is not None:
+            self.control = event.new.create_control(self.parent)
 
 
 class WidgetEditor(EditorFactory):

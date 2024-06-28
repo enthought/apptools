@@ -12,38 +12,4 @@
 # Description: <Enthought undo package component>
 # ------------------------------------------------------------------------------
 
-# Local imports.
-from .abstract_command_stack_action import AbstractCommandStackAction
-
-
-class RedoAction(AbstractCommandStackAction):
-    """An action that redos the last command undone of the active command
-    stack.
-    """
-
-    ###########################################################################
-    # 'Action' interface.
-    ###########################################################################
-
-    def perform(self, event):
-        """ Perform the action. """
-
-        self.undo_manager.redo()
-
-    ###########################################################################
-    # 'AbstractUndoAction' interface.
-    ###########################################################################
-
-    def _update_action(self):
-        """ Update the state of the action. """
-
-        name = self.undo_manager.redo_name
-
-        if name:
-            name = "&Redo " + name
-            self.enabled = True
-        else:
-            name = "&Redo"
-            self.enabled = False
-
-        self.name = name
+from pyface.undo.action.api import RedoAction

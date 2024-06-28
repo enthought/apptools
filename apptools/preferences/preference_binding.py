@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2024 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -9,6 +9,7 @@
 # Thanks for using Enthought open source!
 """ A binding between a trait on an object and a preference value. """
 
+from ast import literal_eval
 
 # Enthought library imports.
 from traits.api import Any, HasTraits, Instance, Str, Undefined
@@ -69,10 +70,10 @@ class PreferenceBinding(HasTraits):
 
     #### Trait change handlers ################################################
 
-    def _on_trait_changed(self, obj, trait_name, old, new):
+    def _on_trait_changed(self, event):
         """ Dynamic trait change handler. """
 
-        self.preferences.set(self.preference_path, new)
+        self.preferences.set(self.preference_path, event.new)
 
     #### Other observer pattern listeners #####################################
 
@@ -101,14 +102,11 @@ class PreferenceBinding(HasTraits):
         if type(handler) is Str:
             pass
 
-        # If the trait type is 'Str' then we convert the raw value.
-        elif type(handler) is Str:
-            value = str(value)
-
-        # Otherwise, we eval it!
+        # Otherwise, we literal_eval it!  This is safe against arbitrary code
+        # execution, but it does limit values to core Python data types.
         else:
             try:
-                value = eval(value)
+                value = literal_eval(value)
 
             # If the eval fails then there is probably a syntax error, but
             # we will let the handler validation throw the exception.
@@ -121,7 +119,7 @@ class PreferenceBinding(HasTraits):
         """ Wire-up trait change handlers etc. """
 
         # Listen for the object's trait being changed.
-        self.obj.on_trait_change(self._on_trait_changed, self.trait_name)
+        self.obj.observe(self._on_trait_changed, self.trait_name)
 
         # Listen for the preference value being changed.
         components = self.preference_path.split(".")

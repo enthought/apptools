@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2024 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -11,6 +11,7 @@
 
 
 # Standard library imports.
+from ast import literal_eval
 import logging
 
 # Enthought library imports.
@@ -154,10 +155,11 @@ class PreferencesHelper(HasTraits):
         if isinstance(handler, Str) or trait.is_str:
             pass
 
-        # Otherwise, we eval it!
+        # Otherwise, we literal_eval it!  This is safe against arbitrary code
+        # execution, but it does limit values to core Python data types.
         else:
             try:
-                value = eval(value)
+                value = literal_eval(value)
 
             # If the eval fails then there is probably a syntax error, but
             # we will let the handler validation throw the exception.

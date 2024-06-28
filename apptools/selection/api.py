@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2024 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -7,6 +7,25 @@
 # is also available online at http://www.enthought.com/licenses/BSD.txt
 #
 # Thanks for using Enthought open source!
+
+""" API for the apptools.selection subpackage.
+
+- :class:`~.ListSelection`
+- :class:`~.SelectionService`
+
+Interfaces
+----------
+- :class:`~.ISelection`
+- :class:`~.IListSelection`
+- :class:`~.ISelectionProvider`
+
+Custom Exceptions
+-----------------
+- :class:`~.IDConflictError`
+- :class:`~.ListenerNotConnectedError`
+- :class:`~.ProviderNotRegisteredError`
+"""
+
 from .errors import (
     IDConflictError,
     ListenerNotConnectedError,

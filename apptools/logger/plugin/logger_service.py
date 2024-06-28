@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2024 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -23,7 +23,7 @@ from traits.api import (
     List,
     Property,
     Undefined,
-    on_trait_change,
+    observe,
 )
 
 root_logger = logging.getLogger()
@@ -170,8 +170,9 @@ class LoggerService(HasTraits):
             "apptools.logger.plugin.mail_files"
         )
 
-    @on_trait_change("preferences.level_")
-    def _level_changed(self, new):
+    @observe("preferences.level_")
+    def _use_updated_preferences_level(self, event):
+        new = event.new
         if (
             new is not None
             and new is not Undefined

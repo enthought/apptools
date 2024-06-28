@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2024 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -29,10 +29,24 @@ class LogFileHandler(RotatingFileHandler):
     """The default log file handler."""
 
     def __init__(
-        self, path, maxBytes=1000000, backupCount=3, level=None, formatter=None
+        self,
+        path,
+        mode="a",
+        maxBytes=1000000,
+        backupCount=3,
+        level=None,
+        formatter=None,
+        encoding=None,
+        delay=False,
     ):
         RotatingFileHandler.__init__(
-            self, path, maxBytes=maxBytes, backupCount=3
+            self,
+            filename=path,
+            mode=mode,
+            maxBytes=maxBytes,
+            backupCount=backupCount,
+            encoding=encoding,
+            delay=delay,
         )
 
         if level is None:

@@ -1,0 +1,73 @@
+name: Test with EDM using ETS packages from source
+
+on:
+  schedule:
+    - cron:  '0 0 * * 5'
+  # Make it possible to manually trigger the workflow
+  workflow_dispatch:
+
+env:
+  INSTALL_EDM_VERSION: 3.7.0
+
+jobs:
+
+  # Test against EDM packages
+  test-with-edm:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        runtime: ['3.8']
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout the target commit
+        uses: actions/checkout@v4
+      - name: Set up bootstrap Python (3.10)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+          cache-dependency-path: '.github/workflows/bootstrap-requirements.txt'
+      - name: Install necessary packages to the bootstrap environment
+        run: python -m pip install -r .github/workflows/bootstrap-requirements.txt
+      - name: Cache EDM packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache
+          key: ${{ runner.os }}-${{ matrix.runtime }}-${{ hashFiles('etstool.py') }}
+      - name: Setup EDM
+        uses: enthought/setup-edm-action@v3
+        with:
+          edm-version: ${{ env.INSTALL_EDM_VERSION }}
+      - name: Install test environment
+        run: python etstool.py install --runtime=${{ matrix.runtime }} --source
+      - name: Run tests
+        run: python etstool.py test --runtime=${{ matrix.runtime }}
+
+  notify-on-failure:
+    needs: test-with-edm
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Slack channel on failure
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel_id: ${{ secrets.ETS_SLACK_CHANNEL_ID }}
+          status: FAILED
+          color: danger
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_ACTION_SECRET }}
+
+  notify-on-success:
+    needs: test-with-edm
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Slack channel on success
+        uses: voxmedia/github-action-slack-notify-build@v1
+        with:
+          channel_id: ${{ secrets.ETS_BOTS_SLACK_CHANNEL_ID }}
+          status: SUCCESS
+          color: good
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_ACTION_SECRET }}

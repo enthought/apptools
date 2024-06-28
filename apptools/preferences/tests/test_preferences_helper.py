@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2024 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -17,32 +17,36 @@ import tempfile
 import unittest
 
 # Major package imports.
-from importlib_resources import files
+try:
+    from importlib.resources import files
+except ImportError:
+    from importlib_resources import files
 
 # Enthought library imports.
 from apptools.preferences.api import Preferences, PreferencesHelper
 from apptools.preferences.api import ScopedPreferences
 from apptools.preferences.api import set_default_preferences
 from traits.api import (
-    Any, Bool, HasTraits, Int, Float, List, Str,
+    Any, Bool, HasTraits, Int, Float, List, Str, TraitError,
     push_exception_handler, pop_exception_handler,
 )
+from traits.observation.api import match
 
 
-def width_listener(obj, trait_name, old, new):
+def width_listener(event):
 
-    width_listener.obj = obj
-    width_listener.trait_name = trait_name
-    width_listener.old = old
-    width_listener.new = new
+    width_listener.obj = event.object
+    width_listener.trait_name = event.name
+    width_listener.old = event.old
+    width_listener.new = event.new
 
 
-def bgcolor_listener(obj, trait_name, old, new):
+def bgcolor_listener(event):
 
-    bgcolor_listener.obj = obj
-    bgcolor_listener.trait_name = trait_name
-    bgcolor_listener.old = old
-    bgcolor_listener.new = new
+    bgcolor_listener.obj = event.object
+    bgcolor_listener.trait_name = event.name
+    bgcolor_listener.old = event.old
+    bgcolor_listener.new = event.new
 
 
 # This module's package.
@@ -105,7 +109,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             names = List(Str)
 
         helper = AcmeUIPreferencesHelper()
-        helper.on_trait_change(bgcolor_listener)
+        helper.observe(bgcolor_listener, match(lambda n, t: True))
 
         # Make sure the helper was initialized properly.
         self.assertEqual("blue", helper.bgcolor)
@@ -157,7 +161,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             names = List(Str)
 
         helper = AcmeUIPreferencesHelper(preferences_path="acme.ui")
-        helper.on_trait_change(bgcolor_listener)
+        helper.observe(bgcolor_listener, match(lambda n, t: True))
 
         # Make sure the helper was initialized properly.
         self.assertEqual("blue", helper.bgcolor)
@@ -344,7 +348,7 @@ class PreferencesHelperTestCase(unittest.TestCase):
             background_color = Str
 
         w = Widget()
-        w.on_trait_change(bgcolor_listener)
+        w.observe(bgcolor_listener, match(lambda n, t: True))
 
         p = self.preferences
         p.load(self.example)
@@ -480,8 +484,8 @@ class PreferencesHelperTestCase(unittest.TestCase):
         helper = AcmeUIPreferencesHelper()
 
         # We only listen to some of the traits so the testing is easier.
-        helper.on_trait_change(width_listener, ["width"])
-        helper.on_trait_change(bgcolor_listener, ["bgcolor"])
+        helper.observe(width_listener, ["width"])
+        helper.observe(bgcolor_listener, ["bgcolor"])
 
         # Create a new preference node.
         p1 = Preferences()
@@ -583,3 +587,18 @@ class PreferencesHelperTestCase(unittest.TestCase):
         helper = AcmeUIPreferencesHelper(preferences_path="acme.ui")
 
         self.assertEqual("50", helper.width)
+
+    def test_invalid_preference(self):
+
+        p = self.preferences
+        p.load(self.example)
+
+        class AcmeUIPreferencesHelper(PreferencesHelper):
+            """ The Acme UI class! """
+
+            # The traits that we want to initialize from preferences.
+            invalid = Int
+
+        # attempt to create instance from invalid value
+        with self.assertRaises(TraitError):
+            AcmeUIPreferencesHelper(preferences_path="acme.ui")

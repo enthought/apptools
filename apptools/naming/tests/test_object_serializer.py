@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2024 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -22,7 +22,7 @@ class FooWithTraits(HasTraits):
 
     full_name = Str()
 
-    last_name = Property(depends_on="full_name")
+    last_name = Property(observe="full_name")
 
     event = Event()
 

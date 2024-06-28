@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2024 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -22,7 +22,7 @@ from traits.api import (
     Property,
     Str,
     cached_property,
-    on_trait_change,
+    observe,
 )
 from traitsui.api import View, Group, Item, CodeEditor, TabularEditor, spring
 from traitsui.tabular_adapter import TabularAdapter
@@ -95,10 +95,10 @@ class LoggerView(TraitsUIView):
     service = Instance(LoggerService)
 
     log_records = List(Instance(logging.LogRecord))
-    formatted_records = Property(Str, depends_on="log_records")
+    formatted_records = Property(Str, observe="log_records")
 
     activated = Instance(logging.LogRecord)
-    activated_text = Property(Str, depends_on="activated")
+    activated_text = Property(Str, observe="activated")
     reset_button = Button("Reset Logs")
     show_button = Button("Complete Text Log")
     copy_button = Button("Copy Log to Clipboard")
@@ -144,8 +144,8 @@ class LoggerView(TraitsUIView):
     # Private interface
     ###########################################################################
 
-    @on_trait_change("service.preferences.level_")
-    def _update_log_records(self):
+    @observe("service.preferences.level_")
+    def _update_log_records(self, event):
         self.service.handler._view = self
         self.update(force=True)
 

@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2021 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2024 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -19,7 +19,10 @@ from os.path import abspath, dirname, basename, join
 from io import BytesIO
 
 # 3rd party imports.
-from importlib_resources import files
+try:
+    from importlib.resources import files
+except ImportError:
+    from importlib_resources import files
 
 from apptools._testing.optional_dependencies import (
     numpy as np,
