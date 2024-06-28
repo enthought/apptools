@@ -124,3 +124,9 @@ latex_documents = [
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
 latex_logo = "e-logo-rev.png"
+
+# Grouping the document tree into Man pages. List of tuples
+# (startdocname, name, description, authors, section)
+man_pages = [
+    (master_doc, project, project + ' ' + version, 'Enthought', 3)
+]
