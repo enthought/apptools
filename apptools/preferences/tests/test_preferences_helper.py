@@ -411,7 +411,9 @@ class PreferencesHelperTestCase(unittest.TestCase):
     def test_scoped_preferences(self):
         """ scoped preferences """
 
-        p = set_default_preferences(ScopedPreferences())
+        p = set_default_preferences(
+            ScopedPreferences(application_preferences_filename=self.tmpfile)
+        )
 
         # Set a preference value in the default scope.
         p.set("default/acme.ui.bgcolor", "blue")
