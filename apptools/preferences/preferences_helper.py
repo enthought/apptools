@@ -100,7 +100,7 @@ class PreferencesHelper(HasTraits):
         # the trait is not a preference trait and we do nothing.
 
     @observe("preferences", post_init=True)
-    def _preferences_changed(self, event):
+    def _update_preferences_listeners(self, event):
         """Update listeners when the preferences object changes."""
 
         old, new = event.old, event.new
