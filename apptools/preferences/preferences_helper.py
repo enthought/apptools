@@ -15,7 +15,7 @@ from ast import literal_eval
 import logging
 
 # Enthought library imports.
-from traits.api import HasTraits, Instance, Str
+from traits.api import HasTraits, Instance, Str, observe
 
 # Local imports.
 from .i_preferences import IPreferences
@@ -99,8 +99,11 @@ class PreferencesHelper(HasTraits):
         # If the change refers to a trait defined on this class, then
         # the trait is not a preference trait and we do nothing.
 
-    def _preferences_changed(self, old, new):
-        """ Static trait change handler. """
+    @observe("preferences", post_init=True)
+    def _update_preferences_listeners(self, event):
+        """Update listeners when the preferences object changes."""
+
+        old, new = event.old, event.new
 
         # Stop listening to the old preferences node.
         if old is not None:

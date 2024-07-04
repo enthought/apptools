@@ -42,13 +42,17 @@ class ScopedPreferencesTestCase(PreferencesTestCase):
     def setUp(self):
         """ Prepares the test fixture before each test method is called. """
 
-        self.preferences = ScopedPreferences()
+        # A temporary directory that can safely be written to.
+        self.tmpdir = tempfile.mkdtemp()
+
+        self.preferences = ScopedPreferences(
+            application_preferences_filename=os.path.join(
+                self.tmpdir, "preferences.ini"
+            )
+        )
 
         # The filename of the example preferences file.
         self.example = os.fspath(files(PKG) / "example.ini")
-
-        # A temporary directory that can safely be written to.
-        self.tmpdir = tempfile.mkdtemp()
 
     def tearDown(self):
         """ Called immediately after each test method has been called. """
