@@ -1,1 +1,0 @@
-Replaced uses of ``numpy.alltrue``, for compatibility with NumPy 2.0.
