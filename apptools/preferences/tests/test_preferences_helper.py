@@ -604,3 +604,26 @@ class PreferencesHelperTestCase(unittest.TestCase):
         # attempt to create instance from invalid value
         with self.assertRaises(TraitError):
             AcmeUIPreferencesHelper(preferences_path="acme.ui")
+
+    def test_preferences_not_written_on_helper_creation(self):
+
+        class AppPreferencesHelper(PreferencesHelper):
+            #: The node that contains the preferences.
+            preferences_path = "app"
+
+            #: The user's favourite colour
+            color = Str()
+
+        default_preferences = Preferences(name="default")
+        default_preferences.set("app.color", "red")
+
+        application_preferences = Preferences(name="application")
+        preferences = ScopedPreferences(
+            scopes=[application_preferences, default_preferences]
+        )
+        self.assertIsNone(application_preferences.get("app.color"))
+
+        # Then creation of the helper should not cause the application
+        # preferences to change.
+        AppPreferencesHelper(preferences=preferences)
+        self.assertIsNone(application_preferences.get("app.color"))
