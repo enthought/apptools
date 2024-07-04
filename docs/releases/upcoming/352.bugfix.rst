@@ -1,0 +1,1 @@
+Fix a test that was broken in the presence of Mayavi / TVTK. (#352)
