@@ -47,6 +47,7 @@ Fixes
 * Fix StatePickler incompatibilities with Python >= 3.11. (#328)
 * Drop Python 3.6 support for source builds. (#330)
 
+
 Version 5.2.0
 ~~~~~~~~~~~~~
 
