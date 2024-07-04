@@ -26,6 +26,8 @@ except ImportError:
 from apptools.preferences.api import Preferences, PreferencesHelper
 from apptools.preferences.api import ScopedPreferences
 from apptools.preferences.api import set_default_preferences
+from apptools._testing.optional_dependencies import requires_configobj
+
 from traits.api import (
     Any, Bool, HasTraits, Int, Float, List, Str, TraitError,
     push_exception_handler, pop_exception_handler,
@@ -53,6 +55,7 @@ def bgcolor_listener(event):
 PKG = "apptools.preferences.tests"
 
 
+@requires_configobj
 class PreferencesHelperTestCase(unittest.TestCase):
     """ Tests for the preferences helper. """
 

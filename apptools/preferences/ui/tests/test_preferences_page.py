@@ -16,12 +16,16 @@ from traits.api import (
     pop_exception_handler,
     push_exception_handler,
 )
-from traitsui.api import Group, Item, View
 
 from apptools.preferences.api import Preferences
-from apptools.preferences.ui.api import PreferencesPage
+from apptools._testing.optional_dependencies import requires_traitsui, traitsui
+
+if traitsui is not None:
+    from traitsui.api import Group, Item, View
+    from apptools.preferences.ui.api import PreferencesPage
 
 
+@requires_traitsui
 class TestPreferencesPage(unittest.TestCase):
     """ Non-GUI Tests for PreferencesPage."""
 
