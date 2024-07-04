@@ -251,7 +251,9 @@ class TestDictPickler(unittest.TestCase):
             ).__metadata__["id"]
 
         if TVTK_AVAILABLE:
-            self.assertEqual(state1._tvtk, state._tvtk)
+            # Some of the values are NumPy arrays, so use NumPy's
+            # assert_equal instead of the unittest assertEqual.
+            numpy.testing.assert_equal(state1._tvtk, state._tvtk)
 
         state1.tuple[-1].__metadata__["id"] = state.tuple[-1].__metadata__[
             "id"
