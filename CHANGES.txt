@@ -41,11 +41,24 @@ Version 5.2.1
 
 Released: 2023-06-23
 
+This is a bugfix release fixing a Python 3.11 compatibility issue in
+StatePickler.
+
+Thanks to the following contributors:
+
+* Mark Dickinson
+* Tony Ni
+* Rahul Poruri
+
 Fixes
 -----
-* Add missing attributes to ``LogFileHandler``, notably ``encoding``. (#324)
-* Fix StatePickler incompatibilities with Python >= 3.11. (#328)
-* Drop Python 3.6 support for source builds. (#330)
+* Fix StatePickler for Python 3.11. (#328)
+* Add encoding as an attribute for LogFileHandler initialization. (#324)
+
+Build
+-----
+* Drop Python 3.6 and macOS from EDM test matrix. (#330, #332)
+* Update Github workflows. (#326)
 
 
 Version 5.2.0
