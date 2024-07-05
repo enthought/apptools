@@ -1,1 +1,0 @@
-Don't write to preferences on ``PreferencesHelper`` creation. (#343)

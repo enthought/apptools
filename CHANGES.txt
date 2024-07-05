@@ -1,6 +1,66 @@
 Apptools CHANGELOG
 ==================
 
+Version 5.3.0
+~~~~~~~~~~~~~
+
+Released: 2024-07-05
+
+This is a minor release, focusing primarily on bringing apptools up to date
+with respect to more recent versions of Python and 3rd party packages.
+Support for Python 3.7 has been dropped.
+
+Thanks to the following contributors:
+
+* Mark Dickinson
+* Stewart Ferguson
+* Frank Longford
+* Tony Ni
+* Sai Rahul Poruri
+
+Fixes
+-----
+* Drop support for Python 3.7. (#339)
+* Replaced uses of ``numpy.alltrue``, for compatibility with NumPy 2.0. (#341)
+* Don't write to preferences on ``PreferencesHelper`` creation. (#343)
+* Fix a test that was broken in the presence of Mayavi / TVTK. (#352)
+
+Documentation
+-------------
+* Moved Sphinx-generated man page to section 3. (#89)
+
+Build System
+------------
+* TraitsUI, Pyface and configobj are now optional dependencies. TraitsUI
+  and Pyface will be installed with ``pip install apptools[gui]``. configobj
+  will be installed with ``pip install apptools[preferences]``. (#351)
+
+
+Version 5.2.1
+~~~~~~~~~~~~~
+
+Released: 2023-06-23
+
+This is a bugfix release fixing a Python 3.11 compatibility issue in
+StatePickler.
+
+Thanks to the following contributors:
+
+* Mark Dickinson
+* Tony Ni
+* Rahul Poruri
+
+Fixes
+-----
+* Fix StatePickler for Python 3.11. (#328)
+* Add encoding as an attribute for LogFileHandler initialization. (#324)
+
+Build
+-----
+* Drop Python 3.6 and macOS from EDM test matrix. (#330, #332)
+* Update Github workflows. (#326)
+
+
 Version 5.2.0
 ~~~~~~~~~~~~~
 

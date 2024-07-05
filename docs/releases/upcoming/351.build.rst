@@ -1,3 +1,0 @@
-TraitsUI, Pyface and configobj are now optional dependencies. TraitsUI
-and Pyface will be installed with ``pip install apptools[gui]``. configobj
-will be installed with ``pip install apptools[preferences]``. (#351)
