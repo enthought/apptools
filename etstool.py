@@ -307,7 +307,6 @@ def flake8(edm, runtime, environment):
         "apptools",
         "docs",
         "etstool.py",
-        "setup.py",
         "examples",
         "integrationtests",
     ]
