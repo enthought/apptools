@@ -22,7 +22,8 @@
 # All configuration values have a default value; values that are commented out
 # serve to show the default value.
 
-import apptools
+import importlib.metadata
+
 import enthought_sphinx_theme
 
 # General configuration
@@ -53,7 +54,7 @@ copyright = '2008-2024, Enthought'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
-version = release = apptools.__version__
+version = release = importlib.metadata.version("apptools")
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:

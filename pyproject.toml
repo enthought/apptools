@@ -1,3 +1,54 @@
 [build-system]
-requires = ['setuptools', 'wheel']
+requires = ['setuptools']
 build-backend = 'setuptools.build_meta'
+
+[project]
+name = 'apptools'
+version = '5.4.0'
+description = 'application tools'
+readme = 'README.rst'
+requires-python = '>= 3.8'
+license = { file = 'LICENSE.txt' }
+authors = [{ name = 'Enthought', email = 'info@enthought.com' }]
+dependencies = ['traits >= 6.2.0']
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Intended Audience :: Developers',
+    'Intended Audience :: Science/Research',
+    'License :: OSI Approved :: BSD License',
+    'Operating System :: MacOS',
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: OS Independent',
+    'Operating System :: POSIX',
+    'Operating System :: Unix',
+    'Programming Language :: Python',
+    'Topic :: Scientific/Engineering',
+    'Topic :: Software Development',
+    'Topic :: Software Development :: Libraries',
+]
+
+[project.optional-dependencies]
+docs = ['enthought_sphinx_theme', 'sphinx']
+gui = ['pyface', 'traitsui']
+# PyTables is currently incompatible with NumPy 2.0
+# https://github.com/enthought/apptools/issues/345
+h5 = ['numpy < 2.0', 'pandas', 'tables']
+persistence = ['numpy < 2.0']
+preferences = ['configobj']
+test = ["importlib-resources>=1.1.0; python_version<'3.9'"]
+
+
+[project.urls]
+documentation = 'https://docs.enthought.com/apptools'
+repository = 'https://github.com/enthought/apptools'
+issues = 'https://github.com/enthought/apptools/issues'
+
+[tool.setuptools.packages.find]
+include = ['apptools*']
+
+[tool.setuptools.package-data]
+apptools = [
+    'logger/plugin/*.ini',
+    'logger/plugin/view/images/*.png',
+    'preferences/tests/*.ini',
+]
