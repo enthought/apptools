@@ -313,14 +313,12 @@ if __name__ == "__main__":
                 "traitsui",
             ],
             "h5": [
-                # PyTables is currently incompatible with NumPy 2.0
-                # xref: enthought/apptools#345
-                "numpy < 2.0",
+                "numpy",
                 "pandas",
                 "tables",
             ],
             "persistence": [
-                "numpy < 2.0",
+                "numpy",
             ],
             "preferences": [
                 "configobj",
