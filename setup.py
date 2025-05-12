@@ -313,12 +313,17 @@ if __name__ == "__main__":
                 "traitsui",
             ],
             "h5": [
-                "numpy",
+                # For Python earlier than 3.10, the most recent version of
+                # PyTables is incompatible with NumPy 2.x.
+                # xref: https://github.com/enthought/apptools/issues/345
+                "numpy < 2.0; python_version<'3.10'",
+                "numpy; python_version>='3.10'",
                 "pandas",
                 "tables",
             ],
             "persistence": [
-                "numpy",
+                "numpy < 2.0; python_version<'3.10'",
+                "numpy; python_version>='3.10'",
             ],
             "preferences": [
                 "configobj",
