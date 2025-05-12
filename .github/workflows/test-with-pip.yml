@@ -20,14 +20,8 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies and local packages (not macOS)
+    - name: Install dependencies and local packages
       run: python -m pip install .[gui,h5,preferences]
-      if: matrix.os != 'macos-latest'
-    - name: Install dependencies and local packages (macOS)
-      run: python -m pip install .[gui,preferences]
-      # PyTables currently won't build on Apple Silicon, so exclude the h5 deps
-      # xref: enthought/apptools/issues/344
-      if: matrix.os == 'macos-latest'
     - name: Run tests
       run: |
         mkdir testdir
