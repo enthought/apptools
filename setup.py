@@ -19,10 +19,10 @@ from setuptools import setup, find_packages
 # together with information from the version control system, and then injected
 # into the package source.
 MAJOR = 5
-MINOR = 4
-MICRO = 0
+MINOR = 3
+MICRO = 1
 PRERELEASE = ""
-IS_RELEASED = False
+IS_RELEASED = True
 
 # If this file is part of a Git export (for example created with "git archive",
 # or downloaded from GitHub), ARCHIVE_COMMIT_HASH gives the full hash of the

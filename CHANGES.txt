@@ -1,6 +1,26 @@
 Apptools CHANGELOG
 ==================
 
+Version 5.3.1
+~~~~~~~~~~~~~
+
+Released: 2025-05-13
+
+This is a bugfix release that only affects packaging and build infrastructure.
+The core functionality is unchanged.
+
+Build
+-----
+* For Python >= 3.10, allow NumPy 2.x to be used. (#361)
+* Run HDF5-related tests on all platforms for Python >= 3.10. (#362)
+* Bump setup-edm-action from v3 to v4. (#359)
+* Remove the issue template. (#355)
+
+Documentation
+-------------
+* Copyrights have been updated for 2025. (#360)
+
+
 Version 5.3.0
 ~~~~~~~~~~~~~
 
