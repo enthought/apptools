@@ -21,7 +21,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout the target commit
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Set up bootstrap Python (3.10)
         uses: actions/setup-python@v5
         with:
