@@ -1,4 +1,4 @@
-# (C) Copyright 2005-2025 Enthought, Inc., Austin, TX
+# (C) Copyright 2005-2026 Enthought, Inc., Austin, TX
 # All rights reserved.
 #
 # This software is provided without warranty under the terms of the BSD
@@ -97,7 +97,7 @@ DEFAULT_RUNTIME = "3.8"
 #: Copyright end year expected by the merge-blocking style check. We hard-code
 #: this (rather than using the current year) to give us a buffer on CI failures
 #: when January 1st rolls around.
-EXPECTED_COPYRIGHT_END_YEAR = 2025
+EXPECTED_COPYRIGHT_END_YEAR = 2026
 
 
 def edm_dependencies(runtime):
