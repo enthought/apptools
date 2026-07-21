@@ -94,11 +94,6 @@ SUPPORTED_RUNTIMES = ["3.8", "3.11"]
 #: Default Python version to use.
 DEFAULT_RUNTIME = "3.8"
 
-#: Copyright end year expected by the merge-blocking style check. We hard-code
-#: this (rather than using the current year) to give us a buffer on CI failures
-#: when January 1st rolls around.
-EXPECTED_COPYRIGHT_END_YEAR = 2026
-
 
 def edm_dependencies(runtime):
     """
@@ -318,7 +313,6 @@ def flake8(edm, runtime, environment):
     ]
     commands = [
         "{edm} run -e {environment} -- python -m flake8 "
-        f"--copyright-end-year {EXPECTED_COPYRIGHT_END_YEAR} "
         + " ".join(targets)
     ]
     execute(commands, parameters)
