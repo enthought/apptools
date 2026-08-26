@@ -697,7 +697,31 @@ class StateSetter:
     that when it sets the state.
     """
 
-    def __init__(self):
+    def __init__(self, ignore=None, first=None, last=None):
+        """Sets the state of the object.
+
+        Parameters
+        ----------
+
+        - ignore : `list(str)`
+
+          The list of attributes specified in this list are ignored
+          and the state of these attributes are not set (this excludes
+          the ones specified in `first` and `last`).  If one specifies
+          a '*' then all attributes are ignored except the ones
+          specified in `first` and `last`.
+
+        - first : `list(str)`
+
+          The list of attributes specified in this list are set first (in
+          order), before any other attributes are set.
+
+        - last : `list(str)`
+
+          The list of attributes specified in this list are set last (in
+          order), after all other attributes are set.
+
+        """
         # Stores the ids of instances already done.
         self._instance_ids = []
         self.type_map = {
@@ -706,6 +730,9 @@ class StateSetter:
             StateList: self._do_list,
             StateDict: self._do_dict,
         }
+        self.ignore = ignore
+        self.first = first
+        self.last = last
 
     def set(self, obj, state, ignore=None, first=None, last=None):
         """Sets the state of the object.
@@ -760,15 +787,15 @@ class StateSetter:
 
         self._register(obj)
 
-        # This wierdness is needed since the state's own `keys` might
+        # This weirdness is needed since the state's own `keys` might
         # be set to something else.
         state_keys = list(dict.keys(state))
         state_keys.remove("__metadata__")
 
-        if first is None:
-            first = []
-        if last is None:
-            last = []
+        # fallback to instance default
+        first = first or self.first or []
+        last = last or self.last or []
+        ignore = ignore or self.ignore or []
 
         # Remove all the ignored keys.
         if ignore:
@@ -778,7 +805,7 @@ class StateSetter:
                 for name in ignore:
                     try:
                         state_keys.remove(name)
-                    except KeyError:
+                    except ValueError:
                         pass
 
         # Do the `first` attributes.
@@ -915,20 +942,29 @@ class StateSetter:
                 if not self._has_instance(state[i]):
                     obj[i] = self._get_pure(state[i])
                 elif isinstance(state[i], tuple):
-                    obj[i] = self._do_tuple(state[i])
+                    obj[i] = self._do_tuple(obj[i], state[i])
                 else:
                     self._do_object(obj[i], state[i])
         else:
-            raise StateSetterError(
-                "Cannot set state of list of incorrect size."
-            )
+            # dynamically increase list so restoring works
+            obj.clear()
+            for i in range(len(state)):
+                if not self._has_instance(state[i]):
+                    new_item = self._get_pure(state[i])
+                elif isinstance(state[i], tuple):
+                    new_item = self._do_tuple(obj, state[i])
+                else:
+                    new_item = create_instance(state[i])
+                    self._do_object(new_item, state[i])
+                obj.append(new_item)
 
     def _do_dict(self, obj, state):
+        obj.clear()
         for key, value in state.items():
             if not self._has_instance(value):
                 obj[key] = self._get_pure(value)
             elif isinstance(value, tuple):
-                obj[key] = self._do_tuple(value)
+                obj[key] = self._do_tuple(obj, value)
             else:
                 self._do_object(obj[key], value)
 
@@ -1001,7 +1037,7 @@ def get_state(obj):
 
 
 def set_state(obj, state, ignore=None, first=None, last=None):
-    StateSetter().set(obj, state, ignore, first, last)
+    StateSetter(ignore, first, last).set(obj, state, ignore, first, last)
 
 
 set_state.__doc__ = StateSetter.set.__doc__
