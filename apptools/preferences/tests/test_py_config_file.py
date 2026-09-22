@@ -14,13 +14,8 @@
 import os
 import tempfile
 import unittest
+from importlib.resources import files
 from os.path import join
-
-# Major package imports.
-try:
-    from importlib.resources import files
-except ImportError:
-    from importlib_resources import files
 
 # Enthought library imports.
 from .py_config_file import PyConfigFile
