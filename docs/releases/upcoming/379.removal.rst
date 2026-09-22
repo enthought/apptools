@@ -1,0 +1,2 @@
+Support for Python 3.8 and Python 3.9 has been dropped. apptools now requires
+Python 3.10 or later.
