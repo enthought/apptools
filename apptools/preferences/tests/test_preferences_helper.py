@@ -15,12 +15,7 @@ import os
 import shutil
 import tempfile
 import unittest
-
-# Major package imports.
-try:
-    from importlib.resources import files
-except ImportError:
-    from importlib_resources import files
+from importlib.resources import files
 
 # Enthought library imports.
 from apptools.preferences.api import Preferences, PreferencesHelper

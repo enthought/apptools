@@ -89,39 +89,24 @@ from tempfile import mkdtemp
 import click
 
 #: Supported Python versions.
-SUPPORTED_RUNTIMES = ["3.8", "3.11"]
+SUPPORTED_RUNTIMES = ["3.11"]
 
 #: Default Python version to use.
-DEFAULT_RUNTIME = "3.8"
+DEFAULT_RUNTIME = "3.11"
 
 
-def edm_dependencies(runtime):
-    """
-    EDM package dependencies for a given runtime version.
-
-    Returns a set of requirement strings.
-    """
-    common_dependencies = {
-        "configobj",
-        "coverage",
-        "pandas",
-        "pyface",
-        "tables",
-        "traitsui",
-    }
-    runtime_specific_dependencies = {
-        "3.8": {
-            # Most of these are currently unavailable on Python 3.11;
-            "enthought_sphinx_theme",
-            "flake8",
-            "flake8_ets",
-            "sphinx",
-            # importlib_resources is not needed on Python 3.11
-            "importlib_resources",
-        },
-        "3.11": set(),
-    }
-    return common_dependencies | runtime_specific_dependencies[runtime]
+#: EDM package dependencies.
+EDM_DEPENDENCIES = {
+    "configobj",
+    "coverage",
+    "enthought_sphinx_theme",
+    "flake8",
+    "pandas",
+    "pyface",
+    "sphinx",
+    "tables",
+    "traitsui",
+}
 
 
 # Dependencies we install from source for cron tests
@@ -183,7 +168,7 @@ def install(edm, runtime, environment, source):
 
     """
     parameters = get_parameters(edm, runtime, environment)
-    edm_packages = ' '.join(edm_dependencies(runtime))
+    edm_packages = ' '.join(EDM_DEPENDENCIES)
     # edm commands to setup the development environment
     commands = [
         "{edm} environments create {environment} --force --version={runtime} "
@@ -489,7 +474,7 @@ def get_parameters(edm, runtime, environment):
     if sys.platform.startswith("win32"):
         platform = "win-x86_64"
     elif sys.platform.startswith("linux"):
-        platform = "rh7-x86_64" if runtime == "3.8" else "rh8-x86_64"
+        platform = "rh8-x86_64"
     elif sys.platform.startswith("darwin"):
         platform = "osx-x86_64"
     else:

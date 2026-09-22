@@ -305,25 +305,18 @@ if __name__ == "__main__":
         install_requires=['traits>=6.2.0'],
         extras_require={
             "docs": ["enthought-sphinx-theme", "sphinx"],
-            "test": [
-                "importlib-resources>=1.1.0; python_version<'3.9'",
-            ],
+            "test": [],
             "gui": [
                 "pyface",
                 "traitsui",
             ],
             "h5": [
-                # For Python earlier than 3.10, the most recent version of
-                # PyTables is incompatible with NumPy 2.x.
-                # xref: https://github.com/enthought/apptools/issues/345
-                "numpy < 2.0; python_version<'3.10'",
-                "numpy; python_version>='3.10'",
+                "numpy",
                 "pandas",
                 "tables",
             ],
             "persistence": [
-                "numpy < 2.0; python_version<'3.10'",
-                "numpy; python_version>='3.10'",
+                "numpy",
             ],
             "preferences": [
                 "configobj",
@@ -333,5 +326,5 @@ if __name__ == "__main__":
         packages=find_packages(),
         platforms=["Windows", "Linux", "Mac OS-X", "Unix", "Solaris"],
         zip_safe=False,
-        python_requires=">=3.8",
+        python_requires=">=3.10",
     )
